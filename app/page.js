@@ -59,53 +59,42 @@ export default function Home() {
           animation: 'fadeUp 0.8s ease',
           maxWidth: 1200, margin: '0 auto', width: '100%',
         }}>
-          {/* Left - Hero Graphic */}
+          {/* Left - Hero Graphic: Real kibble image with label overlays */}
           <div style={{
             width: 'clamp(280px, 30vw, 420px)',
             flexShrink: 0,
+            position: 'relative',
           }}>
-            <svg viewBox="0 0 400 700" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: 'auto' }}>
-              {/* Connector lines */}
-              <g stroke="#1a161230" strokeWidth="1.5" strokeDasharray="6 4">
-                <path d="M120 100 L60 80 L20 80" />
-                <circle cx="120" cy="100" r="3" fill="#1a161240" />
-                <path d="M280 220 L340 220 L380 200" />
-                <circle cx="280" cy="220" r="3" fill="#1a161240" />
-                <path d="M120 360 L40 360 L20 340" />
-                <circle cx="120" cy="360" r="3" fill="#1a161240" />
-                <path d="M280 480 L350 480 L380 460" />
-                <circle cx="280" cy="480" r="3" fill="#1a161240" />
-                <path d="M140 610 L60 630 L20 630" />
-                <circle cx="140" cy="610" r="3" fill="#1a161240" />
-              </g>
-              {/* Labels */}
-              <text x="18" y="68" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="20" letterSpacing="3" fill="#1a1612">PROTEIN</text>
-              <text x="378" y="190" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="20" letterSpacing="3" fill="#1a1612" textAnchor="end">FAT</text>
-              <text x="18" y="328" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="20" letterSpacing="3" fill="#1a1612">CARBS</text>
-              <text x="378" y="450" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="20" letterSpacing="3" fill="#1a1612" textAnchor="end">FIBER</text>
-              <text x="18" y="622" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="20" letterSpacing="3" fill="#1a1612">MOISTURE</text>
-              {/* Kibble pieces */}
-              <ellipse cx="200" cy="120" rx="70" ry="55" fill="#a07840" />
-              <ellipse cx="200" cy="115" rx="68" ry="50" fill="#b8884d" />
-              <ellipse cx="195" cy="110" rx="55" ry="38" fill="#c49558" />
-              <path d="M150 120 Q175 90 220 105 Q240 115 250 130" fill="#a07840" opacity="0.4" />
-              <ellipse cx="210" cy="240" rx="75" ry="58" fill="#9a7038" />
-              <ellipse cx="210" cy="235" rx="72" ry="53" fill="#b08045" />
-              <ellipse cx="205" cy="230" rx="58" ry="40" fill="#c08f52" />
-              <path d="M155 245 Q185 215 230 228 Q255 238 265 255" fill="#9a7038" opacity="0.4" />
-              <ellipse cx="195" cy="370" rx="90" ry="72" fill="#8e6832" />
-              <ellipse cx="195" cy="364" rx="87" ry="67" fill="#a87a42" />
-              <ellipse cx="190" cy="358" rx="72" ry="52" fill="#bc8e50" />
-              <path d="M130 375 Q170 340 220 355 Q255 365 265 385" fill="#8e6832" opacity="0.4" />
-              <ellipse cx="215" cy="495" rx="72" ry="55" fill="#96733a" />
-              <ellipse cx="215" cy="490" rx="69" ry="50" fill="#ad844a" />
-              <ellipse cx="210" cy="485" rx="55" ry="37" fill="#c09255" />
-              <path d="M165 500 Q190 475 230 485 Q250 495 260 510" fill="#96733a" opacity="0.4" />
-              <ellipse cx="190" cy="610" rx="65" ry="50" fill="#a07840" />
-              <ellipse cx="190" cy="606" rx="62" ry="46" fill="#b58a4c" />
-              <ellipse cx="186" cy="601" rx="50" ry="34" fill="#c89858" />
-              <path d="M145 615 Q168 590 210 600 Q230 608 240 622" fill="#a07840" opacity="0.4" />
-            </svg>
+            <img
+              src="/hero-kibble.png"
+              alt="Kibble nutritional breakdown"
+              style={{
+                width: '100%',
+                height: 'auto',
+                objectFit: 'contain',
+              }}
+            />
+            {/* Label overlays */}
+            {[
+              { text: 'PROTEIN', top: '8%', left: '0%' },
+              { text: 'FAT', top: '26%', right: '0%' },
+              { text: 'CARBS', top: '45%', left: '0%' },
+              { text: 'FIBER', top: '64%', right: '0%' },
+              { text: 'MOISTURE', top: '84%', left: '0%' },
+            ].map((label) => (
+              <div key={label.text} style={{
+                position: 'absolute',
+                top: label.top,
+                left: label.left,
+                right: label.right,
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 800,
+                fontSize: 'clamp(14px, 1.8vw, 22px)',
+                letterSpacing: '3px',
+                color: '#1a1612',
+                textShadow: '0 1px 3px rgba(245,212,66,0.8)',
+              }}>{label.text}</div>
+            ))}
           </div>
 
           {/* Right - Text + Search */}
