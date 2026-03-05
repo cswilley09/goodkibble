@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 
 export default function NutrientRing({ label, value, color, delay = 0 }) {
   const [anim, setAnim] = useState(0);
-  const r = 54;
-  const circ = 2 * Math.PI * r;
+  const r = 54, circ = 2 * Math.PI * r;
   const offset = circ - (anim / 100) * circ;
 
   useEffect(() => {

@@ -23,13 +23,7 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
     const val = e.target.value;
     setText(val);
     clearTimeout(debounceRef.current);
-
-    if (!val.trim()) {
-      setResults([]);
-      setOpen(false);
-      return;
-    }
-
+    if (!val.trim()) { setResults([]); setOpen(false); return; }
     setLoading(true);
     debounceRef.current = setTimeout(async () => {
       const { data } = await supabase

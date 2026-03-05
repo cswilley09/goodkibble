@@ -5,6 +5,18 @@ import { supabase } from '../../../lib/supabase';
 import SearchBox from '../../components/SearchBox';
 import NutrientRing from '../../components/NutrientRing';
 
+const SALT_KEYWORDS = ['salt', 'sodium chloride', 'iodized salt', 'sodium', 'sea salt'];
+
+function isSaltIngredient(ing) {
+  const lower = ing.toLowerCase().trim();
+  return SALT_KEYWORDS.some(kw => {
+    if (kw === 'sodium') {
+      return lower === 'sodium' || lower === 'sodium chloride';
+    }
+    return lower === kw || lower.startsWith(kw + ' ') || lower.endsWith(' ' + kw);
+  });
+}
+
 function QualityBadge({ protein, carbs }) {
   const pS = protein >= 30 ? 3 : protein >= 25 ? 2 : 1;
   const cS = carbs <= 45 ? 3 : carbs <= 55 ? 2 : 1;
@@ -36,15 +48,14 @@ function ProductImage({ src, alt }) {
   if (!src || err) {
     return (
       <div style={{
-        width: '100%', maxWidth: 260, aspectRatio: '1', borderRadius: 20,
-        background: '#f0ebe3', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        width: '100%', maxWidth: 280, aspectRatio: '1', borderRadius: 20,
+        background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center',
         color: '#c4b9a8', fontSize: 56,
       }}>🐕</div>
     );
   }
   return <img src={src} alt={alt} onError={() => setErr(true)}
-    style={{ width: '100%', maxWidth: 260, aspectRatio: '1', objectFit: 'contain',
-      borderRadius: 20, background: '#fff', border: '1px solid #ede8df' }} />;
+    style={{ width: '100%', maxWidth: 280, aspectRatio: '1', objectFit: 'contain', borderRadius: 20 }} />;
 }
 
 export default function FoodPage() {
@@ -64,11 +75,9 @@ export default function FoodPage() {
       .catch(() => setLoading(false));
   }, [params.id]);
 
-  function handleSelect(id) {
-    router.push(`/food/${id}`);
-  }
-
   const goHome = () => router.push('/');
+  const goFood = (id) => router.push(`/food/${id}`);
+  const goBrand = () => food && router.push(`/brand/${encodeURIComponent(food.brand)}`);
 
   const ingredients = food?.ingredients
     ? food.ingredients.split(',').map((s) => s.trim()).filter(Boolean) : [];
@@ -82,18 +91,18 @@ export default function FoodPage() {
   ].filter(Boolean) : [];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#faf8f5' }}>
+    <div style={{ minHeight: '100vh', background: '#ffffff' }}>
       {/* Nav */}
       <nav style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#faf8f5',
+        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#fff',
         position: 'sticky', top: 0, zIndex: 40, gap: 24,
       }}>
         <div onClick={goHome} style={{
           fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>kibble<span style={{ opacity: 0.4 }}>check</span></div>
-        <SearchBox onSelect={handleSelect} variant="nav" />
+        }}>Good<span style={{ opacity: 0.4 }}>Kibble</span></div>
+        <SearchBox onSelect={goFood} variant="nav" />
       </nav>
 
       {loading ? (
@@ -126,7 +135,14 @@ export default function FoodPage() {
           }}>
             <ProductImage src={food.image_url} alt={food.name} />
             <div style={{ flex: 1, minWidth: 280 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8 }}>{food.brand}</div>
+              <div onClick={goBrand} style={{
+                fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase',
+                color: '#b5aa99', marginBottom: 8, cursor: 'pointer',
+                transition: 'color 0.2s',
+              }}
+                onMouseEnter={(e) => e.target.style.color = '#1a1612'}
+                onMouseLeave={(e) => e.target.style.color = '#b5aa99'}
+              >{food.brand} →</div>
               <h1 style={{
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 'clamp(24px, 3.5vw, 38px)', fontWeight: 700, color: '#1a1612',
@@ -142,7 +158,7 @@ export default function FoodPage() {
                     {prices.map((p, i) => (
                       <div key={i} style={{
                         padding: '10px 16px', borderRadius: 12,
-                        border: '1.5px solid #ede8df', background: '#fff', fontSize: 14,
+                        border: '1.5px solid #ede8df', background: '#faf8f5', fontSize: 14,
                       }}>
                         <span style={{ fontWeight: 600, color: '#1a1612' }}>{p.lb} lb</span>
                         <span style={{ color: '#8a7e72', marginLeft: 8 }}>${Number(p.price).toFixed(2)}</span>
@@ -154,19 +170,31 @@ export default function FoodPage() {
             </div>
           </div>
 
-          {/* Nutrition */}
+          {/* Nutrition - 3-2 Stack */}
           <div style={{
-            padding: '48px 32px', background: '#fff', borderRadius: 24,
+            padding: '48px 32px', background: '#faf8f5', borderRadius: 24,
             border: '1px solid #ede8df', animation: 'scaleIn 0.5s ease 0.1s both',
           }}>
-            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 36 }}>Guaranteed Analysis</div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(24px, 5vw, 56px)', flexWrap: 'wrap' }}>
+            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 36 }}>
+              Guaranteed Analysis
+            </div>
+
+            {/* Row 1: Protein, Fat, Carbs */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(24px, 5vw, 56px)', flexWrap: 'wrap', marginBottom: 32 }}>
               <NutrientRing label="Protein" value={food.protein || 0} color="#2d7a4f" delay={100} />
               <NutrientRing label="Fat" value={food.fat || 0} color="#c47a20" delay={250} />
               <NutrientRing label="Carbs" value={food.carbohydrates || 0} color="#5a7a9e" delay={400} />
-              {food.fiber > 0 && <NutrientRing label="Fiber" value={food.fiber} color="#8a6aaf" delay={550} />}
-              {food.moisture > 0 && <NutrientRing label="Moisture" value={food.moisture} color="#5a9e9e" delay={700} />}
             </div>
+
+            {/* Row 2: Fiber, Moisture */}
+            {(food.fiber > 0 || food.moisture > 0) && (
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(24px, 5vw, 56px)', flexWrap: 'wrap' }}>
+                {food.fiber > 0 && <NutrientRing label="Fiber" value={food.fiber} color="#8a6aaf" delay={550} />}
+                {food.moisture > 0 && <NutrientRing label="Moisture" value={food.moisture} color="#5a9e9e" delay={700} />}
+              </div>
+            )}
+
+            {/* Bar */}
             <div style={{ marginTop: 40, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
               <div style={{ display: 'flex', height: 14, borderRadius: 100, overflow: 'hidden' }}>
                 <div style={{ width: `${food.protein}%`, background: '#2d7a4f', transition: 'width 1s ease' }} />
@@ -183,7 +211,7 @@ export default function FoodPage() {
 
           {/* Ingredients */}
           <div style={{
-            marginTop: 28, padding: '48px 32px', background: '#fff', borderRadius: 24,
+            marginTop: 28, padding: '48px 32px', background: '#faf8f5', borderRadius: 24,
             border: '1px solid #ede8df', animation: 'scaleIn 0.5s ease 0.2s both',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
@@ -194,24 +222,29 @@ export default function FoodPage() {
               Listed in order of weight. The first ingredient is the most prominent.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {ingredients.map((ing, i) => (
-                <span key={i} style={{
-                  display: 'inline-block', padding: '8px 16px', borderRadius: 100,
-                  fontSize: 14, fontWeight: i === 0 ? 600 : 400,
-                  background: i === 0 ? '#1a1612' : i < 5 ? '#f5f0e8' : '#faf8f5',
-                  color: i === 0 ? '#faf8f5' : '#3d352b',
-                  border: i === 0 ? 'none' : '1px solid #e8e0d4',
-                  animationName: 'fadeUp', animationDuration: '0.4s',
-                  animationFillMode: 'both', animationDelay: `${i * 20}ms`,
-                }}>{ing}</span>
-              ))}
+              {ingredients.map((ing, i) => {
+                const isSalt = isSaltIngredient(ing);
+                const isFirst = i === 0;
+                return (
+                  <span key={i} style={{
+                    display: 'inline-block', padding: '8px 16px', borderRadius: 100,
+                    fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+                    fontWeight: isFirst || isSalt ? 600 : 400,
+                    background: isSalt ? '#c0392b' : isFirst ? '#1a1612' : i < 5 ? '#f5f0e8' : '#fff',
+                    color: isSalt ? '#fff' : isFirst ? '#faf8f5' : '#3d352b',
+                    border: isSalt || isFirst ? 'none' : '1px solid #e8e0d4',
+                    animationName: 'fadeUp', animationDuration: '0.4s',
+                    animationFillMode: 'both', animationDelay: `${i * 20}ms`,
+                  }}>{ing}</span>
+                );
+              })}
             </div>
           </div>
 
           {/* Source */}
           {food.url && (
             <div style={{
-              marginTop: 28, padding: '20px 24px', borderRadius: 16, background: '#f5f0e8',
+              marginTop: 28, padding: '20px 24px', borderRadius: 16, background: '#faf8f5',
               animation: 'fadeUp 0.5s ease 0.3s both',
               display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
             }}>
@@ -227,15 +260,14 @@ export default function FoodPage() {
         </div>
       )}
 
-      {/* Footer */}
       <div style={{
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 800, color: '#1a1612' }}>
-          kibble<span style={{ opacity: 0.3 }}>check</span>
+          Good<span style={{ opacity: 0.3 }}>Kibble</span>
         </div>
-        <div style={{ fontSize: 13, color: '#b5aa99' }}>© 2026 KibbleCheck. Not affiliated with any dog food brand.</div>
+        <div style={{ fontSize: 13, color: '#b5aa99' }}>© 2026 GoodKibble. Not affiliated with any dog food brand.</div>
       </div>
     </div>
   );

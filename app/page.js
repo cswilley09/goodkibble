@@ -5,70 +5,106 @@ import SearchBox from './components/SearchBox';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const [popular, setPopular] = useState([]);
+  const [brands, setBrands] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
     supabase
       .from('dog_foods')
-      .select('id, name, brand, protein, image_url')
-      .limit(6)
-      .then(({ data }) => setPopular(data || []));
+      .select('brand')
+      .then(({ data }) => {
+        if (!data) return;
+        const counts = {};
+        data.forEach(r => { counts[r.brand] = (counts[r.brand] || 0) + 1; });
+        const sorted = Object.entries(counts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 8)
+          .map(([name, count]) => ({ name, count }));
+        setBrands(sorted);
+      });
   }, []);
 
   function handleSelect(id) {
     router.push(`/food/${id}`);
   }
 
+  function handleBrand(brandName) {
+    router.push(`/brand/${encodeURIComponent(brandName)}`);
+  }
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Hero */}
       <div style={{
         flex: 1,
         background: 'linear-gradient(170deg, #f5d442 0%, #f0c930 45%, #e8c020 100%)',
         display: 'flex', flexDirection: 'column',
       }}>
+        {/* Nav */}
         <nav style={{
           padding: '24px 40px', display: 'flex', justifyContent: 'space-between',
           alignItems: 'center', animation: 'fadeIn 0.6s ease',
         }}>
           <div style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800,
+            fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 800,
             color: '#1a1612', letterSpacing: -0.5, cursor: 'pointer',
           }}>
-            kibble<span style={{ opacity: 0.4 }}>check</span>
+            Good<span style={{ opacity: 0.4 }}>Kibble</span>
           </div>
         </nav>
 
+        {/* Hero - Split layout */}
         <div style={{
-          flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
-          justifyContent: 'center', padding: '0 24px 80px', animation: 'fadeUp 0.8s ease',
+          flex: 1, display: 'flex', alignItems: 'center',
+          padding: '0 40px 60px', gap: 40,
+          animation: 'fadeUp 0.8s ease',
+          maxWidth: 1200, margin: '0 auto', width: '100%',
         }}>
+          {/* Left - Hero Image */}
           <div style={{
-            fontSize: 13, fontWeight: 600, letterSpacing: 3,
-            textTransform: 'uppercase', color: '#1a161260', marginBottom: 16,
-          }}>Know what&apos;s in the bowl</div>
-
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 'clamp(40px, 7vw, 72px)', fontWeight: 800, color: '#1a1612',
-            textAlign: 'center', lineHeight: 1.05, marginBottom: 12,
-            letterSpacing: -1.5, maxWidth: 700,
+            flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            What&apos;s really in<br />your dog&apos;s food?
-          </h1>
+            <img
+              src="/hero-kibble.png"
+              alt="Kibble nutritional breakdown"
+              style={{
+                width: 'clamp(200px, 25vw, 360px)',
+                height: 'auto',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 20px 40px rgba(26,22,18,0.15))',
+              }}
+            />
+          </div>
 
-          <p style={{
-            fontSize: 17, color: '#1a161290', maxWidth: 440, textAlign: 'center',
-            lineHeight: 1.6, marginBottom: 40, fontWeight: 400,
+          {/* Right - Text + Search */}
+          <div style={{
+            flex: 1, display: 'flex', flexDirection: 'column',
+            alignItems: 'flex-start',
           }}>
-            Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
-          </p>
+            <div style={{
+              fontSize: 13, fontWeight: 600, letterSpacing: 3,
+              textTransform: 'uppercase', color: '#1a161260', marginBottom: 16,
+            }}>Know what&apos;s in the bowl</div>
 
-          <SearchBox onSelect={handleSelect} variant="hero" />
+            <h1 style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 800, color: '#1a1612',
+              lineHeight: 1.05, marginBottom: 12, letterSpacing: -1.5,
+            }}>
+              What&apos;s really in<br />your dog&apos;s food?
+            </h1>
+
+            <p style={{
+              fontSize: 17, color: '#1a161290', maxWidth: 440,
+              lineHeight: 1.6, marginBottom: 36, fontWeight: 400,
+            }}>
+              Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
+            </p>
+
+            <SearchBox onSelect={handleSelect} variant="hero" />
+          </div>
         </div>
 
-        {/* Popular */}
+        {/* Popular Brands */}
         <div style={{
           background: '#1a1612', borderRadius: '32px 32px 0 0',
           padding: '48px 40px 56px', animation: 'fadeUp 1s ease 0.3s both',
@@ -76,13 +112,13 @@ export default function Home() {
           <div style={{
             fontSize: 12, fontWeight: 600, letterSpacing: 2.5,
             textTransform: 'uppercase', color: '#8a7e72', marginBottom: 24, textAlign: 'center',
-          }}>Most searched</div>
+          }}>Popular Brands</div>
           <div style={{
             display: 'flex', flexWrap: 'wrap', gap: 10,
             justifyContent: 'center', maxWidth: 700, margin: '0 auto',
           }}>
-            {popular.map((f, i) => (
-              <button key={f.id} onClick={() => handleSelect(f.id)}
+            {brands.map((b, i) => (
+              <button key={b.name} onClick={() => handleBrand(b.name)}
                 style={{
                   padding: '12px 22px', borderRadius: 100,
                   border: '1.5px solid #3d352b', background: 'transparent',
@@ -101,7 +137,10 @@ export default function Home() {
                   e.target.style.color = '#d4c9b8';
                   e.target.style.borderColor = '#3d352b';
                 }}
-              >{f.brand}</button>
+              >
+                {b.name}
+                <span style={{ marginLeft: 8, opacity: 0.5, fontSize: 12 }}>({b.count})</span>
+              </button>
             ))}
           </div>
         </div>

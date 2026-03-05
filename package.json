@@ -1,6 +1,6 @@
 {
-  "name": "kibblecheck",
-  "version": "1.0.0",
+  "name": "goodkibble",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
