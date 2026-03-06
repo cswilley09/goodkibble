@@ -27,7 +27,7 @@ export default function BrandPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f5' }}>
-      <nav style={{
+      <nav className='nav-bar' style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#faf8f5',
         position: 'sticky', top: 0, zIndex: 40, gap: 24,
@@ -36,7 +36,7 @@ export default function BrandPage() {
           fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
         }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
-        <SearchBox onSelect={goFood} variant="nav" />
+        <div className='nav-search'><SearchBox onSelect={goFood} variant="nav" /></div>
       </nav>
 
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 24px 80px' }}>

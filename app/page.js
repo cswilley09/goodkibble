@@ -57,9 +57,10 @@ export default function Home() {
       <div style={{
         background: 'linear-gradient(170deg, #f5d442 0%, #f0c930 45%, #e8c020 100%)',
         display: 'flex', flexDirection: 'column',
+        minHeight: '100vh',
       }}>
-        <nav style={{ padding: '24px 48px', animation: 'fadeIn 0.6s ease' }}>
-          <div style={{
+        <nav className="nav-bar" style={{ padding: '24px 48px', animation: 'fadeIn 0.6s ease' }}>
+          <div className="nav-logo" style={{
             fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
             color: '#1a1612', letterSpacing: -0.5,
           }}>
@@ -67,14 +68,14 @@ export default function Home() {
           </div>
         </nav>
 
-        <div style={{
-          display: 'flex', alignItems: 'center',
+        <div className="hero-layout" style={{
+          flex: 1, display: 'flex', alignItems: 'center',
           maxWidth: 1100, width: '100%', margin: '0 auto',
           padding: '40px 48px 60px',
           gap: 60,
           animation: 'fadeUp 0.8s ease',
         }}>
-          <div style={{
+          <div className="hero-kibble-col" style={{
             width: 320, flexShrink: 0,
             display: 'flex', flexDirection: 'column', alignItems: 'center',
           }}>
@@ -84,31 +85,22 @@ export default function Home() {
                 alt="Kibble nutritional breakdown"
                 style={{ width: 130, height: 'auto', display: 'block' }}
               />
-              <div style={{
+              <div className="hero-kibble-labels" style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
                 transform: 'rotate(8deg)',
               }}>
-                {/* PROTEIN - left side of piece 1, mid ~8% */}
                 <div style={{ ...labelStyle, top: '6%', right: '100%', paddingRight: 4 }}>
                   PROTEIN {dashLeft(45)}
                 </div>
-
-                {/* FAT - right side of piece 2, mid ~27% */}
                 <div style={{ ...labelStyle, top: '25%', left: '100%', paddingLeft: 4 }}>
                   {dashRight(55)} FAT
                 </div>
-
-                {/* CARBS - left side of piece 3, mid ~48% */}
                 <div style={{ ...labelStyle, top: '46%', right: '100%', paddingRight: 4 }}>
                   CARBS {dashLeft(35)}
                 </div>
-
-                {/* FIBER - right side of piece 4, mid ~72% */}
                 <div style={{ ...labelStyle, top: '70%', left: '100%', paddingLeft: 4 }}>
                   {dashRight(45)} FIBER
                 </div>
-
-                {/* MOISTURE - left side of piece 5, mid ~91% */}
                 <div style={{ ...labelStyle, top: '90%', right: '100%', paddingRight: 4 }}>
                   MOISTURE {dashLeft(40)}
                 </div>
@@ -116,7 +108,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="hero-text" style={{ flex: 1, minWidth: 0 }}>
             <div style={{
               fontSize: 13, fontWeight: 600, letterSpacing: 3,
               textTransform: 'uppercase', color: '#1a161250', marginBottom: 16,
@@ -141,7 +133,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div style={{
+        <div className="popular-brands" style={{
           background: '#1a1612', borderRadius: '32px 32px 0 0',
           padding: '40px 40px 48px', animation: 'fadeUp 1s ease 0.3s both',
         }}>

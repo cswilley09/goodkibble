@@ -10,3 +10,25 @@ input::placeholder { color: #b5aa99; }
 @keyframes slideDown { from { opacity:0; transform:translateY(-8px) } to { opacity:1; transform:translateY(0) } }
 @keyframes scaleIn { from { opacity:0; transform:scale(0.96) } to { opacity:1; transform:scale(1) } }
 @keyframes spin { to { transform: rotate(360deg) } }
+
+/* Mobile responsive overrides */
+@media (max-width: 768px) {
+  .hero-layout { flex-direction: column !important; gap: 24px !important; padding: 20px 24px 32px !important; }
+  .hero-kibble-col { width: auto !important; }
+  .hero-kibble-col img { width: 90px !important; }
+  .hero-kibble-labels { display: none !important; }
+  .hero-text h1 { font-size: 36px !important; }
+  .hero-text p { font-size: 15px !important; }
+  .nav-bar { padding: 16px 20px !important; }
+  .nav-logo { font-size: 24px !important; }
+  .nav-search { display: none !important; }
+  .product-hero { gap: 24px !important; }
+  .product-image-wrap { width: 180px !important; height: 180px !important; }
+  .product-info { min-width: 0 !important; }
+  .nutrition-section { padding: 32px 16px !important; }
+  .ingredients-section { padding: 32px 16px !important; }
+  .brand-grid { grid-template-columns: 1fr !important; }
+  .footer-bar { padding: 24px 20px !important; flex-direction: column !important; text-align: center !important; }
+  .footer-logo { font-size: 24px !important; }
+  .popular-brands { padding: 32px 20px 40px !important; }
+}
