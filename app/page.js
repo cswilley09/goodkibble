@@ -55,13 +55,13 @@ export default function Home() {
         {/* Hero - Split layout */}
         <div style={{
           flex: 1, display: 'flex', alignItems: 'center',
-          padding: '0 40px 60px', gap: 40,
+          padding: '0 40px 60px', gap: 24,
           animation: 'fadeUp 0.8s ease',
           maxWidth: 1200, margin: '0 auto', width: '100%',
         }}>
           {/* Left - Hero Graphic: Real kibble image with label + line overlays */}
           <div style={{
-            width: 'clamp(280px, 30vw, 420px)',
+            width: 'clamp(220px, 25vw, 340px)',
             flexShrink: 0,
             position: 'relative',
           }}>
@@ -72,6 +72,7 @@ export default function Home() {
                 width: '100%',
                 height: 'auto',
                 objectFit: 'contain',
+                mixBlendMode: 'darken',
               }}
             />
             {/* SVG overlay for lines + labels */}
