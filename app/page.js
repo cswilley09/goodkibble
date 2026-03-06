@@ -61,7 +61,7 @@ export default function Home() {
         }}>
           {/* Left - Hero Graphic: Real kibble image with label + line overlays */}
           <div style={{
-            width: 'clamp(220px, 25vw, 340px)',
+            width: 'clamp(160px, 18vw, 240px)',
             flexShrink: 0,
             position: 'relative',
           }}>
@@ -70,7 +70,7 @@ export default function Home() {
               alt="Kibble nutritional breakdown"
               style={{
                 width: '100%',
-                height: 'auto',
+                maxHeight: '70vh',
                 objectFit: 'contain',
               }}
             />
