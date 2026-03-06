@@ -35,10 +35,8 @@ export default function Home() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div style={{
-        flex: 1,
         background: 'linear-gradient(170deg, #f5d442 0%, #f0c930 45%, #e8c020 100%)',
         display: 'flex', flexDirection: 'column',
-        minHeight: '100vh',
       }}>
         {/* Nav */}
         <nav style={{ padding: '24px 48px', animation: 'fadeIn 0.6s ease' }}>
@@ -50,61 +48,67 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* Hero */}
+        {/* Hero - two column */}
         <div style={{
-          flex: 1, display: 'flex', alignItems: 'center',
+          display: 'flex', alignItems: 'center',
+          maxWidth: 1100, width: '100%', margin: '0 auto',
+          padding: '40px 48px 60px',
+          gap: 60,
           animation: 'fadeUp 0.8s ease',
-          position: 'relative',
-          overflow: 'hidden',
         }}>
-          {/* Kibble - absolutely positioned on the left */}
+          {/* Left column - kibble with labels */}
           <div style={{
-            position: 'absolute',
-            left: '4%',
-            top: '50%',
-            transform: 'translateY(-50%) rotate(-8deg)',
-            width: '22%',
-            maxWidth: 260,
-            minWidth: 140,
+            width: 320, flexShrink: 0,
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
           }}>
-            <img
-              src="/hero-kibble.png"
-              alt="Kibble nutritional breakdown"
-              style={{ width: '100%', height: 'auto' }}
-            />
+            <div style={{
+              position: 'relative',
+              transform: 'rotate(-8deg)',
+            }}>
+              <img
+                src="/hero-kibble.png"
+                alt="Kibble nutritional breakdown"
+                style={{
+                  width: 130,
+                  height: 'auto',
+                  display: 'block',
+                }}
+              />
+              {/* Labels overlaid on the image - counter-rotate so text is straight */}
+              <div style={{
+                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                transform: 'rotate(8deg)',
+              }}>
+                {[
+                  { text: 'PROTEIN', top: '5%', right: '105%' },
+                  { text: 'FAT', top: '23%', left: '105%' },
+                  { text: 'CARBS', top: '43%', right: '105%' },
+                  { text: 'FIBER', top: '63%', left: '105%' },
+                  { text: 'MOISTURE', top: '82%', right: '105%' },
+                ].map((l) => (
+                  <div key={l.text} style={{
+                    position: 'absolute',
+                    top: l.top,
+                    left: l.left || 'auto',
+                    right: l.right || 'auto',
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontWeight: 700,
+                    fontSize: 13,
+                    letterSpacing: '2.5px',
+                    color: '#1a1612',
+                    whiteSpace: 'nowrap',
+                    display: 'flex', alignItems: 'center', gap: 8,
+                  }}>
+                    {l.right && <>{l.text}<span style={{ display: 'inline-block', width: 40, height: 1, background: '#1a161240' }} /></>}
+                    {l.left && <><span style={{ display: 'inline-block', width: 40, height: 1, background: '#1a161240' }} />{l.text}</>}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* Labels - absolutely positioned, connected to kibble */}
-          {/* These use percentage positioning so they scale with the viewport */}
-          {[
-            { text: 'PROTEIN', top: '8%', left: '2%', align: 'left' },
-            { text: 'FAT', top: '28%', left: '28%', align: 'left' },
-            { text: 'CARBS', top: '46%', left: '1%', align: 'left' },
-            { text: 'FIBER', top: '65%', left: '29%', align: 'left' },
-            { text: 'MOISTURE', top: '83%', left: '1%', align: 'left' },
-          ].map((label) => (
-            <div key={label.text} style={{
-              position: 'absolute',
-              top: label.top,
-              left: label.left,
-              fontFamily: "'DM Sans', sans-serif",
-              fontWeight: 800,
-              fontSize: 'clamp(11px, 1.1vw, 16px)',
-              letterSpacing: '3px',
-              color: '#1a1612',
-              opacity: 0.6,
-            }}>{label.text}</div>
-          ))}
-
-          {/* Right content - pushed to the right half */}
-          <div style={{
-            marginLeft: '42%',
-            paddingRight: '6%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            maxWidth: 620,
-          }}>
+          {/* Right column - text + search */}
+          <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{
               fontSize: 13, fontWeight: 600, letterSpacing: 3,
               textTransform: 'uppercase', color: '#1a161250', marginBottom: 16,
@@ -112,7 +116,7 @@ export default function Home() {
 
             <h1 style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(36px, 5vw, 68px)', fontWeight: 800, color: '#1a1612',
+              fontSize: 'clamp(36px, 4.5vw, 64px)', fontWeight: 800, color: '#1a1612',
               lineHeight: 1.02, marginBottom: 20, letterSpacing: -2,
             }}>
               What&apos;s really in<br />your dog&apos;s food?
@@ -125,9 +129,7 @@ export default function Home() {
               Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
             </p>
 
-            <div style={{ width: '100%', maxWidth: 520 }}>
-              <SearchBox onSelect={handleSelect} variant="hero" />
-            </div>
+            <SearchBox onSelect={handleSelect} variant="hero" />
           </div>
         </div>
 
