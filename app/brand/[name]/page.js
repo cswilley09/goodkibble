@@ -33,9 +33,9 @@ export default function BrandPage() {
         position: 'sticky', top: 0, zIndex: 40, gap: 24,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 800,
+          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ opacity: 0.4 }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
         <SearchBox onSelect={goFood} variant="nav" />
       </nav>
 
@@ -132,8 +132,8 @@ export default function BrandPage() {
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ opacity: 0.3 }}>Kibble</span>
+        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#f0c930' }}>Kibble</span>
         </div>
         <div style={{ fontSize: 13, color: '#b5aa99' }}>© 2026 GoodKibble. Not affiliated with any dog food brand.</div>
       </div>
