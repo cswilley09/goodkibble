@@ -45,7 +45,7 @@ export default function Home() {
           alignItems: 'center', animation: 'fadeIn 0.6s ease',
         }}>
           <div style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 800,
+            fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 800,
             color: '#1a1612', letterSpacing: -0.5, cursor: 'pointer',
           }}>
             Good<span style={{ opacity: 0.4 }}>Kibble</span>
@@ -59,9 +59,9 @@ export default function Home() {
           animation: 'fadeUp 0.8s ease',
           overflow: 'hidden',
         }}>
-          {/* Left - Kibble graphic, takes up ~40% */}
+          {/* Left - Kibble graphic */}
           <div style={{
-            width: '42%',
+            width: '38%',
             position: 'relative',
             display: 'flex',
             justifyContent: 'center',
@@ -69,7 +69,7 @@ export default function Home() {
             flexShrink: 0,
           }}>
             <div style={{
-              width: 200,
+              width: 160,
               transform: 'rotate(-5deg)',
               position: 'relative',
             }}>
@@ -80,52 +80,52 @@ export default function Home() {
               />
               {/* SVG overlay - viewBox matches image 263x1046 */}
               <svg
-                viewBox="-120 0 500 1046"
+                viewBox="-140 0 540 1046"
                 fill="none"
                 style={{
                   position: 'absolute',
                   top: 0, left: 0,
-                  width: '270%',
+                  width: '310%',
                   height: '100%',
-                  marginLeft: '-85%',
+                  marginLeft: '-100%',
                   pointerEvents: 'none',
                   overflow: 'visible',
                 }}
               >
-                {/* PROTEIN - left, piece 1 */}
+                {/* PROTEIN - left, piece 1 center y=87 */}
                 <circle cx="80" cy="87" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M80 87 L20 55 L-90 55" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="-90" y="48" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612">PROTEIN</text>
+                <path d="M80 87 L10 55 L-110 55" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="-110" y="48" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3" fill="#1a1612">PROTEIN</text>
 
-                {/* FAT - right, piece 2 */}
-                <circle cx="210" cy="283" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M210 283 L290 260 L380 260" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="380" y="253" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612" textAnchor="end">FAT</text>
+                {/* FAT - right, piece 2 center y=283 */}
+                <circle cx="215" cy="283" r="4" fill="#1a1612" opacity="0.4" />
+                <path d="M215 283 L300 258 L400 258" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="400" y="251" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3" fill="#1a1612" textAnchor="end">FAT</text>
 
-                {/* CARBS - left, piece 3 */}
-                <circle cx="50" cy="503" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M50 503 L-10 478 L-90 478" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="-90" y="471" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612">CARBS</text>
+                {/* CARBS - left, piece 3 center y=503 */}
+                <circle cx="45" cy="503" r="4" fill="#1a1612" opacity="0.4" />
+                <path d="M45 503 L-20 478 L-110 478" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="-110" y="471" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3" fill="#1a1612">CARBS</text>
 
-                {/* FIBER - right, piece 4 */}
-                <circle cx="220" cy="753" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M220 753 L290 730 L380 730" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="380" y="723" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612" textAnchor="end">FIBER</text>
+                {/* FIBER - right, piece 4 center y=753 */}
+                <circle cx="225" cy="753" r="4" fill="#1a1612" opacity="0.4" />
+                <path d="M225 753 L300 728 L400 728" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="400" y="721" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3" fill="#1a1612" textAnchor="end">FIBER</text>
 
-                {/* MOISTURE - left, piece 5 */}
-                <circle cx="70" cy="957" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M70 957 L0 935 L-90 935" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="-90" y="928" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612">MOISTURE</text>
+                {/* MOISTURE - left, piece 5 center y=957 */}
+                <circle cx="65" cy="957" r="4" fill="#1a1612" opacity="0.4" />
+                <path d="M65 957 L-10 935 L-110 935" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="-110" y="928" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3" fill="#1a1612">MOISTURE</text>
               </svg>
             </div>
           </div>
 
-          {/* Right - Text + Search, pushed to the right */}
+          {/* Right - Text + Search, pushed further right */}
           <div style={{
             flex: 1, display: 'flex', flexDirection: 'column',
             alignItems: 'flex-start',
-            paddingRight: 60,
-            maxWidth: 560,
+            paddingRight: 80,
+            paddingLeft: 40,
           }}>
             <div style={{
               fontSize: 13, fontWeight: 600, letterSpacing: 3,
