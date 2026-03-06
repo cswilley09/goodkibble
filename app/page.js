@@ -32,6 +32,15 @@ export default function Home() {
     router.push(`/brand/${encodeURIComponent(brandName)}`);
   }
 
+  const DottedLine = () => (
+    <span style={{
+      display: 'inline-block',
+      width: 40,
+      height: 0,
+      borderTop: '1.5px dashed #1a161240',
+    }} />
+  );
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div style={{
@@ -74,35 +83,60 @@ export default function Home() {
                   display: 'block',
                 }}
               />
-              {/* Labels overlaid on the image - counter-rotate so text is straight */}
+              {/* Labels overlaid - counter-rotate so text is straight */}
               <div style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
                 transform: 'rotate(8deg)',
               }}>
-                {[
-                  { text: 'PROTEIN', top: '5%', right: '105%' },
-                  { text: 'FAT', top: '23%', left: '105%' },
-                  { text: 'CARBS', top: '43%', right: '105%' },
-                  { text: 'FIBER', top: '63%', left: '105%' },
-                  { text: 'MOISTURE', top: '82%', right: '105%' },
-                ].map((l) => (
-                  <div key={l.text} style={{
-                    position: 'absolute',
-                    top: l.top,
-                    left: l.left || 'auto',
-                    right: l.right || 'auto',
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    letterSpacing: '2.5px',
-                    color: '#1a1612',
-                    whiteSpace: 'nowrap',
-                    display: 'flex', alignItems: 'center', gap: 8,
-                  }}>
-                    {l.right && <>{l.text}<span style={{ display: 'inline-block', width: 40, height: 1, background: '#1a161240' }} /></>}
-                    {l.left && <><span style={{ display: 'inline-block', width: 40, height: 1, background: '#1a161240' }} />{l.text}</>}
-                  </div>
-                ))}
+                {/* PROTEIN - left side, piece 1 top ~8% */}
+                <div style={{
+                  position: 'absolute', top: '6%', right: '100%', marginRight: 2,
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
+                }}>
+                  PROTEIN <DottedLine />
+                </div>
+
+                {/* FAT - right side, piece 2 top ~25% */}
+                <div style={{
+                  position: 'absolute', top: '24%', left: '100%', marginLeft: 2,
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
+                }}>
+                  <DottedLine /> FAT
+                </div>
+
+                {/* CARBS - left side, piece 3 top ~45% */}
+                <div style={{
+                  position: 'absolute', top: '44%', right: '100%', marginRight: 2,
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
+                }}>
+                  CARBS <DottedLine />
+                </div>
+
+                {/* FIBER - right side, piece 4 top ~65% */}
+                <div style={{
+                  position: 'absolute', top: '64%', left: '100%', marginLeft: 2,
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
+                }}>
+                  <DottedLine /> FIBER
+                </div>
+
+                {/* MOISTURE - left side, piece 5 top ~84% */}
+                <div style={{
+                  position: 'absolute', top: '83%', right: '100%', marginRight: 2,
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
+                }}>
+                  MOISTURE <DottedLine />
+                </div>
               </div>
             </div>
           </div>
