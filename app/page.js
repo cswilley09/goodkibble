@@ -72,46 +72,46 @@ export default function Home() {
                 width: '100%',
                 height: 'auto',
                 objectFit: 'contain',
-                mixBlendMode: 'darken',
               }}
             />
-            {/* SVG overlay for lines + labels */}
+            {/* SVG overlay for lines + labels - extends beyond image bounds */}
             <svg
-              viewBox="0 0 400 720"
+              viewBox="0 0 263 1046"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               style={{
                 position: 'absolute',
-                top: 0, left: 0,
-                width: '100%',
+                top: 0, left: '-60%',
+                width: '220%',
                 height: '100%',
                 pointerEvents: 'none',
+                overflow: 'visible',
               }}
             >
-              {/* PROTEIN - left side, connects to top kibble */}
-              <circle cx="185" cy="95" r="3" fill="#1a1612" opacity="0.5" />
-              <path d="M185 95 L100 75 L15 75" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="5 3" opacity="0.4" />
-              <text x="15" y="65" fontFamily="DM Sans, sans-serif" fontWeight="800" fontSize="19" letterSpacing="3" fill="#1a1612">PROTEIN</text>
+              {/* PROTEIN - left side, top kibble */}
+              <circle cx="100" cy="60" r="4" fill="#1a1612" opacity="0.5" />
+              <path d="M100 60 L40 30 L-60 30" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.35" />
+              <text x="-60" y="22" fontFamily="DM Sans, sans-serif" fontWeight="800" fontSize="24" letterSpacing="4" fill="#1a1612">PROTEIN</text>
 
-              {/* FAT - right side, connects to second kibble */}
-              <circle cx="270" cy="215" r="3" fill="#1a1612" opacity="0.5" />
-              <path d="M270 215 L340 200 L385 200" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="5 3" opacity="0.4" />
-              <text x="385" y="190" fontFamily="DM Sans, sans-serif" fontWeight="800" fontSize="19" letterSpacing="3" fill="#1a1612" textAnchor="end">FAT</text>
+              {/* FAT - right side, second kibble */}
+              <circle cx="200" cy="260" r="4" fill="#1a1612" opacity="0.5" />
+              <path d="M200 260 L280 240 L360 240" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.35" />
+              <text x="360" y="232" fontFamily="DM Sans, sans-serif" fontWeight="800" fontSize="24" letterSpacing="4" fill="#1a1612" textAnchor="end">FAT</text>
 
-              {/* CARBS - left side, connects to big center kibble */}
-              <circle cx="155" cy="365" r="3" fill="#1a1612" opacity="0.5" />
-              <path d="M155 365 L80 345 L15 345" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="5 3" opacity="0.4" />
-              <text x="15" y="335" fontFamily="DM Sans, sans-serif" fontWeight="800" fontSize="19" letterSpacing="3" fill="#1a1612">CARBS</text>
+              {/* CARBS - left side, big center kibble */}
+              <circle cx="80" cy="480" r="4" fill="#1a1612" opacity="0.5" />
+              <path d="M80 480 L20 460 L-60 460" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.35" />
+              <text x="-60" y="452" fontFamily="DM Sans, sans-serif" fontWeight="800" fontSize="24" letterSpacing="4" fill="#1a1612">CARBS</text>
 
-              {/* FIBER - right side, connects to fourth kibble */}
-              <circle cx="275" cy="490" r="3" fill="#1a1612" opacity="0.5" />
-              <path d="M275 490 L340 470 L385 470" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="5 3" opacity="0.4" />
-              <text x="385" y="460" fontFamily="DM Sans, sans-serif" fontWeight="800" fontSize="19" letterSpacing="3" fill="#1a1612" textAnchor="end">FIBER</text>
+              {/* FIBER - right side, fourth kibble */}
+              <circle cx="210" cy="690" r="4" fill="#1a1612" opacity="0.5" />
+              <path d="M210 690 L280 670 L360 670" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.35" />
+              <text x="360" y="662" fontFamily="DM Sans, sans-serif" fontWeight="800" fontSize="24" letterSpacing="4" fill="#1a1612" textAnchor="end">FIBER</text>
 
-              {/* MOISTURE - left side, connects to bottom kibble */}
-              <circle cx="170" cy="615" r="3" fill="#1a1612" opacity="0.5" />
-              <path d="M170 615 L90 635 L15 635" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="5 3" opacity="0.4" />
-              <text x="15" y="625" fontFamily="DM Sans, sans-serif" fontWeight="800" fontSize="19" letterSpacing="3" fill="#1a1612">MOISTURE</text>
+              {/* MOISTURE - left side, bottom kibble */}
+              <circle cx="100" cy="900" r="4" fill="#1a1612" opacity="0.5" />
+              <path d="M100 900 L40 920 L-60 920" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.35" />
+              <text x="-60" y="912" fontFamily="DM Sans, sans-serif" fontWeight="800" fontSize="24" letterSpacing="4" fill="#1a1612">MOISTURE</text>
             </svg>
           </div>
 
