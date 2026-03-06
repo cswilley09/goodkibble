@@ -1,4 +1,4 @@
-'use client';
+}'use client';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import SearchBox from './components/SearchBox';
@@ -52,28 +52,33 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* Hero - Centered layout with kibble on left */}
+        {/* Hero */}
         <div style={{
-          flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '0 60px 40px',
+          flex: 1, display: 'flex', alignItems: 'center',
+          padding: '0 0 40px 0',
           animation: 'fadeUp 0.8s ease',
+          overflow: 'hidden',
         }}>
+          {/* Left - Kibble graphic, takes up ~40% */}
           <div style={{
-            display: 'flex', alignItems: 'center', gap: 60,
-            maxWidth: 1000, width: '100%',
+            width: '42%',
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexShrink: 0,
           }}>
-            {/* Left - Kibble with labels */}
             <div style={{
+              width: 200,
+              transform: 'rotate(-5deg)',
               position: 'relative',
-              width: 180,
-              flexShrink: 0,
             }}>
               <img
                 src="/hero-kibble.png"
                 alt="Kibble nutritional breakdown"
                 style={{ width: '100%', height: 'auto' }}
               />
-              {/* SVG overlay - viewBox matches image: 263x1046 */}
+              {/* SVG overlay - viewBox matches image 263x1046 */}
               <svg
                 viewBox="-120 0 500 1046"
                 fill="none"
@@ -87,60 +92,62 @@ export default function Home() {
                   overflow: 'visible',
                 }}
               >
-                {/* PROTEIN - left, piece 1 center ~(127,87) */}
-                <circle cx="127" cy="87" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M127 87 L50 50 L-80 50" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="-80" y="43" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612">PROTEIN</text>
+                {/* PROTEIN - left, piece 1 */}
+                <circle cx="80" cy="87" r="4" fill="#1a1612" opacity="0.4" />
+                <path d="M80 87 L20 55 L-90 55" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="-90" y="48" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612">PROTEIN</text>
 
-                {/* FAT - right, piece 2 center ~(131,283) */}
-                <circle cx="200" cy="283" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M200 283 L290 260 L380 260" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                {/* FAT - right, piece 2 */}
+                <circle cx="210" cy="283" r="4" fill="#1a1612" opacity="0.4" />
+                <path d="M210 283 L290 260 L380 260" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
                 <text x="380" y="253" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612" textAnchor="end">FAT</text>
 
-                {/* CARBS - left, piece 3 center ~(129,503) */}
-                <circle cx="60" cy="503" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M60 503 L0 475 L-80 475" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="-80" y="468" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612">CARBS</text>
+                {/* CARBS - left, piece 3 */}
+                <circle cx="50" cy="503" r="4" fill="#1a1612" opacity="0.4" />
+                <path d="M50 503 L-10 478 L-90 478" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="-90" y="471" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612">CARBS</text>
 
-                {/* FIBER - right, piece 4 center ~(134,753) */}
-                <circle cx="210" cy="753" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M210 753 L290 730 L380 730" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                {/* FIBER - right, piece 4 */}
+                <circle cx="220" cy="753" r="4" fill="#1a1612" opacity="0.4" />
+                <path d="M220 753 L290 730 L380 730" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
                 <text x="380" y="723" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612" textAnchor="end">FIBER</text>
 
-                {/* MOISTURE - left, piece 5 center ~(134,957) */}
+                {/* MOISTURE - left, piece 5 */}
                 <circle cx="70" cy="957" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M70 957 L0 935 L-80 935" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="-80" y="928" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612">MOISTURE</text>
+                <path d="M70 957 L0 935 L-90 935" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="-90" y="928" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="22" letterSpacing="3" fill="#1a1612">MOISTURE</text>
               </svg>
             </div>
+          </div>
 
-            {/* Right - Text + Search */}
+          {/* Right - Text + Search, pushed to the right */}
+          <div style={{
+            flex: 1, display: 'flex', flexDirection: 'column',
+            alignItems: 'flex-start',
+            paddingRight: 60,
+            maxWidth: 560,
+          }}>
             <div style={{
-              flex: 1, display: 'flex', flexDirection: 'column',
-              alignItems: 'flex-start', minWidth: 0,
+              fontSize: 13, fontWeight: 600, letterSpacing: 3,
+              textTransform: 'uppercase', color: '#1a161260', marginBottom: 12,
+            }}>Know what&apos;s in the bowl</div>
+
+            <h1 style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: 'clamp(32px, 4.5vw, 60px)', fontWeight: 800, color: '#1a1612',
+              lineHeight: 1.05, marginBottom: 16, letterSpacing: -1.5,
             }}>
-              <div style={{
-                fontSize: 13, fontWeight: 600, letterSpacing: 3,
-                textTransform: 'uppercase', color: '#1a161260', marginBottom: 12,
-              }}>Know what&apos;s in the bowl</div>
+              What&apos;s really in<br />your dog&apos;s food?
+            </h1>
 
-              <h1 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: 'clamp(32px, 4.5vw, 60px)', fontWeight: 800, color: '#1a1612',
-                lineHeight: 1.05, marginBottom: 12, letterSpacing: -1.5,
-              }}>
-                What&apos;s really in<br />your dog&apos;s food?
-              </h1>
+            <p style={{
+              fontSize: 16, color: '#1a161290', maxWidth: 420,
+              lineHeight: 1.6, marginBottom: 32, fontWeight: 400,
+            }}>
+              Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
+            </p>
 
-              <p style={{
-                fontSize: 16, color: '#1a161290', maxWidth: 420,
-                lineHeight: 1.6, marginBottom: 32, fontWeight: 400,
-              }}>
-                Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
-              </p>
-
-              <SearchBox onSelect={handleSelect} variant="hero" />
-            </div>
+            <SearchBox onSelect={handleSelect} variant="hero" />
           </div>
         </div>
 
