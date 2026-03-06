@@ -70,64 +70,64 @@ export default function Home() {
                 alt="Kibble nutritional breakdown"
                 style={{ width: 130, height: 'auto', display: 'block' }}
               />
-              {/* Labels overlaid - counter-rotate so text is straight */}
+              {/* Labels - counter-rotate so text reads straight */}
               <div style={{
                 position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
                 transform: 'rotate(8deg)',
               }}>
-                {/* PROTEIN - left side, piece 1 at ~6% from top */}
+                {/* PROTEIN - left, piece 1 mid=8.3%, left edge=9.1% → needs short line */}
                 <div style={{
-                  position: 'absolute', top: '6%', right: '100%', marginRight: 2,
-                  display: 'flex', alignItems: 'center', gap: 6,
+                  position: 'absolute', top: '6%', right: '91%',
+                  display: 'flex', alignItems: 'center', gap: 0,
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                   fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
                 }}>
                   PROTEIN
-                  <span style={{ display: 'inline-block', width: 30, height: 0, borderTop: '1.5px dashed #1a161250' }} />
+                  <span style={{ display: 'inline-block', width: 12, height: 0, borderTop: '1.5px dashed #1a161250', marginLeft: 6 }} />
                 </div>
 
-                {/* FAT - right side, piece 2 at ~24% */}
+                {/* FAT - right, piece 2 mid=27.1%, right edge=92.4% → needs short line */}
                 <div style={{
-                  position: 'absolute', top: '24%', left: '100%', marginLeft: 2,
-                  display: 'flex', alignItems: 'center', gap: 6,
+                  position: 'absolute', top: '25%', left: '92%',
+                  display: 'flex', alignItems: 'center', gap: 0,
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                   fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
                 }}>
-                  <span style={{ display: 'inline-block', width: 50, height: 0, borderTop: '1.5px dashed #1a161250' }} />
+                  <span style={{ display: 'inline-block', width: 12, height: 0, borderTop: '1.5px dashed #1a161250', marginRight: 6 }} />
                   FAT
                 </div>
 
-                {/* CARBS - left side, piece 3 at ~44% */}
+                {/* CARBS - left, piece 3 mid=48.1%, left edge=3.8% → kibble almost touches edge, very short line */}
                 <div style={{
-                  position: 'absolute', top: '44%', right: '100%', marginRight: 2,
-                  display: 'flex', alignItems: 'center', gap: 6,
+                  position: 'absolute', top: '46%', right: '96%',
+                  display: 'flex', alignItems: 'center', gap: 0,
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                   fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
                 }}>
                   CARBS
-                  <span style={{ display: 'inline-block', width: 20, height: 0, borderTop: '1.5px dashed #1a161250' }} />
+                  <span style={{ display: 'inline-block', width: 6, height: 0, borderTop: '1.5px dashed #1a161250', marginLeft: 6 }} />
                 </div>
 
-                {/* FIBER - right side, piece 4 at ~65% */}
+                {/* FIBER - right, piece 4 mid=72%, right edge=94.3% → short line */}
                 <div style={{
-                  position: 'absolute', top: '65%', left: '100%', marginLeft: 2,
-                  display: 'flex', alignItems: 'center', gap: 6,
+                  position: 'absolute', top: '70%', left: '94%',
+                  display: 'flex', alignItems: 'center', gap: 0,
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                   fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
                 }}>
-                  <span style={{ display: 'inline-block', width: 40, height: 0, borderTop: '1.5px dashed #1a161250' }} />
+                  <span style={{ display: 'inline-block', width: 8, height: 0, borderTop: '1.5px dashed #1a161250', marginRight: 6 }} />
                   FIBER
                 </div>
 
-                {/* MOISTURE - left side, piece 5 at ~86% */}
+                {/* MOISTURE - left, piece 5 mid=91.5%, left edge=10.3% → needs short line */}
                 <div style={{
-                  position: 'absolute', top: '86%', right: '100%', marginRight: 2,
-                  display: 'flex', alignItems: 'center', gap: 6,
+                  position: 'absolute', top: '90%', right: '90%',
+                  display: 'flex', alignItems: 'center', gap: 0,
                   fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
                   fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
                 }}>
                   MOISTURE
-                  <span style={{ display: 'inline-block', width: 15, height: 0, borderTop: '1.5px dashed #1a161250' }} />
+                  <span style={{ display: 'inline-block', width: 12, height: 0, borderTop: '1.5px dashed #1a161250', marginLeft: 6 }} />
                 </div>
               </div>
             </div>
