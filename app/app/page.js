@@ -1,150 +1,63 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
-import SearchBox from './components/SearchBox';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { supabase } from '../../../lib/supabase';
+import SearchBox from '../../components/SearchBox';
+import NutrientRing from '../../components/NutrientRing';
 
-export default function Home() {
-  const [brands, setBrands] = useState([]);
-  const router = useRouter();
+const SALT_KEYWORDS = ['salt', 'sodium chloride', 'iodized salt', 'sodium', 'sea salt'];
 
-  useEffect(() => {
-    supabase
-      .from('dog_foods')
-      .select('brand')
-      .then(({ data }) => {
-        if (!data) return;
-        const counts = {};
-        data.forEach(r => { counts[r.brand] = (counts[r.brand] || 0) + 1; });
-        const sorted = Object.entries(counts)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 8)
-          .map(([name, count]) => ({ name, count }));
-        setBrands(sorted);
-      });
-  }, []);
+function isSaltIngredient(ing) {
+  const lower = ing.toLowerCase().trim();
+  return SALT_KEYWORDS.some(kw => {
+    if (kw === 'sodium') {
+      return lower === 'sodium' || lower === 'sodium chloride';
+    }
+    return lower === kw || lower.startsWith(kw + ' ') || lower.endsWith(' ' + kw);
+  });
+}
 
-  function handleSelect(id) {
-    router.push(`/food/${id}`);
-  }
-
-  function handleBrand(brandName) {
-    router.push(`/brand/${encodeURIComponent(brandName)}`);
-  }
-
+function QualityBadge({ protein, carbs }) {
+  const pS = protein >= 30 ? 3 : protein >= 25 ? 2 : 1;
+  const cS = carbs <= 45 ? 3 : carbs <= 55 ? 2 : 1;
+  const t = pS + cS;
+  const [score, lbl, color, bg] =
+    t >= 5 ? ['A', 'Excellent', '#2d7a4f', '#e8f5ee'] :
+    t >= 4 ? ['B', 'Good', '#5a7a2d', '#f0f5e8'] :
+    t >= 3 ? ['C', 'Average', '#7a6b2d', '#f5f0e8'] :
+             ['D', 'Below Avg', '#7a3d2d', '#f5ebe8'];
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{
+      display: 'inline-flex', alignItems: 'center', gap: 10,
+      padding: '8px 16px 8px 10px', borderRadius: 100, background: bg, border: `1.5px solid ${color}20`,
+    }}>
       <div style={{
-        flex: 1,
-        background: 'linear-gradient(170deg, #f5d442 0%, #f0c930 45%, #e8c020 100%)',
-        display: 'flex', flexDirection: 'column',
-      }}>
-        {/* Nav */}
-        <nav style={{
-          padding: '24px 40px', display: 'flex', justifyContent: 'space-between',
-          alignItems: 'center', animation: 'fadeIn 0.6s ease',
-        }}>
-          <div style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 800,
-            color: '#1a1612', letterSpacing: -0.5, cursor: 'pointer',
-          }}>
-            Good<span style={{ opacity: 0.4 }}>Kibble</span>
-          </div>
-        </nav>
-
-        {/* Hero - Split layout */}
-        <div style={{
-          flex: 1, display: 'flex', alignItems: 'center',
-          padding: '0 40px 60px', gap: 40,
-          animation: 'fadeUp 0.8s ease',
-          maxWidth: 1200, margin: '0 auto', width: '100%',
-        }}>
-          {/* Left - Hero Image */}
-          <div style={{
-            flex: '0 0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <img
-              src="/hero-kibble.png"
-              alt="Kibble nutritional breakdown"
-              style={{
-                width: 'clamp(200px, 25vw, 360px)',
-                height: 'auto',
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 20px 40px rgba(26,22,18,0.15))',
-              }}
-            />
-          </div>
-
-          {/* Right - Text + Search */}
-          <div style={{
-            flex: 1, display: 'flex', flexDirection: 'column',
-            alignItems: 'flex-start',
-          }}>
-            <div style={{
-              fontSize: 13, fontWeight: 600, letterSpacing: 3,
-              textTransform: 'uppercase', color: '#1a161260', marginBottom: 16,
-            }}>Know what&apos;s in the bowl</div>
-
-            <h1 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 800, color: '#1a1612',
-              lineHeight: 1.05, marginBottom: 12, letterSpacing: -1.5,
-            }}>
-              What&apos;s really in<br />your dog&apos;s food?
-            </h1>
-
-            <p style={{
-              fontSize: 17, color: '#1a161290', maxWidth: 440,
-              lineHeight: 1.6, marginBottom: 36, fontWeight: 400,
-            }}>
-              Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
-            </p>
-
-            <SearchBox onSelect={handleSelect} variant="hero" />
-          </div>
-        </div>
-
-        {/* Popular Brands */}
-        <div style={{
-          background: '#1a1612', borderRadius: '32px 32px 0 0',
-          padding: '48px 40px 56px', animation: 'fadeUp 1s ease 0.3s both',
-        }}>
-          <div style={{
-            fontSize: 12, fontWeight: 600, letterSpacing: 2.5,
-            textTransform: 'uppercase', color: '#8a7e72', marginBottom: 24, textAlign: 'center',
-          }}>Popular Brands</div>
-          <div style={{
-            display: 'flex', flexWrap: 'wrap', gap: 10,
-            justifyContent: 'center', maxWidth: 700, margin: '0 auto',
-          }}>
-            {brands.map((b, i) => (
-              <button key={b.name} onClick={() => handleBrand(b.name)}
-                style={{
-                  padding: '12px 22px', borderRadius: 100,
-                  border: '1.5px solid #3d352b', background: 'transparent',
-                  color: '#d4c9b8', fontSize: 14, fontWeight: 500, cursor: 'pointer',
-                  fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
-                  animationName: 'fadeUp', animationDuration: '0.5s',
-                  animationFillMode: 'both', animationDelay: `${i * 80}ms`,
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = '#f5d442';
-                  e.target.style.color = '#1a1612';
-                  e.target.style.borderColor = '#f5d442';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = 'transparent';
-                  e.target.style.color = '#d4c9b8';
-                  e.target.style.borderColor = '#3d352b';
-                }}
-              >
-                {b.name}
-                <span style={{ marginLeft: 8, opacity: 0.5, fontSize: 12 }}>({b.count})</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+        width: 32, height: 32, borderRadius: '50%', background: color,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: "'DM Mono', monospace", fontSize: 16, fontWeight: 700, color: '#fff',
+      }}>{score}</div>
+      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color }}>
+        {lbl} Nutrition
+      </span>
     </div>
   );
 }
+
+function ProductImage({ src, alt }) {
+  const [err, setErr] = useState(false);
+  if (!src || err) {
+    return (
+      <div style={{
+        width: 240, height: 240, borderRadius: 20,
+        background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: '#c4b9a8', fontSize: 56, flexShrink: 0,
+      }}>🐕</div>
+    );
+  }
+  return (
+    <div style={{
+      width: 240, height: 240, borderRadius: 20, overflow: 'hidden',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: '#fff', flexShrink: 0,
+    }}>
+      <img src={src} alt={alt}
