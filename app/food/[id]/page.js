@@ -48,14 +48,54 @@ function ProductImage({ src, alt }) {
   if (!src || err) {
     return (
       <div style={{
-        width: '100%', maxWidth: 280, aspectRatio: '1', borderRadius: 20,
+        width: 240, height: 240, borderRadius: 20,
         background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: '#c4b9a8', fontSize: 56,
+        color: '#c4b9a8', fontSize: 56, flexShrink: 0,
       }}>🐕</div>
     );
   }
-  return <img src={src} alt={alt} onError={() => setErr(true)}
-    style={{ width: '100%', maxWidth: 280, aspectRatio: '1', objectFit: 'contain', borderRadius: 20 }} />;
+  return (
+    <div style={{
+      width: 240, height: 240, borderRadius: 20, overflow: 'hidden',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: '#fff', flexShrink: 0,
+    }}>
+      <img src={src} alt={alt} onError={() => setErr(true)}
+        style={{ width: '85%', height: '85%', objectFit: 'contain' }} />
+    </div>
+  );
+}
+
+function SaltTooltip({ children }) {
+  const [show, setShow] = useState(false);
+  return (
+    <span style={{ position: 'relative', display: 'inline-block' }}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      {children}
+      {show && (
+        <div style={{
+          position: 'absolute', bottom: 'calc(100% + 8px)', left: '50%',
+          transform: 'translateX(-50%)',
+          width: 280, padding: '14px 16px', borderRadius: 12,
+          background: '#1a1612', color: '#faf8f5',
+          fontSize: 13, lineHeight: 1.5, fontWeight: 400,
+          fontFamily: "'DM Sans', sans-serif",
+          boxShadow: '0 8px 24px rgba(26,22,18,0.25)',
+          zIndex: 50, pointerEvents: 'none',
+          animation: 'fadeIn 0.15s ease',
+        }}>
+          The &ldquo;salt divider&rdquo; rule in dog food indicates that any ingredient listed after salt on the label makes up less than 1% of the total formula, as salt usually represents &lt;1% of the recipe.
+          <div style={{
+            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+            width: 0, height: 0, borderLeft: '6px solid transparent',
+            borderRight: '6px solid transparent', borderTop: '6px solid #1a1612',
+          }} />
+        </div>
+      )}
+    </span>
+  );
 }
 
 export default function FoodPage() {
@@ -99,9 +139,9 @@ export default function FoodPage() {
         position: 'sticky', top: 0, zIndex: 40, gap: 24,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 800,
+          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ opacity: 0.4 }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
         <SearchBox onSelect={goFood} variant="nav" />
       </nav>
 
@@ -178,23 +218,17 @@ export default function FoodPage() {
             <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 36 }}>
               Guaranteed Analysis
             </div>
-
-            {/* Row 1: Protein, Fat, Carbs */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(24px, 5vw, 56px)', flexWrap: 'wrap', marginBottom: 32 }}>
               <NutrientRing label="Protein" value={food.protein || 0} color="#2d7a4f" delay={100} />
               <NutrientRing label="Fat" value={food.fat || 0} color="#c47a20" delay={250} />
               <NutrientRing label="Carbs" value={food.carbohydrates || 0} color="#5a7a9e" delay={400} />
             </div>
-
-            {/* Row 2: Fiber, Moisture */}
             {(food.fiber > 0 || food.moisture > 0) && (
               <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(24px, 5vw, 56px)', flexWrap: 'wrap' }}>
                 {food.fiber > 0 && <NutrientRing label="Fiber" value={food.fiber} color="#8a6aaf" delay={550} />}
                 {food.moisture > 0 && <NutrientRing label="Moisture" value={food.moisture} color="#5a9e9e" delay={700} />}
               </div>
             )}
-
-            {/* Bar */}
             <div style={{ marginTop: 40, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
               <div style={{ display: 'flex', height: 14, borderRadius: 100, overflow: 'hidden' }}>
                 <div style={{ width: `${food.protein}%`, background: '#2d7a4f', transition: 'width 1s ease' }} />
@@ -225,17 +259,23 @@ export default function FoodPage() {
               {ingredients.map((ing, i) => {
                 const isSalt = isSaltIngredient(ing);
                 const isFirst = i === 0;
-                return (
-                  <span key={i} style={{
+                const pill = (
+                  <span style={{
                     display: 'inline-block', padding: '8px 16px', borderRadius: 100,
                     fontSize: 14, fontFamily: "'DM Sans', sans-serif",
                     fontWeight: isFirst || isSalt ? 600 : 400,
-                    background: isSalt ? '#c0392b' : isFirst ? '#1a1612' : i < 5 ? '#f5f0e8' : '#fff',
-                    color: isSalt ? '#fff' : isFirst ? '#faf8f5' : '#3d352b',
+                    background: isSalt ? '#f0c930' : isFirst ? '#1a1612' : i < 5 ? '#f5f0e8' : '#fff',
+                    color: isSalt ? '#1a1612' : isFirst ? '#faf8f5' : '#3d352b',
                     border: isSalt || isFirst ? 'none' : '1px solid #e8e0d4',
+                    cursor: isSalt ? 'pointer' : 'default',
                     animationName: 'fadeUp', animationDuration: '0.4s',
                     animationFillMode: 'both', animationDelay: `${i * 20}ms`,
                   }}>{ing}</span>
+                );
+                return isSalt ? (
+                  <SaltTooltip key={i}>{pill}</SaltTooltip>
+                ) : (
+                  <span key={i}>{pill}</span>
                 );
               })}
             </div>
@@ -264,8 +304,8 @@ export default function FoodPage() {
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ opacity: 0.3 }}>Kibble</span>
+        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#f0c930' }}>Kibble</span>
         </div>
         <div style={{ fontSize: 13, color: '#b5aa99' }}>© 2026 GoodKibble. Not affiliated with any dog food brand.</div>
       </div>
