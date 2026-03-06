@@ -61,7 +61,7 @@ export default function Home() {
         }}>
           {/* Left - Kibble graphic */}
           <div style={{
-            width: '38%',
+            width: '35%',
             position: 'relative',
             display: 'flex',
             justifyContent: 'center',
@@ -69,8 +69,8 @@ export default function Home() {
             flexShrink: 0,
           }}>
             <div style={{
-              width: 160,
-              transform: 'rotate(-5deg)',
+              width: 115,
+              transform: 'rotate(-15deg)',
               position: 'relative',
             }}>
               <img
@@ -78,54 +78,54 @@ export default function Home() {
                 alt="Kibble nutritional breakdown"
                 style={{ width: '100%', height: 'auto' }}
               />
-              {/* SVG overlay - viewBox matches image 263x1046 */}
+              {/* SVG overlay - image is 263x1046, labels extend outward */}
               <svg
-                viewBox="-140 0 540 1046"
+                viewBox="-180 -20 620 1086"
                 fill="none"
                 style={{
                   position: 'absolute',
                   top: 0, left: 0,
-                  width: '310%',
+                  width: '100%',
                   height: '100%',
-                  marginLeft: '-100%',
                   pointerEvents: 'none',
                   overflow: 'visible',
+                  transform: 'rotate(15deg)',
                 }}
               >
-                {/* PROTEIN - left, piece 1 center y=87 */}
-                <circle cx="80" cy="87" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M80 87 L10 55 L-110 55" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="-110" y="48" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3" fill="#1a1612">PROTEIN</text>
+                {/* PROTEIN - left, piece 1 y=87 left edge x=24 */}
+                <circle cx="24" cy="87" r="5" fill="#1a1612" opacity="0.4" />
+                <path d="M24 87 L-40 60 L-150 60" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="-155" y="53" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="26" letterSpacing="3" fill="#1a1612">PROTEIN</text>
 
-                {/* FAT - right, piece 2 center y=283 */}
-                <circle cx="215" cy="283" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M215 283 L300 258 L400 258" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="400" y="251" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3" fill="#1a1612" textAnchor="end">FAT</text>
+                {/* FAT - right, piece 2 y=283 right edge x=243 */}
+                <circle cx="243" cy="283" r="5" fill="#1a1612" opacity="0.4" />
+                <path d="M243 283 L310 260 L420 260" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="425" y="253" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="26" letterSpacing="3" fill="#1a1612">FAT</text>
 
-                {/* CARBS - left, piece 3 center y=503 */}
-                <circle cx="45" cy="503" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M45 503 L-20 478 L-110 478" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="-110" y="471" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3" fill="#1a1612">CARBS</text>
+                {/* CARBS - left, piece 3 y=503 left edge x=10 */}
+                <circle cx="10" cy="503" r="5" fill="#1a1612" opacity="0.4" />
+                <path d="M10 503 L-50 480 L-150 480" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="-155" y="473" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="26" letterSpacing="3" fill="#1a1612">CARBS</text>
 
-                {/* FIBER - right, piece 4 center y=753 */}
-                <circle cx="225" cy="753" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M225 753 L300 728 L400 728" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="400" y="721" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3" fill="#1a1612" textAnchor="end">FIBER</text>
+                {/* FIBER - right, piece 4 y=753 right edge x=248 */}
+                <circle cx="248" cy="753" r="5" fill="#1a1612" opacity="0.4" />
+                <path d="M248 753 L310 730 L420 730" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="425" y="723" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="26" letterSpacing="3" fill="#1a1612">FIBER</text>
 
-                {/* MOISTURE - left, piece 5 center y=957 */}
-                <circle cx="65" cy="957" r="4" fill="#1a1612" opacity="0.4" />
-                <path d="M65 957 L-10 935 L-110 935" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
-                <text x="-110" y="928" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="24" letterSpacing="3" fill="#1a1612">MOISTURE</text>
+                {/* MOISTURE - left, piece 5 y=957 left edge x=27 */}
+                <circle cx="27" cy="957" r="5" fill="#1a1612" opacity="0.4" />
+                <path d="M27 957 L-40 935 L-150 935" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.3" />
+                <text x="-155" y="928" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="26" letterSpacing="3" fill="#1a1612">MOISTURE</text>
               </svg>
             </div>
           </div>
 
-          {/* Right - Text + Search, pushed further right */}
+          {/* Right - Text + Search */}
           <div style={{
             flex: 1, display: 'flex', flexDirection: 'column',
             alignItems: 'flex-start',
             paddingRight: 80,
-            paddingLeft: 40,
+            paddingLeft: 20,
           }}>
             <div style={{
               fontSize: 13, fontWeight: 600, letterSpacing: 3,
