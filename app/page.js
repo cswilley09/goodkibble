@@ -56,7 +56,7 @@ export default function Home() {
           gap: 60,
           animation: 'fadeUp 0.8s ease',
         }}>
-          {/* Left column - kibble with SVG labels */}
+          {/* Left column - kibble with labels */}
           <div style={{
             width: 320, flexShrink: 0,
             display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -70,54 +70,66 @@ export default function Home() {
                 alt="Kibble nutritional breakdown"
                 style={{ width: 130, height: 'auto', display: 'block' }}
               />
-              {/*
-                SVG overlay for diagonal lines + labels.
-                Image is 263x1046. Kibble piece centers:
-                  1: y=87,  left edge x=24
-                  2: y=283, right edge x=243
-                  3: y=503, left edge x=10
-                  4: y=753, right edge x=248
-                  5: y=957, left edge x=27
-                Labels extend outward with diagonal lines.
-                Counter-rotate 8deg so text reads horizontal.
-              */}
-              <svg
-                viewBox="-200 -30 660 1106"
-                fill="none"
-                style={{
-                  position: 'absolute',
-                  top: 0, left: 0,
-                  width: '100%', height: '100%',
-                  overflow: 'visible',
-                  pointerEvents: 'none',
-                  transform: 'rotate(8deg)',
-                }}
-              >
-                {/* PROTEIN: left edge of piece 1 (x=24, y=87) → label top-left */}
-                <circle cx="24" cy="87" r="4" fill="#1a1612" opacity="0.35" />
-                <path d="M24 87 L-30 55 L-100 55" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="5 4" opacity="0.3" />
-                <text x="-108" y="60" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="20" letterSpacing="3" fill="#1a1612" textAnchor="end">PROTEIN</text>
+              {/* Labels overlaid - counter-rotate so text is straight */}
+              <div style={{
+                position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                transform: 'rotate(8deg)',
+              }}>
+                {/* PROTEIN - left side, piece 1 at ~6% from top */}
+                <div style={{
+                  position: 'absolute', top: '6%', right: '100%', marginRight: 2,
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
+                }}>
+                  PROTEIN
+                  <span style={{ display: 'inline-block', width: 30, height: 0, borderTop: '1.5px dashed #1a161250' }} />
+                </div>
 
-                {/* FAT: right edge of piece 2 (x=243, y=283) → label right */}
-                <circle cx="243" cy="283" r="4" fill="#1a1612" opacity="0.35" />
-                <path d="M243 283 L310 255 L380 255" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="5 4" opacity="0.3" />
-                <text x="388" y="260" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="20" letterSpacing="3" fill="#1a1612">FAT</text>
+                {/* FAT - right side, piece 2 at ~24% */}
+                <div style={{
+                  position: 'absolute', top: '24%', left: '100%', marginLeft: 2,
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
+                }}>
+                  <span style={{ display: 'inline-block', width: 50, height: 0, borderTop: '1.5px dashed #1a161250' }} />
+                  FAT
+                </div>
 
-                {/* CARBS: left edge of piece 3 (x=10, y=503) → label left */}
-                <circle cx="10" cy="503" r="4" fill="#1a1612" opacity="0.35" />
-                <path d="M10 503 L-50 475 L-100 475" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="5 4" opacity="0.3" />
-                <text x="-108" y="480" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="20" letterSpacing="3" fill="#1a1612" textAnchor="end">CARBS</text>
+                {/* CARBS - left side, piece 3 at ~44% */}
+                <div style={{
+                  position: 'absolute', top: '44%', right: '100%', marginRight: 2,
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
+                }}>
+                  CARBS
+                  <span style={{ display: 'inline-block', width: 20, height: 0, borderTop: '1.5px dashed #1a161250' }} />
+                </div>
 
-                {/* FIBER: right edge of piece 4 (x=248, y=753) → label right */}
-                <circle cx="248" cy="753" r="4" fill="#1a1612" opacity="0.35" />
-                <path d="M248 753 L310 725 L380 725" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="5 4" opacity="0.3" />
-                <text x="388" y="730" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="20" letterSpacing="3" fill="#1a1612">FIBER</text>
+                {/* FIBER - right side, piece 4 at ~65% */}
+                <div style={{
+                  position: 'absolute', top: '65%', left: '100%', marginLeft: 2,
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
+                }}>
+                  <span style={{ display: 'inline-block', width: 40, height: 0, borderTop: '1.5px dashed #1a161250' }} />
+                  FIBER
+                </div>
 
-                {/* MOISTURE: left edge of piece 5 (x=27, y=957) → label bottom-left */}
-                <circle cx="27" cy="957" r="4" fill="#1a1612" opacity="0.35" />
-                <path d="M27 957 L-40 930 L-100 930" stroke="#1a1612" strokeWidth="1.5" strokeDasharray="5 4" opacity="0.3" />
-                <text x="-108" y="935" fontFamily="DM Sans, sans-serif" fontWeight="700" fontSize="20" letterSpacing="3" fill="#1a1612" textAnchor="end">MOISTURE</text>
-              </svg>
+                {/* MOISTURE - left side, piece 5 at ~86% */}
+                <div style={{
+                  position: 'absolute', top: '86%', right: '100%', marginRight: 2,
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 700,
+                  fontSize: 13, letterSpacing: '2.5px', color: '#1a1612', whiteSpace: 'nowrap',
+                }}>
+                  MOISTURE
+                  <span style={{ display: 'inline-block', width: 15, height: 0, borderTop: '1.5px dashed #1a161250' }} />
+                </div>
+              </div>
             </div>
           </div>
 
