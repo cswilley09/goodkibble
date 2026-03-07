@@ -14,12 +14,82 @@ const NC = {
   fiber: '#8a6aaf',
 };
 
+const SHARED_MAX = 50; /* shared scale: all bars use 0–50% */
+
 const NUTRIENTS = [
-  { label: 'Protein', key: 'protein', max: 50 },
-  { label: 'Fat', key: 'fat', max: 30 },
-  { label: 'Carbs', key: 'carbohydrates', max: 70 },
-  { label: 'Fiber', key: 'fiber', max: 10 },
+  { label: 'Protein', key: 'protein' },
+  { label: 'Fat', key: 'fat' },
+  { label: 'Carbs', key: 'carbohydrates' },
+  { label: 'Fiber', key: 'fiber' },
 ];
+
+/* ── nutrient explainer (same content as product page) ── */
+function NutrientExplainer() {
+  const [open, setOpen] = useState(false);
+  const nutrients = [
+    { name: 'Protein', color: '#2d7a4f', desc: 'Essential for muscle development, immune function, and tissue repair. AAFCO recommends a minimum of 18% for adult dogs and 22.5% for puppies. Higher-protein foods (28%+) can benefit active dogs, but excessively high protein may stress the kidneys in dogs with renal issues.' },
+    { name: 'Fat', color: '#c47a20', desc: 'The most concentrated energy source in dog food. Supports healthy skin, coat, brain function, and vitamin absorption. AAFCO minimum is 5.5% for adults and 8.5% for puppies. Most quality foods range between 12-20%. Dogs with pancreatitis may need lower-fat diets.' },
+    { name: 'Carbohydrates', color: '#5a7a9e', desc: 'Provide energy and fiber for digestive health. Dogs have no minimum carbohydrate requirement, but carbs from whole grains, vegetables, and legumes provide beneficial fiber and nutrients. Very high carb content (50%+) may indicate filler ingredients.' },
+    { name: 'Fiber', color: '#8a6aaf', desc: 'Promotes healthy digestion and regular bowel movements. Most dog foods contain 2-5% fiber. Higher fiber (5-10%) can help with weight management and blood sugar regulation. Sources like beet pulp and pumpkin are considered high quality.' },
+    { name: 'Moisture', color: '#5a9e9e', desc: 'The water content in the food. Dry kibble typically contains 6-12% moisture. Higher moisture means less caloric density per cup. When comparing foods, dry matter basis removes moisture from the equation for a fairer comparison.' },
+  ];
+  return (
+    <div style={{
+      marginTop: 20, borderRadius: 20, border: '1px solid #ede8df',
+      background: '#faf8f5', overflow: 'hidden',
+    }}>
+      <button onClick={() => setOpen(!open)} style={{
+        width: '100%', padding: '18px 28px', display: 'flex', justifyContent: 'space-between',
+        alignItems: 'center', border: 'none', background: 'transparent', cursor: 'pointer',
+        fontFamily: "'DM Sans', sans-serif",
+      }}>
+        <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', letterSpacing: 1 }}>
+          📖 What do these numbers mean?
+        </span>
+        <span style={{ fontSize: 18, color: '#8a7e72', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+      </button>
+      {open && (
+        <div style={{ padding: '0 28px 24px' }}>
+          {nutrients.map((n) => (
+            <div key={n.name} style={{ marginBottom: 18, paddingBottom: 18, borderBottom: '1px solid #ede8df' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: n.color, display: 'inline-block' }} />
+                <span style={{ fontSize: 15, fontWeight: 700, color: '#1a1612' }}>{n.name}</span>
+              </div>
+              <p style={{ fontSize: 13, color: '#5a5047', lineHeight: 1.6 }}>{n.desc}</p>
+            </div>
+          ))}
+          <p style={{ fontSize: 12, color: '#b5aa99', lineHeight: 1.5, fontStyle: 'italic' }}>
+            Nutrient guidelines based on AAFCO (Association of American Feed Control Officials) standards for dog food. Always consult your veterinarian for dietary advice specific to your dog.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── bar with tick marks ── */
+function TickBar({ value, color }) {
+  const pct = Math.min((value / SHARED_MAX) * 100, 100);
+  /* ticks at 10, 20, 30, 40 on the shared 0–50 scale */
+  const ticks = [10, 20, 30, 40].map(v => (v / SHARED_MAX) * 100);
+  return (
+    <div style={{ flex: 1, position: 'relative', height: 8 }}>
+      <div style={{ position: 'absolute', inset: 0, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
+        <div style={{
+          height: '100%', borderRadius: 100, background: color,
+          width: `${pct}%`, transition: 'width 0.8s ease',
+        }} />
+      </div>
+      {ticks.map((tp) => (
+        <div key={tp} style={{
+          position: 'absolute', left: `${tp}%`, top: -2, bottom: -2,
+          width: 1, background: '#d4cfc6', opacity: 0.5, pointerEvents: 'none',
+        }} />
+      ))}
+    </div>
+  );
+}
 
 /* ── inline search for the add slot ── */
 function AddCardSearch({ onSelect }) {
@@ -35,7 +105,7 @@ function AddCardSearch({ onSelect }) {
     const t = setTimeout(() => {
       supabase
         .from('dog_foods')
-        .select('id, name, brand, protein, fat, carbohydrates, fiber, moisture, image_url')
+        .select('id, name, brand, protein, fat, carbohydrates, fiber, moisture, ingredients, image_url')
         .ilike('name', `%${query}%`)
         .limit(6)
         .then(({ data }) => setResults(data || []));
@@ -107,6 +177,12 @@ function AddCardSearch({ onSelect }) {
   );
 }
 
+/* ── helper: get first 5 ingredients from comma-separated string ── */
+function getFirst5(ingredientsStr) {
+  if (!ingredientsStr) return [];
+  return ingredientsStr.split(',').map(s => s.trim()).filter(Boolean).slice(0, 5);
+}
+
 /* ── main compare page ── */
 export default function ComparePage() {
   const router = useRouter();
@@ -114,17 +190,12 @@ export default function ComparePage() {
   const goHome = () => router.push('/');
   const goFood = (id) => router.push(`/food/${id}`);
 
-  /* grid column definitions:
-     - label column: fixed 80px
-     - product columns: equal flex
-     - add-slot column (if < 3 items): equal flex */
   const hasAddSlot = items.length < 3;
-  const productCols = items.length;
-  const totalDataCols = productCols + (hasAddSlot ? 1 : 0);
+  const totalDataCols = items.length + (hasAddSlot ? 1 : 0);
+  const gridCols = `80px repeat(${totalDataCols}, 1fr)`;
 
-  /* card row uses same total columns but label col is blank */
-  const cardGridCols = `80px repeat(${totalDataCols}, 1fr)`;
-  const dataGridCols = `80px repeat(${totalDataCols}, 1fr)`;
+  /* alternating column backgrounds for cohesion */
+  const colBg = (idx) => idx % 2 === 1 ? '#f7f4ef' : 'transparent';
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
@@ -196,37 +267,33 @@ export default function ComparePage() {
             </div>
           </div>
         ) : (
-          /* ═══════════════════════════════════════════
+          <>
+          {/* ═══════════════════════════════════════
              UNIFIED COMPARISON GRID
-             label col | product cols | add slot
-             All share the same column widths.
-             ═══════════════════════════════════════════ */
+             ═══════════════════════════════════════ */}
           <div style={{
             background: '#faf8f5', borderRadius: 24, border: '1px solid #ede8df',
             overflow: 'hidden', animation: 'fadeUp 0.5s ease',
           }}>
 
-            {/* ── row 1: product card headers ── */}
+            {/* ── product card row ── */}
             <div style={{
-              display: 'grid',
-              gridTemplateColumns: cardGridCols,
+              display: 'grid', gridTemplateColumns: gridCols,
               borderBottom: '2px solid #ede8df',
             }}>
-              {/* empty label column */}
               <div />
-
-              {/* product cards */}
               {items.map((f, idx) => (
                 <div key={f.id} style={{
                   padding: '28px 16px 22px',
                   textAlign: 'center',
                   borderLeft: '1px solid #ede8df',
+                  background: colBg(idx),
                   cursor: 'pointer', transition: 'background 0.2s',
                   position: 'relative',
                 }}
                   onClick={() => goFood(f.id)}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = '#f5f0e8'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#f0ebe3'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = colBg(idx); }}
                 >
                   {f.image_url && (
                     <div style={{
@@ -241,8 +308,14 @@ export default function ComparePage() {
                     </div>
                   )}
                   <div style={{ fontSize: 11, color: '#8a7e72', fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 3 }}>{f.brand}</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1612', lineHeight: 1.3, marginBottom: 12, minHeight: 34, padding: '0 2px' }}>
-                    {f.name?.length > 45 ? f.name.substring(0, 45) + '...' : f.name}
+                  {/* 2-line name with CSS clamp */}
+                  <div style={{
+                    fontSize: 13, fontWeight: 600, color: '#1a1612', lineHeight: 1.35,
+                    marginBottom: 12, padding: '0 2px',
+                    display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 35,
+                  }}>
+                    {f.name}
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
                     padding: '5px 12px', borderRadius: 100, border: '1px solid #e8e0d4',
@@ -256,11 +329,7 @@ export default function ComparePage() {
                   <div style={{ fontSize: 10, color: '#c4b9a8', marginTop: 8 }}>View details →</div>
                 </div>
               ))}
-
-              {/* add slot */}
-              {hasAddSlot && (
-                <AddCardSearch onSelect={addItem} />
-              )}
+              {hasAddSlot && <AddCardSearch onSelect={addItem} />}
             </div>
 
             {/* ── nutrient rows ── */}
@@ -268,29 +337,22 @@ export default function ComparePage() {
               const color = NC[n.key];
               return (
                 <div key={n.key} style={{
-                  display: 'grid',
-                  gridTemplateColumns: dataGridCols,
-                  alignItems: 'center',
-                  borderBottom: nIdx < NUTRIENTS.length - 1 ? '1px solid #f0ebe3' : 'none',
+                  display: 'grid', gridTemplateColumns: gridCols, alignItems: 'center',
+                  borderBottom: '1px solid #f0ebe3',
                 }}>
-                  {/* ── left label column (once per row) ── */}
                   <div style={{
-                    padding: '14px 12px 14px 20px',
+                    padding: '14px 8px 14px 20px',
                     fontSize: 13, fontWeight: 600, color: color,
-                    letterSpacing: 0.3,
-                    lineHeight: 1.2,
-                  }}>
-                    {n.label}
-                  </div>
+                    letterSpacing: 0.3, lineHeight: 1.2,
+                  }}>{n.label}</div>
 
-                  {/* ── product value cells ── */}
                   {items.map((f, idx) => {
                     const val = f[n.key] || 0;
-                    const pct = Math.min((val / n.max) * 100, 100);
                     return (
                       <div key={f.id} style={{
                         padding: '14px 16px',
                         borderLeft: '1px solid #f0ebe3',
+                        background: colBg(idx),
                         display: 'flex', alignItems: 'center', gap: 10,
                       }}>
                         <div style={{
@@ -300,24 +362,59 @@ export default function ComparePage() {
                         }}>
                           {val}<span style={{ fontSize: 12, fontWeight: 500, color: '#8a7e72' }}>%</span>
                         </div>
-                        <div style={{ flex: 1, height: 8, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
-                          <div style={{
-                            height: '100%', borderRadius: 100, background: color,
-                            width: `${pct}%`, transition: 'width 0.8s ease',
-                          }} />
-                        </div>
+                        <TickBar value={val} color={color} />
                       </div>
                     );
                   })}
-
-                  {/* empty add-slot cell */}
-                  {hasAddSlot && (
-                    <div style={{ borderLeft: '1px dashed #e8e0d4' }} />
-                  )}
+                  {hasAddSlot && <div style={{ borderLeft: '1px dashed #e8e0d4' }} />}
                 </div>
               );
             })}
+
+            {/* ── first 5 ingredients row ── */}
+            <div style={{
+              display: 'grid', gridTemplateColumns: gridCols, alignItems: 'start',
+              borderTop: '2px solid #ede8df',
+            }}>
+              <div style={{
+                padding: '18px 8px 18px 20px',
+                fontSize: 12, fontWeight: 600, color: '#8a7e72',
+                letterSpacing: 0.3, lineHeight: 1.3,
+              }}>
+                Top 5<br />Ingredients
+              </div>
+
+              {items.map((f, idx) => {
+                const first5 = getFirst5(f.ingredients);
+                return (
+                  <div key={f.id} style={{
+                    padding: '16px 16px 20px',
+                    borderLeft: '1px solid #ede8df',
+                    background: colBg(idx),
+                  }}>
+                    {first5.length > 0 ? (
+                      <ol style={{ margin: 0, paddingLeft: 18 }}>
+                        {first5.map((ing, i) => (
+                          <li key={i} style={{
+                            fontSize: 12, color: i === 0 ? '#1a1612' : '#5a5047',
+                            fontWeight: i === 0 ? 600 : 400,
+                            lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif",
+                          }}>{ing}</li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <div style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>Not available</div>
+                    )}
+                  </div>
+                );
+              })}
+              {hasAddSlot && <div style={{ borderLeft: '1px dashed #e8e0d4' }} />}
+            </div>
           </div>
+
+          {/* ── nutrient explainer ── */}
+          <NutrientExplainer />
+          </>
         )}
       </div>
 
