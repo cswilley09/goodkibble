@@ -106,10 +106,6 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
                   <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
                   <div style={{ fontSize: 13, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
                 </div>
-                <div style={{
-                  fontSize: 12, fontWeight: 600, color: '#8a7e72',
-                  background: '#f5f0e8', padding: '4px 10px', borderRadius: 100, whiteSpace: 'nowrap',
-                }}>{f.protein}% protein</div>
               </div>
             ))
           )}
