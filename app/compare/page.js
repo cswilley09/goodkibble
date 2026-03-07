@@ -191,7 +191,7 @@ export default function ComparePage() {
 
   const hasAddSlot = items.length < 3;
   const totalDataCols = items.length + (hasAddSlot ? 1 : 0);
-  const gridCols = `80px repeat(${totalDataCols}, 1fr)`;
+  const gridCols = `100px repeat(${totalDataCols}, 1fr)`;
 
   /* alternating column backgrounds for cohesion */
   const colBg = (idx) => idx % 2 === 1 ? '#f7f4ef' : 'transparent';
