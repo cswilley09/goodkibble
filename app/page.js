@@ -57,9 +57,8 @@ export default function Home() {
       <div style={{
         background: 'linear-gradient(170deg, #f5d442 0%, #f0c930 45%, #e8c020 100%)',
         display: 'flex', flexDirection: 'column',
-        minHeight: '100vh',
       }}>
-        <nav className="nav-bar" style={{ padding: '24px 48px', animation: 'fadeIn 0.6s ease' }}>
+        <nav className="nav-bar" style={{ padding: '16px 48px', animation: 'fadeIn 0.6s ease' }}>
           <div className="nav-logo" style={{
             fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
             color: '#1a1612', letterSpacing: -0.5,
@@ -69,9 +68,9 @@ export default function Home() {
         </nav>
 
         <div className="hero-layout" style={{
-          flex: 1, display: 'flex', alignItems: 'center',
+          display: 'flex', alignItems: 'center',
           maxWidth: 1100, width: '100%', margin: '0 auto',
-          padding: '40px 48px 60px',
+          padding: '20px 48px 40px',
           gap: 60,
           animation: 'fadeUp 0.8s ease',
         }}>
@@ -111,20 +110,20 @@ export default function Home() {
           <div className="hero-text" style={{ flex: 1, minWidth: 0 }}>
             <div style={{
               fontSize: 13, fontWeight: 600, letterSpacing: 3,
-              textTransform: 'uppercase', color: '#1a161250', marginBottom: 16,
+              textTransform: 'uppercase', color: '#1a161250', marginBottom: 12,
             }}>Know what&apos;s in the bowl</div>
 
             <h1 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: 'clamp(36px, 4.5vw, 64px)', fontWeight: 800, color: '#1a1612',
-              lineHeight: 1.02, marginBottom: 20, letterSpacing: -2,
+              lineHeight: 1.02, marginBottom: 16, letterSpacing: -2,
             }}>
               What&apos;s really in<br />your dog&apos;s food?
             </h1>
 
             <p style={{
               fontSize: 17, color: '#1a161280', maxWidth: 440,
-              lineHeight: 1.6, marginBottom: 36, fontWeight: 400,
+              lineHeight: 1.6, marginBottom: 28, fontWeight: 400,
             }}>
               Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
             </p>
@@ -135,7 +134,7 @@ export default function Home() {
 
         <div className="popular-brands" style={{
           background: '#1a1612', borderRadius: '32px 32px 0 0',
-          padding: '40px 40px 48px', animation: 'fadeUp 1s ease 0.3s both',
+          padding: '36px 40px 44px', animation: 'fadeUp 1s ease 0.3s both',
         }}>
           <div style={{
             fontSize: 12, fontWeight: 600, letterSpacing: 2.5,
@@ -176,3 +175,4 @@ export default function Home() {
     </div>
   );
 }
+
