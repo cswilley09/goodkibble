@@ -1,4 +1,5 @@
 import './globals.css';
+import { CompareProvider } from './components/CompareContext';
 
 export const metadata = {
   title: 'GoodKibble — Know What\'s In Your Dog\'s Food',
@@ -8,7 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <CompareProvider>{children}</CompareProvider>
+      </body>
     </html>
   );
 }
