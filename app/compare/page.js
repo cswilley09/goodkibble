@@ -275,7 +275,7 @@ export default function ComparePage() {
                 }}>
                   {/* ── left label column (once per row) ── */}
                   <div style={{
-                    padding: '18px 12px 18px 20px',
+                    padding: '14px 12px 14px 20px',
                     fontSize: 13, fontWeight: 600, color: color,
                     letterSpacing: 0.3,
                     lineHeight: 1.2,
@@ -289,16 +289,18 @@ export default function ComparePage() {
                     const pct = Math.min((val / n.max) * 100, 100);
                     return (
                       <div key={f.id} style={{
-                        padding: '18px 16px',
+                        padding: '14px 16px',
                         borderLeft: '1px solid #f0ebe3',
+                        display: 'flex', alignItems: 'center', gap: 10,
                       }}>
                         <div style={{
-                          fontSize: 26, fontWeight: 700, color: '#1a1612',
-                          fontFamily: "'DM Mono', monospace", lineHeight: 1, marginBottom: 8,
+                          fontSize: 18, fontWeight: 700, color: '#1a1612',
+                          fontFamily: "'DM Mono', monospace", lineHeight: 1,
+                          minWidth: 44, flexShrink: 0,
                         }}>
-                          {val}<span style={{ fontSize: 13, fontWeight: 500, color: '#8a7e72' }}>%</span>
+                          {val}<span style={{ fontSize: 12, fontWeight: 500, color: '#8a7e72' }}>%</span>
                         </div>
-                        <div style={{ height: 6, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
+                        <div style={{ flex: 1, height: 8, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
                           <div style={{
                             height: '100%', borderRadius: 100, background: color,
                             width: `${pct}%`, transition: 'width 0.8s ease',
