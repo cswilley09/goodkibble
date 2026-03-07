@@ -307,12 +307,13 @@ export default function ComparePage() {
                     </div>
                   )}
                   <div style={{ fontSize: 11, color: '#8a7e72', fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 2 }}>{f.brand}</div>
-                  {/* product name: up to 3 lines before truncating */}
+                  {/* product name: fixed height for 3 lines, clamp at 3 */}
                   <div style={{
                     fontSize: 13, fontWeight: 600, color: '#1a1612', lineHeight: 1.4,
                     marginBottom: 10, padding: 0,
                     display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 36,
+                    overflow: 'hidden', textOverflow: 'ellipsis',
+                    height: 55, /* 13px × 1.4 × 3 lines ≈ 55px */
                   }}>
                     {f.name}
                   </div>
@@ -372,30 +373,31 @@ export default function ComparePage() {
 
             {/* ── first 5 ingredients row ── */}
             <div style={{
-              display: 'grid', gridTemplateColumns: gridCols, alignItems: 'center',
+              display: 'grid', gridTemplateColumns: gridCols,
               borderTop: '2px solid #ede8df',
             }}>
               <div style={{
-                padding: '20px 8px 20px 20px',
-                fontSize: 12, fontWeight: 600, color: '#8a7e72',
-                letterSpacing: 0.3, lineHeight: 1.3,
-                alignSelf: 'center',
+                padding: '20px 6px 20px 16px',
+                fontSize: 11, fontWeight: 600, color: '#8a7e72',
+                letterSpacing: 0.3, lineHeight: 1.35,
+                display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
+                borderRight: '1px solid #ede8df',
+                overflow: 'hidden', wordBreak: 'break-word',
               }}>
-                Top 5<br />Ingredients
+                <span>Top 5<br />Ingredients</span>
               </div>
 
               {items.map((f, idx) => {
                 const first5 = getFirst5(f.ingredients);
                 return (
                   <div key={f.id} style={{
-                    padding: '20px 16px',
-                    borderLeft: '1px solid #ede8df',
+                    padding: '18px 16px',
+                    borderLeft: 'none',
                     background: colBg(idx),
-                    alignSelf: 'stretch',
                     display: 'flex', alignItems: 'center',
                   }}>
                     {first5.length > 0 ? (
-                      <ol style={{ margin: 0, paddingLeft: 16, width: '100%' }}>
+                      <ol style={{ margin: 0, paddingLeft: 20, width: '100%' }}>
                         {first5.map((ing, i) => (
                           <li key={i} style={{
                             fontSize: 12, color: i === 0 ? '#1a1612' : '#5a5047',
