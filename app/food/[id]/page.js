@@ -106,20 +106,43 @@ function SaltTooltip({ children }) {
   );
 }
 
-function HorizontalBar({ label, value, color, maxVal = 50 }) {
-  const pct = Math.min((value / maxVal) * 100, 100);
+const SHARED_MAX = 50; /* shared 0-50% scale, same as compare page */
+
+function TickBar({ value, color }) {
+  const pct = Math.min((value / SHARED_MAX) * 100, 100);
+  const ticks = [10, 20, 30, 40].map(v => (v / SHARED_MAX) * 100);
   return (
-    <div style={{ marginBottom: 16 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, alignItems: 'baseline' }}>
-        <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
-        <span style={{ fontSize: 20, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Mono', monospace" }}>{value}%</span>
-      </div>
-      <div style={{ height: 12, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
+    <div style={{ flex: 1, position: 'relative', height: 10 }}>
+      <div style={{ position: 'absolute', inset: 0, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
         <div style={{
           height: '100%', borderRadius: 100, background: color,
-          width: `${pct}%`, transition: 'width 1s ease',
+          width: `${pct}%`, transition: 'width 0.8s ease',
         }} />
       </div>
+      {ticks.map((tp) => (
+        <div key={tp} style={{
+          position: 'absolute', left: `${tp}%`, top: -2, bottom: -2,
+          width: 1, background: '#d4cfc6', opacity: 0.5, pointerEvents: 'none',
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function NutrientRow({ label, value, color }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+      <span style={{
+        fontSize: 14, fontWeight: 600, color: color,
+        fontFamily: "'DM Sans', sans-serif",
+        minWidth: 110, flexShrink: 0,
+      }}>{label}</span>
+      <span style={{
+        fontSize: 18, fontWeight: 700, color: '#1a1612',
+        fontFamily: "'DM Mono', monospace", lineHeight: 1,
+        minWidth: 48, flexShrink: 0,
+      }}>{value}<span style={{ fontSize: 12, fontWeight: 500, color: '#8a7e72' }}>%</span></span>
+      <TickBar value={value} color={color} />
     </div>
   );
 }
@@ -131,7 +154,6 @@ function NutrientExplainer() {
     { name: 'Fat', color: '#c47a20', desc: 'The most concentrated energy source in dog food. Supports healthy skin, coat, brain function, and vitamin absorption. AAFCO minimum is 5.5% for adults and 8.5% for puppies. Most quality foods range between 12-20%. Dogs with pancreatitis may need lower-fat diets.' },
     { name: 'Carbohydrates', color: '#5a7a9e', desc: 'Provide energy and fiber for digestive health. Dogs have no minimum carbohydrate requirement, but carbs from whole grains, vegetables, and legumes provide beneficial fiber and nutrients. Very high carb content (50%+) may indicate filler ingredients.' },
     { name: 'Fiber', color: '#8a6aaf', desc: 'Promotes healthy digestion and regular bowel movements. Most dog foods contain 2-5% fiber. Higher fiber (5-10%) can help with weight management and blood sugar regulation. Sources like beet pulp and pumpkin are considered high quality.' },
-    { name: 'Moisture', color: '#5a9e9e', desc: 'The water content in the food. Dry kibble typically contains 6-12% moisture. Higher moisture means less caloric density per cup. When comparing foods, dry matter basis removes moisture from the equation for a fairer comparison.' },
   ];
   return (
     <div style={{
@@ -336,12 +358,11 @@ export default function FoodPage() {
               <InfoTooltip text="These values are calculated on a Dry Matter Basis (DMB), which removes moisture content to give you a more accurate comparison between foods. Dry matter percentages reflect the actual nutrient concentration in the food solids, making it easier to compare wet and dry foods fairly." />
             </div>
 
-            <div style={{ maxWidth: 520 }}>
-              <HorizontalBar label="Protein" value={food.protein || 0} color="#2d7a4f" maxVal={50} />
-              <HorizontalBar label="Fat" value={food.fat || 0} color="#c47a20" maxVal={30} />
-              <HorizontalBar label="Carbohydrates" value={food.carbohydrates || 0} color="#5a7a9e" maxVal={70} />
-              {food.fiber > 0 && <HorizontalBar label="Fiber" value={food.fiber} color="#8a6aaf" maxVal={10} />}
-              {food.moisture > 0 && <HorizontalBar label="Moisture" value={food.moisture} color="#5a9e9e" maxVal={15} />}
+            <div style={{ maxWidth: 560 }}>
+              <NutrientRow label="Protein" value={food.protein || 0} color="#2d7a4f" />
+              <NutrientRow label="Fat" value={food.fat || 0} color="#c47a20" />
+              <NutrientRow label="Carbohydrates" value={food.carbohydrates || 0} color="#5a7a9e" />
+              {food.fiber > 0 && <NutrientRow label="Fiber" value={food.fiber} color="#8a6aaf" />}
             </div>
           </div>
 
