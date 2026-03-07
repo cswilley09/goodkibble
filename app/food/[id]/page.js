@@ -10,7 +10,8 @@ const SALT_KEYWORDS = ['salt', 'sodium chloride', 'iodized salt', 'sea salt'];
 
 function isSaltIngredient(ing) {
   const lower = ing.toLowerCase().trim();
-  return SALT_KEYWORDS.some(kw => lower === kw || lower.startsWith(kw + ' ') || lower.endsWith(' ' + kw));
+  if (lower === 'salt') return true;
+  return SALT_KEYWORDS.some(kw => lower === kw || lower.startsWith(kw + ' ') || lower.endsWith(' ' + kw) || lower.includes(kw));
 }
 
 function findSaltIndex(ingredients) {
