@@ -14,7 +14,7 @@ const NC = {
   fiber: '#8a6aaf',
 };
 
-const SHARED_MAX = 50; /* shared scale: all bars use 0–50% */
+const SHARED_MAX = 50;
 
 const NUTRIENTS = [
   { label: 'Protein', key: 'protein' },
@@ -23,7 +23,19 @@ const NUTRIENTS = [
   { label: 'Fiber', key: 'fiber' },
 ];
 
-/* ── nutrient explainer (same content as product page) ── */
+/* ── responsive hook ── */
+function useIsMobile(breakpoint = 768) {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setMobile(window.innerWidth <= breakpoint);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, [breakpoint]);
+  return mobile;
+}
+
+/* ── nutrient explainer ── */
 function NutrientExplainer() {
   const [open, setOpen] = useState(false);
   const nutrients = [
@@ -67,10 +79,9 @@ function NutrientExplainer() {
   );
 }
 
-/* ── bar with tick marks ── */
+/* ── desktop bar with tick marks ── */
 function TickBar({ value, color }) {
   const pct = Math.min((value / SHARED_MAX) * 100, 100);
-  /* ticks at 10, 20, 30, 40 on the shared 0–50 scale */
   const ticks = [10, 20, 30, 40].map(v => (v / SHARED_MAX) * 100);
   return (
     <div style={{ flex: 1, position: 'relative', height: 8 }}>
@@ -91,7 +102,7 @@ function TickBar({ value, color }) {
 }
 
 /* ── inline search for the add slot ── */
-function AddCardSearch({ onSelect }) {
+function AddCardSearch({ onSelect, compact }) {
   const [active, setActive] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -118,26 +129,27 @@ function AddCardSearch({ onSelect }) {
         borderLeft: '1px dashed #e8e0d4',
         textAlign: 'center', cursor: 'pointer', transition: 'all 0.25s',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        padding: 24,
+        padding: compact ? 16 : 24, minWidth: compact ? 140 : undefined,
       }}
         onMouseEnter={(e) => { e.currentTarget.style.background = '#f5f0e8'; }}
         onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
       >
         <div style={{
-          width: 44, height: 44, borderRadius: '50%', background: '#ede8df',
+          width: compact ? 36 : 44, height: compact ? 36 : 44, borderRadius: '50%', background: '#ede8df',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 22, marginBottom: 10, color: '#8a7e72',
+          fontSize: compact ? 18 : 22, marginBottom: compact ? 6 : 10, color: '#8a7e72',
         }}>+</div>
-        <div style={{ fontSize: 14, fontWeight: 600, color: '#8a7e72', marginBottom: 2 }}>Add a food</div>
-        <div style={{ fontSize: 12, color: '#b5aa99' }}>Click to search</div>
+        <div style={{ fontSize: compact ? 12 : 14, fontWeight: 600, color: '#8a7e72', marginBottom: 2 }}>Add a food</div>
+        {!compact && <div style={{ fontSize: 12, color: '#b5aa99' }}>Click to search</div>}
       </div>
     );
   }
 
   return (
     <div style={{
-      borderLeft: '2px solid #f0c930', padding: 20,
+      borderLeft: '2px solid #f0c930', padding: compact ? 12 : 20,
       animation: 'scaleIn 0.2s ease', background: '#fff',
+      minWidth: compact ? 180 : undefined,
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
         <span style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', letterSpacing: 1 }}>SEARCH</span>
@@ -148,7 +160,7 @@ function AddCardSearch({ onSelect }) {
       <input
         ref={inputRef} type="text" value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Brand or food name..."
+        placeholder="Brand or food..."
         style={{
           width: '100%', padding: '9px 12px', borderRadius: 10,
           border: '1.5px solid #ede8df', fontSize: 13,
@@ -176,25 +188,49 @@ function AddCardSearch({ onSelect }) {
   );
 }
 
-/* ── helper: get first 5 ingredients from comma-separated string ── */
+/* ── helper: get first 5 ingredients ── */
 function getFirst5(ingredientsStr) {
   if (!ingredientsStr) return [];
   return ingredientsStr.split(',').map(s => s.trim()).filter(Boolean).slice(0, 5);
 }
 
-/* ── main compare page ── */
+/* ══════════════════════════════════════════
+   MAIN COMPARE PAGE
+   ══════════════════════════════════════════ */
 export default function ComparePage() {
   const router = useRouter();
   const { items, addItem, removeItem, clearAll } = useCompare();
   const goHome = () => router.push('/');
   const goFood = (id) => router.push(`/food/${id}`);
+  const isMobile = useIsMobile();
 
   const hasAddSlot = items.length < 3;
   const totalDataCols = items.length + (hasAddSlot ? 1 : 0);
+
+  /* desktop: fixed label col + flex product cols */
   const gridCols = `100px repeat(${totalDataCols}, 1fr)`;
 
-  /* alternating column backgrounds for cohesion */
+  /* mobile: sticky narrow label col + fixed-width scrollable product cols */
+  const mLabelW = 64;
+  const mColW = 150;
+  const mGridCols = `${mLabelW}px repeat(${totalDataCols}, ${mColW}px)`;
+
   const colBg = (idx) => idx % 2 === 1 ? '#f7f4ef' : 'transparent';
+
+  /* shared label cell style (sticky on mobile) */
+  const labelCell = (extra = {}) => ({
+    padding: isMobile ? '10px 6px 10px 10px' : '14px 8px 14px 20px',
+    fontSize: isMobile ? 12 : 13,
+    fontWeight: 600,
+    letterSpacing: 0.3,
+    lineHeight: 1.2,
+    ...(isMobile ? {
+      position: 'sticky', left: 0, zIndex: 2,
+      background: '#faf8f5',
+      borderRight: '1px solid #ede8df',
+    } : {}),
+    ...extra,
+  });
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
@@ -215,29 +251,29 @@ export default function ComparePage() {
       </nav>
 
       {/* content */}
-      <div style={{ maxWidth: 960, margin: '0 auto', padding: '40px 24px 80px' }}>
+      <div style={{ maxWidth: 960, margin: '0 auto', padding: isMobile ? '24px 12px 60px' : '40px 24px 80px' }}>
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
           cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          marginBottom: 32, padding: 0,
+          marginBottom: isMobile ? 20 : 32, padding: 0,
         }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           Back to search
         </button>
 
         {/* header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 36, flexWrap: 'wrap', gap: 12 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isMobile ? 20 : 36, flexWrap: 'wrap', gap: 12 }}>
           <div>
             <h1 style={{
-              fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 3vw, 40px)',
+              fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 24 : 'clamp(28px, 3vw, 40px)',
               fontWeight: 800, color: '#1a1612', letterSpacing: -1,
             }}>Compare Foods</h1>
-            <p style={{ fontSize: 15, color: '#8a7e72', marginTop: 4 }}>
+            <p style={{ fontSize: isMobile ? 13 : 15, color: '#8a7e72', marginTop: 4 }}>
               {items.length === 0
                 ? 'Add products to start comparing'
                 : items.length === 1
-                  ? 'Comparing 1 product — add another to see side-by-side'
+                  ? 'Comparing 1 product — add another'
                   : `Comparing ${items.length} products side-by-side`}
             </p>
           </div>
@@ -253,7 +289,7 @@ export default function ComparePage() {
         {/* empty state */}
         {items.length === 0 ? (
           <div style={{
-            textAlign: 'center', padding: '48px 24px',
+            textAlign: 'center', padding: isMobile ? '36px 16px' : '48px 24px',
             background: '#faf8f5', borderRadius: 24, border: '1px solid #ede8df',
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚖️</div>
@@ -262,41 +298,50 @@ export default function ComparePage() {
               Search for a dog food and click &ldquo;+ Add to Compare&rdquo; on any product page, or search below.
             </p>
             <div style={{ maxWidth: 340, margin: '0 auto', borderRadius: 20, border: '2px dashed #e8e0d4', overflow: 'hidden' }}>
-              <AddCardSearch onSelect={addItem} />
+              <AddCardSearch onSelect={addItem} compact={isMobile} />
             </div>
           </div>
         ) : (
           <>
-          {/* ═══════════════════════════════════════
-             UNIFIED COMPARISON GRID
-             ═══════════════════════════════════════ */}
+          {/* ═══ COMPARISON GRID ═══ */}
           <div style={{
-            background: '#faf8f5', borderRadius: 24, border: '1px solid #ede8df',
-            overflow: 'hidden', animation: 'fadeUp 0.5s ease',
+            background: '#faf8f5', borderRadius: isMobile ? 16 : 24,
+            border: '1px solid #ede8df',
+            overflow: isMobile ? 'auto' : 'hidden',
+            animation: 'fadeUp 0.5s ease',
+            WebkitOverflowScrolling: 'touch',
           }}>
-
-            {/* ── product card row ── */}
+            {/* inner wrapper: on mobile, wider than viewport to enable horizontal scroll */}
             <div style={{
-              display: 'grid', gridTemplateColumns: gridCols,
-              borderBottom: '2px solid #ede8df',
+              display: 'inline-grid',
+              gridTemplateColumns: isMobile ? mGridCols : gridCols,
+              minWidth: isMobile ? `${mLabelW + mColW * totalDataCols}px` : undefined,
             }}>
-              <div />
+
+              {/* ══ ROW: product cards ══ */}
+              {/* label cell */}
+              <div style={{
+                ...(isMobile ? { position: 'sticky', left: 0, zIndex: 2, background: '#faf8f5' } : {}),
+                borderBottom: '2px solid #ede8df',
+              }} />
+
               {items.map((f, idx) => (
                 <div key={f.id} style={{
-                  padding: '24px 12px 18px',
+                  padding: isMobile ? '16px 10px 12px' : '24px 12px 18px',
                   textAlign: 'center',
                   borderLeft: '1px solid #ede8df',
+                  borderBottom: '2px solid #ede8df',
                   background: colBg(idx),
                   cursor: 'pointer', transition: 'background 0.2s',
-                  position: 'relative',
                 }}
                   onClick={() => goFood(f.id)}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = '#f0ebe3'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = colBg(idx); }}
+                  onMouseEnter={(e) => { if (!isMobile) e.currentTarget.style.background = '#f0ebe3'; }}
+                  onMouseLeave={(e) => { if (!isMobile) e.currentTarget.style.background = colBg(idx); }}
                 >
                   {f.image_url && (
                     <div style={{
-                      width: 80, height: 104, margin: '0 auto 12px', borderRadius: 12,
+                      width: isMobile ? 56 : 80, height: isMobile ? 72 : 104,
+                      margin: isMobile ? '0 auto 8px' : '0 auto 12px', borderRadius: 10,
                       overflow: 'hidden', background: '#fff', display: 'flex',
                       alignItems: 'center', justifyContent: 'center',
                       border: '1px solid #ede8df',
@@ -306,118 +351,135 @@ export default function ComparePage() {
                         onError={(e) => e.target.style.display = 'none'} />
                     </div>
                   )}
-                  <div style={{ fontSize: 11, color: '#8a7e72', fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 2 }}>{f.brand}</div>
-                  {/* product name: fixed height for 3 lines, clamp at 3 */}
                   <div style={{
-                    fontSize: 13, fontWeight: 600, color: '#1a1612', lineHeight: 1.4,
-                    marginBottom: 10, padding: 0,
+                    fontSize: isMobile ? 10 : 11, color: '#8a7e72', fontWeight: 600,
+                    letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 2,
+                  }}>{f.brand}</div>
+                  {/* title: fixed height for alignment */}
+                  <div style={{
+                    fontSize: isMobile ? 11 : 13, fontWeight: 600, color: '#1a1612',
+                    lineHeight: 1.4, marginBottom: isMobile ? 8 : 10, padding: 0,
                     display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
                     overflow: 'hidden', textOverflow: 'ellipsis',
-                    height: 55, /* 13px × 1.4 × 3 lines ≈ 55px */
+                    height: isMobile ? 46 : 55,
                   }}>
                     {f.name}
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
-                    padding: '5px 12px', borderRadius: 100, border: '1px solid #e8e0d4',
-                    background: '#fff', color: '#8a7e72', fontSize: 11, cursor: 'pointer',
-                    fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
-                    position: 'relative', zIndex: 2,
+                    padding: isMobile ? '4px 10px' : '5px 12px', borderRadius: 100,
+                    border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
+                    fontSize: 11, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    transition: 'all 0.2s', position: 'relative', zIndex: 2,
                   }}
                     onMouseEnter={(e) => { e.target.style.background = '#fce4e4'; e.target.style.color = '#c44'; e.target.style.borderColor = '#f0c4c4'; }}
                     onMouseLeave={(e) => { e.target.style.background = '#fff'; e.target.style.color = '#8a7e72'; e.target.style.borderColor = '#e8e0d4'; }}
                   >Remove</button>
-                  <div style={{ fontSize: 10, color: '#c4b9a8', marginTop: 8 }}>View details →</div>
+                  {!isMobile && <div style={{ fontSize: 10, color: '#c4b9a8', marginTop: 8 }}>View details →</div>}
                 </div>
               ))}
-              {hasAddSlot && <AddCardSearch onSelect={addItem} />}
-            </div>
 
-            {/* ── nutrient rows ── */}
-            {NUTRIENTS.map((n, nIdx) => {
-              const color = NC[n.key];
-              return (
-                <div key={n.key} style={{
-                  display: 'grid', gridTemplateColumns: gridCols, alignItems: 'center',
-                  borderBottom: '1px solid #f0ebe3',
-                }}>
-                  <div style={{
-                    padding: '14px 8px 14px 20px',
-                    fontSize: 13, fontWeight: 600, color: color,
-                    letterSpacing: 0.3, lineHeight: 1.2,
-                  }}>{n.label}</div>
+              {/* add slot */}
+              {hasAddSlot && (
+                <div style={{ borderBottom: '2px solid #ede8df' }}>
+                  <AddCardSearch onSelect={addItem} compact={isMobile} />
+                </div>
+              )}
 
-                  {items.map((f, idx) => {
+              {/* ══ NUTRIENT ROWS ══ */}
+              {NUTRIENTS.map((n, nIdx) => {
+                const color = NC[n.key];
+                const isLast = nIdx === NUTRIENTS.length - 1;
+                return [
+                  /* label cell */
+                  <div key={`${n.key}-label`} style={{
+                    ...labelCell({ color }),
+                    borderBottom: isLast ? 'none' : '1px solid #f0ebe3',
+                  }}>{n.label}</div>,
+
+                  /* product value cells */
+                  ...items.map((f, idx) => {
                     const val = f[n.key] || 0;
                     return (
-                      <div key={f.id} style={{
-                        padding: '14px 16px',
+                      <div key={`${n.key}-${f.id}`} style={{
+                        padding: isMobile ? '10px 10px' : '14px 16px',
                         borderLeft: '1px solid #f0ebe3',
+                        borderBottom: isLast ? 'none' : '1px solid #f0ebe3',
                         background: colBg(idx),
-                        display: 'flex', alignItems: 'center', gap: 10,
+                        display: 'flex', alignItems: 'center', gap: isMobile ? 0 : 10,
+                        justifyContent: isMobile ? 'center' : 'flex-start',
                       }}>
                         <div style={{
-                          fontSize: 18, fontWeight: 700, color: '#1a1612',
+                          fontSize: isMobile ? 16 : 18, fontWeight: 700, color: '#1a1612',
                           fontFamily: "'DM Mono', monospace", lineHeight: 1,
-                          minWidth: 44, flexShrink: 0,
+                          minWidth: isMobile ? undefined : 44, flexShrink: 0,
                         }}>
                           {val}<span style={{ fontSize: 12, fontWeight: 500, color: '#8a7e72' }}>%</span>
                         </div>
-                        <TickBar value={val} color={color} />
+                        {/* bar: desktop only */}
+                        {!isMobile && <TickBar value={val} color={color} />}
                       </div>
                     );
-                  })}
-                  {hasAddSlot && <div style={{ borderLeft: '1px dashed #e8e0d4' }} />}
-                </div>
-              );
-            })}
+                  }),
 
-            {/* ── first 5 ingredients row ── */}
-            <div style={{
-              display: 'grid', gridTemplateColumns: gridCols,
-              borderTop: '2px solid #ede8df',
-            }}>
+                  /* empty add-slot cell */
+                  hasAddSlot && (
+                    <div key={`${n.key}-add`} style={{
+                      borderLeft: '1px dashed #e8e0d4',
+                      borderBottom: isLast ? 'none' : '1px solid #f0ebe3',
+                    }} />
+                  ),
+                ];
+              })}
+
+              {/* ══ TOP 5 INGREDIENTS ROW ══ */}
+              {/* label cell */}
               <div style={{
-                padding: '20px 6px 20px 16px',
-                fontSize: 11, fontWeight: 600, color: '#8a7e72',
-                letterSpacing: 0.3, lineHeight: 1.35,
+                ...labelCell({ color: '#8a7e72', fontSize: 11 }),
+                borderTop: '2px solid #ede8df',
                 display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
                 borderRight: '1px solid #ede8df',
-                overflow: 'hidden', wordBreak: 'break-word',
               }}>
                 <span>Top 5<br />Ingredients</span>
               </div>
 
+              {/* product ingredient cells */}
               {items.map((f, idx) => {
                 const first5 = getFirst5(f.ingredients);
                 return (
-                  <div key={f.id} style={{
-                    padding: '18px 16px',
-                    borderLeft: 'none',
+                  <div key={`ing-${f.id}`} style={{
+                    padding: isMobile ? '12px 10px' : '18px 16px',
+                    borderTop: '2px solid #ede8df',
                     background: colBg(idx),
                     display: 'flex', alignItems: 'center',
                   }}>
                     {first5.length > 0 ? (
-                      <ol style={{ margin: 0, paddingLeft: 20, width: '100%' }}>
+                      <ol style={{ margin: 0, paddingLeft: isMobile ? 16 : 20, width: '100%' }}>
                         {first5.map((ing, i) => (
                           <li key={i} style={{
-                            fontSize: 12, color: i === 0 ? '#1a1612' : '#5a5047',
+                            fontSize: isMobile ? 11 : 12,
+                            color: i === 0 ? '#1a1612' : '#5a5047',
                             fontWeight: i === 0 ? 600 : 400,
-                            lineHeight: 1.8, fontFamily: "'DM Sans', sans-serif",
+                            lineHeight: isMobile ? 1.6 : 1.8,
+                            fontFamily: "'DM Sans', sans-serif",
                             listStyleType: 'decimal',
                           }}>{ing}</li>
                         ))}
                       </ol>
                     ) : (
-                      <div style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>Not available</div>
+                      <div style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>N/A</div>
                     )}
                   </div>
                 );
               })}
-              {hasAddSlot && <div style={{ borderLeft: '1px dashed #e8e0d4' }} />}
+
+              {/* add-slot cell */}
+              {hasAddSlot && (
+                <div style={{ borderLeft: '1px dashed #e8e0d4', borderTop: '2px solid #ede8df' }} />
+              )}
             </div>
           </div>
 
-          {/* ── nutrient explainer ── */}
+          {/* nutrient explainer */}
           <NutrientExplainer />
           </>
         )}
@@ -425,10 +487,10 @@ export default function ComparePage() {
 
       {/* footer */}
       <div className="footer-bar" style={{
-        borderTop: '1px solid #ede8df', padding: '32px 40px',
+        borderTop: '1px solid #ede8df', padding: isMobile ? '24px 16px' : '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div className="footer-logo" style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+        <div className="footer-logo" style={{ fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 24 : 32, fontWeight: 800, color: '#1a1612' }}>
           Good<span style={{ color: '#f0c930' }}>Kibble</span>
         </div>
         <div style={{ fontSize: 13, color: '#b5aa99' }}>© 2026 GoodKibble. Not affiliated with any dog food brand.</div>
