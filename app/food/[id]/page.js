@@ -408,14 +408,15 @@ export default function FoodPage() {
                   cursor: isSalt ? 'pointer' : 'default',
                 };
 
-                /* wrap in a span that handles both the fade-in animation AND the salt dimming
-                   separately, so the animation doesn't override the opacity */
-                const wrapStyle = {
-                  display: 'inline-block',
-                  opacity: afterSalt ? 0.4 : 1,
-                  animationName: 'fadeUp', animationDuration: '0.4s',
-                  animationFillMode: 'forwards', animationDelay: `${i * 20}ms`,
-                };
+                /* animation on non-dimmed pills only; after-salt pills skip animation
+                   because the fadeUp keyframe ends at opacity:1 which overrides inline opacity */
+                const wrapStyle = afterSalt
+                  ? { display: 'inline-block', opacity: 0.4 }
+                  : {
+                      display: 'inline-block',
+                      animationName: 'fadeUp', animationDuration: '0.4s',
+                      animationFillMode: 'both', animationDelay: `${i * 20}ms`,
+                    };
 
                 const pill = <span style={pillStyle}>{ing}</span>;
 
