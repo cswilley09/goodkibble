@@ -31,7 +31,6 @@ function NutrientExplainer() {
     { name: 'Fat', color: '#c47a20', desc: 'The most concentrated energy source in dog food. Supports healthy skin, coat, brain function, and vitamin absorption. AAFCO minimum is 5.5% for adults and 8.5% for puppies. Most quality foods range between 12-20%. Dogs with pancreatitis may need lower-fat diets.' },
     { name: 'Carbohydrates', color: '#5a7a9e', desc: 'Provide energy and fiber for digestive health. Dogs have no minimum carbohydrate requirement, but carbs from whole grains, vegetables, and legumes provide beneficial fiber and nutrients. Very high carb content (50%+) may indicate filler ingredients.' },
     { name: 'Fiber', color: '#8a6aaf', desc: 'Promotes healthy digestion and regular bowel movements. Most dog foods contain 2-5% fiber. Higher fiber (5-10%) can help with weight management and blood sugar regulation. Sources like beet pulp and pumpkin are considered high quality.' },
-    { name: 'Moisture', color: '#5a9e9e', desc: 'The water content in the food. Dry kibble typically contains 6-12% moisture. Higher moisture means less caloric density per cup. When comparing foods, dry matter basis removes moisture from the equation for a fairer comparison.' },
   ];
   return (
     <div style={{
@@ -284,7 +283,7 @@ export default function ComparePage() {
               <div />
               {items.map((f, idx) => (
                 <div key={f.id} style={{
-                  padding: '28px 16px 22px',
+                  padding: '24px 12px 18px',
                   textAlign: 'center',
                   borderLeft: '1px solid #ede8df',
                   background: colBg(idx),
@@ -307,13 +306,13 @@ export default function ComparePage() {
                         onError={(e) => e.target.style.display = 'none'} />
                     </div>
                   )}
-                  <div style={{ fontSize: 11, color: '#8a7e72', fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 3 }}>{f.brand}</div>
-                  {/* 2-line name with CSS clamp */}
+                  <div style={{ fontSize: 11, color: '#8a7e72', fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 2 }}>{f.brand}</div>
+                  {/* product name: up to 3 lines before truncating */}
                   <div style={{
-                    fontSize: 13, fontWeight: 600, color: '#1a1612', lineHeight: 1.35,
-                    marginBottom: 12, padding: '0 2px',
-                    display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 35,
+                    fontSize: 13, fontWeight: 600, color: '#1a1612', lineHeight: 1.4,
+                    marginBottom: 10, padding: 0,
+                    display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden', textOverflow: 'ellipsis', minHeight: 36,
                   }}>
                     {f.name}
                   </div>
@@ -373,13 +372,14 @@ export default function ComparePage() {
 
             {/* ── first 5 ingredients row ── */}
             <div style={{
-              display: 'grid', gridTemplateColumns: gridCols, alignItems: 'start',
+              display: 'grid', gridTemplateColumns: gridCols, alignItems: 'center',
               borderTop: '2px solid #ede8df',
             }}>
               <div style={{
-                padding: '18px 8px 18px 20px',
+                padding: '20px 8px 20px 20px',
                 fontSize: 12, fontWeight: 600, color: '#8a7e72',
                 letterSpacing: 0.3, lineHeight: 1.3,
+                alignSelf: 'center',
               }}>
                 Top 5<br />Ingredients
               </div>
@@ -388,17 +388,20 @@ export default function ComparePage() {
                 const first5 = getFirst5(f.ingredients);
                 return (
                   <div key={f.id} style={{
-                    padding: '16px 16px 20px',
+                    padding: '20px 16px',
                     borderLeft: '1px solid #ede8df',
                     background: colBg(idx),
+                    alignSelf: 'stretch',
+                    display: 'flex', alignItems: 'center',
                   }}>
                     {first5.length > 0 ? (
-                      <ol style={{ margin: 0, paddingLeft: 18 }}>
+                      <ol style={{ margin: 0, paddingLeft: 16, width: '100%' }}>
                         {first5.map((ing, i) => (
                           <li key={i} style={{
                             fontSize: 12, color: i === 0 ? '#1a1612' : '#5a5047',
                             fontWeight: i === 0 ? 600 : 400,
-                            lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif",
+                            lineHeight: 1.8, fontFamily: "'DM Sans', sans-serif",
+                            listStyleType: 'decimal',
                           }}>{ing}</li>
                         ))}
                       </ol>
