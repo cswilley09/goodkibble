@@ -387,25 +387,42 @@ export default function FoodPage() {
               {ingredients.map((ing, i) => {
                 const isSalt = isSaltIngredient(ing);
                 const isFirst = i === 0;
-                const isAfterSalt = saltIdx >= 0 && i > saltIdx;
-                const pill = (
-                  <span style={{
-                    display: 'inline-block', padding: '8px 16px', borderRadius: 100,
-                    fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-                    fontWeight: isFirst || isSalt ? 600 : 400,
-                    background: isSalt ? '#f0c930' : isFirst ? '#1a1612' : i < 5 ? '#f5f0e8' : '#fff',
-                    color: isSalt ? '#1a1612' : isFirst ? '#faf8f5' : '#3d352b',
-                    border: isSalt || isFirst ? 'none' : '1px solid #e8e0d4',
-                    cursor: isSalt ? 'pointer' : 'default',
-                    opacity: isAfterSalt ? 0.45 : 1,
-                    animationName: 'fadeUp', animationDuration: '0.4s',
-                    animationFillMode: 'both', animationDelay: `${i * 20}ms`,
-                  }}>{ing}</span>
-                );
+                const afterSalt = (saltIdx >= 0 && i > saltIdx) ? true : false;
+
+                let bgColor = '#fff';
+                if (isSalt) bgColor = '#f0c930';
+                else if (isFirst) bgColor = '#1a1612';
+                else if (i < 5) bgColor = '#f5f0e8';
+
+                let textColor = '#3d352b';
+                if (isSalt) textColor = '#1a1612';
+                else if (isFirst) textColor = '#faf8f5';
+
+                const pillStyle = {
+                  display: 'inline-block', padding: '8px 16px', borderRadius: 100,
+                  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: (isFirst || isSalt) ? 600 : 400,
+                  background: bgColor,
+                  color: textColor,
+                  border: (isSalt || isFirst) ? 'none' : '1px solid #e8e0d4',
+                  cursor: isSalt ? 'pointer' : 'default',
+                };
+
+                /* wrap in a span that handles both the fade-in animation AND the salt dimming
+                   separately, so the animation doesn't override the opacity */
+                const wrapStyle = {
+                  display: 'inline-block',
+                  opacity: afterSalt ? 0.4 : 1,
+                  animationName: 'fadeUp', animationDuration: '0.4s',
+                  animationFillMode: 'forwards', animationDelay: `${i * 20}ms`,
+                };
+
+                const pill = <span style={pillStyle}>{ing}</span>;
+
                 return isSalt ? (
-                  <SaltTooltip key={i}>{pill}</SaltTooltip>
+                  <span key={i} style={wrapStyle}><SaltTooltip>{pill}</SaltTooltip></span>
                 ) : (
-                  <span key={i}>{pill}</span>
+                  <span key={i} style={wrapStyle}>{pill}</span>
                 );
               })}
             </div>
