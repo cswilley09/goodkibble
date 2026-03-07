@@ -114,7 +114,17 @@ export default function ComparePage() {
   const goHome = () => router.push('/');
   const goFood = (id) => router.push(`/food/${id}`);
 
-  const colCount = Math.min(items.length + (items.length < 3 ? 1 : 0), 3);
+  /* grid column definitions:
+     - label column: fixed 80px
+     - product columns: equal flex
+     - add-slot column (if < 3 items): equal flex */
+  const hasAddSlot = items.length < 3;
+  const productCols = items.length;
+  const totalDataCols = productCols + (hasAddSlot ? 1 : 0);
+
+  /* card row uses same total columns but label col is blank */
+  const cardGridCols = `80px repeat(${totalDataCols}, 1fr)`;
+  const dataGridCols = `80px repeat(${totalDataCols}, 1fr)`;
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
@@ -186,29 +196,31 @@ export default function ComparePage() {
             </div>
           </div>
         ) : (
-          /* ═══════════════════════════════════════════════
+          /* ═══════════════════════════════════════════
              UNIFIED COMPARISON GRID
-             One continuous rounded surface.
-             Product cards sit as column headers,
-             nutrient rows flow directly beneath them,
-             sharing the same column borders.
-             ═══════════════════════════════════════════════ */
+             label col | product cols | add slot
+             All share the same column widths.
+             ═══════════════════════════════════════════ */
           <div style={{
             background: '#faf8f5', borderRadius: 24, border: '1px solid #ede8df',
             overflow: 'hidden', animation: 'fadeUp 0.5s ease',
           }}>
 
-            {/* ── product card row (column headers) ── */}
+            {/* ── row 1: product card headers ── */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: `repeat(${colCount}, 1fr)`,
+              gridTemplateColumns: cardGridCols,
               borderBottom: '2px solid #ede8df',
             }}>
+              {/* empty label column */}
+              <div />
+
+              {/* product cards */}
               {items.map((f, idx) => (
                 <div key={f.id} style={{
-                  padding: '28px 20px 22px',
+                  padding: '28px 16px 22px',
                   textAlign: 'center',
-                  borderLeft: idx > 0 ? '1px solid #ede8df' : 'none',
+                  borderLeft: '1px solid #ede8df',
                   cursor: 'pointer', transition: 'background 0.2s',
                   position: 'relative',
                 }}
@@ -229,7 +241,7 @@ export default function ComparePage() {
                     </div>
                   )}
                   <div style={{ fontSize: 11, color: '#8a7e72', fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 3 }}>{f.brand}</div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1612', lineHeight: 1.3, marginBottom: 12, minHeight: 34, padding: '0 4px' }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1612', lineHeight: 1.3, marginBottom: 12, minHeight: 34, padding: '0 2px' }}>
                     {f.name?.length > 45 ? f.name.substring(0, 45) + '...' : f.name}
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
@@ -244,40 +256,47 @@ export default function ComparePage() {
                   <div style={{ fontSize: 10, color: '#c4b9a8', marginTop: 8 }}>View details →</div>
                 </div>
               ))}
-              {items.length < 3 && (
+
+              {/* add slot */}
+              {hasAddSlot && (
                 <AddCardSearch onSelect={addItem} />
               )}
             </div>
 
-            {/* ── nutrient rows (share the same columns) ── */}
+            {/* ── nutrient rows ── */}
             {NUTRIENTS.map((n, nIdx) => {
               const color = NC[n.key];
               return (
                 <div key={n.key} style={{
                   display: 'grid',
-                  gridTemplateColumns: `repeat(${colCount}, 1fr)`,
+                  gridTemplateColumns: dataGridCols,
+                  alignItems: 'center',
                   borderBottom: nIdx < NUTRIENTS.length - 1 ? '1px solid #f0ebe3' : 'none',
                 }}>
+                  {/* ── left label column (once per row) ── */}
+                  <div style={{
+                    padding: '18px 12px 18px 20px',
+                    fontSize: 13, fontWeight: 600, color: color,
+                    letterSpacing: 0.3,
+                    lineHeight: 1.2,
+                  }}>
+                    {n.label}
+                  </div>
+
+                  {/* ── product value cells ── */}
                   {items.map((f, idx) => {
                     const val = f[n.key] || 0;
                     const pct = Math.min((val / n.max) * 100, 100);
                     return (
                       <div key={f.id} style={{
-                        padding: '16px 20px',
-                        borderLeft: idx > 0 ? '1px solid #f0ebe3' : 'none',
+                        padding: '18px 16px',
+                        borderLeft: '1px solid #f0ebe3',
                       }}>
-                        {/* nutrient label — shown in every cell for scannability */}
                         <div style={{
-                          display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8,
-                        }}>
-                          <span style={{ width: 7, height: 7, borderRadius: '50%', background: color, display: 'inline-block' }} />
-                          <span style={{ fontSize: 11, fontWeight: 600, color: '#b5aa99', letterSpacing: 0.5 }}>{n.label}</span>
-                        </div>
-                        <div style={{
-                          fontSize: 28, fontWeight: 700, color: '#1a1612',
+                          fontSize: 26, fontWeight: 700, color: '#1a1612',
                           fontFamily: "'DM Mono', monospace", lineHeight: 1, marginBottom: 8,
                         }}>
-                          {val}<span style={{ fontSize: 14, fontWeight: 500, color: '#8a7e72' }}>%</span>
+                          {val}<span style={{ fontSize: 13, fontWeight: 500, color: '#8a7e72' }}>%</span>
                         </div>
                         <div style={{ height: 6, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
                           <div style={{
@@ -288,8 +307,9 @@ export default function ComparePage() {
                       </div>
                     );
                   })}
-                  {/* empty cell for the add column */}
-                  {items.length < 3 && (
+
+                  {/* empty add-slot cell */}
+                  {hasAddSlot && (
                     <div style={{ borderLeft: '1px dashed #e8e0d4' }} />
                   )}
                 </div>
