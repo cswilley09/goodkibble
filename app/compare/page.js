@@ -211,7 +211,7 @@ export default function ComparePage() {
   const gridCols = `100px repeat(${totalDataCols}, 1fr)`;
 
   /* mobile: sticky narrow label col + fixed-width scrollable product cols */
-  const mLabelW = 64;
+  const mLabelW = 80;
   const mColW = 150;
   const mGridCols = `${mLabelW}px repeat(${totalDataCols}, ${mColW}px)`;
 
@@ -304,6 +304,15 @@ export default function ComparePage() {
         ) : (
           <>
           {/* ═══ COMPARISON GRID ═══ */}
+          {isMobile && (
+            <div style={{
+              textAlign: 'center', fontSize: 11, color: '#b5aa99', fontWeight: 500,
+              marginBottom: 8, letterSpacing: 0.5,
+              fontFamily: "'DM Sans', sans-serif",
+            }}>
+              ← Swipe to compare →
+            </div>
+          )}
           <div style={{
             background: '#faf8f5', borderRadius: isMobile ? 16 : 24,
             border: '1px solid #ede8df',
@@ -327,7 +336,7 @@ export default function ComparePage() {
 
               {items.map((f, idx) => (
                 <div key={f.id} style={{
-                  padding: isMobile ? '16px 10px 12px' : '24px 12px 18px',
+                  padding: isMobile ? '10px 8px 10px' : '24px 12px 18px',
                   textAlign: 'center',
                   borderLeft: '1px solid #ede8df',
                   borderBottom: '2px solid #ede8df',
@@ -340,8 +349,8 @@ export default function ComparePage() {
                 >
                   {f.image_url && (
                     <div style={{
-                      width: isMobile ? 56 : 80, height: isMobile ? 72 : 104,
-                      margin: isMobile ? '0 auto 8px' : '0 auto 12px', borderRadius: 10,
+                      width: isMobile ? 44 : 80, height: isMobile ? 56 : 104,
+                      margin: isMobile ? '0 auto 6px' : '0 auto 12px', borderRadius: isMobile ? 8 : 10,
                       overflow: 'hidden', background: '#fff', display: 'flex',
                       alignItems: 'center', justifyContent: 'center',
                       border: '1px solid #ede8df',
@@ -352,13 +361,13 @@ export default function ComparePage() {
                     </div>
                   )}
                   <div style={{
-                    fontSize: isMobile ? 10 : 11, color: '#8a7e72', fontWeight: 600,
-                    letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 2,
+                    fontSize: isMobile ? 9 : 11, color: '#8a7e72', fontWeight: 600,
+                    letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 1,
                   }}>{f.brand}</div>
                   {/* title: fixed height for alignment */}
                   <div style={{
                     fontSize: isMobile ? 11 : 13, fontWeight: 600, color: '#1a1612',
-                    lineHeight: 1.4, marginBottom: isMobile ? 8 : 10, padding: 0,
+                    lineHeight: 1.4, marginBottom: isMobile ? 6 : 10, padding: 0,
                     display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
                     overflow: 'hidden', textOverflow: 'ellipsis',
                     height: isMobile ? 46 : 55,
@@ -366,9 +375,9 @@ export default function ComparePage() {
                     {f.name}
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
-                    padding: isMobile ? '4px 10px' : '5px 12px', borderRadius: 100,
+                    padding: isMobile ? '3px 8px' : '5px 12px', borderRadius: 100,
                     border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
-                    fontSize: 11, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    fontSize: isMobile ? 10 : 11, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
                     transition: 'all 0.2s', position: 'relative', zIndex: 2,
                   }}
                     onMouseEnter={(e) => { e.target.style.background = '#fce4e4'; e.target.style.color = '#c44'; e.target.style.borderColor = '#f0c4c4'; }}
@@ -456,10 +465,10 @@ export default function ComparePage() {
                       <ol style={{ margin: 0, paddingLeft: isMobile ? 16 : 20, width: '100%' }}>
                         {first5.map((ing, i) => (
                           <li key={i} style={{
-                            fontSize: isMobile ? 11 : 12,
+                            fontSize: isMobile ? 10 : 12,
                             color: i === 0 ? '#1a1612' : '#5a5047',
                             fontWeight: i === 0 ? 600 : 400,
-                            lineHeight: isMobile ? 1.6 : 1.8,
+                            lineHeight: isMobile ? 1.4 : 1.8,
                             fontFamily: "'DM Sans', sans-serif",
                             listStyleType: 'decimal',
                           }}>{ing}</li>
