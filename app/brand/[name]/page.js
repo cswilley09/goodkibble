@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import SearchBox from '../../components/SearchBox';
+import CompareBubble from '../../components/CompareBubble';
 
 export default function BrandPage() {
   const params = useParams();
@@ -27,16 +28,17 @@ export default function BrandPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f5' }}>
-      <nav className='nav-bar' style={{
+      <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#faf8f5',
-        position: 'sticky', top: 0, zIndex: 40, gap: 24,
+        position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
           fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
         }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
-        <div className='nav-search'><SearchBox onSelect={goFood} variant="nav" /></div>
+        <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}><SearchBox onSelect={goFood} variant="nav" /></div>
+        <CompareBubble />
       </nav>
 
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 24px 80px' }}>
@@ -51,10 +53,7 @@ export default function BrandPage() {
         </button>
 
         <div style={{ animation: 'fadeUp 0.5s ease' }}>
-          <div style={{
-            fontSize: 13, fontWeight: 600, letterSpacing: 2,
-            textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8,
-          }}>Brand</div>
+          <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8 }}>Brand</div>
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
             fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: '#1a1612',
@@ -67,16 +66,11 @@ export default function BrandPage() {
 
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
-            <div style={{
-              width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612',
-              borderRadius: '50%', animation: 'spin 0.8s linear infinite',
-            }} />
+            <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: 16,
+          <div className="brand-grid" style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16,
           }}>
             {products.map((p, i) => (
               <div key={p.id} onClick={() => goFood(p.id)}
@@ -87,38 +81,18 @@ export default function BrandPage() {
                   animationName: 'fadeUp', animationDuration: '0.4s',
                   animationFillMode: 'both', animationDelay: `${i * 40}ms`,
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(26,22,18,0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(26,22,18,0.1)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
               >
                 <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                   <ProductThumb src={p.image_url} />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{
-                      fontSize: 15, fontWeight: 600, color: '#1a1612',
-                      marginBottom: 4, lineHeight: 1.3,
-                    }}>{p.name}</div>
-                    {p.flavor && (
-                      <div style={{ fontSize: 13, color: '#8a7e72', marginBottom: 12 }}>{p.flavor}</div>
-                    )}
+                    <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 4, lineHeight: 1.3 }}>{p.name}</div>
+                    {p.flavor && <div style={{ fontSize: 13, color: '#8a7e72', marginBottom: 12 }}>{p.flavor}</div>}
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      <span style={{
-                        fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100,
-                        background: '#e8f5ee', color: '#2d7a4f',
-                      }}>Protein {p.protein}%</span>
-                      <span style={{
-                        fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100,
-                        background: '#fef3e2', color: '#c47a20',
-                      }}>Fat {p.fat}%</span>
-                      <span style={{
-                        fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100,
-                        background: '#edf2f7', color: '#5a7a9e',
-                      }}>Carbs {p.carbohydrates}%</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#e8f5ee', color: '#2d7a4f' }}>Protein {p.protein}%</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#fef3e2', color: '#c47a20' }}>Fat {p.fat}%</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#edf2f7', color: '#5a7a9e' }}>Carbs {p.carbohydrates}%</span>
                     </div>
                   </div>
                 </div>
@@ -128,11 +102,11 @@ export default function BrandPage() {
         )}
       </div>
 
-      <div style={{
+      <div className="footer-bar" style={{
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+        <div className="footer-logo" style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
           Good<span style={{ color: '#f0c930' }}>Kibble</span>
         </div>
         <div style={{ fontSize: 13, color: '#b5aa99' }}>© 2026 GoodKibble. Not affiliated with any dog food brand.</div>
@@ -145,12 +119,16 @@ function ProductThumb({ src }) {
   const [err, setErr] = useState(false);
   if (!src || err) {
     return (
-      <div style={{
-        width: 64, height: 64, borderRadius: 12, background: '#f5f0e8',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0,
-      }}>🐕</div>
+      <div style={{ width: 64, height: 80, borderRadius: 10, background: '#f5f0e8',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>🐕</div>
     );
   }
-  return <img src={src} alt="" onError={() => setErr(true)}
-    style={{ width: 64, height: 64, borderRadius: 12, objectFit: 'contain', background: '#f5f0e8', flexShrink: 0 }} />;
+  return (
+    <div style={{ width: 64, height: 80, borderRadius: 10, overflow: 'hidden', background: '#f5f0e8',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <img src={src} alt="" onError={() => setErr(true)}
+        style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }} />
+    </div>
+  );
 }
+
