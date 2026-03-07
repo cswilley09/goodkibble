@@ -6,7 +6,22 @@ import CompareBubble from '../components/CompareBubble';
 import SearchBox from '../components/SearchBox';
 import { supabase } from '../../lib/supabase';
 
-/* ───── inline search for the "add" card ───── */
+/* ── fixed nutrient color map (matches single-product page) ── */
+const NUTRIENT_COLORS = {
+  protein: '#2d7a4f',
+  fat: '#c47a20',
+  carbohydrates: '#5a7a9e',
+  fiber: '#8a6aaf',
+};
+
+const NUTRIENTS = [
+  { label: 'Protein', key: 'protein', max: 50 },
+  { label: 'Fat', key: 'fat', max: 30 },
+  { label: 'Carbs', key: 'carbohydrates', max: 70 },
+  { label: 'Fiber', key: 'fiber', max: 10 },
+];
+
+/* ── inline search for the "add" card ── */
 function AddCardSearch({ onSelect }) {
   const [active, setActive] = useState(false);
   const [query, setQuery] = useState('');
@@ -104,33 +119,34 @@ function AddCardSearch({ onSelect }) {
   );
 }
 
-/* ───── nutrient row in the comparison table ───── */
-function NutrientRow({ label, values, maxVal, colors }) {
+/* ── nutrient comparison row ── */
+function NutrientRow({ label, nutrientKey, values, maxVal }) {
+  const color = NUTRIENT_COLORS[nutrientKey];
   return (
     <div style={{
       display: 'grid',
       gridTemplateColumns: `100px repeat(${values.length}, 1fr)`,
       gap: 0, alignItems: 'center',
-      padding: '16px 0',
+      padding: '18px 0',
       borderBottom: '1px solid #f0ebe3',
     }}>
-      <div style={{
-        fontSize: 13, fontWeight: 600, color: '#8a7e72',
-        letterSpacing: 0.5, paddingRight: 12,
-      }}>{label}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, paddingRight: 12 }}>
+        <span style={{ width: 8, height: 8, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />
+        <span style={{ fontSize: 13, fontWeight: 600, color: '#5a5047' }}>{label}</span>
+      </div>
       {values.map((v, i) => {
         const pct = Math.min((v / maxVal) * 100, 100);
         return (
-          <div key={i} style={{ padding: '0 8px' }}>
+          <div key={i} style={{ padding: '0 10px' }}>
             <div style={{
-              fontSize: 22, fontWeight: 700, color: '#1a1612',
-              fontFamily: "'DM Mono', monospace", marginBottom: 6,
+              fontSize: 24, fontWeight: 700, color: '#1a1612',
+              fontFamily: "'DM Mono', monospace", marginBottom: 6, lineHeight: 1,
             }}>
               {v}<span style={{ fontSize: 13, fontWeight: 500, color: '#8a7e72' }}>%</span>
             </div>
             <div style={{ height: 8, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
               <div style={{
-                height: '100%', borderRadius: 100, background: colors[i],
+                height: '100%', borderRadius: 100, background: color,
                 width: `${pct}%`, transition: 'width 0.8s ease',
               }} />
             </div>
@@ -141,33 +157,16 @@ function NutrientRow({ label, values, maxVal, colors }) {
   );
 }
 
-/* ───── main compare page ───── */
+/* ── main compare page ── */
 export default function ComparePage() {
   const router = useRouter();
   const { items, addItem, removeItem, clearAll } = useCompare();
   const goHome = () => router.push('/');
   const goFood = (id) => router.push(`/food/${id}`);
 
-  const columnColors = ['#2d7a4f', '#c47a20', '#5a7a9e'];
-
-  const nutrients = [
-    { label: 'Protein', key: 'protein', max: 50 },
-    { label: 'Fat', key: 'fat', max: 30 },
-    { label: 'Carbs', key: 'carbohydrates', max: 70 },
-    { label: 'Fiber', key: 'fiber', max: 10 },
-  ];
-
-  /* find the highest value per nutrient for highlighting */
-  function bestIdx(key) {
-    if (items.length < 2) return -1;
-    let best = -1, bestVal = -1;
-    items.forEach((f, i) => { if ((f[key] || 0) > bestVal) { bestVal = f[key] || 0; best = i; } });
-    return best;
-  }
-
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
-      {/* ── nav ── */}
+      {/* nav */}
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#fff',
@@ -183,7 +182,7 @@ export default function ComparePage() {
         <CompareBubble />
       </nav>
 
-      {/* ── content ── */}
+      {/* content */}
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 24px 80px' }}>
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -228,7 +227,7 @@ export default function ComparePage() {
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚖️</div>
             <p style={{ fontSize: 18, fontWeight: 600, color: '#1a1612', marginBottom: 8 }}>No products selected yet</p>
             <p style={{ fontSize: 14, color: '#8a7e72', maxWidth: 380, margin: '0 auto 24px' }}>
-              Search for a dog food and click &ldquo;+ Compare&rdquo; on any product page, or use the search below.
+              Search for a dog food and click &ldquo;+ Add to Compare&rdquo; on any product page, or search below.
             </p>
             <div style={{ maxWidth: 360, margin: '0 auto' }}>
               <AddCardSearch onSelect={addItem} />
@@ -236,18 +235,24 @@ export default function ComparePage() {
           </div>
         ) : (
           <>
-            {/* ── product cards row ── */}
+            {/* product cards row */}
             <div className="compare-grid" style={{
               display: 'grid',
               gridTemplateColumns: `repeat(${Math.min(items.length + (items.length < 3 ? 1 : 0), 3)}, 1fr)`,
               gap: 16, marginBottom: 4,
             }}>
-              {items.map((f, idx) => (
+              {items.map((f) => (
                 <div key={f.id} style={{
                   background: '#faf8f5', borderRadius: 20, padding: 24,
-                  borderTop: `4px solid ${columnColors[idx]}`,
+                  border: '1px solid #ede8df',
                   textAlign: 'center', animation: 'fadeUp 0.4s ease both',
-                }}>
+                  cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
+                  position: 'relative',
+                }}
+                  onClick={() => goFood(f.id)}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(26,22,18,0.08)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                >
                   {f.image_url && (
                     <div style={{
                       width: 100, height: 130, margin: '0 auto 14px', borderRadius: 12,
@@ -263,14 +268,19 @@ export default function ComparePage() {
                   <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', lineHeight: 1.3, marginBottom: 14, minHeight: 36 }}>
                     {f.name?.length > 50 ? f.name.substring(0, 50) + '...' : f.name}
                   </div>
-                  <button onClick={() => removeItem(f.id)} style={{
+                  <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
                     padding: '6px 14px', borderRadius: 100, border: '1px solid #e8e0d4',
                     background: '#fff', color: '#8a7e72', fontSize: 12, cursor: 'pointer',
                     fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+                    position: 'relative', zIndex: 2,
                   }}
                     onMouseEnter={(e) => { e.target.style.background = '#fce4e4'; e.target.style.color = '#c44'; e.target.style.borderColor = '#f0c4c4'; }}
                     onMouseLeave={(e) => { e.target.style.background = '#fff'; e.target.style.color = '#8a7e72'; e.target.style.borderColor = '#e8e0d4'; }}
                   >Remove</button>
+                  <div style={{
+                    position: 'absolute', bottom: 8, right: 12,
+                    fontSize: 11, color: '#c4b9a8', fontWeight: 500,
+                  }}>View details →</div>
                 </div>
               ))}
               {items.length < 3 && (
@@ -278,7 +288,7 @@ export default function ComparePage() {
               )}
             </div>
 
-            {/* ── comparison table ── */}
+            {/* comparison table — always shown, even with 1 product */}
             <div style={{
               background: '#faf8f5', borderRadius: 24, padding: '32px 28px',
               border: '1px solid #ede8df', marginTop: 28,
@@ -286,72 +296,46 @@ export default function ComparePage() {
             }}>
               <div style={{
                 fontSize: 12, fontWeight: 600, letterSpacing: 2.5,
-                textTransform: 'uppercase', color: '#b5aa99', marginBottom: 24,
+                textTransform: 'uppercase', color: '#b5aa99', marginBottom: 20,
               }}>
                 Nutritional Breakdown
               </div>
 
-              {/* column header — product names aligned to grid */}
+              {/* column headers */}
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: `100px repeat(${items.length}, 1fr)`,
-                gap: 0, marginBottom: 4,
+                gap: 0, paddingBottom: 12, borderBottom: '2px solid #ede8df',
               }}>
-                <div />
-                {items.map((f, idx) => (
-                  <div key={f.id} style={{ padding: '0 8px', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{
-                      width: 10, height: 10, borderRadius: '50%',
-                      background: columnColors[idx], display: 'inline-block', flexShrink: 0,
-                    }} />
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#5a5047', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <div style={{ fontSize: 11, color: '#b5aa99', fontWeight: 600, letterSpacing: 1, paddingRight: 12 }}>METRIC</div>
+                {items.map((f) => (
+                  <div key={f.id} style={{ padding: '0 10px' }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: '#1a1612', lineHeight: 1.3 }}>
                       {f.brand}
-                    </span>
+                    </div>
+                    <div style={{ fontSize: 11, color: '#8a7e72', lineHeight: 1.3, marginTop: 2 }}>
+                      {f.name?.length > 30 ? f.name.substring(0, 30) + '...' : f.name}
+                    </div>
                   </div>
                 ))}
               </div>
 
               {/* nutrient rows */}
-              {nutrients.map((n) => (
+              {NUTRIENTS.map((n) => (
                 <NutrientRow
                   key={n.key}
                   label={n.label}
+                  nutrientKey={n.key}
                   values={items.map(f => f[n.key] || 0)}
                   maxVal={n.max}
-                  colors={items.map((_, i) => columnColors[i])}
                 />
               ))}
-
-              {/* quick-glance summary for 2+ products */}
-              {items.length >= 2 && (
-                <div style={{ marginTop: 24, padding: '16px 20px', background: '#fff', borderRadius: 16, border: '1px solid #ede8df' }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: '#b5aa99', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 12 }}>
-                    Quick Glance
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                    {nutrients.map((n) => {
-                      const bi = bestIdx(n.key);
-                      if (bi < 0) return null;
-                      return (
-                        <div key={n.key} style={{
-                          padding: '8px 14px', borderRadius: 12, background: '#f5f0e8',
-                          fontSize: 13, color: '#5a5047',
-                        }}>
-                          <span style={{ fontWeight: 600 }}>Highest {n.label}:</span>{' '}
-                          <span style={{ color: columnColors[bi], fontWeight: 700 }}>{items[bi].brand}</span>{' '}
-                          <span style={{ fontFamily: "'DM Mono', monospace", fontWeight: 600 }}>({items[bi][n.key]}%)</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
             </div>
           </>
         )}
       </div>
 
-      {/* ── footer ── */}
+      {/* footer */}
       <div className="footer-bar" style={{
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
