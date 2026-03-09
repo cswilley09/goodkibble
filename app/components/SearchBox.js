@@ -1,14 +1,86 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabase';
+
+function normalize(str) {
+  return (str || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function tokenize(str) {
+  return normalize(str).split(' ').filter(Boolean);
+}
+
+function fuzzyMatch(token, target) {
+  if (target.startsWith(token)) return 2;
+  if (target.includes(token)) return 1;
+  if (token.length >= 3 && target.length >= 3) {
+    let edits = 0;
+    const short = token.length < target.length ? token : target;
+    const long = token.length < target.length ? target : token;
+    if (Math.abs(short.length - long.length) > 2) return 0;
+    for (let i = 0; i < short.length; i++) {
+      if (short[i] !== long[i]) edits++;
+      if (edits > 2) return 0;
+    }
+    return edits <= 1 ? 0.5 : 0;
+  }
+  return 0;
+}
+
+function scoreResult(food, queryTokens) {
+  const brand = normalize(food.brand || '');
+  const name = normalize(food.name || '');
+  const flavor = normalize(food.flavor || '');
+  const all = `${brand} ${name} ${flavor}`;
+  const allTokens = tokenize(all);
+  let score = 0;
+
+  for (const qt of queryTokens) {
+    const brandMatch = brand.startsWith(qt) ? 10 : brand.includes(qt) ? 6 : 0;
+    if (brandMatch) { score += brandMatch; continue; }
+
+    let bestToken = 0;
+    for (const at of allTokens) {
+      const m = fuzzyMatch(qt, at);
+      if (m > bestToken) bestToken = m;
+    }
+    score += bestToken;
+  }
+
+  if (queryTokens.length > 0 && brand === queryTokens.join(' ')) score += 20;
+  if (queryTokens.length > 0 && brand.startsWith(queryTokens.join(' '))) score += 15;
+
+  return score;
+}
+
+function highlightText(text, query) {
+  if (!query.trim() || !text) return text;
+  const tokens = tokenize(query);
+  let result = text;
+  tokens.forEach(token => {
+    const regex = new RegExp(`(${token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    result = result.replace(regex, '|||$1|||');
+  });
+  const parts = result.split('|||');
+  return parts.map((part, i) => {
+    const isMatch = tokens.some(t => part.toLowerCase().startsWith(t.substring(0, Math.min(t.length, part.length))));
+    if (isMatch && i % 2 === 1) {
+      return <strong key={i} style={{ color: '#1a1612' }}>{part}</strong>;
+    }
+    return part;
+  });
+}
 
 export default function SearchBox({ onSelect, variant = 'hero' }) {
   const [text, setText] = useState('');
   const [results, setResults] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const boxRef = useRef(null);
   const debounceRef = useRef(null);
+  const router = useRouter();
   const isNav = variant === 'nav';
 
   useEffect(() => {
@@ -23,18 +95,30 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
     const val = e.target.value;
     setText(val);
     clearTimeout(debounceRef.current);
-    if (!val.trim()) { setResults([]); setOpen(false); return; }
+    if (!val.trim()) { setResults([]); setTotalCount(0); setOpen(false); return; }
     setLoading(true);
     debounceRef.current = setTimeout(async () => {
-      const { data } = await supabase
+      const tokens = tokenize(val);
+      if (tokens.length === 0) { setResults([]); setOpen(false); setLoading(false); return; }
+
+      const queries = tokens.map(t => `name.ilike.%${t}%,brand.ilike.%${t}%,flavor.ilike.%${t}%`);
+      const orClause = queries.join(',');
+
+      const { data, count } = await supabase
         .from('dog_foods')
-        .select('id, name, brand, flavor, protein, image_url')
-        .or(`name.ilike.%${val.trim()}%,brand.ilike.%${val.trim()}%,flavor.ilike.%${val.trim()}%`)
-        .limit(8);
-      setResults(data || []);
+        .select('id, name, brand, flavor, protein, image_url', { count: 'exact' })
+        .or(orClause)
+        .limit(50);
+
+      const scored = (data || []).map(f => ({ ...f, _score: scoreResult(f, tokens) }))
+        .filter(f => f._score > 0)
+        .sort((a, b) => b._score - a._score);
+
+      setResults(scored.slice(0, 10));
+      setTotalCount(scored.length);
       setOpen(true);
       setLoading(false);
-    }, 300);
+    }, 250);
   }
 
   function handleSelect(food) {
@@ -42,6 +126,14 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
     setResults([]);
     setOpen(false);
     onSelect(food.id);
+  }
+
+  function viewAll() {
+    const q = text.trim();
+    setText('');
+    setResults([]);
+    setOpen(false);
+    router.push(`/search?q=${encodeURIComponent(q)}`);
   }
 
   return (
@@ -61,6 +153,7 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
           placeholder={isNav ? 'Search another food...' : 'Search any dog food...'}
           value={text} onChange={handleChange}
           onFocus={() => { if (results.length > 0) setOpen(true); }}
+          onKeyDown={(e) => { if (e.key === 'Enter' && text.trim()) viewAll(); }}
           style={{
             flex: 1, border: 'none', outline: 'none',
             fontSize: isNav ? 14 : 17, padding: isNav ? '10px 8px' : '14px 12px',
@@ -69,7 +162,7 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
           }}
         />
         {!isNav && (
-          <button onClick={() => { if (results.length > 0) handleSelect(results[0]); }}
+          <button onClick={() => { if (text.trim()) viewAll(); }}
             style={{
               padding: '14px 28px', borderRadius: 14, border: 'none',
               background: '#1a1612', color: '#faf8f5', fontSize: 15,
@@ -83,31 +176,55 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
           position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0,
           background: '#fff', borderRadius: 16, overflow: 'hidden',
           boxShadow: '0 12px 48px rgba(26,22,18,0.15)', zIndex: 100,
-          maxHeight: 400, overflowY: 'auto', animation: 'slideDown 0.15s ease',
+          maxHeight: 480, overflowY: 'auto', animation: 'slideDown 0.15s ease',
         }}>
           {loading && results.length === 0 ? (
             <div style={{ padding: 24, textAlign: 'center', color: '#8a7e72', fontSize: 15 }}>Searching...</div>
           ) : results.length === 0 ? (
             <div style={{ padding: 24, textAlign: 'center', color: '#8a7e72', fontSize: 15 }}>No results found.</div>
           ) : (
-            results.map((f, i) => (
-              <div key={f.id}
-                onMouseDown={(e) => { e.preventDefault(); handleSelect(f); }}
-                style={{
-                  padding: '12px 20px', cursor: 'pointer',
-                  borderBottom: i < results.length - 1 ? '1px solid #f0ebe3' : 'none',
-                  display: 'flex', alignItems: 'center', gap: 12,
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#faf8f5')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-              >
-                <Thumb src={f.image_url} />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
-                  <div style={{ fontSize: 13, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
+            <>
+              {results.map((f, i) => (
+                <div key={f.id}
+                  onMouseDown={(e) => { e.preventDefault(); handleSelect(f); }}
+                  style={{
+                    padding: '12px 20px', cursor: 'pointer',
+                    borderBottom: '1px solid #f0ebe3',
+                    display: 'flex', alignItems: 'center', gap: 12,
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#faf8f5')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                >
+                  <Thumb src={f.image_url} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {highlightText(f.brand, text)}
+                    </div>
+                    <div style={{ fontSize: 13, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {highlightText(f.name, text)}
+                    </div>
+                  </div>
+                  <div style={{
+                    fontSize: 12, fontWeight: 600, color: '#8a7e72',
+                    background: '#f5f0e8', padding: '4px 10px', borderRadius: 100, whiteSpace: 'nowrap',
+                  }}>{f.protein}% protein</div>
                 </div>
-              </div>
-            ))
+              ))}
+              {totalCount > 10 && (
+                <div
+                  onMouseDown={(e) => { e.preventDefault(); viewAll(); }}
+                  style={{
+                    padding: '14px 20px', cursor: 'pointer', textAlign: 'center',
+                    fontSize: 14, fontWeight: 600, color: '#1a1612',
+                    background: '#faf8f5', borderTop: '1px solid #ede8df',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#f5f0e8')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = '#faf8f5')}
+                >
+                  View all {totalCount} results →
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
