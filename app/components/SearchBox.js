@@ -36,6 +36,17 @@ function getSearchVariants(query) {
   }).join(' ');
   variants.add(firstWordApos);
 
+  /* for long queries (4+ words), also try just the first 2-3 significant words
+     so pasting a full product name still finds results even if slightly different */
+  if (words.length >= 4) {
+    const stopWords = new Set(['and', 'the', 'for', 'with', 'dry', 'dog', 'food', 'recipe', 'formula', 'adult', 'puppy', 'senior', 'natural', 'grain', 'free']);
+    const significant = words.filter(w => w.length > 2 && !stopWords.has(w.toLowerCase()));
+    if (significant.length >= 2) {
+      variants.add(significant.slice(0, 3).join(' '));
+      variants.add(significant.slice(0, 2).join(' '));
+    }
+  }
+
   return [...variants].filter(v => v.length > 0);
 }
 
