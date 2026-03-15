@@ -17,10 +17,10 @@ const NC = {
 const SHARED_MAX = 50;
 
 const NUTRIENTS = [
-  { label: 'Protein', key: 'protein' },
-  { label: 'Fat', key: 'fat' },
-  { label: 'Carbs', key: 'carbohydrates' },
-  { label: 'Fiber', key: 'fiber' },
+  { label: 'Protein', key: 'protein_dmb' },
+  { label: 'Fat', key: 'fat_dmb' },
+  { label: 'Carbs', key: 'carbs_dmb' },
+  { label: 'Fiber', key: 'fiber_dmb' },
 ];
 
 /* ── responsive hook ── */
@@ -114,8 +114,8 @@ function AddCardSearch({ onSelect, compact }) {
     if (query.length < 2) { setResults([]); return; }
     const t = setTimeout(() => {
       supabase
-        .from('dog_foods')
-        .select('id, name, brand, protein, fat, carbohydrates, fiber, moisture, ingredients, image_url')
+        .from('dog_foods_v2')
+        .select('id, name, brand, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, moisture, ingredients, image_url')
         .ilike('name', `%${query}%`)
         .limit(6)
         .then(({ data }) => setResults(data || []));
@@ -191,7 +191,10 @@ function AddCardSearch({ onSelect, compact }) {
 /* ── helper: get first 5 ingredients ── */
 function getFirst5(ingredientsStr) {
   if (!ingredientsStr) return [];
-  return ingredientsStr.split(',').map(s => s.trim()).filter(Boolean).slice(0, 5);
+  /* smart split: don't split on commas inside parentheses or brackets */
+  const all = ingredientsStr.match(/(?:[^,(\[]*(?:\([^)]*\)|\[[^\]]*\])?[^,(\[]*)*/g)
+    ?.map(s => s.trim()).filter(Boolean) || [];
+  return all.slice(0, 5);
 }
 
 /* ══════════════════════════════════════════
