@@ -112,21 +112,27 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
       const seen = new Set();
       const merged = [];
 
-      /* brand matches get priority */
       for (const item of (brandMatches || [])) {
-        if (!seen.has(item.id)) {
-          seen.add(item.id);
-          merged.push({ ...item, _matchType: 'brand' });
-        }
+        if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
+      }
+      for (const item of (nameMatches || [])) {
+        if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
       }
 
-      /* then name/flavor matches */
-      for (const item of (nameMatches || [])) {
-        if (!seen.has(item.id)) {
-          seen.add(item.id);
-          merged.push({ ...item, _matchType: 'name' });
+      /* relevance sort */
+      const queryWords = val.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 1);
+      function relevanceScore(item) {
+        const text = `${item.brand} ${item.name} ${item.flavor || ''}`.toLowerCase();
+        let score = 0;
+        for (const word of queryWords) {
+          if (text.includes(word)) score += 1;
         }
+        const strippedQuery = val.toLowerCase().replace(/[''`]/g, '').trim();
+        if (item.name.toLowerCase().includes(strippedQuery)) score += 10;
+        if (item.brand.toLowerCase().includes(queryWords[0])) score += 3;
+        return score;
       }
+      merged.sort((a, b) => relevanceScore(b) - relevanceScore(a));
 
       setTotalCount(merged.length);
       setResults(merged.slice(0, 6)); /* show top 6 in dropdown */
