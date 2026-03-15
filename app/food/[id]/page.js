@@ -247,7 +247,7 @@ export default function FoodPage() {
 
   useEffect(() => {
     setLoading(true);
-    supabase.from('dog_foods').select('*').eq('id', params.id).single()
+    supabase.from('dog_foods_v2').select('*').eq('id', params.id).single()
       .then(({ data }) => { setFood(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, [params.id]);
@@ -256,17 +256,12 @@ export default function FoodPage() {
   const goFood = (id) => router.push(`/food/${id}`);
   const goBrand = () => food && router.push(`/brand/${encodeURIComponent(food.brand)}`);
 
+  /* smart split: don't split on commas inside parentheses or brackets */
   const ingredients = food?.ingredients
-    ? food.ingredients.split(',').map((s) => s.trim()).filter(Boolean) : [];
+    ? food.ingredients.match(/(?:[^,(\[]*(?:\([^)]*\)|\[[^\]]*\])?[^,(\[]*)*/g)
+        ?.map((s) => s.trim()).filter(Boolean) || []
+    : [];
   const saltIdx = findSaltIndex(ingredients);
-
-  const prices = food ? [
-    food.size_1_lb && food.price_1 ? { lb: food.size_1_lb, price: food.price_1 } : null,
-    food.size_2_lb && food.price_2 ? { lb: food.size_2_lb, price: food.price_2 } : null,
-    food.size_3_lb && food.price_3 ? { lb: food.size_3_lb, price: food.price_3 } : null,
-    food.size_4_lb && food.price_4 ? { lb: food.size_4_lb, price: food.price_4 } : null,
-    food.size_5_lb && food.price_5 ? { lb: food.size_5_lb, price: food.price_5 } : null,
-  ].filter(Boolean) : [];
 
   return (
     <div style={{ minHeight: '100vh', background: '#ffffff' }}>
@@ -327,43 +322,26 @@ export default function FoodPage() {
               {food.flavor && <div style={{ fontSize: 15, color: '#8a7e72', marginBottom: 16 }}>Flavor: {food.flavor}</div>}
 
               <CompareToggle food={food} />
-
-              {prices.length > 0 && (
-                <div style={{ marginTop: 20 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 10 }}>Available sizes</div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {prices.map((p, i) => (
-                      <div key={i} style={{
-                        padding: '10px 16px', borderRadius: 12,
-                        border: '1.5px solid #ede8df', background: '#faf8f5', fontSize: 14,
-                      }}>
-                        <span style={{ fontWeight: 600, color: '#1a1612' }}>{p.lb} lb</span>
-                        <span style={{ color: '#8a7e72', marginLeft: 8 }}>${Number(p.price).toFixed(2)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Nutrition - Horizontal Bars */}
+          {/* Nutrition - Dry Matter Basis */}
           <div className="nutrition-section" style={{
             padding: '40px 32px', background: '#faf8f5', borderRadius: 24,
             border: '1px solid #ede8df', animation: 'scaleIn 0.5s ease 0.1s both',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: 32 }}>
               <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99' }}>
-                Guaranteed Analysis
+                Guaranteed Analysis (Dry Matter Basis)
               </span>
               <InfoTooltip text="These values are calculated on a Dry Matter Basis (DMB), which removes moisture content to give you a more accurate comparison between foods. Dry matter percentages reflect the actual nutrient concentration in the food solids, making it easier to compare wet and dry foods fairly." />
             </div>
 
             <div style={{ maxWidth: 560 }}>
-              <NutrientRow label="Protein" value={food.protein || 0} color="#2d7a4f" />
-              <NutrientRow label="Fat" value={food.fat || 0} color="#c47a20" />
-              <NutrientRow label="Carbohydrates" value={food.carbohydrates || 0} color="#5a7a9e" />
-              {food.fiber > 0 && <NutrientRow label="Fiber" value={food.fiber} color="#8a6aaf" />}
+              <NutrientRow label="Protein" value={food.protein_dmb || 0} color="#2d7a4f" />
+              <NutrientRow label="Fat" value={food.fat_dmb || 0} color="#c47a20" />
+              <NutrientRow label="Carbohydrates" value={food.carbs_dmb || 0} color="#5a7a9e" />
+              {food.fiber_dmb > 0 && <NutrientRow label="Fiber" value={food.fiber_dmb} color="#8a6aaf" />}
             </div>
           </div>
 
