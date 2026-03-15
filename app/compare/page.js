@@ -8,10 +8,10 @@ import { supabase } from '../../lib/supabase';
 
 /* ── fixed nutrient colors (same as product page) ── */
 const NC = {
-  protein: '#2d7a4f',
-  fat: '#c47a20',
-  carbohydrates: '#5a7a9e',
-  fiber: '#8a6aaf',
+  protein_dmb: '#2d7a4f',
+  fat_dmb: '#c47a20',
+  carbs_dmb: '#5a7a9e',
+  fiber_dmb: '#8a6aaf',
 };
 
 const SHARED_MAX = 50;
