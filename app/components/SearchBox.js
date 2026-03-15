@@ -27,8 +27,8 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
     setLoading(true);
     debounceRef.current = setTimeout(async () => {
       const { data } = await supabase
-        .from('dog_foods')
-        .select('id, name, brand, flavor, protein, image_url')
+        .from('dog_foods_v2')
+        .select('id, name, brand, flavor, image_url')
         .or(`name.ilike.%${val.trim()}%,brand.ilike.%${val.trim()}%,flavor.ilike.%${val.trim()}%`)
         .limit(8);
       setResults(data || []);
@@ -106,10 +106,6 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
                   <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
                   <div style={{ fontSize: 13, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
                 </div>
-                <div style={{
-                  fontSize: 12, fontWeight: 600, color: '#8a7e72',
-                  background: '#f5f0e8', padding: '4px 10px', borderRadius: 100, whiteSpace: 'nowrap',
-                }}>{f.protein}% protein</div>
               </div>
             ))
           )}
