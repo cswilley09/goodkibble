@@ -10,7 +10,7 @@ export default function Home() {
 
   useEffect(() => {
     supabase
-      .from('dog_foods')
+      .from('dog_foods_v2')
       .select('brand')
       .then(({ data }) => {
         if (!data) return;
@@ -99,9 +99,6 @@ export default function Home() {
                 </div>
                 <div style={{ ...labelStyle, top: '70%', left: '100%', paddingLeft: 4 }}>
                   {dashRight(45)} FIBER
-                </div>
-                <div style={{ ...labelStyle, top: '90%', right: '100%', paddingRight: 4 }}>
-                  MOISTURE {dashLeft(40)}
                 </div>
               </div>
             </div>
