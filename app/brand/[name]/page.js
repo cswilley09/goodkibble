@@ -15,8 +15,8 @@ export default function BrandPage() {
   useEffect(() => {
     setLoading(true);
     supabase
-      .from('dog_foods')
-      .select('id, name, brand, flavor, protein, fat, carbohydrates, image_url')
+      .from('dog_foods_v2')
+      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, image_url')
       .eq('brand', brandName)
       .order('name')
       .then(({ data }) => { setProducts(data || []); setLoading(false); })
@@ -90,9 +90,9 @@ export default function BrandPage() {
                     <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 4, lineHeight: 1.3 }}>{p.name}</div>
                     {p.flavor && <div style={{ fontSize: 13, color: '#8a7e72', marginBottom: 12 }}>{p.flavor}</div>}
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#e8f5ee', color: '#2d7a4f' }}>Protein {p.protein}%</span>
-                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#fef3e2', color: '#c47a20' }}>Fat {p.fat}%</span>
-                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#edf2f7', color: '#5a7a9e' }}>Carbs {p.carbohydrates}%</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#e8f5ee', color: '#2d7a4f' }}>Protein {p.protein_dmb}%</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#fef3e2', color: '#c47a20' }}>Fat {p.fat_dmb}%</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#edf2f7', color: '#5a7a9e' }}>Carbs {p.carbs_dmb}%</span>
                     </div>
                   </div>
                 </div>
@@ -131,4 +131,3 @@ function ProductThumb({ src }) {
     </div>
   );
 }
-
