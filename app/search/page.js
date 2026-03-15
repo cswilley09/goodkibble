@@ -21,6 +21,15 @@ function getSearchVariants(query) {
     return w;
   }).join(' ');
   variants.add(firstWordApos);
+  /* for long queries, extract key words */
+  if (words.length >= 4) {
+    const stopWords = new Set(['and', 'the', 'for', 'with', 'dry', 'dog', 'food', 'recipe', 'formula', 'adult', 'puppy', 'senior', 'natural', 'grain', 'free']);
+    const significant = words.filter(w => w.length > 2 && !stopWords.has(w.toLowerCase()));
+    if (significant.length >= 2) {
+      variants.add(significant.slice(0, 3).join(' '));
+      variants.add(significant.slice(0, 2).join(' '));
+    }
+  }
   return [...variants].filter(v => v.length > 0);
 }
 
