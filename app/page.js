@@ -152,7 +152,7 @@ export default function Home() {
                 onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
                 onMouseLeave={(e) => { e.target.style.color = '#1a161260'; e.target.style.textDecoration = 'none'; }}
               >
-                or browse all {totalCount > 0 ? totalCount.toLocaleString() : ''} foods by filter →
+                or browse 1,000+ dog foods by filter →
               </span>
             </div>
           </div>
