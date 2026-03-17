@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [brands, setBrands] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -14,6 +15,7 @@ export default function Home() {
       .select('brand')
       .then(({ data }) => {
         if (!data) return;
+        setTotalCount(data.length);
         const counts = {};
         data.forEach(r => { counts[r.brand] = (counts[r.brand] || 0) + 1; });
         const sorted = Object.entries(counts)
@@ -150,7 +152,7 @@ export default function Home() {
                 onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
                 onMouseLeave={(e) => { e.target.style.color = '#1a161260'; e.target.style.textDecoration = 'none'; }}
               >
-                or browse all {brands.reduce((sum, b) => sum + b.count, 0).toLocaleString()}+ foods by filter →
+                or browse all {totalCount > 0 ? totalCount.toLocaleString() : ''} foods by filter →
               </span>
             </div>
           </div>
