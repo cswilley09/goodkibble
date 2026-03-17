@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { supabase } from '../../lib/supabase';
 import CompareBubble from '../components/CompareBubble';
 import SearchBox from '../components/SearchBox';
@@ -35,9 +36,22 @@ const FIBER_RANGES = [
   { label: '6%+', min: 6, max: 999 },
 ];
 
-/* ── collapsible filter section ── */
-function FilterSection({ title, children, defaultOpen = true }) {
+/* ── sort options ── */
+const SORT_OPTIONS = [
+  { label: 'Protein (high to low)', value: 'protein_desc', field: 'protein_dmb', dir: -1 },
+  { label: 'Protein (low to high)', value: 'protein_asc', field: 'protein_dmb', dir: 1 },
+  { label: 'Carbs (low to high)', value: 'carbs_asc', field: 'carbs_dmb', dir: 1 },
+  { label: 'Carbs (high to low)', value: 'carbs_desc', field: 'carbs_dmb', dir: -1 },
+  { label: 'Fat (low to high)', value: 'fat_asc', field: 'fat_dmb', dir: 1 },
+  { label: 'Fat (high to low)', value: 'fat_desc', field: 'fat_dmb', dir: -1 },
+  { label: 'Brand (A–Z)', value: 'brand_asc', field: 'brand', dir: 1 },
+  { label: 'Brand (Z–A)', value: 'brand_desc', field: 'brand', dir: -1 },
+];
+
+/* ── collapsible filter section (Change 5) ── */
+function FilterSection({ title, children, defaultOpen = true, forceOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
+  const isOpen = open || forceOpen;
   return (
     <div style={{ marginBottom: 16, borderBottom: '1px solid #ede8df', paddingBottom: 12 }}>
       <button onClick={() => setOpen(!open)} style={{
@@ -46,9 +60,9 @@ function FilterSection({ title, children, defaultOpen = true }) {
         fontFamily: "'DM Sans', sans-serif",
       }}>
         <span style={{ fontSize: 13, fontWeight: 700, color: '#1a1612', letterSpacing: 1, textTransform: 'uppercase' }}>{title}</span>
-        <span style={{ fontSize: 14, color: '#8a7e72', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+        <span style={{ fontSize: 14, color: '#8a7e72', transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
       </button>
-      {open && <div style={{ marginTop: 10 }}>{children}</div>}
+      {isOpen && <div style={{ marginTop: 10 }}>{children}</div>}
     </div>
   );
 }
@@ -68,7 +82,7 @@ function CheckOption({ label, checked, onChange, count }) {
   );
 }
 
-/* ── product card ── */
+/* ── product card (Change 4: added fiber pill) ── */
 function ProductCard({ food, onClick }) {
   const [imgErr, setImgErr] = useState(false);
   return (
@@ -97,15 +111,19 @@ function ProductCard({ food, onClick }) {
           <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 100, background: '#e8f5ee', color: '#2d7a4f' }}>Protein {food.protein_dmb}%</span>
           <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 100, background: '#fef3e2', color: '#c47a20' }}>Fat {food.fat_dmb}%</span>
           <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 100, background: '#edf2f7', color: '#5a7a9e' }}>Carbs {food.carbs_dmb}%</span>
+          {food.fiber_dmb != null && (
+            <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 100, background: '#f0edf7', color: '#8a6aaf' }}>Fiber {food.fiber_dmb}%</span>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-/* ── main discover page ── */
-export default function DiscoverPage() {
+/* ── main discover page content ── */
+function DiscoverContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [allFoods, setAllFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -119,8 +137,20 @@ export default function DiscoverPage() {
   const [selectedFiberRange, setSelectedFiberRange] = useState([]);
   const [brandSearch, setBrandSearch] = useState('');
 
+  /* sort state (Change 3) — read initial from URL, default protein desc */
+  const initialSort = searchParams.get('sort') || 'protein_desc';
+  const [sortValue, setSortValue] = useState(initialSort);
+
   const goHome = () => router.push('/');
   const goFood = (id) => router.push(`/food/${id}`);
+
+  /* update URL when sort changes */
+  function handleSortChange(val) {
+    setSortValue(val);
+    const url = new URL(window.location);
+    url.searchParams.set('sort', val);
+    window.history.replaceState({}, '', url);
+  }
 
   /* fetch all products once */
   useEffect(() => {
@@ -198,6 +228,21 @@ export default function DiscoverPage() {
     });
   }, [allFoods, selectedBrands, selectedProteins, selectedProteinRange, selectedCarbRange, selectedFatRange, selectedFiberRange]);
 
+  /* sort filtered results (Change 3) */
+  const sorted = useMemo(() => {
+    const opt = SORT_OPTIONS.find(o => o.value === sortValue) || SORT_OPTIONS[0];
+    return [...filtered].sort((a, b) => {
+      const av = a[opt.field];
+      const bv = b[opt.field];
+      /* nulls go to bottom */
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      if (typeof av === 'string') return opt.dir * av.localeCompare(bv);
+      return opt.dir * (av - bv);
+    });
+  }, [filtered, sortValue]);
+
   const activeFilterCount = [selectedBrands, selectedProteins, selectedProteinRange, selectedCarbRange, selectedFatRange, selectedFiberRange]
     .filter(a => a.length > 0).length;
 
@@ -222,21 +267,26 @@ export default function DiscoverPage() {
     setter(exists ? selected.filter(r => r.label !== range.label) : [...selected, range]);
   }
 
-  /* ── filter panel content (shared between desktop sidebar and mobile panel) ── */
+  /* ── smart result count text (Change 1) ── */
+  function getResultText() {
+    if (loading) return 'Loading...';
+    if (filtered.length === 0) return 'No foods match your filters';
+    if (activeFilterCount === 0) return `Showing all ${allFoods.length.toLocaleString()} foods`;
+    if (activeFilterCount === 1) {
+      if (selectedProteins.length === 1) {
+        return `Showing ${filtered.length.toLocaleString()} ${selectedProteins[0].toLowerCase()} foods`;
+      }
+      if (selectedBrands.length === 1) {
+        return `Showing ${filtered.length.toLocaleString()} ${selectedBrands[0]} foods`;
+      }
+    }
+    return `Showing ${filtered.length.toLocaleString()} foods`;
+  }
+
+  /* ── filter panel content ── */
   const filterContent = (
     <>
-      {activeFilterCount > 0 && (
-        <button onClick={clearAll} style={{
-          width: '100%', padding: '10px 16px', borderRadius: 12,
-          border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
-          fontSize: 13, fontWeight: 600, cursor: 'pointer', marginBottom: 16,
-          fontFamily: "'DM Sans', sans-serif",
-        }}>
-          Clear all filters ({activeFilterCount})
-        </button>
-      )}
-
-      <FilterSection title="Protein Type">
+      <FilterSection title="Protein Type" defaultOpen={true} forceOpen={selectedProteins.length > 0}>
         {PROTEIN_TYPES.map(pt => (
           <CheckOption key={pt} label={pt} count={proteinCounts[pt] || 0}
             checked={selectedProteins.includes(pt)}
@@ -244,7 +294,7 @@ export default function DiscoverPage() {
         ))}
       </FilterSection>
 
-      <FilterSection title="Brand">
+      <FilterSection title="Brand" defaultOpen={true} forceOpen={selectedBrands.length > 0}>
         <input
           type="text" placeholder="Search brands..."
           value={brandSearch} onChange={(e) => setBrandSearch(e.target.value)}
@@ -265,7 +315,7 @@ export default function DiscoverPage() {
         </div>
       </FilterSection>
 
-      <FilterSection title="Protein %" defaultOpen={false}>
+      <FilterSection title="Protein %" defaultOpen={false} forceOpen={selectedProteinRange.length > 0}>
         {PROTEIN_RANGES.map(r => (
           <CheckOption key={r.label} label={r.label}
             checked={selectedProteinRange.some(s => s.label === r.label)}
@@ -273,7 +323,7 @@ export default function DiscoverPage() {
         ))}
       </FilterSection>
 
-      <FilterSection title="Carbohydrates %" defaultOpen={false}>
+      <FilterSection title="Carbohydrates %" defaultOpen={false} forceOpen={selectedCarbRange.length > 0}>
         {CARB_RANGES.map(r => (
           <CheckOption key={r.label} label={r.label}
             checked={selectedCarbRange.some(s => s.label === r.label)}
@@ -281,7 +331,7 @@ export default function DiscoverPage() {
         ))}
       </FilterSection>
 
-      <FilterSection title="Fat %" defaultOpen={false}>
+      <FilterSection title="Fat %" defaultOpen={false} forceOpen={selectedFatRange.length > 0}>
         {FAT_RANGES.map(r => (
           <CheckOption key={r.label} label={r.label}
             checked={selectedFatRange.some(s => s.label === r.label)}
@@ -289,7 +339,7 @@ export default function DiscoverPage() {
         ))}
       </FilterSection>
 
-      <FilterSection title="Fiber %" defaultOpen={false}>
+      <FilterSection title="Fiber %" defaultOpen={false} forceOpen={selectedFiberRange.length > 0}>
         {FIBER_RANGES.map(r => (
           <CheckOption key={r.label} label={r.label}
             checked={selectedFiberRange.some(s => s.label === r.label)}
@@ -320,19 +370,15 @@ export default function DiscoverPage() {
       {/* content */}
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>
         {/* header */}
-        <div style={{ marginBottom: 24 }}>
+        <div style={{ marginBottom: 8 }}>
           <h1 style={{
             fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 3vw, 40px)',
             fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 4,
           }}>Discover Foods</h1>
-          <p style={{ fontSize: 15, color: '#8a7e72' }}>
-            {loading ? 'Loading...' : `${filtered.length} of ${allFoods.length} products`}
-            {activeFilterCount > 0 && ` · ${activeFilterCount} filter${activeFilterCount > 1 ? 's' : ''} active`}
-          </p>
         </div>
 
         {/* mobile filter toggle */}
-        <div className="mobile-filter-toggle" style={{ display: 'none', marginBottom: 16 }}>
+        <div className="mobile-filter-toggle" style={{ display: 'none', marginBottom: 12 }}>
           <button onClick={() => setMobileFiltersOpen(true)} style={{
             width: '100%', padding: '12px 20px', borderRadius: 14,
             border: '1.5px solid #ede8df', background: '#fff',
@@ -343,6 +389,51 @@ export default function DiscoverPage() {
             <span>Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}</span>
             <span style={{ color: '#8a7e72' }}>▼</span>
           </button>
+        </div>
+
+        {/* result count + clear + sort row (Changes 1, 2, 3) */}
+        <div className="results-bar" style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          flexWrap: 'wrap', gap: 12, marginBottom: 20,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
+              {getResultText()}
+            </span>
+            {activeFilterCount > 0 && (
+              <span
+                onClick={clearAll}
+                style={{
+                  fontSize: 13, color: '#b5aa99', cursor: 'pointer',
+                  fontFamily: "'DM Sans', sans-serif", transition: 'color 0.15s',
+                }}
+                onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
+                onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
+              >
+                · Clear filters
+              </span>
+            )}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 13, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap' }}>Sort by:</span>
+            <select
+              value={sortValue}
+              onChange={(e) => handleSortChange(e.target.value)}
+              style={{
+                padding: '8px 12px', borderRadius: 10, border: '1.5px solid #ede8df',
+                background: '#fff', fontSize: 13, color: '#1a1612', cursor: 'pointer',
+                fontFamily: "'DM Sans', sans-serif", outline: 'none',
+                appearance: 'none', WebkitAppearance: 'none',
+                backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'10\' height=\'6\' viewBox=\'0 0 10 6\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M1 1L5 5L9 1\' stroke=\'%238a7e72\' stroke-width=\'1.5\' stroke-linecap=\'round\'/%3E%3C/svg%3E")',
+                backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center',
+                paddingRight: 32,
+              }}
+            >
+              {SORT_OPTIONS.map(o => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* main layout: sidebar + grid */}
@@ -362,7 +453,7 @@ export default function DiscoverPage() {
               <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
                 <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
               </div>
-            ) : filtered.length === 0 ? (
+            ) : sorted.length === 0 ? (
               <div style={{ padding: '60px 32px', borderRadius: 24, border: '2px dashed #e8e0d4', textAlign: 'center', color: '#b5aa99' }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
                 <div style={{ fontSize: 16, fontWeight: 500 }}>No products match your filters</div>
@@ -370,7 +461,7 @@ export default function DiscoverPage() {
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
-                {filtered.map((f) => (
+                {sorted.map((f) => (
                   <ProductCard key={f.id} food={f} onClick={() => goFood(f.id)} />
                 ))}
               </div>
@@ -428,5 +519,18 @@ export default function DiscoverPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+/* Wrap in Suspense for useSearchParams */
+export default function DiscoverPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ display: 'flex', justifyContent: 'center', padding: '120px 0' }}>
+        <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      </div>
+    }>
+      <DiscoverContent />
+    </Suspense>
   );
 }
