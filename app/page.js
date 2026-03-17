@@ -58,13 +58,25 @@ export default function Home() {
         background: 'linear-gradient(170deg, #f5d442 0%, #f0c930 45%, #e8c020 100%)',
         display: 'flex', flexDirection: 'column',
       }}>
-        <nav className="nav-bar" style={{ padding: '16px 48px', animation: 'fadeIn 0.6s ease' }}>
+        <nav className="nav-bar" style={{
+          padding: '16px 48px', animation: 'fadeIn 0.6s ease',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        }}>
           <div className="nav-logo" style={{
             fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
             color: '#1a1612', letterSpacing: -0.5,
           }}>
             Good<span style={{ opacity: 0.4 }}>Kibble</span>
           </div>
+          <button onClick={() => router.push('/discover')} style={{
+            padding: '10px 22px', borderRadius: 100,
+            border: '1.5px solid #1a161230', background: 'transparent',
+            color: '#1a1612', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+            fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+          }}
+            onMouseEnter={(e) => { e.target.style.background = '#1a1612'; e.target.style.color = '#f5d442'; e.target.style.borderColor = '#1a1612'; }}
+            onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#1a1612'; e.target.style.borderColor = '#1a161230'; }}
+          >Discover Foods</button>
         </nav>
 
         <div className="hero-layout" style={{
@@ -126,6 +138,21 @@ export default function Home() {
             </p>
 
             <SearchBox onSelect={handleSelect} variant="hero" />
+
+            <div style={{ marginTop: 14, textAlign: 'left' }}>
+              <span
+                onClick={() => router.push('/discover')}
+                style={{
+                  fontSize: 14, color: '#1a161260', cursor: 'pointer',
+                  fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                  transition: 'color 0.2s', textDecoration: 'none',
+                }}
+                onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
+                onMouseLeave={(e) => { e.target.style.color = '#1a161260'; e.target.style.textDecoration = 'none'; }}
+              >
+                or browse all {brands.reduce((sum, b) => sum + b.count, 0).toLocaleString()}+ foods by filter →
+              </span>
+            </div>
           </div>
         </div>
 
