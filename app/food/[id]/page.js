@@ -376,7 +376,19 @@ export default function FoodPage() {
                 if (isSalt) textColor = '#1a1612';
                 else if (isFirst) textColor = '#faf8f5';
 
-                const pillStyle = {
+                /* for very long ingredients (vitamin/mineral blocks), use a block style instead of pill */
+                const isLongBlock = ing.length > 80;
+
+                const pillStyle = isLongBlock ? {
+                  display: 'block', padding: '10px 16px', borderRadius: 16,
+                  fontSize: 13, fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 400, lineHeight: 1.5,
+                  background: bgColor,
+                  color: textColor,
+                  border: '1px solid #e8e0d4',
+                  cursor: 'default',
+                  maxWidth: '100%',
+                } : {
                   display: 'inline-block', padding: '8px 16px', borderRadius: 100,
                   fontSize: 14, fontFamily: "'DM Sans', sans-serif",
                   fontWeight: (isFirst || isSalt) ? 600 : 400,
@@ -389,9 +401,10 @@ export default function FoodPage() {
                 /* animation on non-dimmed pills only; after-salt pills skip animation
                    because the fadeUp keyframe ends at opacity:1 which overrides inline opacity */
                 const wrapStyle = afterSalt
-                  ? { display: 'inline-block', opacity: 0.4 }
+                  ? { display: isLongBlock ? 'block' : 'inline-block', opacity: 0.4, width: isLongBlock ? '100%' : 'auto' }
                   : {
-                      display: 'inline-block',
+                      display: isLongBlock ? 'block' : 'inline-block',
+                      width: isLongBlock ? '100%' : 'auto',
                       animationName: 'fadeUp', animationDuration: '0.4s',
                       animationFillMode: 'both', animationDelay: `${i * 20}ms`,
                     };
