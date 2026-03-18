@@ -90,9 +90,9 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
       const variants = getSearchVariants(val);
       if (variants.length === 0) { setResults([]); setTotalCount(0); setLoading(false); return; }
 
-      /* ── two-pass search: brand matches first, then name/flavor matches ── */
+      /* ── three-pass search ── */
 
-      /* pass 1: brand matches */
+      /* pass 1: brand matches (full phrase variants) */
       const brandFilter = buildOrFilter(variants, ['brand']);
       const { data: brandMatches } = await supabase
         .from('dog_foods_v2')
@@ -100,7 +100,7 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
         .or(brandFilter)
         .limit(20);
 
-      /* pass 2: name/flavor matches (excluding already-found brand matches) */
+      /* pass 2: name/flavor matches (full phrase variants) */
       const nameFilter = buildOrFilter(variants, ['name', 'flavor']);
       const { data: nameMatches } = await supabase
         .from('dog_foods_v2')
@@ -108,7 +108,29 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
         .or(nameFilter)
         .limit(20);
 
-      /* merge: brand matches first, then name matches (deduped) */
+      /* pass 3: individual word search across ALL columns
+         This catches "Royal Canin French Bulldog" where brand = "Royal Canin"
+         and name = "French Bulldog Adult..." — neither column has the full query */
+      let wordMatches = [];
+      const queryWords = val.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 2);
+      if (queryWords.length >= 2) {
+        /* search for the longest meaningful word that isn't a stop word */
+        const stopWords = new Set(['and', 'the', 'for', 'with', 'dry', 'dog', 'food', 'recipe', 'formula', 'adult', 'puppy', 'senior', 'natural', 'grain', 'free']);
+        const meaningful = queryWords.filter(w => !stopWords.has(w));
+        if (meaningful.length >= 1) {
+          /* pick the most unique word (longest) to search, to keep results tight */
+          const bestWord = meaningful.sort((a, b) => b.length - a.length)[0];
+          const wordFilter = buildOrFilter([bestWord], ['name', 'brand', 'flavor']);
+          const { data } = await supabase
+            .from('dog_foods_v2')
+            .select('id, name, brand, flavor, image_url')
+            .or(wordFilter)
+            .limit(30);
+          wordMatches = data || [];
+        }
+      }
+
+      /* merge all three passes (deduped) */
       const seen = new Set();
       const merged = [];
 
@@ -118,18 +140,24 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
       for (const item of (nameMatches || [])) {
         if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
       }
+      for (const item of wordMatches) {
+        if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
+      }
 
       /* relevance sort */
-      const queryWords = val.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 1);
+      const allWords = val.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 1);
       function relevanceScore(item) {
         const text = `${item.brand} ${item.name} ${item.flavor || ''}`.toLowerCase();
         let score = 0;
-        for (const word of queryWords) {
+        for (const word of allWords) {
           if (text.includes(word)) score += 1;
         }
         const strippedQuery = val.toLowerCase().replace(/[''`]/g, '').trim();
         if (item.name.toLowerCase().includes(strippedQuery)) score += 10;
-        if (item.brand.toLowerCase().includes(queryWords[0])) score += 3;
+        /* bonus for brand+name combo match */
+        const combined = `${item.brand} ${item.name}`.toLowerCase();
+        if (combined.includes(strippedQuery)) score += 10;
+        if (allWords[0] && item.brand.toLowerCase().includes(allWords[0])) score += 3;
         return score;
       }
       merged.sort((a, b) => relevanceScore(b) - relevanceScore(a));
