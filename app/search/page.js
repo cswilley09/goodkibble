@@ -82,21 +82,41 @@ function SearchResults() {
       const variants = getSearchVariants(query);
       if (variants.length === 0) { setResults([]); setLoading(false); return; }
 
-      /* brand matches first */
+      const selectCols = 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, image_url';
+
+      /* pass 1: brand matches */
       const brandFilter = buildOrFilter(variants, ['brand']);
       const { data: brandMatches } = await supabase
         .from('dog_foods_v2')
-        .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, image_url')
+        .select(selectCols)
         .or(brandFilter)
         .limit(200);
 
-      /* name/flavor matches */
+      /* pass 2: name/flavor matches */
       const nameFilter = buildOrFilter(variants, ['name', 'flavor']);
       const { data: nameMatches } = await supabase
         .from('dog_foods_v2')
-        .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, image_url')
+        .select(selectCols)
         .or(nameFilter)
         .limit(200);
+
+      /* pass 3: individual word search across all columns */
+      let wordMatches = [];
+      const queryWords = query.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 2);
+      if (queryWords.length >= 2) {
+        const stopWords = new Set(['and', 'the', 'for', 'with', 'dry', 'dog', 'food', 'recipe', 'formula', 'adult', 'puppy', 'senior', 'natural', 'grain', 'free']);
+        const meaningful = queryWords.filter(w => !stopWords.has(w));
+        if (meaningful.length >= 1) {
+          const bestWord = meaningful.sort((a, b) => b.length - a.length)[0];
+          const wordFilter = buildOrFilter([bestWord], ['name', 'brand', 'flavor']);
+          const { data } = await supabase
+            .from('dog_foods_v2')
+            .select(selectCols)
+            .or(wordFilter)
+            .limit(200);
+          wordMatches = data || [];
+        }
+      }
 
       /* merge and dedupe */
       const seen = new Set();
@@ -107,20 +127,26 @@ function SearchResults() {
       for (const item of (nameMatches || [])) {
         if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
       }
+      for (const item of wordMatches) {
+        if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
+      }
 
-      /* relevance sort: score each result by how many query words appear in name+brand */
-      const queryWords = query.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 1);
+      /* relevance sort */
+      const allWords = query.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 1);
       function relevanceScore(item) {
         const text = `${item.brand} ${item.name} ${item.flavor || ''}`.toLowerCase();
         let score = 0;
-        for (const word of queryWords) {
+        for (const word of allWords) {
           if (text.includes(word)) score += 1;
         }
         /* bonus for exact phrase match in name */
         const strippedQuery = query.toLowerCase().replace(/[''`]/g, '').trim();
         if (item.name.toLowerCase().includes(strippedQuery)) score += 10;
+        /* bonus for brand+name combo match */
+        const combined = `${item.brand} ${item.name}`.toLowerCase();
+        if (combined.includes(strippedQuery)) score += 10;
         /* bonus for brand match */
-        if (item.brand.toLowerCase().includes(queryWords[0])) score += 3;
+        if (allWords[0] && item.brand.toLowerCase().includes(allWords[0])) score += 3;
         return score;
       }
       merged.sort((a, b) => relevanceScore(b) - relevanceScore(a));
