@@ -326,23 +326,152 @@ function ScoreRing({ score, size = 52 }) {
   );
 }
 
-/* ── Score Breakdown Bar Row ── */
-function ScoreBarRow({ label, score, max, color, blurred }) {
-  const pct = max > 0 ? (score / max) * 100 : 0;
+/* ── Mini Ring for tiles ── */
+function MiniRing({ score, max, color, size = 28 }) {
+  const radius = (size - 5) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const pct = max > 0 ? score / max : 0;
+  const offset = circumference * (1 - pct);
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, filter: blurred ? 'blur(4px)' : 'none', opacity: blurred ? 0.35 : 1 }}>
-      <div style={{ width: 110, fontSize: 11, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{label}</div>
-      <div style={{ flex: 1, height: 8, background: '#EDEAE2', borderRadius: 4, overflow: 'hidden' }}>
-        <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: 4, transition: 'width 0.5s ease' }} />
-      </div>
-      <div style={{ fontSize: 11, fontWeight: 500, color: '#1a1612', fontFamily: "'DM Mono', monospace", minWidth: 36, textAlign: 'right' }}>
-        {blurred ? `?/${max}` : `${score}/${max}`}
-      </div>
+    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#E8E5DB" strokeWidth={2.5} />
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={color} strokeWidth={2.5}
+          strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 0.4s ease' }} />
+      </svg>
+      <div style={{
+        position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 9, fontWeight: 500, fontFamily: "'DM Mono', monospace", color: '#1a1612',
+      }}>{score}</div>
     </div>
   );
 }
 
-/* ── Score Breakdown Card ── */
+/* ── Detail panel per category ── */
+function DetailCell({ label, value, green }) {
+  return (
+    <div>
+      <div style={{ fontSize: 9, color: '#999' }}>{label}</div>
+      <div style={{ fontSize: 11, fontWeight: 500, color: green ? '#3B6D11' : '#1a1a1a' }}>{value}</div>
+    </div>
+  );
+}
+
+function CategoryDetailPanel({ catKey, data }) {
+  if (!data) return null;
+  const c = data;
+
+  let cells = [];
+  let context = '';
+  let citation = '';
+
+  if (catKey === 'A_protein') {
+    cells = [
+      { l: 'Protein (DMB)', v: `${c.protein_dmb}%` },
+      { l: 'Bracket', v: `${c.bracket} → ${c.score} pts` },
+      { l: 'AAFCO adult min', v: '18.0%' },
+      { l: 'AAFCO growth min', v: '22.5%' },
+    ];
+    const ratio = c.protein_dmb ? (c.protein_dmb / 22.5).toFixed(1) : '?';
+    context = `Exceeds AAFCO growth minimum by ${ratio}x. Protein provides the 10 essential amino acids dogs cannot produce on their own.`;
+    citation = 'AAFCO, 2016; NRC, 2006';
+  } else if (catKey === 'B_fat') {
+    cells = [
+      { l: 'Fat (DMB)', v: `${c.fat_dmb}%` },
+      { l: 'Fat level', v: `${c.fat_level_points}/8 pts` },
+      { l: 'Fat:protein ratio', v: `${c.fat_protein_ratio}` },
+      { l: 'Ratio score', v: `${c.ratio_points}/7 pts` },
+    ];
+    context = 'AAFCO minimum is 5.5% for adults, 8.5% for growth.';
+    citation = 'AAFCO, 2016; NRC, 2006';
+  } else if (catKey === 'C_carbs') {
+    cells = [
+      { l: 'Carbs (DMB)', v: `${c.carbs_dmb}%` },
+      { l: 'Bracket', v: `→ ${c.score} pts` },
+      { l: 'NRC requirement', v: 'None established' },
+    ];
+    context = 'Dogs have no dietary requirement for carbohydrates (NRC, 2006). Carbs = 100 − protein − fat − fiber − ash.';
+    citation = 'NRC, 2006';
+  } else if (catKey === 'D_fiber') {
+    cells = [
+      { l: 'Fiber (DMB)', v: `${c.fiber_dmb}%` },
+      { l: 'Bracket', v: `→ ${c.score} pts` },
+    ];
+    context = 'No minimum requirement established. This category functions as a formulation quality signal.';
+    citation = 'NRC, 2006';
+  } else if (catKey === 'E_protein_source') {
+    cells = [
+      { l: 'First animal protein', v: c.first_animal_protein || 'none' },
+      { l: 'Second animal protein', v: c.second_animal_protein || 'none in top 5' },
+      { l: 'By-product status', v: c.byproduct_status || 'none' },
+      { l: 'Splitting penalty', v: c.splitting_penalty ? `${c.splitting_penalty}` : 'none' },
+    ];
+    if (c.plant_concentrate_penalty) {
+      cells.push({ l: 'Plant protein penalty', v: `${c.plant_concentrate_penalty} — ${(c.plant_concentrate_detail || []).join(', ')}` });
+    }
+    context = c.byproduct_status === 'none'
+      ? 'Named animal proteins in top positions with no by-products detected.'
+      : `By-product status: ${c.byproduct_status}.`;
+    citation = 'AAFCO definitions; Templeman & Shoveller, 2022';
+  } else if (catKey === 'F_preservatives') {
+    cells = [
+      { l: 'Synthetic found', v: (c.synthetic_found && c.synthetic_found.length > 0) ? c.synthetic_found.join(', ') : 'none' },
+      { l: 'Status', v: c.status === 'natural_only' ? 'Natural only' : c.status },
+    ];
+    context = c.status === 'natural_only'
+      ? 'No synthetic preservatives detected.'
+      : 'Multiple regulatory bodies have flagged synthetic preservatives.';
+    citation = 'NTP, 2021; EFSA, 2018';
+  } else if (catKey === 'G_additives') {
+    cells = [
+      { l: 'Artificial colors', v: c.artificial_colors ? 'yes' : 'no' },
+      { l: 'Artificial flavors', v: c.artificial_flavors ? 'yes' : 'no' },
+    ];
+    context = "Dogs have dichromatic vision — artificial colors serve no function for the dog.";
+    citation = 'Miller & Murphy, 1995';
+  } else if (catKey === 'H_functional') {
+    const p = c.probiotics || {};
+    const o = c.omega3 || {};
+    const g = c.glucosamine || {};
+    const m = c.chelated_minerals || {};
+    cells = [
+      { l: 'Omega-3 source', v: o.found ? `${o.ingredient || 'found'} → ${o.points} pts` : 'Not found → 0 pts', green: o.found },
+      { l: 'Probiotics', v: p.found ? `found → ${p.points} pts` : 'Not found → 0 pts', green: p.found },
+      { l: 'Glucosamine', v: g.found ? `found → ${g.points} pts` : 'Not found → 0 pts', green: g.found },
+      { l: 'Chelated minerals', v: m.found ? `found → ${m.points} pts` : 'Not found → 0 pts', green: m.found },
+    ];
+    const foundItems = [o.found && 'omega-3', p.found && 'probiotics', g.found && 'glucosamine', m.found && 'chelated minerals'].filter(Boolean);
+    context = foundItems.length > 0
+      ? `${foundItems.join(', ')} qualified at meaningful concentration (before salt).`
+      : 'No functional ingredients detected before salt.';
+    citation = 'Bauer, 2011, JAVMA';
+  }
+
+  return (
+    <div style={{
+      background: '#F3F1EA', borderRadius: '0 0 8px 8px', marginTop: -5,
+      padding: '10px 12px 12px', animation: 'fadeIn 0.15s ease',
+    }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px 16px' }}>
+        {cells.map((cell, i) => (
+          <DetailCell key={i} label={cell.l} value={cell.v} green={cell.green} />
+        ))}
+      </div>
+      {context && (
+        <div style={{
+          marginTop: 8, paddingTop: 6, borderTop: '0.5px solid rgba(0,0,0,0.06)',
+          fontSize: 9, color: '#aaa', lineHeight: 1.5,
+        }}>
+          {context}
+          {citation && <div style={{ fontStyle: 'italic', color: '#bbb', marginTop: 2 }}>{citation}</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Score Breakdown Card (Ring Tile Pattern) ── */
 function ScoreBreakdownCard({ breakdown }) {
   const [expandedCat, setExpandedCat] = useState(null);
   if (!breakdown || !breakdown.categories) return null;
@@ -352,126 +481,91 @@ function ScoreBreakdownCard({ breakdown }) {
     setExpandedCat(expandedCat === key ? null : key);
   };
 
-  /* expanded detail renderer */
-  function renderDetail(key) {
-    const c = cats[key];
-    if (!c) return null;
-    const lines = [];
-    if (key === 'A_protein') {
-      lines.push(`Protein DMB: ${c.protein_dmb}%`);
-      lines.push(`Bracket: ${c.bracket} → ${c.score} points`);
-      lines.push(`AAFCO adult minimum: 18% · growth minimum: 22.5%`);
-    } else if (key === 'B_fat') {
-      lines.push(`Fat DMB: ${c.fat_dmb}%`);
-      lines.push(`Fat level: ${c.bracket_level} → ${c.fat_level_points}/8`);
-      lines.push(`Fat:protein ratio: ${c.fat_protein_ratio} (${c.bracket_ratio}) → ${c.ratio_points}/7`);
-    } else if (key === 'C_carbs') {
-      lines.push(`Carbs DMB: ${c.carbs_dmb}%`);
-      lines.push(`Bracket: ${c.bracket} → ${c.score} points`);
-    } else if (key === 'D_fiber') {
-      lines.push(`Fiber DMB: ${c.fiber_dmb}%`);
-      lines.push(`Bracket: ${c.bracket} → ${c.score} points`);
-    } else if (key === 'E_protein_source') {
-      lines.push(`First animal protein: ${c.first_animal_protein || 'none'} → ${c.first_animal_points} pts`);
-      lines.push(`Second animal protein: ${c.second_animal_protein || 'none'} → ${c.second_animal_points} pts`);
-      lines.push(`Third+ animal protein: ${c.third_plus_animal ? 'yes' : 'no'} → ${c.third_plus_points} pts`);
-      lines.push(`By-products: ${c.byproduct_status} → ${c.byproduct_points} pts`);
-      if (c.splitting_penalty) lines.push(`Splitting penalty: ${c.splitting_penalty} (${c.splitting_detail})`);
-      if (c.plant_concentrate_penalty) lines.push(`Plant concentrate penalty: ${c.plant_concentrate_penalty} (${(c.plant_concentrate_detail || []).join(', ')})`);
-    } else if (key === 'F_preservatives') {
-      lines.push(`Status: ${c.status === 'natural_only' ? 'Natural preservatives only' : c.status}`);
-      if (c.synthetic_found && c.synthetic_found.length > 0) lines.push(`Found: ${c.synthetic_found.join(', ')}`);
-    } else if (key === 'G_additives') {
-      lines.push(`Artificial colors: ${c.artificial_colors ? 'yes' : 'none'}`);
-      lines.push(`Artificial flavors: ${c.artificial_flavors ? 'yes' : 'none'}`);
-    } else if (key === 'H_functional') {
-      const p = c.probiotics || {};
-      const o = c.omega3 || {};
-      const g = c.glucosamine || {};
-      const m = c.chelated_minerals || {};
-      lines.push(`Probiotics: ${p.found ? (p.before_salt ? 'before salt' : 'after salt') : 'not found'} → ${p.points} pts`);
-      lines.push(`Omega-3: ${o.found ? (o.ingredient || 'found') + (o.before_salt ? ' (before salt)' : ' (after salt)') : 'not found'} → ${o.points} pts`);
-      lines.push(`Glucosamine: ${g.found ? 'found' : 'not found'} → ${g.points} pts`);
-      lines.push(`Chelated minerals: ${m.found ? 'found' : 'not found'} → ${m.points} pts`);
-    }
-    return (
-      <div style={{
-        padding: '10px 14px', marginTop: 4, marginBottom: 8,
-        borderRadius: 10, background: '#f5f0e8', fontSize: 12,
-        color: '#5a5248', lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif",
-        animation: 'fadeIn 0.15s ease',
-      }}>
-        {lines.map((line, i) => <div key={i}>{line}</div>)}
-      </div>
-    );
-  }
-
-  const nutritionRows = [
+  const nutritionTiles = [
     { key: 'A_protein', label: 'Protein', color: '#639922' },
     { key: 'B_fat', label: 'Fat', color: '#EF9F27' },
     { key: 'C_carbs', label: 'Carbs', color: '#378ADD' },
     { key: 'D_fiber', label: 'Fiber', color: '#7F77DD' },
   ];
-  const ingredientRows = [
-    { key: 'E_protein_source', label: 'Protein sources', color: '#1D9E75' },
-    { key: 'F_preservatives', label: 'Preservatives', color: '#1D9E75' },
-    { key: 'G_additives', label: 'Additives', color: '#1D9E75' },
-    { key: 'H_functional', label: 'Functional', color: '#1D9E75' },
+  const ingredientTiles = [
+    { key: 'E_protein_source', label: 'Protein sources', color: '#C8A415', textColor: '#A08310' },
+    { key: 'F_preservatives', label: 'Preservatives', color: '#C8A415', textColor: '#A08310' },
+    { key: 'G_additives', label: 'Additives', color: '#C8A415', textColor: '#A08310' },
+    { key: 'H_functional', label: 'Functional', color: '#C8A415', textColor: '#A08310' },
   ];
+
+  function renderTile({ key, label, color, textColor }) {
+    const c = cats[key];
+    if (!c) return null;
+    const isExpanded = expandedCat === key;
+    const nameColor = textColor || color;
+
+    return (
+      <div key={key} style={{ gridColumn: isExpanded ? '1 / -1' : 'auto' }}>
+        <div
+          onClick={() => toggleExpand(key)}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '7px 10px',
+            background: isExpanded ? '#F3F1EA' : '#FAFAF7',
+            borderRadius: isExpanded ? '8px 8px 0 0' : 8,
+            cursor: 'pointer', transition: 'background 0.15s',
+          }}
+          onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.background = '#F3F1EA'; }}
+          onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.background = '#FAFAF7'; }}
+        >
+          <MiniRing score={c.score} max={c.max} color={color} />
+          <span style={{ fontSize: 10, fontWeight: 500, color: nameColor, flex: 1, fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
+          <span style={{ fontSize: 9, color: '#999', fontFamily: "'DM Mono', monospace" }}>{c.score}/{c.max}</span>
+          <span style={{
+            fontSize: 8, color: '#ccc', transition: 'transform 0.15s',
+            transform: isExpanded ? 'rotate(90deg)' : 'none',
+          }}>▶</span>
+        </div>
+        {isExpanded && <CategoryDetailPanel catKey={key} data={c} />}
+      </div>
+    );
+  }
 
   return (
     <div style={{
-      padding: '28px 32px', background: '#faf8f5', borderRadius: 24,
-      border: '1px solid #ede8df', marginBottom: 28,
+      padding: '16px 18px', background: '#fff', borderRadius: 12,
+      border: '0.5px solid #ede8df', marginBottom: 28,
       animation: 'scaleIn 0.5s ease 0.05s both',
     }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+      <div style={{ marginBottom: 14 }}>
         <span style={{ fontSize: 13, fontWeight: 500, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>Score breakdown</span>
       </div>
 
-      {/* Nutrition */}
-      <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 10 }}>Nutrition</div>
-      {nutritionRows.map(({ key, label, color }) => {
-        const c = cats[key];
-        if (!c) return null;
-        return (
-          <div key={key}>
-            <div onClick={() => toggleExpand(key)} style={{ cursor: 'pointer' }}>
-              <ScoreBarRow label={label} score={c.score} max={c.max} color={color} blurred={false} />
-            </div>
-            {expandedCat === key && renderDetail(key)}
-          </div>
-        );
-      })}
+      {/* Nutrition tiles */}
+      <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 6 }}>Nutrition</div>
+      <div className="score-tiles-grid" style={{
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 6, marginBottom: 12,
+      }}>
+        {nutritionTiles.map(renderTile)}
+      </div>
 
-      <div style={{ height: 1, background: '#ede8df', margin: '16px 0' }} />
+      <div style={{ height: 0.5, background: 'rgba(0,0,0,0.06)', margin: '8px 0 12px' }} />
 
-      {/* Ingredients (fully visible) */}
-      <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 10 }}>Ingredients</div>
-      {ingredientRows.map(({ key, label, color }) => {
-        const c = cats[key];
-        if (!c) return null;
-        return (
-          <div key={key}>
-            <div onClick={() => toggleExpand(key)} style={{ cursor: 'pointer' }}>
-              <ScoreBarRow label={label} score={c.score} max={c.max} color={color} blurred={false} />
-            </div>
-            {expandedCat === key && renderDetail(key)}
-          </div>
-        );
-      })}
+      {/* Ingredient tiles */}
+      <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 6 }}>Ingredients</div>
+      <div className="score-tiles-grid" style={{
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 6, marginBottom: 12,
+      }}>
+        {ingredientTiles.map(renderTile)}
+      </div>
 
-      <div style={{ height: 1, background: '#ede8df', margin: '16px 0 12px' }} />
+      <div style={{ height: 0.5, background: 'rgba(0,0,0,0.06)', margin: '8px 0 10px' }} />
 
       {/* Methodology link */}
       <div style={{ textAlign: 'center' }}>
         <a href="/how-we-score" style={{
-          fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif",
-          textDecoration: 'none', transition: 'color 0.15s',
+          fontSize: 11, color: '#999', fontFamily: "'DM Sans', sans-serif",
+          textDecoration: 'underline', transition: 'color 0.15s',
         }}
-          onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
-          onMouseLeave={(e) => { e.target.style.color = '#8a7e72'; e.target.style.textDecoration = 'none'; }}
+          onMouseEnter={(e) => e.target.style.color = '#1a1612'}
+          onMouseLeave={(e) => e.target.style.color = '#999'}
         >
           Read our full scoring methodology
         </a>
