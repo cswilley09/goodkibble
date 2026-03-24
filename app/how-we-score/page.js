@@ -492,26 +492,6 @@ export default function HowWeScorePage() {
           </div>
         </div>
 
-        {/* ─── Section 8: Pro CTA ─── */}
-        <div style={{
-          padding: '32px', borderRadius: 20, border: '2px solid #C8A415',
-          background: '#fff', textAlign: 'center', marginBottom: 56,
-        }}>
-          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>See the full breakdown for your dog&apos;s food</h3>
-          <p style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.5, maxWidth: 480, margin: '0 auto 20px' }}>
-            GoodKibble Pro shows you exactly how every food scored in every category — which ingredients helped, which hurt, and why.
-          </p>
-          <button style={{
-            padding: '14px 32px', borderRadius: 100, border: 'none',
-            background: '#C8A415', color: '#fff', fontSize: 15, fontWeight: 600,
-            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-            transition: 'transform 0.15s',
-          }}
-            onMouseEnter={(e) => e.target.style.transform = 'scale(1.03)'}
-            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-          >Get GoodKibble Pro — $29.99/year</button>
-        </div>
-
         {/* ─── Section 9: References ─── */}
         <div style={{ marginBottom: 40 }}>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 16 }}>References</h2>
