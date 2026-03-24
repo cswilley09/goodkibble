@@ -143,13 +143,13 @@ export default function HowWeScorePage() {
             lineHeight: 1.1, letterSpacing: -1, marginBottom: 16,
           }}>How we score dog food</h1>
           <p style={{ fontSize: 17, color: '#5a5248', lineHeight: 1.6, maxWidth: 600, marginBottom: 16 }}>
-            Every GoodKibble Score is based on published veterinary science and verifiable label data. No opinions. No sponsorships. No hidden formulas. Here&apos;s exactly how it works.
+            The GoodKibble Score is an evidence-informed scoring model built on regulatory standards and published veterinary research. This page separates verified science from our scoring design choices — so you can see exactly what&apos;s fact and what&apos;s our framework.
           </p>
           <span style={{
             display: 'inline-block', padding: '5px 14px', borderRadius: 100,
             background: '#f0ebe3', fontSize: 12, color: '#8a7e72', fontWeight: 500,
             fontFamily: "'DM Sans', sans-serif",
-          }}>Methodology v1.3 · Last updated March 2026</span>
+          }}>Methodology v1.4 · Last updated March 2026</span>
         </div>
 
         {/* ─── Section 2: Principles ─── */}
@@ -177,6 +177,31 @@ export default function HowWeScorePage() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* ─── Section 2b: Two Layers ─── */}
+        <div style={{ marginBottom: 56 }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>Two layers, clearly separated</h2>
+          <p style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 20 }}>
+            Throughout this methodology, we separate two distinct layers. We will never blur them.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+            <div style={{ padding: '24px', borderRadius: 20, border: '2px solid #1D9E75', background: '#fff' }}>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D9E75', marginBottom: 8 }}>Layer 1 — Verified facts</div>
+              <p style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.6, margin: 0 }}>
+                Regulatory standards, published research findings, and labeling rules that any veterinarian or nutritionist can independently verify. These are cited with specific sources.
+              </p>
+            </div>
+            <div style={{ padding: '24px', borderRadius: 20, border: '2px solid #EF9F27', background: '#fff' }}>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8A415', marginBottom: 8 }}>Layer 2 — Scoring design</div>
+              <p style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.6, margin: 0 }}>
+                The specific brackets, point values, and weightings that GoodKibble uses to translate verified facts into a numerical score. These are informed by — but not directly derived from — the scientific literature.
+              </p>
+            </div>
+          </div>
+          <p style={{ fontSize: 13, color: '#8a7e72', lineHeight: 1.6, marginTop: 16 }}>
+            When we state a fact, it is cited. When we make a scoring decision, we say so. The scoring brackets should be interpreted as a comparative ranking system, not clinical recommendations.
+          </p>
         </div>
 
         {/* ─── Section 3: Score at a Glance ─── */}
@@ -234,29 +259,34 @@ export default function HowWeScorePage() {
 
             {/* A — Protein */}
             <CategoryDetail color={CAT_COLORS.protein} name="Protein" maxPts={25} type="Nutrition">
-              <P>Protein provides the 10 essential amino acids your dog can&apos;t produce on their own. It supports muscle maintenance, immune function, coat health, and virtually every biological process in your dog&apos;s body.</P>
-              <P>AAFCO requires a minimum of 18% protein (dry matter basis) for adult dogs and 22.5% for puppies. We score higher protein more favorably because research — including a long-term study of Labrador Retrievers — found that maintaining lean muscle mass was the single strongest dietary factor linked to longer lifespan.</P>
-              <P>This category measures the amount of protein. Category E (Protein Sources) separately evaluates where that protein comes from — because quantity without quality is an incomplete picture.</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D9E75', marginBottom: 8 }}>What the science establishes</div>
+              <P>AAFCO requires a minimum of 18% protein (dry matter basis) for adult dogs and 22.5% for puppies. NRC confirms dogs require 10 indispensable amino acids and that no maximum protein level has been established — there is insufficient data to demonstrate harmful effects of high protein in healthy dogs.</P>
+              <P>Dogs do not have a requirement for &quot;protein per se&quot; but rather for indispensable amino acids. This category measures crude protein quantity. Category E separately evaluates where that protein comes from — because quantity without quality is an incomplete picture.</P>
+              <P>What the science does NOT establish: an optimal protein percentage for healthy adult dogs. The literature defines a floor but no evidence-based ceiling or &quot;sweet spot.&quot;</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8A415', margin: '16px 0 8px' }}>How we score (design choices)</div>
+              <P>Scores increase as protein exceeds AAFCO minimums. Because no upper optimal threshold is established, the upper tiers are a design choice to differentiate between baseline adequacy and higher-protein formulations.</P>
               <ThresholdTable
-                headers={['Range (DMB)', 'Points', 'Label']}
+                headers={['Range (DMB)', 'Points', 'Rationale']}
                 rows={[
-                  ['40%+', '25', 'Highest tier'],
-                  ['35–39.9%', '23', 'Well above average'],
-                  ['30–34.9%', '20', 'Above average'],
-                  ['26–29.9%', '16', 'Moderate'],
-                  ['22–25.9%', '12', 'Meets growth minimum'],
-                  ['18–21.9%', '8', 'Meets adult minimum'],
+                  ['40%+', '25', 'Above minimum — design choice'],
+                  ['35–39.9%', '23', 'Above minimum — design choice'],
+                  ['30–34.9%', '20', 'Above minimum — design choice'],
+                  ['26–29.9%', '16', 'Above minimum — design choice'],
+                  ['22–25.9%', '12', 'Meets AAFCO growth minimum'],
+                  ['18–21.9%', '8', 'Meets AAFCO adult minimum'],
                   ['Below 18%', '0', 'Below AAFCO minimum'],
                 ]}
               />
-              <Citations text="AAFCO Dog Food Nutrient Profiles, 2016; NRC Nutrient Requirements of Dogs and Cats, 2006; Kealy et al., 2002, JAVMA" />
+              <Citations text="AAFCO Dog Food Nutrient Profiles, 2016; NRC, 2006 (Ch. 5); Templeman & Shoveller, 2022, Journal of Animal Science, 100(11):skac279" />
             </CategoryDetail>
 
             {/* B — Fat */}
             <CategoryDetail color={CAT_COLORS.fat} name="Fat" maxPts={15} type="Nutrition">
-              <P>Fat is your dog&apos;s most concentrated energy source and provides essential fatty acids that support skin, coat, brain function, and vitamin absorption. AAFCO requires a minimum of 5.5% fat for adult dogs and 8.5% for puppies.</P>
-              <P>We score fat in two parts: the absolute level (is there enough fat?) and the fat-to-protein ratio (is fat proportional to protein?). A food with very high fat relative to protein can contribute to obesity, while too little fat means missing essential nutrients.</P>
-              <P>High-protein formulas made with whole-animal ingredients naturally contain 16–20% fat because animal tissue carries fat along with protein. Our thresholds account for this — moderate fat levels up to 20% receive full points.</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D9E75', marginBottom: 8 }}>What the science establishes</div>
+              <P>AAFCO requires a minimum of 5.5% fat for adult dogs and 8.5% for puppies. Fat provides essential fatty acids, carries fat-soluble vitamins, and is the most concentrated dietary energy source (~8.5 kcal/g). No maximum for total fat is established.</P>
+              <P>What the science does NOT establish: an optimal fat percentage, a &quot;safe upper limit,&quot; or an evidence-based fat-to-protein ratio for healthy adult dogs.</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8A415', margin: '16px 0 8px' }}>How we score (design choices)</div>
+              <P>Fat is scored in two parts: absolute level and fat-to-protein ratio. All thresholds are design choices. The 20% upper boundary for full points reflects that high-protein kibbles using whole-animal ingredients typically contain 16–20% fat as a natural compositional consequence.</P>
               <div style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', marginTop: 8, marginBottom: 4 }}>Fat level (8 points)</div>
               <ThresholdTable
                 headers={['Range (DMB)', 'Points']}
@@ -271,62 +301,69 @@ export default function HowWeScorePage() {
               />
               <div style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', marginTop: 8, marginBottom: 4 }}>Fat-to-protein ratio (7 points)</div>
               <ThresholdTable
-                headers={['Ratio', 'Points', 'Label']}
+                headers={['Ratio', 'Points']}
                 rows={[
-                  ['0.40–0.75', '7', 'Optimal'],
-                  ['0.30–0.39 or 0.76–0.85', '5', 'Slightly outside optimal'],
-                  ['Below 0.30 or 0.86–1.00', '3', 'Disproportionate'],
-                  ['Above 1.00', '1', 'Fat exceeds protein'],
+                  ['0.40–0.75', '7'],
+                  ['0.30–0.39 or 0.76–0.85', '5'],
+                  ['Below 0.30 or 0.86–1.00', '3'],
+                  ['Above 1.00', '1'],
                 ]}
               />
-              <Citations text="AAFCO Dog Food Nutrient Profiles, 2016; NRC, 2006; Xenoulis & Steiner, 2010, JSAP" />
+              <Citations text="AAFCO, 2016; NRC, 2006; Xenoulis & Steiner, 2010, The Veterinary Journal, 183(1):12-21" />
             </CategoryDetail>
 
             {/* C — Carbohydrates */}
             <CategoryDetail color={CAT_COLORS.carbs} name="Carbohydrates" maxPts={15} type="Nutrition">
-              <P>Dogs have no nutritional requirement for carbohydrates — their bodies can produce glucose from protein and fat. However, all dry kibble contains some carbohydrates because starch is needed for the extrusion process that forms the kibble shape.</P>
-              <P>Lower carbohydrate content generally means more room for protein and fat. Research has shown that high-carbohydrate diets can alter gut bacterial composition in dogs, particularly in overweight individuals.</P>
-              <P>A carbohydrate content of 25–35% is typical even for high-quality kibble. Our scoring reflects this reality — moderate carb levels receive the majority of available points, and only very high carb content (40%+) is significantly penalized.</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D9E75', marginBottom: 8 }}>What the science establishes</div>
+              <P>Dogs have no established nutritional requirement for dietary carbohydrates (NRC, 2006). Dogs can synthesize glucose via gluconeogenesis from amino acids and glycerol. Starch is needed for kibble extrusion — it&apos;s a manufacturing necessity, not a nutritional one.</P>
+              <P>Research shows dietary protein-to-carbohydrate ratio impacts gut microbial composition in dogs, with more pronounced effects in obese dogs (Li et al., 2017). However, the study demonstrates microbial shifts, not clinical health outcomes.</P>
+              <P>What the science does NOT establish: a specific carbohydrate percentage above which health is impaired in healthy dogs.</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8A415', margin: '16px 0 8px' }}>How we score (design choices)</div>
+              <P>Lower carbohydrate scores higher based on the macronutrient displacement principle: higher protein and fat necessarily displace carbohydrates. Since dogs have no carbohydrate requirement, this rewards formulations that prioritize nutrients dogs do require. All bracket cutoffs are design choices based on our database distribution.</P>
               <ThresholdTable
-                headers={['Range (DMB)', 'Points', 'Label']}
+                headers={['Range (DMB)', 'Points', 'Rationale']}
                 rows={[
-                  ['Below 20%', '15', 'Very low carb'],
-                  ['20–29.9%', '12', 'Low carb'],
-                  ['30–39.9%', '10', 'Moderate'],
-                  ['40–49.9%', '5', 'High carb'],
-                  ['50%+', '1', 'Very high carb'],
+                  ['Below 20%', '15', 'Lowest carb tier — design choice'],
+                  ['20–29.9%', '12', 'Low carb — design choice'],
+                  ['30–39.9%', '10', 'Moderate — where most mid-range kibbles fall'],
+                  ['40–49.9%', '5', 'High carb — design choice'],
+                  ['50%+', '1', 'Very high — top of observed range'],
                 ]}
               />
               <div style={{ padding: '10px 14px', borderRadius: 10, background: '#faf8f5', fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginTop: 8 }}>
-                <strong>Note:</strong> Carbohydrate on GoodKibble is calculated as: 100 − protein − fat − fiber − ash (all dry matter basis). Some manufacturers report &quot;Total Carbohydrate&quot; which includes fiber — that number will be higher than what GoodKibble displays.
+                <strong>Note:</strong> Carbohydrate on GoodKibble is calculated as: 100 − protein − fat − fiber − ash (all dry matter basis). When ash is not provided by the manufacturer, we use a sliding default: 7% for products under 30% protein DMB, 8% for 30–39.9%, 9% for 40%+.
               </div>
-              <Citations text="NRC, 2006; Li et al., 2017, mBio; Carciofi et al., 2008, Animal Feed Science and Technology" />
+              <Citations text="NRC, 2006 (Ch. 3); Li et al., 2017, mBio, 8(1):e01703-16; Carciofi et al., 2008, JAPN, 92(3):326-336" />
             </CategoryDetail>
 
             {/* D — Fiber */}
             <CategoryDetail color={CAT_COLORS.fiber} name="Fiber" maxPts={5} type="Nutrition">
-              <P>Dogs don&apos;t have a strict requirement for fiber, but moderate amounts support healthy digestion. Soluble fiber is fermented by gut bacteria to produce short-chain fatty acids, which help maintain intestinal health and immune function.</P>
-              <P>Too little fiber may limit these benefits. Too much — especially from low-quality sources like cellulose (wood pulp) — can reduce how well your dog absorbs nutrients from the rest of the food.</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D9E75', marginBottom: 8 }}>What the science establishes</div>
+              <P>No minimum dietary requirement for crude fiber is established for dogs (NRC, 2006). Soluble fiber is fermented by gut bacteria to produce short-chain fatty acids that support intestinal health (Swanson et al., 2002).</P>
+              <P>What the science does NOT establish: an optimal crude fiber range for healthy adult dogs. No study defines a specific fiber percentage as superior to another.</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8A415', margin: '16px 0 8px' }}>How we score (design choices)</div>
+              <P>This category functions as a formulation quality signal, not a nutritional adequacy measure. No regulatory anchors exist. The moderate range (4–7%) represents the most common range in well-formulated general-purpose kibbles in our database. The entire category is a design choice.</P>
               <ThresholdTable
-                headers={['Range (DMB)', 'Points', 'Label']}
+                headers={['Range (DMB)', 'Points', 'Rationale']}
                 rows={[
-                  ['4.0–6.9%', '5', 'Optimal range'],
-                  ['2.0–3.9%', '4', 'Low but functional'],
-                  ['7.0–9.9%', '3', 'Elevated'],
-                  ['Below 2.0%', '2', 'Very low'],
-                  ['10.0%+', '1', 'Very high'],
+                  ['4.0–6.9%', '5', 'Moderate range — design choice'],
+                  ['2.0–3.9%', '4', 'Low but functional — design choice'],
+                  ['7.0–9.9%', '3', 'Elevated — design choice'],
+                  ['Below 2.0%', '2', 'Very low — design choice'],
+                  ['10.0%+', '1', 'Very high — design choice'],
                 ]}
               />
-              <Citations text="NRC, 2006; Swanson et al., 2002, Journal of Nutrition" />
+              <Citations text="NRC, 2006; Swanson et al., 2002, Journal of Nutrition, 132(6):1717S-1722S" />
             </CategoryDetail>
 
             {/* E — Protein Sources */}
             <CategoryDetail color={CAT_COLORS.teal} name="Protein sources" maxPts={15} type="Ingredients">
-              <P>Not all protein is created equal. This category looks at where the protein actually comes from by examining the first five ingredients (which make up the majority of the food by weight).</P>
-              <P>Named animal proteins — like &quot;chicken meal&quot; or &quot;deboned salmon&quot; — earn more points than generic terms like &quot;meat meal&quot; or &quot;poultry by-product meal.&quot; The generic terms mean the manufacturer isn&apos;t disclosing which animal the protein came from, and the composition can vary between batches.</P>
-              <P>We also detect two common practices that can make a food&apos;s ingredient list look better than it really is:</P>
-              <P><strong>Ingredient splitting (−3 penalty):</strong> When the same plant source appears 3 or more times in different forms — like &quot;peas, pea protein, pea fiber&quot; — it may collectively be the dominant ingredient even though no single form appears first on the list.</P>
-              <P><strong>Plant protein concentrates (−2 penalty):</strong> Ingredients like corn gluten meal, soy protein isolate, pea protein, potato protein, and wheat gluten are processed specifically to inflate the crude protein percentage without providing the complete amino acid profile dogs need.</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D9E75', marginBottom: 8 }}>What the science establishes</div>
+              <P>FDA requires ingredients listed in descending order by weight. AAFCO defines specific terms: &quot;chicken&quot; means clean flesh; &quot;chicken meal&quot; means rendered and dried; generic terms like &quot;meat meal&quot; indicate unspecified sources that may vary between batches.</P>
+              <P>Animal-sourced ingredients have significantly higher protein quality scores than plant-sourced ingredients (Templeman &amp; Shoveller, 2022). Fresh chicken provided the highest protein quality without amino acid supplementation, while chicken by-product meal had the lowest digestibility (Sieja, Oba et al., 2023). Plant protein concentrates are typically limiting in methionine, taurine, and lysine relative to animal proteins (Case et al., 2011).</P>
+              <P>What the science does NOT establish: a point-value system for ranking ingredients by position, or a specific threshold for how many plant protein concentrates constitute a concern.</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8A415', margin: '16px 0 8px' }}>How we score (design choices)</div>
+              <P>Named animal protein sources are rewarded over generic terms based on the ingredient transparency principle. The plant protein concentrate penalty targets ingredients whose amino acid limitations are documented — and where consumers cannot determine from the label whether amino acids have been supplemented.</P>
               <ThresholdTable
                 headers={['Component', 'Points']}
                 rows={[
@@ -342,7 +379,7 @@ export default function HowWeScorePage() {
                   ['Plant concentrate penalty (if 2+ in top 10)', '−2'],
                 ]}
               />
-              <Citations text="FDA 21 CFR 501.4; AAFCO ingredient definitions; NRC, 2006; Case et al., 2011, Canine and Feline Nutrition" />
+              <Citations text="FDA 21 CFR 501.4; AAFCO ingredient definitions; Case et al., 2011; Templeman & Shoveller, 2022, JAS, 100(11):skac279; Sieja, Oba et al., 2023, JAS, 101:skad093" />
             </CategoryDetail>
 
             {/* F — Preservatives */}
@@ -441,12 +478,13 @@ export default function HowWeScorePage() {
           <div style={{ marginTop: 20, padding: '20px 24px', background: '#fff', borderRadius: 16, border: '1px solid #ede8df' }}>
             <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Version history</div>
             {[
-              { v: 'v1.3 (current)', desc: 'Fat threshold adjusted based on full-database validation.' },
+              { v: 'v1.4 (current)', desc: 'Separated verified facts (Layer 1) from scoring design (Layer 2). Removed Kealy (2002) — study is about caloric restriction, not protein. Corrected Carciofi and Xenoulis journal references. Added Templeman & Shoveller (2022) and Sieja/Oba (2023) to protein sources.' },
+              { v: 'v1.3', desc: 'Fat threshold adjusted from 18% to 20% based on full-database validation.' },
               { v: 'v1.2', desc: 'Plant protein concentrate detection added.' },
               { v: 'v1.1', desc: 'Sliding ash defaults, ingredient splitting detection, probiotic viability adjustment, preservative threshold refinement.' },
               { v: 'v1.0', desc: 'Initial methodology.' },
             ].map((ver, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 3 ? '1px solid #f0ebe3' : 'none' }}>
+              <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 4 ? '1px solid #f0ebe3' : 'none' }}>
                 <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', minWidth: 100, fontFamily: "'DM Mono', monospace" }}>{ver.v}</div>
                 <div style={{ fontSize: 12, color: '#8a7e72' }}>{ver.desc}</div>
               </div>
@@ -481,16 +519,18 @@ export default function HowWeScorePage() {
             <ol style={{ paddingLeft: 20, margin: 0 }}>
               <li>AAFCO (2016). <em>Dog Food Nutrient Profiles.</em></li>
               <li>National Research Council (2006). <em>Nutrient Requirements of Dogs and Cats.</em> National Academies Press.</li>
-              <li>Kealy, R.D., et al. (2002). Effects of diet restriction on life span. <em>JAVMA</em>, 220(9).</li>
               <li>Li, Q., et al. (2017). Protein and carbohydrate ratio effects on gut microbiome. <em>mBio</em>, 8(1).</li>
-              <li>Carciofi, A.C., et al. (2008). Carbohydrate sources and digestibility. <em>Animal Feed Science and Technology</em>, 147(1-3).</li>
+              <li>Xenoulis, P.G. &amp; Steiner, J.M. (2010). Lipid metabolism in dogs. <em>The Veterinary Journal</em>, 183(1):12-21.</li>
               <li>Case, L.P., et al. (2011). <em>Canine and Feline Nutrition</em>, 3rd ed. Mosby Elsevier.</li>
-              <li>Xenoulis, P.G. &amp; Steiner, J.M. (2010). Lipid metabolism in dogs. <em>JSAP</em>, 51(12).</li>
+              <li>Carciofi, A.C., et al. (2008). Carbohydrate sources and digestibility. <em>Journal of Animal Physiology and Animal Nutrition</em>, 92(3):326-336.</li>
+              <li>Templeman, J.R. &amp; Shoveller, A.K. (2022). Digestible indispensable amino acid scores. <em>Journal of Animal Science</em>, 100(11):skac279.</li>
+              <li>Sieja, K.M., Oba, P.M., et al. (2023). Evaluation of high-protein diets differing in protein source. <em>Journal of Animal Science</em>, 101:skad093.</li>
               <li>NTP (2021). <em>Report on Carcinogens</em>, 15th Edition.</li>
               <li>Bauer, J.E. (2011). Omega-3 fatty acids in companion animals. <em>JAVMA</em>, 239(11).</li>
               <li>Schmitz, S. &amp; Suchodolski, J. (2016). Canine intestinal microbiota. <em>Advances in Animal Biosciences</em>, 7(2).</li>
+              <li>Swanson, K.S., et al. (2002). FOS and gut microbial populations in dogs. <em>Journal of Nutrition</em>, 132(6).</li>
             </ol>
-            <p style={{ marginTop: 12, fontStyle: 'italic' }}>+ 13 additional references in full methodology document</p>
+            <p style={{ marginTop: 12, fontStyle: 'italic' }}>+ 8 additional references in full methodology document</p>
           </div>
         </div>
 
