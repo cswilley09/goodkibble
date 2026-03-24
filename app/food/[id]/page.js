@@ -308,19 +308,21 @@ function ScoreRing({ score, size = 52 }) {
   const offset = circumference - (circumference * score / 100);
 
   return (
-    <svg width={size} height={size} style={{ transform: 'rotate(-90deg)', flexShrink: 0 }}>
-      <circle cx={size / 2} cy={size / 2} r={radius}
-        fill="none" stroke="#E8E5DB" strokeWidth={4} />
-      <circle cx={size / 2} cy={size / 2} r={radius}
-        fill="none" stroke={tier.color} strokeWidth={4}
-        strokeDasharray={circumference} strokeDashoffset={offset}
-        strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.6s ease' }} />
-      <text x={size / 2} y={size / 2}
-        textAnchor="middle" dominantBaseline="central"
-        style={{ transform: 'rotate(90deg)', transformOrigin: 'center', fontSize: 16, fontWeight: 500, fontFamily: "'DM Mono', monospace", fill: '#1a1612' }}>
-        {score}
-      </text>
-    </svg>
+    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={size / 2} cy={size / 2} r={radius}
+          fill="none" stroke="#E8E5DB" strokeWidth={4} />
+        <circle cx={size / 2} cy={size / 2} r={radius}
+          fill="none" stroke={tier.color} strokeWidth={4}
+          strokeDasharray={circumference} strokeDashoffset={offset}
+          strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.6s ease' }} />
+      </svg>
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 16, fontWeight: 500, fontFamily: "'DM Mono', monospace", color: '#1a1612',
+      }}>{score}</div>
+    </div>
   );
 }
 
