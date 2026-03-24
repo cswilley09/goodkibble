@@ -107,6 +107,57 @@ function SaltTooltip({ children }) {
   );
 }
 
+/* Compact pill for bracketed ingredient sub-groups (vitamins [...], trace minerals [...]) */
+function SubGroupPill({ groupName, subItems, afterSalt, animDelay }) {
+  const [expanded, setExpanded] = useState(false);
+
+  const baseDisplay = expanded ? 'block' : 'inline-block';
+  const wrapStyle = afterSalt
+    ? { display: baseDisplay, opacity: 0.4, width: expanded ? '100%' : 'auto' }
+    : {
+        display: baseDisplay,
+        width: expanded ? '100%' : 'auto',
+        animationName: 'fadeUp', animationDuration: '0.4s',
+        animationFillMode: 'both', animationDelay: `${animDelay}ms`,
+      };
+
+  return (
+    <span style={wrapStyle}>
+      <span
+        onClick={() => setExpanded(!expanded)}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          padding: '8px 16px', borderRadius: 100,
+          fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+          border: '1px dashed #c4bdb2', background: '#faf8f5',
+          color: '#8a7e72', cursor: 'pointer', transition: 'background 0.15s',
+          verticalAlign: 'middle',
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = '#f0ebe3'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = '#faf8f5'; }}
+      >
+        <span style={{
+          fontSize: 11, background: '#e8e0d4', color: '#5a5248',
+          padding: '2px 7px', borderRadius: 100, fontWeight: 600,
+        }}>{subItems.length}</span>
+        {groupName}
+        <span style={{ fontSize: 10, color: '#b5aa99', transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+      </span>
+      {expanded && (
+        <div style={{
+          marginTop: 6, padding: '12px 16px',
+          borderRadius: 12, background: '#f5f0e8', border: '1px solid #ede8df',
+          fontSize: 13, color: '#5a5248', lineHeight: 1.6,
+          fontFamily: "'DM Sans', sans-serif",
+          animation: 'fadeIn 0.15s ease',
+        }}>
+          {subItems.join(', ')}
+        </div>
+      )}
+    </span>
+  );
+}
+
 const SHARED_MAX = 50; /* shared 0-50% scale, same as compare page */
 
 function TickBar({ value, color }) {
@@ -376,19 +427,23 @@ export default function FoodPage() {
                 if (isSalt) textColor = '#1a1612';
                 else if (isFirst) textColor = '#faf8f5';
 
-                /* for very long ingredients (vitamin/mineral blocks), use a block style instead of pill */
-                const isLongBlock = ing.length > 80;
+                /* detect bracketed sub-groups: "vitamins [...]" or "trace minerals [...]" */
+                const bracketMatch = ing.match(/^([^[\]]+?)\s*\[(.+)\]$/s);
+                if (bracketMatch) {
+                  const groupName = bracketMatch[1].trim();
+                  const subItems = bracketMatch[2].split(',').map(s => s.trim()).filter(Boolean);
+                  return (
+                    <SubGroupPill
+                      key={i}
+                      groupName={groupName}
+                      subItems={subItems}
+                      afterSalt={afterSalt}
+                      animDelay={i * 20}
+                    />
+                  );
+                }
 
-                const pillStyle = isLongBlock ? {
-                  display: 'block', padding: '10px 16px', borderRadius: 16,
-                  fontSize: 13, fontFamily: "'DM Sans', sans-serif",
-                  fontWeight: 400, lineHeight: 1.5,
-                  background: bgColor,
-                  color: textColor,
-                  border: '1px solid #e8e0d4',
-                  cursor: 'default',
-                  maxWidth: '100%',
-                } : {
+                const pillStyle = {
                   display: 'inline-block', padding: '8px 16px', borderRadius: 100,
                   fontSize: 14, fontFamily: "'DM Sans', sans-serif",
                   fontWeight: (isFirst || isSalt) ? 600 : 400,
@@ -401,10 +456,9 @@ export default function FoodPage() {
                 /* animation on non-dimmed pills only; after-salt pills skip animation
                    because the fadeUp keyframe ends at opacity:1 which overrides inline opacity */
                 const wrapStyle = afterSalt
-                  ? { display: isLongBlock ? 'block' : 'inline-block', opacity: 0.4, width: isLongBlock ? '100%' : 'auto' }
+                  ? { display: 'inline-block', opacity: 0.4 }
                   : {
-                      display: isLongBlock ? 'block' : 'inline-block',
-                      width: isLongBlock ? '100%' : 'auto',
+                      display: 'inline-block',
                       animationName: 'fadeUp', animationDuration: '0.4s',
                       animationFillMode: 'both', animationDelay: `${i * 20}ms`,
                     };
