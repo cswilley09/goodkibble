@@ -490,7 +490,7 @@ function ScoreBreakdownCard({ breakdown }) {
 
       {/* Methodology link */}
       <div style={{ textAlign: 'center' }}>
-        <a href="/methodology" style={{
+        <a href="/how-we-score" style={{
           fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif",
           textDecoration: 'none', transition: 'color 0.15s',
         }}
@@ -595,7 +595,7 @@ export default function FoodPage() {
                       {getScoreTier(food.quality_score).label}
                     </div>
                     <div style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
-                      <a href="/methodology" style={{ color: '#b5aa99', textDecoration: 'none' }}
+                      <a href="/how-we-score" style={{ color: '#b5aa99', textDecoration: 'none' }}
                         onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
                         onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
                       >How we score</a> · v{food.score_version || '1.3'}
