@@ -290,6 +290,218 @@ function CompareToggle({ food }) {
   );
 }
 
+/* ── Score tier helper ── */
+function getScoreTier(score) {
+  if (score >= 90) return { label: 'Excellent', color: '#639922' };
+  if (score >= 80) return { label: 'Very Good', color: '#639922' };
+  if (score >= 70) return { label: 'Good', color: '#1D9E75' };
+  if (score >= 60) return { label: 'Adequate', color: '#EF9F27' };
+  if (score >= 50) return { label: 'Below Average', color: '#D85A30' };
+  return { label: 'Concerning', color: '#C0392B' };
+}
+
+/* ── Score Ring ── */
+function ScoreRing({ score, size = 52 }) {
+  const tier = getScoreTier(score);
+  const radius = (size - 8) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (circumference * score / 100);
+
+  return (
+    <svg width={size} height={size} style={{ transform: 'rotate(-90deg)', flexShrink: 0 }}>
+      <circle cx={size / 2} cy={size / 2} r={radius}
+        fill="none" stroke="#E8E5DB" strokeWidth={4} />
+      <circle cx={size / 2} cy={size / 2} r={radius}
+        fill="none" stroke={tier.color} strokeWidth={4}
+        strokeDasharray={circumference} strokeDashoffset={offset}
+        strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.6s ease' }} />
+      <text x={size / 2} y={size / 2}
+        textAnchor="middle" dominantBaseline="central"
+        style={{ transform: 'rotate(90deg)', transformOrigin: 'center', fontSize: 16, fontWeight: 500, fontFamily: "'DM Mono', monospace", fill: '#1a1612' }}>
+        {score}
+      </text>
+    </svg>
+  );
+}
+
+/* ── Score Breakdown Bar Row ── */
+function ScoreBarRow({ label, score, max, color, blurred }) {
+  const pct = max > 0 ? (score / max) * 100 : 0;
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, filter: blurred ? 'blur(4px)' : 'none', opacity: blurred ? 0.35 : 1 }}>
+      <div style={{ width: 110, fontSize: 11, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{label}</div>
+      <div style={{ flex: 1, height: 8, background: '#EDEAE2', borderRadius: 4, overflow: 'hidden' }}>
+        <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: 4, transition: 'width 0.5s ease' }} />
+      </div>
+      <div style={{ fontSize: 11, fontWeight: 500, color: '#1a1612', fontFamily: "'DM Mono', monospace", minWidth: 36, textAlign: 'right' }}>
+        {blurred ? `?/${max}` : `${score}/${max}`}
+      </div>
+    </div>
+  );
+}
+
+/* ── Score Breakdown Card ── */
+function ScoreBreakdownCard({ breakdown }) {
+  const [expandedCat, setExpandedCat] = useState(null);
+  if (!breakdown || !breakdown.categories) return null;
+  const cats = breakdown.categories;
+
+  const toggleExpand = (key) => {
+    setExpandedCat(expandedCat === key ? null : key);
+  };
+
+  /* expanded detail renderer */
+  function renderDetail(key) {
+    const c = cats[key];
+    if (!c) return null;
+    const lines = [];
+    if (key === 'A_protein') {
+      lines.push(`Protein DMB: ${c.protein_dmb}%`);
+      lines.push(`Bracket: ${c.bracket} → ${c.score} points`);
+      lines.push(`AAFCO adult minimum: 18% · growth minimum: 22.5%`);
+    } else if (key === 'B_fat') {
+      lines.push(`Fat DMB: ${c.fat_dmb}%`);
+      lines.push(`Fat level: ${c.bracket_level} → ${c.fat_level_points}/8`);
+      lines.push(`Fat:protein ratio: ${c.fat_protein_ratio} (${c.bracket_ratio}) → ${c.ratio_points}/7`);
+    } else if (key === 'C_carbs') {
+      lines.push(`Carbs DMB: ${c.carbs_dmb}%`);
+      lines.push(`Bracket: ${c.bracket} → ${c.score} points`);
+    } else if (key === 'D_fiber') {
+      lines.push(`Fiber DMB: ${c.fiber_dmb}%`);
+      lines.push(`Bracket: ${c.bracket} → ${c.score} points`);
+    } else if (key === 'E_protein_source') {
+      lines.push(`First animal protein: ${c.first_animal_protein || 'none'} → ${c.first_animal_points} pts`);
+      lines.push(`Second animal protein: ${c.second_animal_protein || 'none'} → ${c.second_animal_points} pts`);
+      lines.push(`Third+ animal protein: ${c.third_plus_animal ? 'yes' : 'no'} → ${c.third_plus_points} pts`);
+      lines.push(`By-products: ${c.byproduct_status} → ${c.byproduct_points} pts`);
+      if (c.splitting_penalty) lines.push(`Splitting penalty: ${c.splitting_penalty} (${c.splitting_detail})`);
+      if (c.plant_concentrate_penalty) lines.push(`Plant concentrate penalty: ${c.plant_concentrate_penalty} (${(c.plant_concentrate_detail || []).join(', ')})`);
+    } else if (key === 'F_preservatives') {
+      lines.push(`Status: ${c.status === 'natural_only' ? 'Natural preservatives only' : c.status}`);
+      if (c.synthetic_found && c.synthetic_found.length > 0) lines.push(`Found: ${c.synthetic_found.join(', ')}`);
+    } else if (key === 'G_additives') {
+      lines.push(`Artificial colors: ${c.artificial_colors ? 'yes' : 'none'}`);
+      lines.push(`Artificial flavors: ${c.artificial_flavors ? 'yes' : 'none'}`);
+    } else if (key === 'H_functional') {
+      const p = c.probiotics || {};
+      const o = c.omega3 || {};
+      const g = c.glucosamine || {};
+      const m = c.chelated_minerals || {};
+      lines.push(`Probiotics: ${p.found ? (p.before_salt ? 'before salt' : 'after salt') : 'not found'} → ${p.points} pts`);
+      lines.push(`Omega-3: ${o.found ? (o.ingredient || 'found') + (o.before_salt ? ' (before salt)' : ' (after salt)') : 'not found'} → ${o.points} pts`);
+      lines.push(`Glucosamine: ${g.found ? 'found' : 'not found'} → ${g.points} pts`);
+      lines.push(`Chelated minerals: ${m.found ? 'found' : 'not found'} → ${m.points} pts`);
+    }
+    return (
+      <div style={{
+        padding: '10px 14px', marginTop: 4, marginBottom: 8,
+        borderRadius: 10, background: '#f5f0e8', fontSize: 12,
+        color: '#5a5248', lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif",
+        animation: 'fadeIn 0.15s ease',
+      }}>
+        {lines.map((line, i) => <div key={i}>{line}</div>)}
+      </div>
+    );
+  }
+
+  const nutritionRows = [
+    { key: 'A_protein', label: 'Protein', color: '#639922' },
+    { key: 'B_fat', label: 'Fat', color: '#EF9F27' },
+    { key: 'C_carbs', label: 'Carbs', color: '#378ADD' },
+    { key: 'D_fiber', label: 'Fiber', color: '#7F77DD' },
+  ];
+  const ingredientRows = [
+    { key: 'E_protein_source', label: 'Protein sources', color: '#1D9E75' },
+    { key: 'F_preservatives', label: 'Preservatives', color: '#1D9E75' },
+    { key: 'G_additives', label: 'Additives', color: '#1D9E75' },
+    { key: 'H_functional', label: 'Functional', color: '#1D9E75' },
+  ];
+
+  return (
+    <div style={{
+      padding: '28px 32px', background: '#faf8f5', borderRadius: 24,
+      border: '1px solid #ede8df', marginBottom: 28,
+      animation: 'scaleIn 0.5s ease 0.05s both',
+    }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+        <span style={{ fontSize: 13, fontWeight: 500, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>Score breakdown</span>
+        <span style={{
+          fontSize: 10, fontWeight: 700, letterSpacing: 1,
+          padding: '3px 10px', borderRadius: 100,
+          background: '#C8A415', color: '#fff',
+          fontFamily: "'DM Sans', sans-serif", textTransform: 'uppercase',
+        }}>PRO</span>
+      </div>
+
+      {/* Nutrition (visible to all) */}
+      <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 10 }}>Nutrition</div>
+      {nutritionRows.map(({ key, label, color }) => {
+        const c = cats[key];
+        if (!c) return null;
+        return (
+          <div key={key}>
+            <div onClick={() => toggleExpand(key)} style={{ cursor: 'pointer' }}>
+              <ScoreBarRow label={label} score={c.score} max={c.max} color={color} blurred={false} />
+            </div>
+            {expandedCat === key && renderDetail(key)}
+          </div>
+        );
+      })}
+
+      <div style={{ height: 1, background: '#ede8df', margin: '16px 0' }} />
+
+      {/* Ingredients (blurred for free users) */}
+      <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 10 }}>Ingredients</div>
+      <div style={{ position: 'relative' }}>
+        {ingredientRows.map(({ key, label, color }) => {
+          const c = cats[key];
+          if (!c) return null;
+          return (
+            <ScoreBarRow key={key} label={label} score={c.score} max={c.max} color={color} blurred={true} />
+          );
+        })}
+        {/* Pro CTA overlay */}
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          padding: '16px 0 8px',
+        }}>
+          <button style={{
+            padding: '10px 24px', borderRadius: 100,
+            border: '1.5px solid #C8A415', background: '#fff',
+            color: '#C8A415', fontSize: 13, fontWeight: 600,
+            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            transition: 'all 0.2s',
+          }}
+            onMouseEnter={(e) => { e.target.style.background = '#C8A415'; e.target.style.color = '#fff'; }}
+            onMouseLeave={(e) => { e.target.style.background = '#fff'; e.target.style.color = '#C8A415'; }}
+          >
+            Unlock full breakdown — GoodKibble Pro
+          </button>
+          <div style={{ fontSize: 11, color: '#b5aa99', marginTop: 8, fontFamily: "'DM Sans', sans-serif" }}>
+            $29.99/year · See exactly why this food scored {breakdown.total}
+          </div>
+        </div>
+      </div>
+
+      <div style={{ height: 1, background: '#ede8df', margin: '16px 0 12px' }} />
+
+      {/* Methodology link */}
+      <div style={{ textAlign: 'center' }}>
+        <a href="/methodology" style={{
+          fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif",
+          textDecoration: 'none', transition: 'color 0.15s',
+        }}
+          onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
+          onMouseLeave={(e) => { e.target.style.color = '#8a7e72'; e.target.style.textDecoration = 'none'; }}
+        >
+          Read our full scoring methodology
+        </a>
+      </div>
+    </div>
+  );
+}
+
 export default function FoodPage() {
   const params = useParams();
   const router = useRouter();
@@ -372,9 +584,32 @@ export default function FoodPage() {
               }}>{food.name}</h1>
               {food.flavor && <div style={{ fontSize: 15, color: '#8a7e72', marginBottom: 16 }}>Flavor: {food.flavor}</div>}
 
+              {/* Score ring + label */}
+              {food.quality_score != null && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
+                  <ScoreRing score={food.quality_score} />
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 500, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                      {getScoreTier(food.quality_score).label}
+                    </div>
+                    <div style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
+                      <a href="/methodology" style={{ color: '#b5aa99', textDecoration: 'none' }}
+                        onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
+                        onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
+                      >How we score</a> · v{food.score_version || '1.3'}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <CompareToggle food={food} />
             </div>
           </div>
+
+          {/* Score Breakdown */}
+          {food.score_breakdown && (
+            <ScoreBreakdownCard breakdown={food.score_breakdown} />
+          )}
 
           {/* Nutrition - Dry Matter Basis */}
           <div className="nutrition-section" style={{
