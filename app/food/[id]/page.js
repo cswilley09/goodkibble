@@ -428,15 +428,9 @@ function ScoreBreakdownCard({ breakdown }) {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <span style={{ fontSize: 13, fontWeight: 500, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>Score breakdown</span>
-        <span style={{
-          fontSize: 10, fontWeight: 700, letterSpacing: 1,
-          padding: '3px 10px', borderRadius: 100,
-          background: '#C8A415', color: '#fff',
-          fontFamily: "'DM Sans', sans-serif", textTransform: 'uppercase',
-        }}>PRO</span>
       </div>
 
-      {/* Nutrition (visible to all) */}
+      {/* Nutrition */}
       <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 10 }}>Nutrition</div>
       {nutritionRows.map(({ key, label, color }) => {
         const c = cats[key];
@@ -453,38 +447,20 @@ function ScoreBreakdownCard({ breakdown }) {
 
       <div style={{ height: 1, background: '#ede8df', margin: '16px 0' }} />
 
-      {/* Ingredients (blurred for free users) */}
+      {/* Ingredients (fully visible) */}
       <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 10 }}>Ingredients</div>
-      <div style={{ position: 'relative' }}>
-        {ingredientRows.map(({ key, label, color }) => {
-          const c = cats[key];
-          if (!c) return null;
-          return (
-            <ScoreBarRow key={key} label={label} score={c.score} max={c.max} color={color} blurred={true} />
-          );
-        })}
-        {/* Pro CTA overlay */}
-        <div style={{
-          display: 'flex', flexDirection: 'column', alignItems: 'center',
-          padding: '16px 0 8px',
-        }}>
-          <button style={{
-            padding: '10px 24px', borderRadius: 100,
-            border: '1.5px solid #C8A415', background: '#fff',
-            color: '#C8A415', fontSize: 13, fontWeight: 600,
-            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-            transition: 'all 0.2s',
-          }}
-            onMouseEnter={(e) => { e.target.style.background = '#C8A415'; e.target.style.color = '#fff'; }}
-            onMouseLeave={(e) => { e.target.style.background = '#fff'; e.target.style.color = '#C8A415'; }}
-          >
-            Unlock full breakdown — GoodKibble Pro
-          </button>
-          <div style={{ fontSize: 11, color: '#b5aa99', marginTop: 8, fontFamily: "'DM Sans', sans-serif" }}>
-            $29.99/year · See exactly why this food scored {breakdown.total}
+      {ingredientRows.map(({ key, label, color }) => {
+        const c = cats[key];
+        if (!c) return null;
+        return (
+          <div key={key}>
+            <div onClick={() => toggleExpand(key)} style={{ cursor: 'pointer' }}>
+              <ScoreBarRow label={label} score={c.score} max={c.max} color={color} blurred={false} />
+            </div>
+            {expandedCat === key && renderDetail(key)}
           </div>
-        </div>
-      </div>
+        );
+      })}
 
       <div style={{ height: 1, background: '#ede8df', margin: '16px 0 12px' }} />
 
