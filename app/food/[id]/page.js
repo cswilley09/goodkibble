@@ -129,12 +129,12 @@ function SubGroupPill({ groupName, subItems, afterSalt, animDelay }) {
           display: 'inline-flex', alignItems: 'center', gap: 6,
           padding: '8px 16px', borderRadius: 100,
           fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-          border: '1px dashed #c4bdb2', background: '#faf8f5',
-          color: '#8a7e72', cursor: 'pointer', transition: 'background 0.15s',
+          border: '1px dashed #c4bdb2', background: '#fff',
+          color: '#3d352b', cursor: 'pointer', transition: 'background 0.15s',
           verticalAlign: 'middle',
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = '#f0ebe3'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = '#faf8f5'; }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = '#f5f0e8'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = '#fff'; }}
       >
         <span style={{
           fontSize: 11, background: '#e8e0d4', color: '#5a5248',
