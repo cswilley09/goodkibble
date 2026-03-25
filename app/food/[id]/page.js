@@ -358,7 +358,7 @@ function DetailCell({ label, value, green }) {
   );
 }
 
-function CategoryDetailPanel({ catKey, data }) {
+function CategoryDetailPanel({ catKey, data, color }) {
   if (!data) return null;
   const c = data;
 
@@ -450,8 +450,9 @@ function CategoryDetailPanel({ catKey, data }) {
 
   return (
     <div style={{
-      background: '#F3F1EA', borderRadius: '0 0 8px 8px', marginTop: -5,
+      background: '#F3F1EA', borderRadius: '0 0 8px 0', marginTop: -5,
       padding: '10px 12px 12px', animation: 'fadeIn 0.15s ease',
+      borderLeft: `3px solid ${color || '#ccc'}`, maxWidth: 420,
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px 16px' }}>
         {cells.map((cell, i) => (
@@ -522,7 +523,7 @@ function ScoreBreakdownCard({ breakdown }) {
             transform: isExpanded ? 'rotate(90deg)' : 'none',
           }}>▶</span>
         </div>
-        {isExpanded && <CategoryDetailPanel catKey={key} data={c} />}
+        {isExpanded && <CategoryDetailPanel catKey={key} data={c} color={color} />}
       </div>
     );
   }
@@ -541,7 +542,7 @@ function ScoreBreakdownCard({ breakdown }) {
       {/* Nutrition tiles */}
       <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 6 }}>Nutrition</div>
       <div className="score-tiles-grid" style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 6, marginBottom: 12,
+        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 12,
       }}>
         {nutritionTiles.map(renderTile)}
       </div>
@@ -551,7 +552,7 @@ function ScoreBreakdownCard({ breakdown }) {
       {/* Ingredient tiles */}
       <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 6 }}>Ingredients</div>
       <div className="score-tiles-grid" style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 6, marginBottom: 12,
+        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 12,
       }}>
         {ingredientTiles.map(renderTile)}
       </div>
@@ -600,6 +601,11 @@ export default function FoodPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#ffffff' }}>
+      <style>{`
+        @media (max-width: 480px) {
+          .score-tiles-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#fff',
