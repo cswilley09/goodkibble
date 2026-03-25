@@ -328,23 +328,23 @@ function ScoreRing({ score, size = 52 }) {
 
 
 /* ── Mini Ring for tiles (36px) ── */
-function MiniRing({ score, max, color }) {
-  const size = 36;
-  const radius = 14;
-  const circumference = 2 * Math.PI * radius;
+
+/* ── Tile Ring (40px, matches GA value style) ── */
+function TileRing({ score, max, color }) {
+  const circumference = 2 * Math.PI * 16;
   const pct = max > 0 ? score / max : 0;
   const offset = circumference * (1 - pct);
   return (
-    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
-      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={18} cy={18} r={radius} fill="none" stroke="#E8E5DB" strokeWidth={3} />
-        <circle cx={18} cy={18} r={radius} fill="none" stroke={color} strokeWidth={3}
+    <div style={{ position: 'relative', width: 40, height: 40, flexShrink: 0 }}>
+      <svg width={40} height={40} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={20} cy={20} r={16} fill="none" stroke="#ede8df" strokeWidth={3} />
+        <circle cx={20} cy={20} r={16} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
           style={{ transition: 'stroke-dashoffset 0.4s ease' }} />
       </svg>
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 12, fontWeight: 500, fontFamily: "'DM Mono', monospace", color: '#1a1612',
+        fontSize: 14, fontWeight: 700, fontFamily: "'DM Mono', monospace", color: '#1a1612',
       }}>{score}</div>
     </div>
   );
@@ -442,69 +442,63 @@ function CategoryDetailPanel({ catKey, data, color }) {
 
   return (
     <div style={{
-      background: '#F3F1EA', borderRadius: '0 0 8px 0', marginTop: 2,
-      padding: '12px 14px 14px', animation: 'fadeIn 0.15s ease',
-      borderLeft: `3px solid ${color || '#ccc'}`, maxWidth: 460,
+      background: '#ede8df', borderRadius: '0 0 12px 0', marginTop: -2,
+      padding: '16px 18px 18px',
+      borderLeft: `3px solid ${color || '#ccc'}`,
+      animation: 'fadeIn 0.15s ease',
     }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 24px', maxWidth: 460 }}>
         {cells.map((cell, i) => (
           <div key={i}>
-            <div style={{ fontSize: 10, color: '#999' }}>{cell.l}</div>
-            <div style={{ fontSize: 12, fontWeight: 500, color: cell.green ? '#3B6D11' : '#1a1a1a' }}>{cell.v}</div>
+            <div style={{ fontSize: 11, fontWeight: 500, color: '#b5aa99' }}>{cell.l}</div>
+            <div style={{
+              fontSize: 14, fontWeight: 700, fontFamily: "'DM Mono', monospace",
+              color: cell.green ? '#2d7a4f' : '#1a1612',
+            }}>{cell.v}</div>
           </div>
         ))}
       </div>
       {context && (
         <div style={{
-          marginTop: 8, paddingTop: 6, borderTop: '0.5px solid rgba(0,0,0,0.06)',
-          fontSize: 10, color: '#aaa', lineHeight: 1.5,
+          marginTop: 10, paddingTop: 10,
+          borderTop: '1px solid rgba(0,0,0,0.06)',
+          fontSize: 11, fontWeight: 400, color: '#8a7e72', lineHeight: 1.6,
         }}>
           {context}
-          {citation && <div style={{ fontStyle: 'italic', color: '#bbb', marginTop: 2 }}>{citation}</div>}
+          {citation && <div style={{ fontStyle: 'italic', color: '#b5aa99', marginTop: 2 }}>{citation}</div>}
         </div>
       )}
     </div>
   );
 }
 
-/* ── Tile Row: renders a pair of tiles with detail panels OUTSIDE the grid ── */
-function TileRow({ tiles, cats, expandedCat, onToggle }) {
+/* ── Single Tile (flex child) ── */
+function ScoreTile({ catKey, label, color, textColor, data, isExpanded, onToggle }) {
+  if (!data) return null;
+  const nameColor = textColor || color;
   return (
-    <div style={{ marginBottom: 6 }}>
-      <div className="score-tiles-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-        {tiles.map(({ key, label, color, textColor }) => {
-          const c = cats[key];
-          if (!c) return null;
-          const isExpanded = expandedCat === key;
-          const nameColor = textColor || color;
-          return (
-            <div key={key}
-              onClick={() => onToggle(key)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 10,
-                padding: '10px 14px',
-                background: isExpanded ? '#F3F1EA' : '#FAFAF7',
-                borderRadius: 8, cursor: 'pointer', transition: 'background 0.15s',
-              }}
-              onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.background = '#F3F1EA'; }}
-              onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.background = '#FAFAF7'; }}
-            >
-              <MiniRing score={c.score} max={c.max} color={color} />
-              <span style={{ fontSize: 13, fontWeight: 500, color: nameColor, flex: 1, fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
-              <span style={{ fontSize: 12, color: '#999', fontFamily: "'DM Mono', monospace" }}>{c.score}/{c.max}</span>
-              <span style={{
-                fontSize: 10, color: '#ccc', transition: 'transform 0.15s',
-                transform: isExpanded ? 'rotate(90deg)' : 'none',
-              }}>▶</span>
-            </div>
-          );
-        })}
+    <div style={{ flex: 1, minWidth: 0 }}>
+      <div
+        onClick={() => onToggle(catKey)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 12,
+          padding: '14px 18px',
+          background: isExpanded ? '#ede8df' : '#f4f1ec',
+          borderRadius: isExpanded ? '12px 12px 0 0' : 12,
+          cursor: 'pointer', transition: 'background 0.15s',
+        }}
+        onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.background = '#ede8df'; }}
+        onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.background = '#f4f1ec'; }}
+      >
+        <TileRing score={data.score} max={data.max} color={color} />
+        <span style={{ fontSize: 14, fontWeight: 600, color: nameColor, flex: 1, minWidth: 0, fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
+        <span style={{ fontSize: 13, fontWeight: 500, color: '#8a7e72', fontFamily: "'DM Mono', monospace", flexShrink: 0 }}>{data.score}/{data.max}</span>
+        <span style={{
+          fontSize: 10, color: '#b5aa99', flexShrink: 0, transition: 'transform 0.15s',
+          transform: isExpanded ? 'rotate(90deg)' : 'none',
+        }}>▶</span>
       </div>
-      {tiles.map(({ key, color }) => {
-        const c = cats[key];
-        if (!c || expandedCat !== key) return null;
-        return <CategoryDetailPanel key={`detail-${key}`} catKey={key} data={c} color={color} />;
-      })}
+      {isExpanded && <CategoryDetailPanel catKey={catKey} data={data} color={color} />}
     </div>
   );
 }
@@ -519,50 +513,63 @@ function ScoreBreakdownCard({ breakdown }) {
     setExpandedCat(expandedCat === key ? null : key);
   };
 
-  const nutritionRow1 = [
-    { key: 'A_protein', label: 'Protein', color: '#639922' },
-    { key: 'B_fat', label: 'Fat', color: '#EF9F27' },
+  const nutRow1 = [
+    { key: 'A_protein', label: 'Protein', color: '#2d7a4f' },
+    { key: 'B_fat', label: 'Fat', color: '#c47a20' },
   ];
-  const nutritionRow2 = [
-    { key: 'C_carbs', label: 'Carbs', color: '#378ADD' },
-    { key: 'D_fiber', label: 'Fiber', color: '#7F77DD' },
+  const nutRow2 = [
+    { key: 'C_carbs', label: 'Carbs', color: '#5a7a9e' },
+    { key: 'D_fiber', label: 'Fiber', color: '#8a6aaf' },
   ];
-  const ingredientRow1 = [
+  const ingRow1 = [
     { key: 'E_protein_source', label: 'Protein sources', color: '#C8A415', textColor: '#A08310' },
     { key: 'F_preservatives', label: 'Preservatives', color: '#C8A415', textColor: '#A08310' },
   ];
-  const ingredientRow2 = [
+  const ingRow2 = [
     { key: 'G_additives', label: 'Additives', color: '#C8A415', textColor: '#A08310' },
     { key: 'H_functional', label: 'Functional', color: '#C8A415', textColor: '#A08310' },
   ];
 
+  const renderPair = (tiles) => (
+    <div className="score-tile-pair" style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+      {tiles.map((t) => (
+        <ScoreTile key={t.key} catKey={t.key} label={t.label}
+          color={t.color} textColor={t.textColor}
+          data={cats[t.key]} isExpanded={expandedCat === t.key}
+          onToggle={toggleExpand} />
+      ))}
+    </div>
+  );
+
   return (
     <div style={{
-      padding: '24px 28px', background: '#faf8f5', borderRadius: 24,
+      padding: '40px 32px', background: '#faf8f5', borderRadius: 24,
       border: '1px solid #ede8df', marginBottom: 28,
       animation: 'scaleIn 0.5s ease 0.05s both',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
         <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99' }}>Score breakdown</span>
       </div>
 
-      <TileRow tiles={nutritionRow1} cats={cats} expandedCat={expandedCat} onToggle={toggleExpand} />
-      <TileRow tiles={nutritionRow2} cats={cats} expandedCat={expandedCat} onToggle={toggleExpand} />
+      <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Nutrition</div>
+      {renderPair(nutRow1)}
+      {renderPair(nutRow2)}
 
-      <div style={{ height: 1, background: '#ede8df', margin: '12px 0' }} />
+      <div style={{ height: 1, background: '#ede8df', margin: '14px 0 24px' }} />
 
-      <TileRow tiles={ingredientRow1} cats={cats} expandedCat={expandedCat} onToggle={toggleExpand} />
-      <TileRow tiles={ingredientRow2} cats={cats} expandedCat={expandedCat} onToggle={toggleExpand} />
+      <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Ingredients</div>
+      {renderPair(ingRow1)}
+      {renderPair(ingRow2)}
 
-      <div style={{ height: 1, background: '#ede8df', margin: '12px 0 10px' }} />
+      <div style={{ height: 1, background: '#ede8df', margin: '14px 0 16px' }} />
 
       <div style={{ textAlign: 'center' }}>
         <a href="/how-we-score" style={{
           fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif",
-          textDecoration: 'none', transition: 'color 0.15s',
+          textDecoration: 'underline', textUnderlineOffset: 3, transition: 'color 0.15s',
         }}
-          onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
-          onMouseLeave={(e) => { e.target.style.color = '#8a7e72'; e.target.style.textDecoration = 'none'; }}
+          onMouseEnter={(e) => e.target.style.color = '#1a1612'}
+          onMouseLeave={(e) => e.target.style.color = '#8a7e72'}
         >
           Read our full scoring methodology
         </a>
@@ -599,7 +606,7 @@ export default function FoodPage() {
     <div style={{ minHeight: '100vh', background: '#ffffff' }}>
       <style>{`
         @media (max-width: 480px) {
-          .score-tiles-grid { grid-template-columns: 1fr !important; }
+          .score-tile-pair { flex-direction: column; }
         }
       `}</style>
       <nav className="nav-bar" style={{
