@@ -663,7 +663,20 @@ export default function FoodPage() {
                 fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 700, color: '#1a1612',
                 lineHeight: 1.2, marginBottom: 12, letterSpacing: -0.5,
               }}>{food.name}</h1>
-              {food.flavor && <div style={{ fontSize: 15, color: '#8a7e72', marginBottom: 16 }}>Flavor: {food.flavor}</div>}
+              {(food.flavor || food.primary_protein) && (
+                <div style={{ marginBottom: 14 }}>
+                  {food.flavor && (
+                    <div style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.5 }}>
+                      <span style={{ fontWeight: 600, color: '#6b6157' }}>Flavor:</span> {food.flavor}
+                    </div>
+                  )}
+                  {food.primary_protein && (
+                    <div style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.5 }}>
+                      <span style={{ fontWeight: 600, color: '#6b6157' }}>Primary Protein:</span> {food.primary_protein}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Score ring + label */}
               {food.quality_score != null && (
