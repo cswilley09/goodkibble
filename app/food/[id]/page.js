@@ -494,9 +494,9 @@ function ScoreTile({ catKey, label, color, textColor, data, isExpanded, onToggle
         <span style={{ fontSize: 14, fontWeight: 600, color: nameColor, flex: 1, minWidth: 0, fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
         <span style={{ fontSize: 13, fontWeight: 500, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{data.score}/{data.max}</span>
         <span style={{
-          fontSize: 10, color: '#b5aa99', flexShrink: 0, transition: 'transform 0.15s',
-          transform: isExpanded ? 'rotate(90deg)' : 'none',
-        }}>▶</span>
+          fontSize: 18, color: '#8a7e72', flexShrink: 0, transition: 'transform 0.2s',
+          transform: isExpanded ? 'rotate(180deg)' : 'none',
+        }}>▼</span>
       </div>
       {isExpanded && <CategoryDetailPanel catKey={catKey} data={data} color={color} />}
     </div>
