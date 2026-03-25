@@ -36,8 +36,51 @@ const FIBER_RANGES = [
   { label: '6%+', min: 6, max: 999 },
 ];
 
+/* ── score tier helpers ── */
+function getScoreColor(score) {
+  if (score >= 70) return '#2d7a4f';
+  if (score >= 50) return '#c47a20';
+  return '#b5483a';
+}
+
+function getScoreTier(score) {
+  if (score >= 90) return 'Excellent';
+  if (score >= 80) return 'Great';
+  if (score >= 70) return 'Good';
+  if (score >= 60) return 'Fair';
+  if (score >= 50) return 'Below Avg';
+  return 'Poor';
+}
+
+/* ── score ring badge ── */
+function ScoreRing({ score }) {
+  if (score == null) return null;
+  const color = getScoreColor(score);
+  const circumference = 106.8;
+  const offset = circumference * (1 - score / 100);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, marginLeft: 'auto' }}>
+      <svg width={42} height={42} viewBox="0 0 42 42">
+        <circle cx={21} cy={21} r={17} fill="none" stroke="#ede8df" strokeWidth={3} />
+        <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
+          strokeDasharray={circumference} strokeDashoffset={offset}
+          strokeLinecap="round" transform="rotate(-90 21 21)" />
+        <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
+          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
+          {score}
+        </text>
+      </svg>
+      <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+        {getScoreTier(score)}
+      </span>
+    </div>
+  );
+}
+
 /* ── sort options ── */
 const SORT_OPTIONS = [
+  { label: 'GoodKibble Score (high to low)', value: 'score_desc', field: 'quality_score', dir: -1 },
+  { label: 'GoodKibble Score (low to high)', value: 'score_asc', field: 'quality_score', dir: 1 },
   { label: 'Protein (high to low)', value: 'protein_desc', field: 'protein_dmb', dir: -1 },
   { label: 'Protein (low to high)', value: 'protein_asc', field: 'protein_dmb', dir: 1 },
   { label: 'Carbs (low to high)', value: 'carbs_asc', field: 'carbs_dmb', dir: 1 },
@@ -89,7 +132,7 @@ function ProductCard({ food, onClick }) {
     <div onClick={onClick} style={{
       background: '#fff', borderRadius: 16, padding: 16, border: '1px solid #ede8df',
       cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
-      display: 'flex', gap: 14, alignItems: 'flex-start',
+      display: 'flex', gap: 14, alignItems: 'center',
     }}
       onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(26,22,18,0.08)'; }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
@@ -116,6 +159,7 @@ function ProductCard({ food, onClick }) {
           )}
         </div>
       </div>
+      <ScoreRing score={food.quality_score} />
     </div>
   );
 }
@@ -138,7 +182,7 @@ function DiscoverContent() {
   const [brandSearch, setBrandSearch] = useState('');
 
   /* sort state (Change 3) — read initial from URL, default protein desc */
-  const initialSort = searchParams.get('sort') || 'protein_desc';
+  const initialSort = searchParams.get('sort') || 'score_desc';
   const [sortValue, setSortValue] = useState(initialSort);
 
   const goHome = () => router.push('/');
@@ -161,7 +205,7 @@ function DiscoverContent() {
       while (true) {
         const { data } = await supabase
           .from('dog_foods_v2')
-          .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url')
+          .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score')
           .range(offset, offset + batch - 1);
         if (!data || data.length === 0) break;
         all = all.concat(data);
