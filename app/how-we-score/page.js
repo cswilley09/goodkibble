@@ -213,15 +213,15 @@ export default function HowWeScorePage() {
           <div style={{ padding: '28px 32px', background: '#fff', borderRadius: 20, border: '1px solid #ede8df' }}>
             <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Nutrition</div>
             <GlanceBar label="Protein" pts={25} max={25} color={CAT_COLORS.protein} />
-            <GlanceBar label="Fat" pts={15} max={25} color={CAT_COLORS.fat} />
-            <GlanceBar label="Carbohydrates" pts={15} max={25} color={CAT_COLORS.carbs} />
-            <GlanceBar label="Fiber" pts={5} max={25} color={CAT_COLORS.fiber} />
+            <GlanceBar label="Fat" pts={15} max={15} color={CAT_COLORS.fat} />
+            <GlanceBar label="Carbohydrates" pts={15} max={15} color={CAT_COLORS.carbs} />
+            <GlanceBar label="Fiber" pts={5} max={5} color={CAT_COLORS.fiber} />
             <div style={{ height: 1, background: '#ede8df', margin: '16px 0' }} />
             <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Ingredients</div>
-            <GlanceBar label="Protein sources" pts={15} max={25} color={CAT_COLORS.teal} />
-            <GlanceBar label="Preservatives" pts={10} max={25} color={CAT_COLORS.teal} />
-            <GlanceBar label="Additives" pts={5} max={25} color={CAT_COLORS.teal} />
-            <GlanceBar label="Functional" pts={10} max={25} color={CAT_COLORS.teal} />
+            <GlanceBar label="Protein sources" pts={15} max={15} color={CAT_COLORS.teal} />
+            <GlanceBar label="Preservatives" pts={10} max={10} color={CAT_COLORS.teal} />
+            <GlanceBar label="Additives" pts={5} max={5} color={CAT_COLORS.teal} />
+            <GlanceBar label="Functional" pts={10} max={10} color={CAT_COLORS.teal} />
             <div style={{ textAlign: 'right', fontSize: 12, color: '#8a7e72', marginTop: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>Total: 100 points</div>
           </div>
         </div>
