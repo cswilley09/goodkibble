@@ -7,6 +7,15 @@ import CompareBubble from '../components/CompareBubble';
 import SearchBox from '../components/SearchBox';
 
 /* ── filter range definitions ── */
+const SCORE_RANGES = [
+  { label: 'Excellent (90–100)', min: 90, max: 100 },
+  { label: 'Great (80–89)', min: 80, max: 89 },
+  { label: 'Good (70–79)', min: 70, max: 79 },
+  { label: 'Fair (60–69)', min: 60, max: 69 },
+  { label: 'Below Avg (50–59)', min: 50, max: 59 },
+  { label: 'Poor (under 50)', min: 0, max: 49 },
+];
+
 const PROTEIN_TYPES = ['Chicken', 'Beef', 'Salmon', 'Lamb', 'Turkey', 'Duck', 'Fish', 'Other', 'Specialty / Veterinary'];
 
 const PROTEIN_RANGES = [
@@ -173,6 +182,7 @@ function DiscoverContent() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   /* filter state */
+  const [selectedScoreRange, setSelectedScoreRange] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedProteins, setSelectedProteins] = useState([]);
   const [selectedProteinRange, setSelectedProteinRange] = useState([]);
@@ -247,6 +257,10 @@ function DiscoverContent() {
   /* apply all filters */
   const filtered = useMemo(() => {
     return allFoods.filter(f => {
+      if (selectedScoreRange.length > 0) {
+        const val = f.quality_score;
+        if (val == null || !selectedScoreRange.some(r => val >= r.min && val <= r.max)) return false;
+      }
       if (selectedBrands.length > 0 && !selectedBrands.includes(f.brand)) return false;
       if (selectedProteins.length > 0) {
         const pp = f.primary_protein || 'Unknown';
@@ -270,7 +284,7 @@ function DiscoverContent() {
       }
       return true;
     });
-  }, [allFoods, selectedBrands, selectedProteins, selectedProteinRange, selectedCarbRange, selectedFatRange, selectedFiberRange]);
+  }, [allFoods, selectedScoreRange, selectedBrands, selectedProteins, selectedProteinRange, selectedCarbRange, selectedFatRange, selectedFiberRange]);
 
   /* sort filtered results (Change 3) */
   const sorted = useMemo(() => {
@@ -287,10 +301,11 @@ function DiscoverContent() {
     });
   }, [filtered, sortValue]);
 
-  const activeFilterCount = [selectedBrands, selectedProteins, selectedProteinRange, selectedCarbRange, selectedFatRange, selectedFiberRange]
+  const activeFilterCount = [selectedScoreRange, selectedBrands, selectedProteins, selectedProteinRange, selectedCarbRange, selectedFatRange, selectedFiberRange]
     .filter(a => a.length > 0).length;
 
   function clearAll() {
+    setSelectedScoreRange([]);
     setSelectedBrands([]);
     setSelectedProteins([]);
     setSelectedProteinRange([]);
@@ -330,6 +345,14 @@ function DiscoverContent() {
   /* ── filter panel content ── */
   const filterContent = (
     <>
+      <FilterSection title="GoodKibble Score" defaultOpen={true} forceOpen={selectedScoreRange.length > 0}>
+        {SCORE_RANGES.map(r => (
+          <CheckOption key={r.label} label={r.label}
+            checked={selectedScoreRange.some(s => s.label === r.label)}
+            onChange={() => toggleRange(r, selectedScoreRange, setSelectedScoreRange)} />
+        ))}
+      </FilterSection>
+
       <FilterSection title="Protein Type" defaultOpen={true} forceOpen={selectedProteins.length > 0}>
         {PROTEIN_TYPES.map(pt => (
           <CheckOption key={pt} label={pt} count={proteinCounts[pt] || 0}
