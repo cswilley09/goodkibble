@@ -35,6 +35,47 @@ function useIsMobile(breakpoint = 768) {
   return mobile;
 }
 
+/* ── score tier helpers ── */
+function getScoreColor(score) {
+  if (score >= 70) return '#2d7a4f';
+  if (score >= 50) return '#c47a20';
+  return '#b5483a';
+}
+
+function getScoreTier(score) {
+  if (score >= 90) return 'Excellent';
+  if (score >= 80) return 'Great';
+  if (score >= 70) return 'Good';
+  if (score >= 60) return 'Fair';
+  if (score >= 50) return 'Below Avg';
+  return 'Poor';
+}
+
+/* ── score ring badge ── */
+function ScoreRing({ score, compact }) {
+  if (score == null) return null;
+  const color = getScoreColor(score);
+  const circumference = 106.8;
+  const offset = circumference * (1 - score / 100);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <svg width={compact ? 32 : 42} height={compact ? 32 : 42} viewBox="0 0 42 42">
+        <circle cx={21} cy={21} r={17} fill="none" stroke="#ede8df" strokeWidth={3} />
+        <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
+          strokeDasharray={circumference} strokeDashoffset={offset}
+          strokeLinecap="round" transform="rotate(-90 21 21)" />
+        <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
+          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
+          {score}
+        </text>
+      </svg>
+      <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+        {getScoreTier(score)}
+      </span>
+    </div>
+  );
+}
+
 /* ── nutrient explainer ── */
 function NutrientExplainer() {
   const [open, setOpen] = useState(false);
@@ -115,7 +156,7 @@ function AddCardSearch({ onSelect, compact }) {
     const t = setTimeout(() => {
       supabase
         .from('dog_foods_v2')
-        .select('id, name, brand, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, moisture, ingredients, image_url')
+        .select('id, name, brand, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, moisture, ingredients, image_url, quality_score')
         .ilike('name', `%${query}%`)
         .limit(6)
         .then(({ data }) => setResults(data || []));
@@ -376,6 +417,9 @@ export default function ComparePage() {
                     height: isMobile ? 46 : 55,
                   }}>
                     {f.name}
+                  </div>
+                  <div style={{ marginBottom: isMobile ? 4 : 8 }}>
+                    <ScoreRing score={f.quality_score} compact={isMobile} />
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
                     padding: isMobile ? '3px 8px' : '5px 12px', borderRadius: 100,
