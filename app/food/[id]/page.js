@@ -191,7 +191,7 @@ function NutrientRow({ label, value, color }) {
       }}>{label}</span>
       <span style={{
         fontSize: 18, fontWeight: 700, color: '#1a1612',
-        fontFamily: "'DM Mono', monospace", lineHeight: 1,
+        fontFamily: "'DM Sans', sans-serif", lineHeight: 1,
         minWidth: 48, flexShrink: 0,
       }}>{value}<span style={{ fontSize: 12, fontWeight: 500, color: '#8a7e72' }}>%</span></span>
       <TickBar value={value} color={color} />
@@ -320,7 +320,7 @@ function ScoreRing({ score, size = 52 }) {
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 16, fontWeight: 500, fontFamily: "'DM Mono', monospace", color: '#1a1612',
+        fontSize: 16, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1a1612',
       }}>{score}</div>
     </div>
   );
@@ -344,7 +344,7 @@ function TileRing({ score, max, color }) {
       </svg>
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 14, fontWeight: 700, fontFamily: "'DM Mono', monospace", color: '#1a1612',
+        fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", color: '#1a1612',
       }}>{score}</div>
     </div>
   );
@@ -452,7 +452,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
           <div key={i}>
             <div style={{ fontSize: 11, fontWeight: 500, color: '#b5aa99' }}>{cell.l}</div>
             <div style={{
-              fontSize: 14, fontWeight: 700, fontFamily: "'DM Mono', monospace",
+              fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
               color: cell.green ? '#2d7a4f' : '#1a1612',
             }}>{cell.v}</div>
           </div>
@@ -492,7 +492,7 @@ function ScoreTile({ catKey, label, color, textColor, data, isExpanded, onToggle
       >
         <TileRing score={data.score} max={data.max} color={color} />
         <span style={{ fontSize: 14, fontWeight: 600, color: nameColor, flex: 1, minWidth: 0, fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
-        <span style={{ fontSize: 13, fontWeight: 500, color: '#8a7e72', fontFamily: "'DM Mono', monospace", flexShrink: 0 }}>{data.score}/{data.max}</span>
+        <span style={{ fontSize: 13, fontWeight: 500, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{data.score}/{data.max}</span>
         <span style={{
           fontSize: 10, color: '#b5aa99', flexShrink: 0, transition: 'transform 0.15s',
           transform: isExpanded ? 'rotate(90deg)' : 'none',

@@ -70,7 +70,7 @@ function ThresholdTable({ headers, rows }) {
           {rows.map((row, i) => (
             <tr key={i} style={{ background: i % 2 === 0 ? '#faf8f5' : '#fff' }}>
               {row.map((cell, j) => (
-                <td key={j} style={{ padding: '8px 12px', borderBottom: '1px solid #f0ebe3', color: j === 0 ? '#1a1612' : '#5a5248', fontWeight: j === 1 ? 600 : 400, fontFamily: j === 1 ? "'DM Mono', monospace" : 'inherit' }}>{cell}</td>
+                <td key={j} style={{ padding: '8px 12px', borderBottom: '1px solid #f0ebe3', color: j === 0 ? '#1a1612' : '#5a5248', fontWeight: j === 1 ? 600 : 400, fontFamily: j === 1 ? "'DM Sans', sans-serif" : 'inherit' }}>{cell}</td>
               ))}
             </tr>
           ))}
@@ -98,10 +98,10 @@ function GlanceBar({ label, pts, max, color }) {
       <div style={{ width: 130, fontSize: 13, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{label}</div>
       <div style={{ flex: 1, height: 24, background: '#EDEAE2', borderRadius: 6, overflow: 'hidden', position: 'relative' }}>
         <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: '#fff', fontFamily: "'DM Mono', monospace" }}>{pts}</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: '#fff', fontFamily: "'DM Sans', sans-serif" }}>{pts}</span>
         </div>
       </div>
-      <div style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Mono', monospace", minWidth: 28, textAlign: 'right' }}>/{max}</div>
+      <div style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif", minWidth: 28, textAlign: 'right' }}>/{max}</div>
     </div>
   );
 }
@@ -170,7 +170,7 @@ export default function HowWeScorePage() {
                   width: 32, height: 32, borderRadius: '50%', background: '#f0ebe3',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 12, fontWeight: 700, color: '#8a7e72', marginBottom: 12,
-                  fontFamily: "'DM Mono', monospace",
+                  fontFamily: "'DM Sans', sans-serif",
                 }}>{p.n}</div>
                 <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 6 }}>{p.title}</div>
                 <div style={{ fontSize: 13, color: '#8a7e72', lineHeight: 1.5 }}>{p.desc}</div>
@@ -222,7 +222,7 @@ export default function HowWeScorePage() {
             <GlanceBar label="Preservatives" pts={10} max={25} color={CAT_COLORS.teal} />
             <GlanceBar label="Additives" pts={5} max={25} color={CAT_COLORS.teal} />
             <GlanceBar label="Functional" pts={10} max={25} color={CAT_COLORS.teal} />
-            <div style={{ textAlign: 'right', fontSize: 12, color: '#8a7e72', marginTop: 12, fontFamily: "'DM Mono', monospace", fontWeight: 500 }}>Total: 100 points</div>
+            <div style={{ textAlign: 'right', fontSize: 12, color: '#8a7e72', marginTop: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>Total: 100 points</div>
           </div>
         </div>
 
@@ -242,7 +242,7 @@ export default function HowWeScorePage() {
                 display: 'flex', alignItems: 'center', gap: 14, padding: '10px 0',
                 borderBottom: i < 5 ? '1px solid #f0ebe3' : 'none',
               }}>
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 13, fontWeight: 600, color: tier.color, minWidth: 60 }}>{tier.range}</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: tier.color, minWidth: 60 }}>{tier.range}</div>
                 <div style={{ fontWeight: 600, fontSize: 14, color: tier.color, minWidth: 110 }}>{tier.label}</div>
                 <div style={{ fontSize: 13, color: '#8a7e72', flex: 1 }}>{tier.desc}</div>
               </div>
@@ -485,7 +485,7 @@ export default function HowWeScorePage() {
               { v: 'v1.0', desc: 'Initial methodology.' },
             ].map((ver, i) => (
               <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 4 ? '1px solid #f0ebe3' : 'none' }}>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', minWidth: 100, fontFamily: "'DM Mono', monospace" }}>{ver.v}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', minWidth: 100, fontFamily: "'DM Sans', sans-serif" }}>{ver.v}</div>
                 <div style={{ fontSize: 12, color: '#8a7e72' }}>{ver.desc}</div>
               </div>
             ))}

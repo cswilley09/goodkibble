@@ -422,7 +422,7 @@ export default function ComparePage() {
                       }}>
                         <div style={{
                           fontSize: isMobile ? 16 : 18, fontWeight: 700, color: '#1a1612',
-                          fontFamily: "'DM Mono', monospace", lineHeight: 1,
+                          fontFamily: "'DM Sans', sans-serif", lineHeight: 1,
                           minWidth: isMobile ? undefined : 44, flexShrink: 0,
                         }}>
                           {val}<span style={{ fontSize: 12, fontWeight: 500, color: '#8a7e72' }}>%</span>
