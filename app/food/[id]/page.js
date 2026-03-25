@@ -6,6 +6,11 @@ import SearchBox from '../../components/SearchBox';
 import CompareBubble from '../../components/CompareBubble';
 import { useCompare } from '../../components/CompareContext';
 
+function capitalize(str) {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 const SALT_KEYWORDS = ['salt', 'sodium chloride', 'iodized salt', 'sea salt'];
 
 function isSaltIngredient(ing) {
@@ -394,22 +399,22 @@ function CategoryDetailPanel({ catKey, data, color }) {
     citation = 'NRC, 2006';
   } else if (catKey === 'E_protein_source') {
     cells = [
-      { l: 'First animal protein', v: c.first_animal_protein || 'None' },
-      { l: 'Second animal protein', v: c.second_animal_protein || 'None in top 5' },
-      { l: 'By-product status', v: c.byproduct_status || 'None' },
-      { l: 'Splitting penalty', v: c.splitting_penalty ? `${c.splitting_penalty}` : 'None' },
+      { l: 'First animal protein', v: capitalize(c.first_animal_protein) || 'None' },
+      { l: 'Second animal protein', v: capitalize(c.second_animal_protein) || 'None in top 5' },
+      { l: 'By-product status', v: capitalize(c.byproduct_status) || 'None' },
+      { l: 'Splitting penalty', v: c.splitting_penalty ? capitalize(`${c.splitting_penalty}`) : 'None' },
     ];
     if (c.plant_concentrate_penalty) {
-      cells.push({ l: 'Plant protein penalty', v: `${c.plant_concentrate_penalty} — ${(c.plant_concentrate_detail || []).join(', ')}` });
+      cells.push({ l: 'Plant protein penalty', v: `${capitalize(`${c.plant_concentrate_penalty}`)} — ${(c.plant_concentrate_detail || []).map(capitalize).join(', ')}` });
     }
     context = c.byproduct_status === 'none'
       ? 'Named animal proteins in top positions with no by-products detected.'
-      : `By-product status: ${c.byproduct_status}.`;
+      : `By-product status: ${capitalize(c.byproduct_status)}.`;
     citation = 'AAFCO definitions; Templeman & Shoveller, 2022';
   } else if (catKey === 'F_preservatives') {
     cells = [
-      { l: 'Synthetic found', v: (c.synthetic_found && c.synthetic_found.length > 0) ? c.synthetic_found.join(', ') : 'None' },
-      { l: 'Status', v: c.status === 'natural_only' ? 'Natural only' : c.status },
+      { l: 'Synthetic found', v: (c.synthetic_found && c.synthetic_found.length > 0) ? c.synthetic_found.map(capitalize).join(', ') : 'None' },
+      { l: 'Status', v: c.status === 'natural_only' ? 'Natural only' : capitalize(c.status) },
     ];
     context = c.status === 'natural_only'
       ? 'No synthetic preservatives detected.'
