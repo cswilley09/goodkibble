@@ -326,42 +326,34 @@ function ScoreRing({ score, size = 52 }) {
   );
 }
 
-/* ── Mini Ring for tiles ── */
-function MiniRing({ score, max, color, size = 28 }) {
-  const radius = (size - 5) / 2;
+
+/* ── Mini Ring for tiles (36px) ── */
+function MiniRing({ score, max, color }) {
+  const size = 36;
+  const radius = 14;
   const circumference = 2 * Math.PI * radius;
   const pct = max > 0 ? score / max : 0;
   const offset = circumference * (1 - pct);
   return (
     <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#E8E5DB" strokeWidth={2.5} />
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={color} strokeWidth={2.5}
+        <circle cx={18} cy={18} r={radius} fill="none" stroke="#E8E5DB" strokeWidth={3} />
+        <circle cx={18} cy={18} r={radius} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
           style={{ transition: 'stroke-dashoffset 0.4s ease' }} />
       </svg>
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 9, fontWeight: 500, fontFamily: "'DM Mono', monospace", color: '#1a1612',
+        fontSize: 12, fontWeight: 500, fontFamily: "'DM Mono', monospace", color: '#1a1612',
       }}>{score}</div>
     </div>
   );
 }
 
 /* ── Detail panel per category ── */
-function DetailCell({ label, value, green }) {
-  return (
-    <div>
-      <div style={{ fontSize: 9, color: '#999' }}>{label}</div>
-      <div style={{ fontSize: 11, fontWeight: 500, color: green ? '#3B6D11' : '#1a1a1a' }}>{value}</div>
-    </div>
-  );
-}
-
 function CategoryDetailPanel({ catKey, data, color }) {
   if (!data) return null;
   const c = data;
-
   let cells = [];
   let context = '';
   let citation = '';
@@ -450,19 +442,22 @@ function CategoryDetailPanel({ catKey, data, color }) {
 
   return (
     <div style={{
-      background: '#F3F1EA', borderRadius: '0 0 8px 0', marginTop: -5,
-      padding: '10px 12px 12px', animation: 'fadeIn 0.15s ease',
-      borderLeft: `3px solid ${color || '#ccc'}`, maxWidth: 420,
+      background: '#F3F1EA', borderRadius: '0 0 8px 0', marginTop: 2,
+      padding: '12px 14px 14px', animation: 'fadeIn 0.15s ease',
+      borderLeft: `3px solid ${color || '#ccc'}`, maxWidth: 460,
     }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px 16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 20px' }}>
         {cells.map((cell, i) => (
-          <DetailCell key={i} label={cell.l} value={cell.v} green={cell.green} />
+          <div key={i}>
+            <div style={{ fontSize: 10, color: '#999' }}>{cell.l}</div>
+            <div style={{ fontSize: 12, fontWeight: 500, color: cell.green ? '#3B6D11' : '#1a1a1a' }}>{cell.v}</div>
+          </div>
         ))}
       </div>
       {context && (
         <div style={{
           marginTop: 8, paddingTop: 6, borderTop: '0.5px solid rgba(0,0,0,0.06)',
-          fontSize: 9, color: '#aaa', lineHeight: 1.5,
+          fontSize: 10, color: '#aaa', lineHeight: 1.5,
         }}>
           {context}
           {citation && <div style={{ fontStyle: 'italic', color: '#bbb', marginTop: 2 }}>{citation}</div>}
@@ -472,7 +467,49 @@ function CategoryDetailPanel({ catKey, data, color }) {
   );
 }
 
-/* ── Score Breakdown Card (Ring Tile Pattern) ── */
+/* ── Tile Row: renders a pair of tiles with detail panels OUTSIDE the grid ── */
+function TileRow({ tiles, cats, expandedCat, onToggle }) {
+  return (
+    <div style={{ marginBottom: 6 }}>
+      <div className="score-tiles-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+        {tiles.map(({ key, label, color, textColor }) => {
+          const c = cats[key];
+          if (!c) return null;
+          const isExpanded = expandedCat === key;
+          const nameColor = textColor || color;
+          return (
+            <div key={key}
+              onClick={() => onToggle(key)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '10px 14px',
+                background: isExpanded ? '#F3F1EA' : '#FAFAF7',
+                borderRadius: 8, cursor: 'pointer', transition: 'background 0.15s',
+              }}
+              onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.background = '#F3F1EA'; }}
+              onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.background = '#FAFAF7'; }}
+            >
+              <MiniRing score={c.score} max={c.max} color={color} />
+              <span style={{ fontSize: 13, fontWeight: 500, color: nameColor, flex: 1, fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
+              <span style={{ fontSize: 12, color: '#999', fontFamily: "'DM Mono', monospace" }}>{c.score}/{c.max}</span>
+              <span style={{
+                fontSize: 10, color: '#ccc', transition: 'transform 0.15s',
+                transform: isExpanded ? 'rotate(90deg)' : 'none',
+              }}>▶</span>
+            </div>
+          );
+        })}
+      </div>
+      {tiles.map(({ key, color }) => {
+        const c = cats[key];
+        if (!c || expandedCat !== key) return null;
+        return <CategoryDetailPanel key={`detail-${key}`} catKey={key} data={c} color={color} />;
+      })}
+    </div>
+  );
+}
+
+/* ── Score Breakdown Card ── */
 function ScoreBreakdownCard({ breakdown }) {
   const [expandedCat, setExpandedCat] = useState(null);
   if (!breakdown || !breakdown.categories) return null;
@@ -482,91 +519,50 @@ function ScoreBreakdownCard({ breakdown }) {
     setExpandedCat(expandedCat === key ? null : key);
   };
 
-  const nutritionTiles = [
+  const nutritionRow1 = [
     { key: 'A_protein', label: 'Protein', color: '#639922' },
     { key: 'B_fat', label: 'Fat', color: '#EF9F27' },
+  ];
+  const nutritionRow2 = [
     { key: 'C_carbs', label: 'Carbs', color: '#378ADD' },
     { key: 'D_fiber', label: 'Fiber', color: '#7F77DD' },
   ];
-  const ingredientTiles = [
+  const ingredientRow1 = [
     { key: 'E_protein_source', label: 'Protein sources', color: '#C8A415', textColor: '#A08310' },
     { key: 'F_preservatives', label: 'Preservatives', color: '#C8A415', textColor: '#A08310' },
+  ];
+  const ingredientRow2 = [
     { key: 'G_additives', label: 'Additives', color: '#C8A415', textColor: '#A08310' },
     { key: 'H_functional', label: 'Functional', color: '#C8A415', textColor: '#A08310' },
   ];
 
-  function renderTile({ key, label, color, textColor }) {
-    const c = cats[key];
-    if (!c) return null;
-    const isExpanded = expandedCat === key;
-    const nameColor = textColor || color;
-
-    return (
-      <div key={key} style={{ gridColumn: isExpanded ? '1 / -1' : 'auto' }}>
-        <div
-          onClick={() => toggleExpand(key)}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            padding: '7px 10px',
-            background: isExpanded ? '#F3F1EA' : '#FAFAF7',
-            borderRadius: isExpanded ? '8px 8px 0 0' : 8,
-            cursor: 'pointer', transition: 'background 0.15s',
-          }}
-          onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.background = '#F3F1EA'; }}
-          onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.background = '#FAFAF7'; }}
-        >
-          <MiniRing score={c.score} max={c.max} color={color} />
-          <span style={{ fontSize: 10, fontWeight: 500, color: nameColor, flex: 1, fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
-          <span style={{ fontSize: 9, color: '#999', fontFamily: "'DM Mono', monospace" }}>{c.score}/{c.max}</span>
-          <span style={{
-            fontSize: 8, color: '#ccc', transition: 'transform 0.15s',
-            transform: isExpanded ? 'rotate(90deg)' : 'none',
-          }}>▶</span>
-        </div>
-        {isExpanded && <CategoryDetailPanel catKey={key} data={c} color={color} />}
-      </div>
-    );
-  }
-
   return (
     <div style={{
-      padding: '16px 18px', background: '#fff', borderRadius: 12,
-      border: '0.5px solid #ede8df', marginBottom: 28,
+      padding: '24px 28px', background: '#faf8f5', borderRadius: 24,
+      border: '1px solid #ede8df', marginBottom: 28,
       animation: 'scaleIn 0.5s ease 0.05s both',
     }}>
-      {/* Header */}
-      <div style={{ marginBottom: 14 }}>
-        <span style={{ fontSize: 13, fontWeight: 500, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>Score breakdown</span>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+        <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99' }}>Score breakdown</span>
       </div>
 
-      {/* Nutrition tiles */}
-      <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 6 }}>Nutrition</div>
-      <div className="score-tiles-grid" style={{
-        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 12,
-      }}>
-        {nutritionTiles.map(renderTile)}
-      </div>
+      <TileRow tiles={nutritionRow1} cats={cats} expandedCat={expandedCat} onToggle={toggleExpand} />
+      <TileRow tiles={nutritionRow2} cats={cats} expandedCat={expandedCat} onToggle={toggleExpand} />
 
-      <div style={{ height: 0.5, background: 'rgba(0,0,0,0.06)', margin: '8px 0 12px' }} />
+      <div style={{ height: 1, background: '#ede8df', margin: '12px 0' }} />
 
-      {/* Ingredient tiles */}
-      <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 6 }}>Ingredients</div>
-      <div className="score-tiles-grid" style={{
-        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 12,
-      }}>
-        {ingredientTiles.map(renderTile)}
-      </div>
+      <TileRow tiles={ingredientRow1} cats={cats} expandedCat={expandedCat} onToggle={toggleExpand} />
+      <TileRow tiles={ingredientRow2} cats={cats} expandedCat={expandedCat} onToggle={toggleExpand} />
 
-      <div style={{ height: 0.5, background: 'rgba(0,0,0,0.06)', margin: '8px 0 10px' }} />
+      <div style={{ height: 1, background: '#ede8df', margin: '12px 0 10px' }} />
 
-      {/* Methodology link */}
       <div style={{ textAlign: 'center' }}>
         <a href="/how-we-score" style={{
-          fontSize: 11, color: '#999', fontFamily: "'DM Sans', sans-serif",
-          textDecoration: 'underline', transition: 'color 0.15s',
+          fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif",
+          textDecoration: 'none', transition: 'color 0.15s',
         }}
-          onMouseEnter={(e) => e.target.style.color = '#1a1612'}
-          onMouseLeave={(e) => e.target.style.color = '#999'}
+          onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
+          onMouseLeave={(e) => { e.target.style.color = '#8a7e72'; e.target.style.textDecoration = 'none'; }}
         >
           Read our full scoring methodology
         </a>
