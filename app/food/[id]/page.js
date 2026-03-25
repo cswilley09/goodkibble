@@ -571,7 +571,7 @@ function ScoreBreakdownCard({ breakdown }) {
           onMouseEnter={(e) => e.target.style.color = '#1a1612'}
           onMouseLeave={(e) => e.target.style.color = '#8a7e72'}
         >
-          Read our full scoring methodology
+          How we score – read our full methodology
         </a>
       </div>
     </div>
