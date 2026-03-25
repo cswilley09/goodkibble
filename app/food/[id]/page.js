@@ -809,21 +809,14 @@ export default function FoodPage() {
           </div>
 
           {/* Source */}
-          {food.url && (
-            <div style={{
-              marginTop: 28, padding: '20px 24px', borderRadius: 16, background: '#faf8f5',
-              animation: 'fadeUp 0.5s ease 0.3s both',
-              display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
-            }}>
-              <span style={{ fontSize: 14, color: '#5a5047' }}>
-                <strong>Source:</strong> Manufacturer&apos;s reported nutritional information
-              </span>
-              <a href={food.url} target="_blank" rel="noopener noreferrer" style={{
-                fontSize: 13, fontWeight: 600, color: '#1a1612', textDecoration: 'none',
-                padding: '8px 16px', borderRadius: 100, background: '#fff', border: '1px solid #e8e0d4',
-              }}>View on PetSmart →</a>
-            </div>
-          )}
+          <div style={{
+            marginTop: 28, padding: '20px 24px', borderRadius: 16, background: '#faf8f5',
+            animation: 'fadeUp 0.5s ease 0.3s both',
+          }}>
+            <span style={{ fontSize: 14, color: '#5a5047' }}>
+              <strong>Source:</strong> Manufacturer&apos;s reported nutritional information
+            </span>
+          </div>
         </div>
       )}
 
