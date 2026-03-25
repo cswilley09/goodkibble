@@ -158,7 +158,20 @@ function ProductCard({ food, onClick }) {
         <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', lineHeight: 1.3, marginBottom: 6,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{food.name}</div>
-        {food.flavor && <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 8 }}>{food.flavor}</div>}
+        {(food.flavor || food.primary_protein) && (
+          <div style={{ marginBottom: 6 }}>
+            {food.flavor && (
+              <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.4 }}>
+                <span style={{ fontWeight: 600, color: '#6b6157' }}>Flavor:</span> {food.flavor}
+              </div>
+            )}
+            {food.primary_protein && (
+              <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.4 }}>
+                <span style={{ fontWeight: 600, color: '#6b6157' }}>Primary Protein:</span> {food.primary_protein}
+              </div>
+            )}
+          </div>
+        )}
         <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 100, background: '#e8f5ee', color: '#2d7a4f' }}>Protein {food.protein_dmb}%</span>
           <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 100, background: '#fef3e2', color: '#c47a20' }}>Fat {food.fat_dmb}%</span>
