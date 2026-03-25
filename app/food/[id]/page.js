@@ -394,10 +394,10 @@ function CategoryDetailPanel({ catKey, data, color }) {
     citation = 'NRC, 2006';
   } else if (catKey === 'E_protein_source') {
     cells = [
-      { l: 'First animal protein', v: c.first_animal_protein || 'none' },
-      { l: 'Second animal protein', v: c.second_animal_protein || 'none in top 5' },
-      { l: 'By-product status', v: c.byproduct_status || 'none' },
-      { l: 'Splitting penalty', v: c.splitting_penalty ? `${c.splitting_penalty}` : 'none' },
+      { l: 'First animal protein', v: c.first_animal_protein || 'None' },
+      { l: 'Second animal protein', v: c.second_animal_protein || 'None in top 5' },
+      { l: 'By-product status', v: c.byproduct_status || 'None' },
+      { l: 'Splitting penalty', v: c.splitting_penalty ? `${c.splitting_penalty}` : 'None' },
     ];
     if (c.plant_concentrate_penalty) {
       cells.push({ l: 'Plant protein penalty', v: `${c.plant_concentrate_penalty} — ${(c.plant_concentrate_detail || []).join(', ')}` });
@@ -408,7 +408,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
     citation = 'AAFCO definitions; Templeman & Shoveller, 2022';
   } else if (catKey === 'F_preservatives') {
     cells = [
-      { l: 'Synthetic found', v: (c.synthetic_found && c.synthetic_found.length > 0) ? c.synthetic_found.join(', ') : 'none' },
+      { l: 'Synthetic found', v: (c.synthetic_found && c.synthetic_found.length > 0) ? c.synthetic_found.join(', ') : 'None' },
       { l: 'Status', v: c.status === 'natural_only' ? 'Natural only' : c.status },
     ];
     context = c.status === 'natural_only'
@@ -417,8 +417,8 @@ function CategoryDetailPanel({ catKey, data, color }) {
     citation = 'NTP, 2021; EFSA, 2018';
   } else if (catKey === 'G_additives') {
     cells = [
-      { l: 'Artificial colors', v: c.artificial_colors ? 'yes' : 'no' },
-      { l: 'Artificial flavors', v: c.artificial_flavors ? 'yes' : 'no' },
+      { l: 'Artificial colors', v: c.artificial_colors ? 'Yes' : 'No' },
+      { l: 'Artificial flavors', v: c.artificial_flavors ? 'Yes' : 'No' },
     ];
     context = "Dogs have dichromatic vision — artificial colors serve no function for the dog.";
     citation = 'Miller & Murphy, 1995';
@@ -428,10 +428,10 @@ function CategoryDetailPanel({ catKey, data, color }) {
     const g = c.glucosamine || {};
     const m = c.chelated_minerals || {};
     cells = [
-      { l: 'Omega-3 source', v: o.found ? `${o.ingredient || 'found'} → ${o.points} pts` : 'Not found → 0 pts', green: o.found },
-      { l: 'Probiotics', v: p.found ? `found → ${p.points} pts` : 'Not found → 0 pts', green: p.found },
-      { l: 'Glucosamine', v: g.found ? `found → ${g.points} pts` : 'Not found → 0 pts', green: g.found },
-      { l: 'Chelated minerals', v: m.found ? `found → ${m.points} pts` : 'Not found → 0 pts', green: m.found },
+      { l: 'Omega-3 source', v: o.found ? `${o.ingredient || 'Found'} → ${o.points} pts` : 'Not found → 0 pts', green: o.found },
+      { l: 'Probiotics', v: p.found ? `Found → ${p.points} pts` : 'Not found → 0 pts', green: p.found },
+      { l: 'Glucosamine', v: g.found ? `Found → ${g.points} pts` : 'Not found → 0 pts', green: g.found },
+      { l: 'Chelated minerals', v: m.found ? `Found → ${m.points} pts` : 'Not found → 0 pts', green: m.found },
     ];
     const foundItems = [o.found && 'omega-3', p.found && 'probiotics', g.found && 'glucosamine', m.found && 'chelated minerals'].filter(Boolean);
     context = foundItems.length > 0
