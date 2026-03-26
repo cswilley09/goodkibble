@@ -438,7 +438,7 @@ function FooterCTA({ onNavigate, onSelect }) {
         }}
           onMouseEnter={(e) => { e.target.style.background = '#f0c930'; e.target.style.color = '#1a1612'; e.target.style.borderColor = '#f0c930'; }}
           onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#d4c9b8'; e.target.style.borderColor = '#3d352b'; }}
-        >Explore 1,000+ dog foods →</button>
+        >Discover 900+ dog foods →</button>
       </div>
     </div>
   );
