@@ -241,30 +241,66 @@ function ScoringDemo({ onNavigate }) {
             })}
           </div>
 
-          {/* Right: big score circle */}
+          {/* Right: gold certification stamp */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {demoProduct ? (
               <>
-                <div style={{ transform: 'rotate(-3deg)', marginBottom: 16 }}>
-                  <div style={{
-                    width: 130, height: 130, borderRadius: '50%',
-                    background: getScoreColor(demoProduct.quality_score),
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: `0 8px 32px ${getScoreColor(demoProduct.quality_score)}40`,
-                  }}>
-                    <span style={{ fontSize: 48, fontWeight: 900, color: '#fff', fontFamily: "'DM Sans', sans-serif" }}>{demoProduct.quality_score}</span>
-                  </div>
+                <div style={{ transform: 'rotate(-7deg)', opacity: 0.80 }}>
+                  <svg width="190" height="190" viewBox="0 0 200 200" style={{ overflow: 'visible' }}>
+                    <defs>
+                      <filter id="stamp-worn">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
+                        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" />
+                      </filter>
+                      <path id="top-arc" d="M 40,100 a 60,60 0 0,1 120,0" fill="none" />
+                      <path id="bottom-arc" d="M 40,100 a 60,60 0 0,0 120,0" fill="none" />
+                    </defs>
+                    <g filter="url(#stamp-worn)">
+                      {/* outer ring */}
+                      <circle cx="100" cy="100" r="92" fill="none" stroke="#C9A84C" strokeWidth="5" />
+                      {/* inner ring */}
+                      <circle cx="100" cy="100" r="78" fill="none" stroke="#C9A84C" strokeWidth="2.5" />
+                      {/* 8 stars between rings */}
+                      {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
+                        const r = 85;
+                        const rad = (angle * Math.PI) / 180;
+                        const x = 100 + r * Math.cos(rad);
+                        const y = 100 + r * Math.sin(rad);
+                        return (
+                          <text key={angle} x={x} y={y} textAnchor="middle" dominantBaseline="central"
+                            style={{ fontSize: 8, fill: '#C9A84C', fontFamily: 'sans-serif' }}>★</text>
+                        );
+                      })}
+                      {/* curved top text */}
+                      <text style={{ fontSize: '8.5px', fontWeight: 700, letterSpacing: '3px', fill: '#C9A84C', fontFamily: "'DM Sans', sans-serif" }}>
+                        <textPath href="#top-arc" startOffset="50%" textAnchor="middle">GOODKIBBLE RATED</textPath>
+                      </text>
+                      {/* score number */}
+                      <text x="100" y="88" textAnchor="middle" dominantBaseline="central"
+                        style={{ fontSize: 50, fontWeight: 900, fill: '#C9A84C', fontFamily: "'Playfair Display', serif" }}>
+                        {demoProduct.quality_score}
+                      </text>
+                      {/* gold banner */}
+                      <rect x="22" y="105" width="156" height="30" rx="3" fill="#C9A84C" />
+                      {/* tier label on banner */}
+                      <text x="100" y="121" textAnchor="middle" dominantBaseline="central"
+                        style={{ fontSize: 15, fontWeight: 800, letterSpacing: '5px', fill: '#FAF8F4', fontFamily: "'DM Sans', sans-serif" }}>
+                        {getScoreTier(demoProduct.quality_score).toUpperCase()}
+                      </text>
+                      {/* curved bottom text */}
+                      <text style={{ fontSize: '8px', fontWeight: 600, letterSpacing: '2px', fill: '#C9A84C', fontFamily: "'DM Sans', sans-serif", opacity: 0.8 }}>
+                        <textPath href="#bottom-arc" startOffset="50%" textAnchor="middle">★ CERTIFIED QUALITY ★</textPath>
+                      </text>
+                    </g>
+                  </svg>
                 </div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>
-                  {getScoreTier(demoProduct.quality_score)}
-                </div>
-                <div style={{ fontSize: 12, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif", textAlign: 'center', maxWidth: 200 }}>
+                <div style={{ fontSize: 11, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", textAlign: 'center', maxWidth: 220, marginTop: 12 }}>
                   {demoProduct.brand} — {demoProduct.name}
                 </div>
               </>
             ) : (
               <div style={{
-                width: 130, height: 130, borderRadius: '50%', background: '#ede8df',
+                width: 190, height: 190, borderRadius: '50%', border: '4px solid #ede8df',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <div style={{ width: 24, height: 24, border: '3px solid #b5aa99', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
