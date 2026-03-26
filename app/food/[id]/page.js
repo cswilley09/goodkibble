@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import SearchBox from '../../components/SearchBox';
@@ -92,19 +92,28 @@ function SaltTooltip({ children }) {
       {children}
       {show && (
         <div style={{
-          position: 'absolute', bottom: 'calc(100% + 8px)', left: '50%',
-          transform: 'translateX(-50%)', width: 280, padding: '14px 16px',
-          borderRadius: 12, background: '#1a1612', color: '#faf8f5',
-          fontSize: 13, lineHeight: 1.5, fontWeight: 400,
+          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
+          transform: 'translateX(-50%)', width: 300, padding: '16px 18px',
+          borderRadius: 14, background: '#1a1612', color: '#faf8f5',
+          fontSize: 13, lineHeight: 1.55, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
-          boxShadow: '0 8px 24px rgba(26,22,18,0.25)',
-          zIndex: 50, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
+          boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
+          zIndex: 60, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
         }}>
-          The &ldquo;salt divider&rdquo; rule: any ingredient listed after salt typically makes up less than 1% of the total formula, as salt itself usually represents &lt;1% of the recipe.
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: '#d4852a' }} />
+            <span style={{ fontWeight: 700, fontSize: 14 }}>Salt Divider</span>
+          </div>
+          {/* Description */}
+          <div style={{ color: '#d4cfc6' }}>
+            Any ingredient listed after salt typically makes up less than 1% of the total formula, as salt itself usually represents &lt;1% of the recipe.
+          </div>
+          {/* Arrow */}
           <div style={{
             position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-            width: 0, height: 0, borderLeft: '6px solid transparent',
-            borderRight: '6px solid transparent', borderTop: '6px solid #1a1612',
+            width: 0, height: 0, borderLeft: '7px solid transparent',
+            borderRight: '7px solid transparent', borderTop: '7px solid #1a1612',
           }} />
         </div>
       )}
@@ -137,26 +146,27 @@ function lookupIngredient(ing, ingredientInfo) {
 const SIGNAL_COLORS = { good: '#2d7a4f', neutral: '#8a7e72', caution: '#d4852a' };
 const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.12)', caution: 'rgba(212,133,42,0.12)' };
 
-function IngredientTooltip({ info, isOpen, onToggle, children }) {
-  const tooltipRef = useRef(null);
+function IngredientTooltip({ info, children }) {
+  const [show, setShow] = useState(false);
 
   return (
-    <span data-ingredient-tooltip style={{ position: 'relative', display: 'inline-block' }}>
-      <span onClick={(e) => { e.stopPropagation(); onToggle(); }} style={{ cursor: 'pointer' }}>
+    <span style={{ position: 'relative', display: 'inline-block' }}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      <span style={{ cursor: 'pointer' }}>
         {children}
       </span>
-      {isOpen && info && (
-        <div ref={tooltipRef} style={{
+      {show && info && (
+        <div style={{
           position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
           transform: 'translateX(-50%)', width: 300, padding: '16px 18px',
           borderRadius: 14, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.55, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
           boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
-          zIndex: 60, animation: 'fadeIn 0.15s ease',
-        }}
-          onClick={(e) => e.stopPropagation()}
-        >
+          zIndex: 60, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
+        }}>
           {/* Header row with signal dot + display name */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <span style={{
@@ -670,7 +680,6 @@ export default function FoodPage() {
   const [food, setFood] = useState(null);
   const [loading, setLoading] = useState(true);
   const [ingredientInfo, setIngredientInfo] = useState({});
-  const [activeTooltip, setActiveTooltip] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -700,17 +709,6 @@ export default function FoodPage() {
         ?.map((s) => s.trim()).filter(Boolean) || []
     : [];
   const saltIdx = findSaltIndex(ingredients);
-
-  /* Close tooltip on any click outside — use mousedown to fire before click */
-  useEffect(() => {
-    const handler = (e) => {
-      /* If the click target is inside an ingredient tooltip or pill, let the pill's onClick handle it */
-      if (e.target.closest('[data-ingredient-tooltip]')) return;
-      setActiveTooltip(null);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
 
   return (
     <div style={{ minHeight: '100vh', background: '#ffffff' }}>
@@ -915,12 +913,15 @@ export default function FoodPage() {
                   cursor: (isSalt || hasTooltip) ? 'pointer' : 'default',
                   borderBottomStyle: hasTooltip && !isFirst && !isSalt ? 'dashed' : undefined,
                   transition: 'background 0.15s, border-color 0.15s',
+                  opacity: afterSalt && (hasTooltip || isSalt) ? 0.4 : undefined,
                 };
 
                 /* animation on non-dimmed pills only; after-salt pills skip animation
-                   because the fadeUp keyframe ends at opacity:1 which overrides inline opacity */
+                   because the fadeUp keyframe ends at opacity:1 which overrides inline opacity.
+                   For tooltip/salt pills after salt, opacity lives on the pill itself so the
+                   tooltip popover renders at full opacity. */
                 const wrapStyle = afterSalt
-                  ? { display: 'inline-block', opacity: 0.4 }
+                  ? { display: 'inline-block', opacity: (hasTooltip || isSalt) ? 1 : 0.4 }
                   : {
                       display: 'inline-block',
                       animationName: 'fadeUp', animationDuration: '0.4s',
@@ -949,11 +950,7 @@ export default function FoodPage() {
                 if (hasTooltip) {
                   return (
                     <span key={i} style={wrapStyle}>
-                      <IngredientTooltip
-                        info={info}
-                        isOpen={activeTooltip === i}
-                        onToggle={() => setActiveTooltip(activeTooltip === i ? null : i)}
-                      >
+                      <IngredientTooltip info={info}>
                         {pill}
                       </IngredientTooltip>
                     </span>
