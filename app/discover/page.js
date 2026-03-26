@@ -197,7 +197,8 @@ function DiscoverContent() {
   /* filter state */
   const [selectedScoreRange, setSelectedScoreRange] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
-  const [selectedProteins, setSelectedProteins] = useState([]);
+  const initialProtein = searchParams.get('protein');
+  const [selectedProteins, setSelectedProteins] = useState(initialProtein ? [initialProtein] : []);
   const [selectedProteinRange, setSelectedProteinRange] = useState([]);
   const [selectedCarbRange, setSelectedCarbRange] = useState([]);
   const [selectedFatRange, setSelectedFatRange] = useState([]);

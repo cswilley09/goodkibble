@@ -143,11 +143,13 @@ function ProductMarquee({ onCardClick }) {
       .from('dog_foods_v2')
       .select('id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url')
       .not('quality_score', 'is', null)
-      .not('image_url', 'is', null)
-      .limit(100)
-      .then(({ data }) => {
-        if (!data || data.length === 0) return;
-        const shuffled = data.sort(() => Math.random() - 0.5).slice(0, 6);
+      .limit(200)
+      .then(({ data, error }) => {
+        if (error) { console.error('Marquee query error:', error); return; }
+        if (!data || data.length === 0) { console.warn('Marquee: no data returned'); return; }
+        const withImage = data.filter(d => d.image_url && d.image_url.trim() !== '');
+        const pool = withImage.length >= 6 ? withImage : data;
+        const shuffled = pool.sort(() => Math.random() - 0.5).slice(0, 6);
         setProducts(shuffled);
       });
   }, []);
