@@ -126,21 +126,31 @@ function normalizeIngredient(ing) {
   let s = ing.toLowerCase().trim();
   // Strip trailing punctuation (some brands end with periods)
   s = s.replace(/[.]+$/, '').trim();
+  // Strip &nbsp; artifacts
+  s = s.replace(/&nbsp;/g, '').trim();
+  // Strip Purina manufacturing codes: "garlic oil. e449223 manufactured and..."
+  s = s.replace(/\.\s*[a-z]?\d{5,}.*$/i, '').trim();
+  // Strip "manufactured and guaranteed by..." suffixes
+  s = s.replace(/\s*manufactured\s+(and\s+)?guaranteed\s+by.*$/i, '').trim();
+  // Strip trailing periods again after stripping codes
+  s = s.replace(/[.]+$/, '').trim();
   // Strip parenthetical content: "chicken fat (preserved with mixed tocopherols)" → "chicken fat"
   s = s.replace(/\s*\([^)]*\)$/g, '').trim();
   // Strip leading "and "
   if (s.startsWith('and ')) s = s.slice(4).trim();
+  // Normalize color numbers: "red #40" → "red 40"
+  s = s.replace(/#(\d)/g, '$1');
   return s;
 }
 
-const STRIP_PREFIXES = ['whole grain ', 'ground whole grain ', 'ground whole ', 'whole ', 'ground ', 'dried ', 'dehydrated ', 'deboned ', 'freeze-dried ', 'pressed ', 'organic '];
+const STRIP_PREFIXES = ['whole grain ', 'ground whole grain ', 'ground whole ', 'whole ', 'ground ', 'dried ', 'dehydrated ', 'deboned ', 'freeze-dried ', 'freeze dried ', 'pressed ', 'organic ', 'raw ', 'roasted ', 'smoke-flavored '];
 
 function lookupIngredient(ing, ingredientInfo) {
   if (!ingredientInfo || !ing) return null;
   let lower = ing.toLowerCase().trim().replace(/[.]+$/, '');
   // 1. Exact match (full string as-is)
   if (ingredientInfo[lower]) return ingredientInfo[lower];
-  // 2. With parenthetical stripped
+  // 2. With full normalization (strips parens, codes, punctuation, etc.)
   const norm = normalizeIngredient(ing);
   if (ingredientInfo[norm]) return ingredientInfo[norm];
   // 3. Try prefix-stripped variations: "whole cranberries" → "cranberries"
