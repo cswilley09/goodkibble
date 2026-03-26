@@ -515,6 +515,7 @@ export default function Home() {
       <div style={{
         padding: '48px 24px 36px', maxWidth: 680, width: '100%',
         margin: '0 auto', textAlign: 'center',
+        position: 'relative', zIndex: 30,
       }}>
         <div style={{
           fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase',
@@ -539,7 +540,7 @@ export default function Home() {
           Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
         </p>
 
-        <div style={{ animation: 'fadeUp 0.6s ease 0.3s both' }}>
+        <div style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60 }}>
           <SearchBox onSelect={handleSelect} variant="hero" />
         </div>
 
