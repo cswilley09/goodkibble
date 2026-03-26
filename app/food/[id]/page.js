@@ -325,7 +325,7 @@ function ScoreRing({ score, size = 52 }) {
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 16, fontWeight: 500, fontFamily: "'DM Sans', sans-serif", color: '#1a1612',
+        fontSize: size >= 72 ? 22 : 16, fontWeight: size >= 72 ? 700 : 500, fontFamily: "'DM Sans', sans-serif", color: '#1a1612',
       }}>{score}</div>
     </div>
   );
@@ -685,13 +685,13 @@ export default function FoodPage() {
 
               {/* Score ring + label */}
               {food.quality_score != null && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
-                  <ScoreRing score={food.quality_score} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+                  <ScoreRing score={food.quality_score} size={72} />
                   <div>
-                    <div style={{ fontSize: 14, fontWeight: 500, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                    <div style={{ fontSize: 18, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", marginBottom: 2 }}>
                       {getScoreTier(food.quality_score).label}
                     </div>
-                    <div style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
+                    <div style={{ fontSize: 13, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
                       <a href="/how-we-score" style={{ color: '#b5aa99', textDecoration: 'none' }}
                         onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
                         onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
