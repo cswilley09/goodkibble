@@ -540,12 +540,12 @@ export default function Home() {
           Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
         </p>
 
-        <div style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60 }}>
+        <div style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, margin: '0 auto' }}>
           <SearchBox onSelect={handleSelect} variant="hero" />
         </div>
 
         <div style={{
-          marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both',
+          marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both', textAlign: 'center',
         }}>
           <span onClick={() => goTo('/discover')} style={{
             fontSize: 14, color: '#C9A84C', cursor: 'pointer',
