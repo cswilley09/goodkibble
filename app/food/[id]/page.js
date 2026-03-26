@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import SearchBox from '../../components/SearchBox';
@@ -198,20 +198,61 @@ const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.1
 
 function IngredientTooltip({ info, children }) {
   const [show, setShow] = useState(false);
+  const triggerRef = useRef(null);
+  const [pos, setPos] = useState({ left: 0, arrowLeft: '50%' });
+  const tooltipW = 300;
+  const pad = 16;
+
+  useEffect(() => {
+    if (!show || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const isMobile = vw <= 768;
+    if (isMobile) {
+      /* full-width below the pill on mobile */
+      setPos({ left: 0, arrowLeft: '50%', mobile: true });
+    } else {
+      /* desktop: centered, clamped to viewport */
+      const pillCenter = rect.left + rect.width / 2;
+      let idealLeft = pillCenter - tooltipW / 2;
+      if (idealLeft < pad) idealLeft = pad;
+      if (idealLeft + tooltipW > vw - pad) idealLeft = vw - pad - tooltipW;
+      const parentRect = triggerRef.current.offsetParent?.getBoundingClientRect() || rect;
+      const relLeft = idealLeft - parentRect.left;
+      const arrowRel = pillCenter - idealLeft;
+      setPos({ left: relLeft, arrowLeft: `${arrowRel}px`, mobile: false });
+    }
+  }, [show]);
+
+  function handleClick() { setShow(prev => !prev); }
 
   return (
-    <span style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
+    <span ref={triggerRef} style={{ position: 'relative', display: 'inline-block' }}
+      onMouseEnter={() => { if (window.innerWidth > 768) setShow(true); }}
+      onMouseLeave={() => { if (window.innerWidth > 768) setShow(false); }}
+      onClick={handleClick}
     >
       <span style={{ cursor: 'pointer' }}>
         {children}
       </span>
       {show && info && (
-        <div style={{
-          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
-          transform: 'translateX(-50%)', width: 300, padding: '16px 18px',
-          borderRadius: 14, background: '#1a1612', color: '#faf8f5',
+        <div style={pos.mobile ? {
+          position: 'fixed', left: pad, right: pad, top: 'auto',
+          bottom: 'auto', marginTop: 8,
+          width: `calc(100vw - ${pad * 2}px)`, maxWidth: `calc(100vw - ${pad * 2}px)`,
+          padding: '16px 18px', borderRadius: 14, background: '#1a1612', color: '#faf8f5',
+          fontSize: 13, lineHeight: 1.55, fontWeight: 400,
+          fontFamily: "'DM Sans', sans-serif",
+          boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
+          zIndex: 60, animation: 'fadeIn 0.15s ease',
+          ...((() => {
+            const r = triggerRef.current?.getBoundingClientRect();
+            return r ? { top: r.bottom + 8 } : {};
+          })()),
+        } : {
+          position: 'absolute', bottom: 'calc(100% + 10px)',
+          left: pos.left, width: tooltipW, maxWidth: `calc(100vw - ${pad * 2}px)`,
+          padding: '16px 18px', borderRadius: 14, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.55, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
           boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
@@ -242,11 +283,13 @@ function IngredientTooltip({ info, children }) {
             </div>
           )}
           {/* Arrow */}
-          <div style={{
-            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-            width: 0, height: 0, borderLeft: '7px solid transparent',
-            borderRight: '7px solid transparent', borderTop: '7px solid #1a1612',
-          }} />
+          {!pos.mobile && (
+            <div style={{
+              position: 'absolute', top: '100%', left: pos.arrowLeft, transform: 'translateX(-50%)',
+              width: 0, height: 0, borderLeft: '7px solid transparent',
+              borderRight: '7px solid transparent', borderTop: '7px solid #1a1612',
+            }} />
+          )}
         </div>
       )}
     </span>
