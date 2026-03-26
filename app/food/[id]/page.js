@@ -141,7 +141,7 @@ function IngredientTooltip({ info, isOpen, onToggle, children }) {
   const tooltipRef = useRef(null);
 
   return (
-    <span style={{ position: 'relative', display: 'inline-block' }}>
+    <span data-ingredient-tooltip style={{ position: 'relative', display: 'inline-block' }}>
       <span onClick={(e) => { e.stopPropagation(); onToggle(); }} style={{ cursor: 'pointer' }}>
         {children}
       </span>
@@ -701,11 +701,15 @@ export default function FoodPage() {
     : [];
   const saltIdx = findSaltIndex(ingredients);
 
-  /* Close tooltip on any click outside */
+  /* Close tooltip on any click outside — use mousedown to fire before click */
   useEffect(() => {
-    const handler = () => setActiveTooltip(null);
-    document.addEventListener('click', handler);
-    return () => document.removeEventListener('click', handler);
+    const handler = (e) => {
+      /* If the click target is inside an ingredient tooltip or pill, let the pill's onClick handle it */
+      if (e.target.closest('[data-ingredient-tooltip]')) return;
+      setActiveTooltip(null);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
   return (
