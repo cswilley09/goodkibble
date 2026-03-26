@@ -124,6 +124,8 @@ function SaltTooltip({ children }) {
 /* Normalize an ingredient string for matching against ingredient_info table */
 function normalizeIngredient(ing) {
   let s = ing.toLowerCase().trim();
+  // Strip trailing punctuation (some brands end with periods)
+  s = s.replace(/[.]+$/, '').trim();
   // Strip parenthetical content: "chicken fat (preserved with mixed tocopherols)" → "chicken fat"
   s = s.replace(/\s*\([^)]*\)$/g, '').trim();
   // Strip leading "and "
@@ -131,15 +133,34 @@ function normalizeIngredient(ing) {
   return s;
 }
 
+const STRIP_PREFIXES = ['whole grain ', 'ground whole grain ', 'ground whole ', 'whole ', 'ground ', 'dried ', 'dehydrated ', 'deboned ', 'freeze-dried ', 'pressed ', 'organic '];
+
 function lookupIngredient(ing, ingredientInfo) {
   if (!ingredientInfo || !ing) return null;
-  const lower = ing.toLowerCase().trim();
-  // 1. Exact match
+  let lower = ing.toLowerCase().trim().replace(/[.]+$/, '');
+  // 1. Exact match (full string as-is)
   if (ingredientInfo[lower]) return ingredientInfo[lower];
-  // 2. Stripped parenthetical match
+  // 2. With parenthetical stripped
   const norm = normalizeIngredient(ing);
   if (ingredientInfo[norm]) return ingredientInfo[norm];
-  // 3. Try the full string with parens (some entries include them)
+  // 3. Try prefix-stripped variations: "whole cranberries" → "cranberries"
+  for (const prefix of STRIP_PREFIXES) {
+    if (norm.startsWith(prefix)) {
+      const base = norm.slice(prefix.length);
+      if (ingredientInfo[base]) return ingredientInfo[base];
+      // Try singular→plural and plural→singular
+      if (ingredientInfo[base + 's']) return ingredientInfo[base + 's'];
+      if (base.endsWith('s') && ingredientInfo[base.slice(0, -1)]) return ingredientInfo[base.slice(0, -1)];
+      if (base.endsWith('es') && ingredientInfo[base.slice(0, -2)]) return ingredientInfo[base.slice(0, -2)];
+    }
+  }
+  // 4. Try plural/singular on the normalized form directly
+  if (ingredientInfo[norm + 's']) return ingredientInfo[norm + 's'];
+  if (norm.endsWith('s') && ingredientInfo[norm.slice(0, -1)]) return ingredientInfo[norm.slice(0, -1)];
+  if (norm.endsWith('es') && ingredientInfo[norm.slice(0, -2)]) return ingredientInfo[norm.slice(0, -2)];
+  // 5. "oat meal" → "oatmeal" (space removal)
+  const nospace = norm.replace(/\s+/g, '');
+  if (ingredientInfo[nospace]) return ingredientInfo[nospace];
   return null;
 }
 
