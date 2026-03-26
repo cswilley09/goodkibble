@@ -555,7 +555,7 @@ export default function Home() {
             onMouseEnter={(e) => { e.target.style.color = '#a8882e'; e.target.style.textDecoration = 'underline'; }}
             onMouseLeave={(e) => { e.target.style.color = '#C9A84C'; e.target.style.textDecoration = 'none'; }}
           >
-            or browse 1,000+ dog foods by filter →
+            or discover 900+ dog foods by filter →
           </span>
         </div>
       </div>
