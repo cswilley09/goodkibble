@@ -197,7 +197,7 @@ function AnimatedScore({ target, max, active, delay }) {
     if (!active) { setDisplay(0); return; }
     const timeout = setTimeout(() => {
       const start = performance.now();
-      const duration = 1200;
+      const duration = 1600;
       function tick(now) {
         const elapsed = now - start;
         const progress = Math.min(elapsed / duration, 1);
@@ -212,7 +212,7 @@ function AnimatedScore({ target, max, active, delay }) {
   return <>{display}/{max}</>;
 }
 
-const BAR_DELAYS = [0, 150, 300, 450, 650, 800, 950, 1100];
+const BAR_DELAYS = [0, 200, 400, 600, 850, 1050, 1250, 1450];
 
 function ScoringDemo({ onNavigate }) {
   const sectionRef = useRef(null);
@@ -271,7 +271,7 @@ function ScoringDemo({ onNavigate }) {
                     <div style={{
                       height: '100%', borderRadius: 100, background: cat.color,
                       width: animated ? `${pct}%` : '0%',
-                      transition: `width 1200ms ease-out ${delay}ms`,
+                      transition: `width 1600ms ease-out ${delay}ms`,
                     }} />
                   </div>
                   <span style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", width: 40, textAlign: 'right', flexShrink: 0 }}>
@@ -287,7 +287,7 @@ function ScoringDemo({ onNavigate }) {
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
             opacity: animated ? 0.78 : 0,
             transform: animated ? 'scale(1) rotate(-7deg)' : 'scale(0.7) rotate(-15deg)',
-            transition: 'opacity 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 1500ms, transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 1500ms',
+            transition: 'opacity 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 2500ms, transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 2500ms',
           }}>
             {demoProduct ? (
               <div style={{ width: 190 }}>
