@@ -198,6 +198,17 @@ const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.1
 
 function IngredientTooltip({ info, children }) {
   const [show, setShow] = useState(false);
+  const tooltipRef = useRef(null);
+
+  /* After render, nudge the tooltip if it overflows viewport edges */
+  useEffect(() => {
+    if (!show || !tooltipRef.current) return;
+    const el = tooltipRef.current;
+    const rect = el.getBoundingClientRect();
+    const pad = 16;
+    if (rect.left < pad) el.style.transform = `translateX(${pad - rect.left}px)`;
+    else if (rect.right > window.innerWidth - pad) el.style.transform = `translateX(${window.innerWidth - pad - rect.right}px)`;
+  }, [show]);
 
   return (
     <span style={{ position: 'relative', display: 'inline-block' }}
@@ -208,10 +219,10 @@ function IngredientTooltip({ info, children }) {
         {children}
       </span>
       {show && info && (
-        <div style={{
+        <div ref={tooltipRef} style={{
           position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
           transform: 'translateX(-50%)', width: 300, maxWidth: 'calc(100vw - 32px)',
-          padding: '16px 18px',
+          padding: '16px 18px', overflowWrap: 'break-word',
           borderRadius: 14, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.55, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
