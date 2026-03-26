@@ -777,6 +777,26 @@ export default function FoodPage() {
                   );
                 }
 
+                /* detect parenthesis sub-groups: "Minerals (sub1, sub2, sub3, ...)" */
+                const parenMatch = ing.match(/^([^()]+?)\s*\((.+)\)$/s);
+                if (parenMatch) {
+                  const inner = parenMatch[2];
+                  const commaCount = (inner.match(/,/g) || []).length;
+                  if (commaCount >= 3) {
+                    const groupName = parenMatch[1].trim();
+                    const subItems = inner.split(',').map(s => s.trim()).filter(Boolean);
+                    return (
+                      <SubGroupPill
+                        key={i}
+                        groupName={groupName}
+                        subItems={subItems}
+                        afterSalt={afterSalt}
+                        animDelay={i * 20}
+                      />
+                    );
+                  }
+                }
+
                 const pillStyle = {
                   display: 'inline-block', padding: '8px 16px', borderRadius: 100,
                   fontSize: 14, fontFamily: "'DM Sans', sans-serif",
