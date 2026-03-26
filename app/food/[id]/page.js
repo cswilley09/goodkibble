@@ -899,6 +899,56 @@ export default function FoodPage() {
               Listed in order of weight. The first ingredient is the most prominent. Tap any ingredient with ⓘ to learn more.
               {saltIdx >= 0 && ' Ingredients after the salt indicator typically make up less than 1% of the formula.'}
             </p>
+
+            {/* Quality signal summary bar */}
+            {Object.keys(ingredientInfo).length > 0 && (() => {
+              let good = 0, neutral = 0, caution = 0;
+              ingredients.forEach(ing => {
+                if (isSaltIngredient(ing)) { neutral++; return; }
+                const info = lookupIngredient(ing, ingredientInfo);
+                const sig = info?.quality_signal;
+                if (sig === 'good') good++;
+                else if (sig === 'caution') caution++;
+                else neutral++;
+              });
+              return (
+                <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                  <div style={{ flex: 1, background: '#eef5e4', borderRadius: 10, padding: '12px 10px', textAlign: 'center' }}>
+                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#639922', lineHeight: 1.1 }}>{good}</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#639922', marginTop: 2 }}>Good</div>
+                  </div>
+                  <div style={{ flex: 1, background: '#f5f2ec', borderRadius: 10, padding: '12px 10px', textAlign: 'center' }}>
+                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#8a7e72', lineHeight: 1.1 }}>{neutral}</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginTop: 2 }}>Neutral</div>
+                  </div>
+                  <div style={{ flex: 1, background: '#fdf0e0', borderRadius: 10, padding: '12px 10px', textAlign: 'center' }}>
+                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#d4760a', lineHeight: 1.1 }}>{caution}</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#d4760a', marginTop: 2 }}>Caution</div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* First ingredient callout */}
+            {ingredients.length > 0 && (() => {
+              const first = ingredients[0];
+              const info = lookupIngredient(first, ingredientInfo);
+              const isCaution = info?.quality_signal === 'caution';
+              const bg = isCaution ? '#fdf0e0' : '#eef5e4';
+              const dotColor = isCaution ? '#d4760a' : '#639922';
+              const desc = info?.short_description
+                ? `${first} — ${info.short_description}`
+                : `${first} — the most prominent ingredient by weight.`;
+              return (
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, background: bg, borderRadius: 12, padding: '12px 14px', marginBottom: 16 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: dotColor, flexShrink: 0, marginTop: 5 }} />
+                  <div style={{ fontSize: 13, color: '#3d352b', lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>
+                    <strong>First ingredient:</strong> {desc}
+                  </div>
+                </div>
+              );
+            })()}
+
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {ingredients.map((ing, i) => {
                 const isSalt = isSaltIngredient(ing);
@@ -953,7 +1003,7 @@ export default function FoodPage() {
                 }
 
                 const pillStyle = {
-                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
                   padding: '8px 16px', borderRadius: 100,
                   fontSize: 14, fontFamily: "'DM Sans', sans-serif",
                   fontWeight: (isFirst || isSalt) ? 600 : 400,
@@ -978,11 +1028,20 @@ export default function FoodPage() {
                       animationFillMode: 'both', animationDelay: `${i * 20}ms`,
                     };
 
+                /* quality dot color */
+                const signal = info?.quality_signal;
+                const dotColorMap = { good: '#639922', neutral: '#bbbbbb', caution: '#d4760a' };
+                const showDot = !isSalt && signal && dotColorMap[signal];
+                const dotColor = isFirst ? '#ffffff' : dotColorMap[signal];
+
                 const pill = (
                   <span style={pillStyle}
                     onMouseEnter={(e) => { if (hasTooltip) e.currentTarget.style.borderColor = '#b5aa99'; }}
                     onMouseLeave={(e) => { if (hasTooltip) e.currentTarget.style.borderColor = '#e8e0d4'; }}
                   >
+                    {showDot && (
+                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: dotColor, flexShrink: 0 }} />
+                    )}
                     {ing}
                     {hasTooltip && (
                       <span style={{
