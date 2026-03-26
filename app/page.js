@@ -191,9 +191,33 @@ const DEMO_CATS = [
   { key: 'H_functional', name: 'Functional', max: 10, color: '#C9A84C' },
 ];
 
+function AnimatedScore({ target, max, active, delay }) {
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    if (!active) { setDisplay(0); return; }
+    const timeout = setTimeout(() => {
+      const start = performance.now();
+      const duration = 800;
+      function tick(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setDisplay(Math.round(eased * target));
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [active, target, delay]);
+  return <>{display}/{max}</>;
+}
+
+const BAR_DELAYS = [0, 100, 200, 300, 450, 550, 650, 750];
+
 function ScoringDemo({ onNavigate }) {
-  const [ref, visible] = useFadeIn(0.15);
+  const sectionRef = useRef(null);
   const [demoProduct, setDemoProduct] = useState(null);
+  const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
     supabase
@@ -210,11 +234,21 @@ function ScoringDemo({ onNavigate }) {
       });
   }, []);
 
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setAnimated(true); obs.unobserve(el); }
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   const cats = demoProduct?.score_breakdown?.categories;
 
   return (
-    <div ref={ref} style={{ background: '#faf8f4', padding: '80px 24px' }}>
-      <div style={{ maxWidth: 820, margin: '0 auto', ...fade(visible) }}>
+    <div ref={sectionRef} style={{ background: '#faf8f4', padding: '80px 24px' }}>
+      <div style={{ maxWidth: 820, margin: '0 auto', opacity: demoProduct ? 1 : 0, transform: demoProduct ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 0.7s ease, transform 0.7s ease' }}>
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 10, textAlign: 'center' }}>
           A score you can actually understand
         </h2>
@@ -225,26 +259,38 @@ function ScoringDemo({ onNavigate }) {
         <div className="demo-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 40, alignItems: 'center', marginBottom: 40 }}>
           {/* Left: category bars */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {DEMO_CATS.map((cat) => {
+            {DEMO_CATS.map((cat, i) => {
               const earned = cats?.[cat.key]?.score ?? Math.round(cat.max * 0.8);
               const pct = Math.min((earned / cat.max) * 100, 100);
+              const delay = BAR_DELAYS[i];
               return (
                 <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: cat.color, flexShrink: 0 }} />
                   <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", width: 120, flexShrink: 0 }}>{cat.name}</span>
                   <div style={{ flex: 1, height: 8, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', borderRadius: 100, background: cat.color, width: `${pct}%`, transition: 'width 1s ease' }} />
+                    <div style={{
+                      height: '100%', borderRadius: 100, background: cat.color,
+                      width: animated ? `${pct}%` : '0%',
+                      transition: `width 800ms ease-out ${delay}ms`,
+                    }} />
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", width: 40, textAlign: 'right', flexShrink: 0 }}>{earned}/{cat.max}</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", width: 40, textAlign: 'right', flexShrink: 0 }}>
+                    <AnimatedScore target={earned} max={cat.max} active={animated} delay={delay} />
+                  </span>
                 </div>
               );
             })}
           </div>
 
           {/* Right: gold certification stamp */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            opacity: animated ? 0.78 : 0,
+            transform: animated ? 'scale(1) rotate(-7deg)' : 'scale(0.7) rotate(-15deg)',
+            transition: 'opacity 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 1000ms, transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 1000ms',
+          }}>
             {demoProduct ? (
-              <div style={{ transform: 'rotate(-7deg)', width: 190 }}>
+              <div style={{ width: 190 }}>
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                   <defs>
                     <filter id="stampWorn" x="-5%" y="-5%" width="110%" height="110%">
