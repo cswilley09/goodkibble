@@ -381,7 +381,7 @@ const VALUE_PROPS = [
   },
   {
     title: 'Apples-to-Apples Nutrition',
-    desc: "Most sites show nutrition with moisture still in the mix — which makes wet-heavy foods look weaker than they are. We use Dry Matter Basis to strip moisture out of the equation, so you're comparing real nutrition, food to food. No inflated numbers. No misleading comparisons.",
+    desc: "We strip moisture out of the equation so every food is compared on equal footing. Real nutrition, side by side.",
     icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="#C9A84C"/><circle cx="17" cy="12" r="2" fill="#C9A84C"/><circle cx="11" cy="18" r="2" fill="#C9A84C"/></svg>,
   },
 ];
@@ -392,7 +392,7 @@ function WhyGoodKibble() {
     <div ref={ref} style={{ background: '#faf8f4', padding: '80px 24px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', ...fade(visible) }}>
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 48, textAlign: 'center' }}>Why GoodKibble?</h2>
-        <div className="value-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+        <div className="value-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, alignItems: 'stretch' }}>
           {VALUE_PROPS.map((vp) => (
             <div key={vp.title} style={{ background: '#fff', borderRadius: 20, padding: 32, border: '1px solid #ede8df' }}>
               <div style={{ marginBottom: 16 }}>{vp.icon}</div>
