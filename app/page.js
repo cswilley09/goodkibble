@@ -25,7 +25,6 @@ function getScoreTier(score) {
   return 'Poor';
 }
 
-/* ── fade-in on scroll ── */
 function useFadeIn(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -61,7 +60,6 @@ function MarqueeCard({ p, onClick }) {
       transition: 'transform 0.25s, box-shadow 0.25s',
       overflow: 'hidden',
     }}>
-      {/* image area with overlapping score badge */}
       <div style={{ height: 140, background: '#f2efe9', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         {p.image_url && !imgErr ? (
           <img src={p.image_url} alt="" onError={() => setImgErr(true)}
@@ -74,32 +72,20 @@ function MarqueeCard({ p, onClick }) {
             position: 'absolute', bottom: -18, left: '50%', transform: 'translateX(-50%)',
             width: 44, height: 44, borderRadius: '50%', background: color,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: '3px solid #fff', boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            zIndex: 1,
+            border: '3px solid #fff', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', zIndex: 1,
           }}>
             <span style={{ fontSize: 16, fontWeight: 800, color: '#fff', fontFamily: "'DM Sans', sans-serif" }}>{p.quality_score}</span>
           </div>
         )}
       </div>
-
-      {/* card body */}
       <div style={{ padding: '28px 16px 18px', textAlign: 'center' }}>
-        <div style={{
-          fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase',
-          color: '#8a7e72', marginBottom: 4, fontFamily: "'DM Sans', sans-serif",
-        }}>{p.brand}</div>
-        <div style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 14, fontWeight: 700,
-          color: '#1a1612', lineHeight: 1.3, marginBottom: 6,
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>{p.name}</div>
+        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 4, fontFamily: "'DM Sans', sans-serif" }}>{p.brand}</div>
+        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 14, fontWeight: 700, color: '#1a1612', lineHeight: 1.3, marginBottom: 6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
         {p.primary_protein && (
           <div style={{ fontSize: 11, color: '#8a7e72', marginBottom: 10, fontFamily: "'DM Sans', sans-serif" }}>
             Primary Protein: {p.primary_protein}
           </div>
         )}
-
-        {/* nutrient pills */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
           {p.protein_dmb != null && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'DM Sans', sans-serif" }}>
@@ -133,8 +119,7 @@ function ProductMarquee({ onCardClick }) {
       .not('quality_score', 'is', null)
       .limit(200)
       .then(({ data, error }) => {
-        if (error) { console.error('Marquee query error:', error); return; }
-        if (!data || data.length === 0) { console.warn('Marquee: no data returned'); return; }
+        if (error || !data || data.length === 0) return;
         const withImage = data.filter(d => d.image_url && d.image_url.trim() !== '');
         const pool = withImage.length >= 6 ? withImage : data;
         const shuffled = pool.sort(() => Math.random() - 0.5).slice(0, 6);
@@ -152,29 +137,14 @@ function ProductMarquee({ onCardClick }) {
       opacity: loaded ? 1 : 0, transform: loaded ? 'translateY(0)' : 'translateY(24px)',
       transition: 'opacity 0.7s ease, transform 0.7s ease',
     }}>
-      {/* header */}
       <div style={{ textAlign: 'center', marginBottom: 40, padding: '0 24px' }}>
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 3vw, 36px)',
-          fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 8,
-        }}>See how popular brands stack up</h2>
-        <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: '0 auto' }}>
-          Every kibble scored 0–100 across nutrition and ingredient quality
-        </p>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 8 }}>See how popular brands stack up</h2>
+        <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", maxWidth: 480, margin: '0 auto' }}>Every kibble scored 0–100 across nutrition and ingredient quality</p>
       </div>
-
-      {/* fade edges */}
       <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to right, #faf8f4, transparent)', pointerEvents: 'none' }} />
       <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to left, #faf8f4, transparent)', pointerEvents: 'none' }} />
-
-      {/* marquee track */}
-      <div className="marquee-track" style={{
-        display: 'flex', gap: 20, width: 'max-content',
-        animation: 'marquee 45s linear infinite',
-      }}>
-        {doubled.map((p, i) => (
-          <MarqueeCard key={`${p.id}-${i}`} p={p} onClick={onCardClick} />
-        ))}
+      <div className="marquee-track" style={{ display: 'flex', gap: 20, width: 'max-content', animation: 'marquee 45s linear infinite' }}>
+        {doubled.map((p, i) => <MarqueeCard key={`${p.id}-${i}`} p={p} onClick={onCardClick} />)}
       </div>
     </div>
   );
@@ -184,7 +154,7 @@ function ProductMarquee({ onCardClick }) {
    SECTION 3: STATS STRIP
    ═══════════════════════════════════════ */
 
-function StatsStrip({ productCount, brandCount }) {
+function StatsStrip() {
   const [ref, visible] = useFadeIn(0.2);
   const stats = [
     { number: '900+', label: 'products scored' },
@@ -194,21 +164,11 @@ function StatsStrip({ productCount, brandCount }) {
   ];
   return (
     <div ref={ref} style={{ background: '#1a1612', padding: '56px 24px' }}>
-      <div className="stats-grid" style={{
-        maxWidth: 900, margin: '0 auto',
-        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24,
-        ...fade(visible),
-      }}>
+      <div className="stats-grid" style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24, ...fade(visible) }}>
         {stats.map((s, i) => (
           <div key={i} style={{ textAlign: 'center' }}>
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(28px, 4vw, 42px)',
-              fontWeight: 800, color: '#f0c930', lineHeight: 1.1, marginBottom: 6,
-            }}>{s.number}</div>
-            <div style={{
-              fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-            }}>{s.label}</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#f0c930', lineHeight: 1.1, marginBottom: 6 }}>{s.number}</div>
+            <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -217,67 +177,99 @@ function StatsStrip({ productCount, brandCount }) {
 }
 
 /* ═══════════════════════════════════════
-   SECTION 4: HOW WE SCORE TEASER
+   SECTION 4: SCORING VISUAL DEMO
    ═══════════════════════════════════════ */
 
-const SCORING_CATS = {
-  nutrition: [
-    { name: 'Protein', max: 25, color: '#639922' },
-    { name: 'Fat', max: 15, color: '#EF9F27' },
-    { name: 'Carbohydrates', max: 15, color: '#378ADD' },
-    { name: 'Fiber', max: 5, color: '#7F77DD' },
-  ],
-  ingredients: [
-    { name: 'Protein Sources', max: 15, color: '#C9A84C' },
-    { name: 'Preservatives', max: 10, color: '#C9A84C' },
-    { name: 'Additives', max: 5, color: '#C9A84C' },
-    { name: 'Functional', max: 10, color: '#C9A84C' },
-  ],
-};
+const DEMO_CATS = [
+  { key: 'A_protein', name: 'Protein', max: 25, color: '#639922' },
+  { key: 'B_fat', name: 'Fat', max: 15, color: '#EF9F27' },
+  { key: 'C_carbs', name: 'Carbohydrates', max: 15, color: '#378ADD' },
+  { key: 'D_fiber', name: 'Fiber', max: 5, color: '#7F77DD' },
+  { key: 'E_protein_source', name: 'Protein Sources', max: 15, color: '#C9A84C' },
+  { key: 'F_preservatives', name: 'Preservatives', max: 10, color: '#C9A84C' },
+  { key: 'G_additives', name: 'Additives', max: 5, color: '#C9A84C' },
+  { key: 'H_functional', name: 'Functional', max: 10, color: '#C9A84C' },
+];
 
-function HowWeScoreTeaser({ onNavigate }) {
+function ScoringDemo({ onNavigate }) {
   const [ref, visible] = useFadeIn(0.15);
+  const [demoProduct, setDemoProduct] = useState(null);
 
-  function CatRow({ cat }) {
-    return (
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 10, padding: 11,
-        background: '#fff', borderRadius: 12, border: '1px solid #ede8df',
-      }}>
-        <div style={{ width: 8, height: 8, borderRadius: '50%', background: cat.color, flexShrink: 0 }} />
-        <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", flex: 1 }}>{cat.name}</span>
-        <span style={{ fontSize: 13, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>/{cat.max}</span>
-      </div>
-    );
-  }
+  useEffect(() => {
+    supabase
+      .from('dog_foods_v2')
+      .select('name, brand, quality_score, score_breakdown')
+      .not('score_breakdown', 'is', null)
+      .gte('quality_score', 80)
+      .limit(20)
+      .then(({ data }) => {
+        if (!data || data.length === 0) return;
+        const valid = data.filter(d => d.score_breakdown && d.score_breakdown.categories);
+        if (valid.length === 0) return;
+        setDemoProduct(valid[Math.floor(Math.random() * valid.length)]);
+      });
+  }, []);
+
+  const cats = demoProduct?.score_breakdown?.categories;
 
   return (
     <div ref={ref} style={{ background: '#faf8f4', padding: '80px 24px' }}>
-      <div style={{ maxWidth: 780, margin: '0 auto', ...fade(visible) }}>
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px, 3vw, 38px)',
-          fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 16, textAlign: 'center',
-        }}>A score you can trust</h2>
-        <p style={{
-          fontSize: 16, color: '#5a5248', lineHeight: 1.7, maxWidth: 580,
-          margin: '0 auto 40px', textAlign: 'center', fontFamily: "'DM Sans', sans-serif",
-        }}>
-          Every dry kibble is scored 0–100 across eight categories. The first four measure nutritional
-          content. The last four evaluate ingredient quality. No brand sponsorships. No hidden agendas.
+      <div style={{ maxWidth: 820, margin: '0 auto', ...fade(visible) }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 10, textAlign: 'center' }}>
+          A score you can actually understand
+        </h2>
+        <p style={{ fontSize: 16, color: '#5a5248', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 44px', textAlign: 'center', fontFamily: "'DM Sans', sans-serif" }}>
+          Here&apos;s how a real product breaks down across all 8 categories.
         </p>
 
-        <div className="scoring-cols" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 40 }}>
-          <div>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>Nutrition</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {SCORING_CATS.nutrition.map(c => <CatRow key={c.name} cat={c} />)}
-            </div>
+        <div className="demo-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 40, alignItems: 'center', marginBottom: 40 }}>
+          {/* Left: category bars */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {DEMO_CATS.map((cat) => {
+              const earned = cats?.[cat.key]?.score ?? Math.round(cat.max * 0.8);
+              const pct = Math.min((earned / cat.max) * 100, 100);
+              return (
+                <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: cat.color, flexShrink: 0 }} />
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", width: 120, flexShrink: 0 }}>{cat.name}</span>
+                  <div style={{ flex: 1, height: 8, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
+                    <div style={{ height: '100%', borderRadius: 100, background: cat.color, width: `${pct}%`, transition: 'width 1s ease' }} />
+                  </div>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", width: 40, textAlign: 'right', flexShrink: 0 }}>{earned}/{cat.max}</span>
+                </div>
+              );
+            })}
           </div>
-          <div>
-            <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>Ingredients</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {SCORING_CATS.ingredients.map(c => <CatRow key={c.name} cat={c} />)}
-            </div>
+
+          {/* Right: big score circle */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {demoProduct ? (
+              <>
+                <div style={{ transform: 'rotate(-3deg)', marginBottom: 16 }}>
+                  <div style={{
+                    width: 130, height: 130, borderRadius: '50%',
+                    background: getScoreColor(demoProduct.quality_score),
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: `0 8px 32px ${getScoreColor(demoProduct.quality_score)}40`,
+                  }}>
+                    <span style={{ fontSize: 48, fontWeight: 900, color: '#fff', fontFamily: "'DM Sans', sans-serif" }}>{demoProduct.quality_score}</span>
+                  </div>
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>
+                  {getScoreTier(demoProduct.quality_score)}
+                </div>
+                <div style={{ fontSize: 12, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif", textAlign: 'center', maxWidth: 200 }}>
+                  {demoProduct.brand} — {demoProduct.name}
+                </div>
+              </>
+            ) : (
+              <div style={{
+                width: 130, height: 130, borderRadius: '50%', background: '#ede8df',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <div style={{ width: 24, height: 24, border: '3px solid #b5aa99', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+              </div>
+            )}
           </div>
         </div>
 
@@ -300,34 +292,27 @@ function HowWeScoreTeaser({ onNavigate }) {
    SECTION 5: BROWSE BY PROTEIN
    ═══════════════════════════════════════ */
 
-const PROTEINS = [
-  { name: 'Chicken', emoji: '🐔' },
-  { name: 'Salmon', emoji: '🐟' },
-  { name: 'Lamb', emoji: '🐑' },
-  { name: 'Beef', emoji: '🐄' },
-  { name: 'Turkey', emoji: '🦃' },
-  { name: 'Fish', emoji: '🐠' },
-];
+const PROTEIN_ICONS = {
+  Chicken: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2c-1 2-3 4-3 6a3 3 0 006 0c0-2-2-4-3-6z"/><path d="M9 14c-2 1-4 3-4 5 0 1.5 1.5 2 3 2h8c1.5 0 3-.5 3-2 0-2-2-4-4-5"/><path d="M12 8v6"/></svg>,
+  Salmon: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-5 7-6c4-1 6 1 8 1s5-1 5 2-2 4-5 5c-3 1-5-1-8 0s-7 4-7 4"/><path d="M20 10l2-2M20 14l2 2"/><circle cx="7" cy="11" r="1" fill="#C9A84C"/></svg>,
+  Lamb: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="11" r="5"/><circle cx="8.5" cy="7" r="2"/><circle cx="15.5" cy="7" r="2"/><path d="M9 16v4M15 16v4"/><circle cx="10" cy="11" r="0.5" fill="#C9A84C"/><circle cx="14" cy="11" r="0.5" fill="#C9A84C"/></svg>,
+  Beef: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15c0-5 3.5-9 8-9s8 4 8 9c0 3-3 4-8 4s-8-1-8-4z"/><path d="M4 15c1-1 2-3 2-5M20 15c-1-1-2-3-2-5"/><path d="M10 14c.5-.5 1.5-1 2-1s1.5.5 2 1"/></svg>,
+  Turkey: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="14" cy="8" r="3"/><path d="M14 11v3"/><path d="M10 21h8"/><path d="M11 14c-3 0-6 2-6 4 0 1 1 3 9 3s9-2 9-3c0-2-3-4-6-4"/><path d="M5 10c-1-2 0-5 2-6"/><path d="M4 7c-1-2 0-4 2-5"/></svg>,
+  Fish: <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12c3-4 7-6 11-6 2 0 4 1 5 2l2-3v14l-2-3c-1 1-3 2-5 2-4 0-8-2-11-6z"/><circle cx="15" cy="12" r="1" fill="#C9A84C"/><path d="M10 10v4"/></svg>,
+};
 
 function BrowseByProtein({ proteinCounts, onNavigate }) {
   const [ref, visible] = useFadeIn(0.15);
+  const proteins = ['Chicken', 'Salmon', 'Lamb', 'Beef', 'Turkey', 'Fish'];
   return (
     <div ref={ref} style={{ background: '#fff', padding: '80px 24px', borderTop: '1px solid #ede8df', borderBottom: '1px solid #ede8df' }}>
       <div style={{ maxWidth: 680, margin: '0 auto', ...fade(visible) }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px, 3vw, 38px)',
-            fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 8,
-          }}>Browse by protein</h2>
-          <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
-            Find foods by your dog&apos;s preferred protein source
-          </p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 8 }}>Browse by protein</h2>
+          <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>Find foods by your dog&apos;s preferred protein source</p>
         </div>
-
-        <div className="protein-grid" style={{
-          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14,
-        }}>
-          {PROTEINS.map(({ name, emoji }) => (
+        <div className="protein-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+          {proteins.map((name) => (
             <div key={name}
               onClick={() => onNavigate(`/discover?protein=${encodeURIComponent(name)}`)}
               className="protein-tile"
@@ -338,7 +323,7 @@ function BrowseByProtein({ proteinCounts, onNavigate }) {
                 textAlign: 'center',
               }}
             >
-              <div style={{ fontSize: 32, marginBottom: 8 }}>{emoji}</div>
+              <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'center' }}>{PROTEIN_ICONS[name]}</div>
               <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>{name}</div>
               <div style={{ fontSize: 12, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
                 {proteinCounts[name] ? `${proteinCounts[name]} products` : '—'}
@@ -359,29 +344,17 @@ const VALUE_PROPS = [
   {
     title: 'Transparent Scoring',
     desc: 'Every score is broken down across 8 categories. See exactly why a food earned its rating.',
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 20V10M18 20V4M6 20v-4"/>
-      </svg>
-    ),
+    icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>,
   },
   {
     title: 'Manufacturer-Sourced Data',
     desc: 'All nutritional data comes directly from manufacturer websites. No guesswork, no retailer approximations.',
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
-    ),
+    icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
   },
   {
-    title: 'Dry Matter Basis',
-    desc: 'We calculate nutrition on a dry matter basis so you can compare foods accurately, regardless of moisture content.',
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="#C9A84C"/><circle cx="17" cy="12" r="2" fill="#C9A84C"/><circle cx="11" cy="18" r="2" fill="#C9A84C"/>
-      </svg>
-    ),
+    title: 'Apples-to-Apples Nutrition',
+    desc: "Most sites show nutrition with moisture still in the mix — which makes wet-heavy foods look weaker than they are. We use Dry Matter Basis to strip moisture out of the equation, so you're comparing real nutrition, food to food. No inflated numbers. No misleading comparisons.",
+    icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="#C9A84C"/><circle cx="17" cy="12" r="2" fill="#C9A84C"/><circle cx="11" cy="18" r="2" fill="#C9A84C"/></svg>,
   },
 ];
 
@@ -390,16 +363,10 @@ function WhyGoodKibble() {
   return (
     <div ref={ref} style={{ background: '#faf8f4', padding: '80px 24px' }}>
       <div style={{ maxWidth: 900, margin: '0 auto', ...fade(visible) }}>
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px, 3vw, 38px)',
-          fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 48, textAlign: 'center',
-        }}>Why GoodKibble?</h2>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 48, textAlign: 'center' }}>Why GoodKibble?</h2>
         <div className="value-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
           {VALUE_PROPS.map((vp) => (
-            <div key={vp.title} style={{
-              background: '#fff', borderRadius: 20, padding: 32,
-              border: '1px solid #ede8df',
-            }}>
+            <div key={vp.title} style={{ background: '#fff', borderRadius: 20, padding: 32, border: '1px solid #ede8df' }}>
               <div style={{ marginBottom: 16 }}>{vp.icon}</div>
               <div style={{ fontSize: 17, fontWeight: 700, color: '#1a1612', marginBottom: 10, fontFamily: "'DM Sans', sans-serif" }}>{vp.title}</div>
               <p style={{ fontSize: 14, color: '#6b6157', lineHeight: 1.65, fontFamily: "'DM Sans', sans-serif", margin: 0 }}>{vp.desc}</p>
@@ -420,21 +387,17 @@ function FooterCTA({ onNavigate, onSelect }) {
   return (
     <div ref={ref} style={{ background: '#1a1612', padding: '72px 24px 80px', textAlign: 'center' }}>
       <div style={{ maxWidth: 560, margin: '0 auto', ...fade(visible) }}>
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 3vw, 36px)',
-          fontWeight: 800, color: '#faf8f4', letterSpacing: -0.5, marginBottom: 12,
-        }}>Ready to see what&apos;s in your dog&apos;s food?</h2>
-        <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 32, fontFamily: "'DM Sans', sans-serif" }}>
-          Search any brand or browse our full database
-        </p>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800, color: '#faf8f4', letterSpacing: -0.5, marginBottom: 12 }}>
+          Ready to see what&apos;s in your dog&apos;s food?
+        </h2>
+        <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 32, fontFamily: "'DM Sans', sans-serif" }}>Search any brand or browse our full database</p>
         <div style={{ marginBottom: 20 }}>
           <SearchBox onSelect={onSelect} variant="hero" />
         </div>
         <button onClick={() => onNavigate('/discover')} style={{
-          padding: '14px 36px', borderRadius: 100,
-          border: '1.5px solid #3d352b', background: 'transparent',
-          color: '#d4c9b8', fontSize: 15, fontWeight: 600, cursor: 'pointer',
-          fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+          padding: '14px 36px', borderRadius: 100, border: '1.5px solid #3d352b',
+          background: 'transparent', color: '#d4c9b8', fontSize: 15, fontWeight: 600,
+          cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
         }}
           onMouseEnter={(e) => { e.target.style.background = '#f0c930'; e.target.style.color = '#1a1612'; e.target.style.borderColor = '#f0c930'; }}
           onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#d4c9b8'; e.target.style.borderColor = '#3d352b'; }}
@@ -449,8 +412,6 @@ function FooterCTA({ onNavigate, onSelect }) {
    ═══════════════════════════════════════ */
 
 export default function Home() {
-  const [totalCount, setTotalCount] = useState(0);
-  const [brandCount, setBrandCount] = useState(0);
   const [proteinCounts, setProteinCounts] = useState({});
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
@@ -458,20 +419,15 @@ export default function Home() {
   useEffect(() => {
     supabase
       .from('dog_foods_v2')
-      .select('brand, primary_protein')
+      .select('primary_protein')
       .then(({ data }) => {
         if (!data) return;
-        setTotalCount(data.length);
-        const bCounts = {};
-        data.forEach(r => { bCounts[r.brand] = (bCounts[r.brand] || 0) + 1; });
-        setBrandCount(Object.keys(bCounts).length);
         const pCounts = {};
         data.forEach(r => { if (r.primary_protein) pCounts[r.primary_protein] = (pCounts[r.primary_protein] || 0) + 1; });
         setProteinCounts(pCounts);
       });
   }, []);
 
-  /* sticky nav scroll detection */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -493,17 +449,11 @@ export default function Home() {
         boxShadow: scrolled ? '0 2px 12px rgba(26,22,18,0.04)' : 'none',
         transition: 'border-color 0.3s, box-shadow 0.3s',
       }}>
-        <div style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 800,
-          color: '#1a1612', letterSpacing: -0.5, cursor: 'pointer',
-        }} onClick={() => goTo('/')}>
+        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5, cursor: 'pointer' }} onClick={() => goTo('/')}>
           Good<span style={{ color: '#C9A84C' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span className="nav-discover-link" onClick={() => goTo('/discover')} style={{
-            fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer',
-            fontFamily: "'DM Sans', sans-serif", transition: 'color 0.2s',
-          }}
+          <span className="nav-discover-link" onClick={() => goTo('/discover')} style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'color 0.2s' }}
             onMouseEnter={(e) => e.target.style.color = '#1a1612'}
             onMouseLeave={(e) => e.target.style.color = '#5a5248'}
           >Discover Foods</span>
@@ -511,84 +461,48 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* ═══ SECTION 1: HERO ═══ */}
-      <div style={{
-        padding: '48px 24px 36px', maxWidth: 680, width: '100%',
-        margin: '0 auto', textAlign: 'center',
-        position: 'relative', zIndex: 30,
-      }}>
-        <div style={{
-          fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase',
-          color: '#C9A84C', marginBottom: 16,
-          animation: 'fadeUp 0.6s ease both',
-        }}>Know what&apos;s in the bowl</div>
-
-        <h1 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 'clamp(38px, 5vw, 58px)', fontWeight: 900, color: '#1a1612',
-          lineHeight: 1.08, letterSpacing: -2, marginBottom: 20,
-          animation: 'fadeUp 0.6s ease 0.1s both',
-        }}>
+      {/* ═══ 1. HERO ═══ */}
+      <div style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 30 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 16, animation: 'fadeUp 0.6s ease both' }}>Know what&apos;s in the bowl</div>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(38px, 5vw, 58px)', fontWeight: 900, color: '#1a1612', lineHeight: 1.08, letterSpacing: -2, marginBottom: 20, animation: 'fadeUp 0.6s ease 0.1s both' }}>
           What&apos;s really in<br />your dog&apos;s food?
         </h1>
-
-        <p style={{
-          fontSize: 18, color: '#8a7e72', lineHeight: 1.6, maxWidth: 480,
-          margin: '0 auto 32px', fontFamily: "'DM Sans', sans-serif",
-          animation: 'fadeUp 0.6s ease 0.2s both',
-        }}>
+        <p style={{ fontSize: 18, color: '#8a7e72', lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px', fontFamily: "'DM Sans', sans-serif", animation: 'fadeUp 0.6s ease 0.2s both' }}>
           Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
         </p>
-
         <div style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, margin: '0 auto' }}>
           <SearchBox onSelect={handleSelect} variant="hero" />
         </div>
-
-        <div style={{
-          marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both', textAlign: 'center',
-        }}>
-          <span onClick={() => goTo('/discover')} style={{
-            fontSize: 14, color: '#C9A84C', cursor: 'pointer',
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
-            transition: 'color 0.2s',
-          }}
+        <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both', textAlign: 'center' }}>
+          <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#C9A84C', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
             onMouseEnter={(e) => { e.target.style.color = '#a8882e'; e.target.style.textDecoration = 'underline'; }}
             onMouseLeave={(e) => { e.target.style.color = '#C9A84C'; e.target.style.textDecoration = 'none'; }}
-          >
-            or discover 900+ dog foods by filter →
-          </span>
+          >or discover 900+ dog foods by filter →</span>
         </div>
       </div>
 
-      {/* ═══ SECTION 2: MARQUEE ═══ */}
+      {/* ═══ 2. MARQUEE ═══ */}
       <ProductMarquee onCardClick={handleSelect} />
 
-      {/* ═══ SECTION 3: STATS ═══ */}
-      <StatsStrip productCount={totalCount} brandCount={brandCount} />
+      {/* ═══ 3. STATS ═══ */}
+      <StatsStrip />
 
-      {/* ═══ SECTION 4: HOW WE SCORE ═══ */}
-      <HowWeScoreTeaser onNavigate={goTo} />
+      {/* ═══ 4. SCORING DEMO ═══ */}
+      <ScoringDemo onNavigate={goTo} />
 
-      {/* ═══ SECTION 5: BROWSE BY PROTEIN ═══ */}
+      {/* ═══ 5. BROWSE BY PROTEIN ═══ */}
       <BrowseByProtein proteinCounts={proteinCounts} onNavigate={goTo} />
 
-      {/* ═══ SECTION 6: WHY GOODKIBBLE ═══ */}
+      {/* ═══ 6. WHY GOODKIBBLE ═══ */}
       <WhyGoodKibble />
 
-      {/* ═══ SECTION 7: FOOTER CTA ═══ */}
+      {/* ═══ 7. FOOTER CTA ═══ */}
       <FooterCTA onNavigate={goTo} onSelect={handleSelect} />
 
       {/* ═══ FOOTER ═══ */}
-      <div style={{
-        borderTop: '1px solid #3d352b', padding: '28px 40px', background: '#1a1612',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
-      }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 800, color: '#faf8f4' }}>
-          Good<span style={{ color: '#f0c930' }}>Kibble</span>
-        </div>
-        <div style={{ fontSize: 12, color: '#5a5248', fontFamily: "'DM Sans', sans-serif" }}>
-          © 2026 GoodKibble. Not affiliated with any dog food brand.
-        </div>
+      <div style={{ borderTop: '1px solid #3d352b', padding: '28px 40px', background: '#1a1612', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 800, color: '#faf8f4' }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
+        <div style={{ fontSize: 12, color: '#5a5248', fontFamily: "'DM Sans', sans-serif" }}>© 2026 GoodKibble. Not affiliated with any dog food brand.</div>
       </div>
 
       {/* ═══ STYLES ═══ */}
@@ -597,23 +511,14 @@ export default function Home() {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        .marquee-track:hover {
-          animation-play-state: paused;
-        }
-        .marquee-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 32px rgba(26,22,18,0.10);
-        }
-        .protein-tile:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 8px 24px rgba(26,22,18,0.06);
-          border-color: #C9A84C !important;
-        }
+        .marquee-track:hover { animation-play-state: paused; }
+        .marquee-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,22,18,0.10); }
+        .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #C9A84C !important; }
         @media (max-width: 768px) {
           .site-nav { padding: 12px 16px !important; }
           .nav-discover-link { display: none !important; }
           .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 28px 16px !important; }
-          .scoring-cols { grid-template-columns: 1fr !important; gap: 28px !important; }
+          .demo-layout { grid-template-columns: 1fr !important; gap: 32px !important; }
           .protein-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .value-grid { grid-template-columns: 1fr !important; }
           .marquee-card { width: 210px !important; }
