@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
 import SearchBox from '../../components/SearchBox';
@@ -105,6 +105,87 @@ function SaltTooltip({ children }) {
             position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
             width: 0, height: 0, borderLeft: '6px solid transparent',
             borderRight: '6px solid transparent', borderTop: '6px solid #1a1612',
+          }} />
+        </div>
+      )}
+    </span>
+  );
+}
+
+/* Normalize an ingredient string for matching against ingredient_info table */
+function normalizeIngredient(ing) {
+  let s = ing.toLowerCase().trim();
+  // Strip parenthetical content: "chicken fat (preserved with mixed tocopherols)" → "chicken fat"
+  s = s.replace(/\s*\([^)]*\)$/g, '').trim();
+  // Strip leading "and "
+  if (s.startsWith('and ')) s = s.slice(4).trim();
+  return s;
+}
+
+function lookupIngredient(ing, ingredientInfo) {
+  if (!ingredientInfo || !ing) return null;
+  const lower = ing.toLowerCase().trim();
+  // 1. Exact match
+  if (ingredientInfo[lower]) return ingredientInfo[lower];
+  // 2. Stripped parenthetical match
+  const norm = normalizeIngredient(ing);
+  if (ingredientInfo[norm]) return ingredientInfo[norm];
+  // 3. Try the full string with parens (some entries include them)
+  return null;
+}
+
+const SIGNAL_COLORS = { good: '#2d7a4f', neutral: '#8a7e72', caution: '#d4852a' };
+const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.12)', caution: 'rgba(212,133,42,0.12)' };
+
+function IngredientTooltip({ info, isOpen, onToggle, children }) {
+  const tooltipRef = useRef(null);
+
+  return (
+    <span style={{ position: 'relative', display: 'inline-block' }}>
+      <span onClick={(e) => { e.stopPropagation(); onToggle(); }} style={{ cursor: 'pointer' }}>
+        {children}
+      </span>
+      {isOpen && info && (
+        <div ref={tooltipRef} style={{
+          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
+          transform: 'translateX(-50%)', width: 300, padding: '16px 18px',
+          borderRadius: 14, background: '#1a1612', color: '#faf8f5',
+          fontSize: 13, lineHeight: 1.55, fontWeight: 400,
+          fontFamily: "'DM Sans', sans-serif",
+          boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
+          zIndex: 60, animation: 'fadeIn 0.15s ease',
+        }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header row with signal dot + display name */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{
+              width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+              background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+            }} />
+            <span style={{ fontWeight: 700, fontSize: 14 }}>{info.display_name}</span>
+            <span style={{
+              marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+              textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100,
+              background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
+              color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+            }}>{info.quality_signal}</span>
+          </div>
+          {/* Description */}
+          <div style={{ color: '#d4cfc6', marginBottom: info.source ? 10 : 0 }}>
+            {info.short_description}
+          </div>
+          {/* Source citation */}
+          {info.source && (
+            <div style={{ fontSize: 11, color: '#8a7e72', fontStyle: 'italic' }}>
+              Source: {info.source}
+            </div>
+          )}
+          {/* Arrow */}
+          <div style={{
+            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+            width: 0, height: 0, borderLeft: '7px solid transparent',
+            borderRight: '7px solid transparent', borderTop: '7px solid #1a1612',
           }} />
         </div>
       )}
@@ -588,6 +669,8 @@ export default function FoodPage() {
   const router = useRouter();
   const [food, setFood] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [ingredientInfo, setIngredientInfo] = useState({});
+  const [activeTooltip, setActiveTooltip] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -595,6 +678,17 @@ export default function FoodPage() {
       .then(({ data }) => { setFood(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, [params.id]);
+
+  /* Fetch ingredient_info lookup table once */
+  useEffect(() => {
+    supabase.from('ingredient_info').select('*')
+      .then(({ data }) => {
+        if (!data) return;
+        const map = {};
+        data.forEach(row => { map[row.ingredient_name] = row; });
+        setIngredientInfo(map);
+      });
+  }, []);
 
   const goHome = () => router.push('/');
   const goFood = (id) => router.push(`/food/${id}`);
@@ -606,6 +700,13 @@ export default function FoodPage() {
         ?.map((s) => s.trim()).filter(Boolean) || []
     : [];
   const saltIdx = findSaltIndex(ingredients);
+
+  /* Close tooltip on any click outside */
+  useEffect(() => {
+    const handler = () => setActiveTooltip(null);
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }, []);
 
   return (
     <div style={{ minHeight: '100vh', background: '#ffffff' }}>
@@ -743,7 +844,7 @@ export default function FoodPage() {
               <div style={{ fontSize: 12, color: '#b5aa99', fontWeight: 500 }}>{ingredients.length} ingredients</div>
             </div>
             <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 24, lineHeight: 1.5 }}>
-              Listed in order of weight. The first ingredient is the most prominent.
+              Listed in order of weight. The first ingredient is the most prominent. Tap any ingredient with ⓘ to learn more.
               {saltIdx >= 0 && ' Ingredients after the salt indicator typically make up less than 1% of the formula.'}
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -751,6 +852,8 @@ export default function FoodPage() {
                 const isSalt = isSaltIngredient(ing);
                 const isFirst = i === 0;
                 const afterSalt = (saltIdx >= 0 && i > saltIdx) ? true : false;
+                const info = !isSalt ? lookupIngredient(ing, ingredientInfo) : null;
+                const hasTooltip = !!info;
 
                 let bgColor = '#fff';
                 if (isSalt) bgColor = '#f0c930';
@@ -798,13 +901,16 @@ export default function FoodPage() {
                 }
 
                 const pillStyle = {
-                  display: 'inline-block', padding: '8px 16px', borderRadius: 100,
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  padding: '8px 16px', borderRadius: 100,
                   fontSize: 14, fontFamily: "'DM Sans', sans-serif",
                   fontWeight: (isFirst || isSalt) ? 600 : 400,
                   background: bgColor,
                   color: textColor,
                   border: (isSalt || isFirst) ? 'none' : '1px solid #e8e0d4',
-                  cursor: isSalt ? 'pointer' : 'default',
+                  cursor: (isSalt || hasTooltip) ? 'pointer' : 'default',
+                  borderBottomStyle: hasTooltip && !isFirst && !isSalt ? 'dashed' : undefined,
+                  transition: 'background 0.15s, border-color 0.15s',
                 };
 
                 /* animation on non-dimmed pills only; after-salt pills skip animation
@@ -817,13 +923,40 @@ export default function FoodPage() {
                       animationFillMode: 'both', animationDelay: `${i * 20}ms`,
                     };
 
-                const pill = <span style={pillStyle}>{ing}</span>;
-
-                return isSalt ? (
-                  <span key={i} style={wrapStyle}><SaltTooltip>{pill}</SaltTooltip></span>
-                ) : (
-                  <span key={i} style={wrapStyle}>{pill}</span>
+                const pill = (
+                  <span style={pillStyle}
+                    onMouseEnter={(e) => { if (hasTooltip) e.currentTarget.style.borderColor = '#b5aa99'; }}
+                    onMouseLeave={(e) => { if (hasTooltip) e.currentTarget.style.borderColor = '#e8e0d4'; }}
+                  >
+                    {ing}
+                    {hasTooltip && (
+                      <span style={{
+                        fontSize: 11, color: isFirst ? 'rgba(250,248,245,0.5)' : '#b5aa99',
+                        lineHeight: 1, marginLeft: 2,
+                      }}>ⓘ</span>
+                    )}
+                  </span>
                 );
+
+                if (isSalt) {
+                  return <span key={i} style={wrapStyle}><SaltTooltip>{pill}</SaltTooltip></span>;
+                }
+
+                if (hasTooltip) {
+                  return (
+                    <span key={i} style={wrapStyle}>
+                      <IngredientTooltip
+                        info={info}
+                        isOpen={activeTooltip === i}
+                        onToggle={() => setActiveTooltip(activeTooltip === i ? null : i)}
+                      >
+                        {pill}
+                      </IngredientTooltip>
+                    </span>
+                  );
+                }
+
+                return <span key={i} style={wrapStyle}>{pill}</span>;
               })}
             </div>
             {saltIdx >= 0 && (
