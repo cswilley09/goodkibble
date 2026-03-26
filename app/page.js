@@ -242,54 +242,50 @@ function ScoringDemo({ onNavigate }) {
           </div>
 
           {/* Right: gold certification stamp */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             {demoProduct ? (
-              <div style={{ transform: 'rotate(-7deg)', opacity: 0.84 }}>
-                <svg width="190" height="190" viewBox="0 0 200 200" style={{ overflow: 'visible' }}>
+              <div style={{ transform: 'rotate(-7deg)', width: 190 }}>
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                   <defs>
-                    <filter id="stamp-worn">
-                      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
-                      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1" />
+                    <filter id="stampWorn" x="-5%" y="-5%" width="110%" height="110%">
+                      <feTurbulence type="fractalNoise" baseFrequency="0.065" numOctaves="5" seed="2" result="noise1"/>
+                      <feDisplacementMap in="SourceGraphic" in2="noise1" scale="2.5" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                      <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" seed="5" result="fineNoise"/>
+                      <feColorMatrix in="fineNoise" type="saturate" values="0" result="grayNoise"/>
+                      <feComponentTransfer in="grayNoise" result="mask">
+                        <feFuncA type="linear" slope="1.8" intercept="-0.45"/>
+                      </feComponentTransfer>
+                      <feComposite operator="in" in="displaced" in2="mask" result="worn"/>
                     </filter>
-                    <path id="top-arc" d="M 40,100 a 60,60 0 0,1 120,0" fill="none" />
-                    <path id="bottom-arc" d="M 40,100 a 60,60 0 0,0 120,0" fill="none" />
+                    <path id="topArc" d="M 32,100 A 68,68 0 0,1 168,100" fill="none"/>
+                    <path id="botArc" d="M 163,118 A 65,65 0 0,1 37,118" fill="none"/>
                   </defs>
-                  <g filter="url(#stamp-worn)">
-                    {/* outer ring */}
-                    <circle cx="100" cy="100" r="92" fill="none" stroke="#C9A84C" strokeWidth="5" />
-                    {/* inner ring */}
-                    <circle cx="100" cy="100" r="78" fill="none" stroke="#C9A84C" strokeWidth="2.5" />
-                    {/* 8 stars between rings */}
-                    {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
-                      const r = 85;
-                      const rad = (angle * Math.PI) / 180;
-                      const x = 100 + r * Math.cos(rad);
-                      const y = 100 + r * Math.sin(rad);
-                      return (
-                        <text key={angle} x={x} y={y} textAnchor="middle" dominantBaseline="central"
-                          fill="#C9A84C" style={{ fontSize: 9 }}>★</text>
-                      );
-                    })}
-                    {/* curved top text */}
-                    <text fill="#C9A84C" style={{ fontSize: '8.5px', fontWeight: 700, letterSpacing: '3px', fontFamily: "'DM Sans', sans-serif" }}>
-                      <textPath href="#top-arc" startOffset="50%" textAnchor="middle">GOODKIBBLE RATED</textPath>
+                  <g filter="url(#stampWorn)" opacity="0.78">
+                    <circle cx="100" cy="100" r="93" fill="none" stroke="#C9A84C" strokeWidth="4.5"/>
+                    <circle cx="100" cy="100" r="81" fill="none" stroke="#C9A84C" strokeWidth="2"/>
+                    <circle cx="100" cy="100" r="87" fill="none" stroke="#C9A84C" strokeWidth="0.5" strokeDasharray="2,4" opacity="0.5"/>
+                    <g fill="#C9A84C" fontSize="7" textAnchor="middle" fontFamily="serif">
+                      <text x="100" y="14">★</text>
+                      <text x="100" y="194">★</text>
+                      <text x="9" y="104">★</text>
+                      <text x="191" y="104">★</text>
+                      <text x="27" y="33">★</text>
+                      <text x="173" y="33">★</text>
+                      <text x="27" y="174">★</text>
+                      <text x="173" y="174">★</text>
+                    </g>
+                    <text fontFamily="'DM Sans', Helvetica, Arial, sans-serif" fontSize="8" fontWeight="700" letterSpacing="3.5" fill="#C9A84C" textAnchor="middle">
+                      <textPath href="#topArc" startOffset="50%">GOODKIBBLE RATED</textPath>
                     </text>
-                    {/* score number */}
-                    <text x="100" y="88" textAnchor="middle" dominantBaseline="central"
-                      fill="#C9A84C" fontWeight="900" fontFamily="Georgia, 'Playfair Display', serif"
-                      style={{ fontSize: 50, fontWeight: 900 }}>
+                    <text x="100" y="95" textAnchor="middle" fontFamily="Georgia, 'Playfair Display', 'Times New Roman', serif" fontSize="52" fontWeight="bold" fill="#C9A84C" style={{ fontWeight: 900, letterSpacing: '-2px' }}>
                       {demoProduct.quality_score}
                     </text>
-                    {/* gold banner */}
-                    <rect x="22" y="105" width="156" height="30" rx="3" fill="#C9A84C" />
-                    {/* tier label on banner */}
-                    <text x="100" y="121" textAnchor="middle" dominantBaseline="central"
-                      fill="#FAF8F4" style={{ fontSize: 15, fontWeight: 800, letterSpacing: '5px', fontFamily: "'DM Sans', sans-serif" }}>
+                    <rect x="18" y="100" width="164" height="24" rx="2" fill="#C9A84C"/>
+                    <text x="100" y="117" textAnchor="middle" fontFamily="'DM Sans', Helvetica, Arial, sans-serif" fontSize="13" fontWeight="800" letterSpacing="5" fill="#FAF8F4">
                       {getScoreTier(demoProduct.quality_score).toUpperCase()}
                     </text>
-                    {/* curved bottom text */}
-                    <text fill="#C9A84C" style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '2px', fontFamily: "'DM Sans', sans-serif" }}>
-                      <textPath href="#bottom-arc" startOffset="50%" textAnchor="middle">★ CERTIFIED QUALITY ★</textPath>
+                    <text fontFamily="'DM Sans', Helvetica, Arial, sans-serif" fontSize="7.5" fontWeight="600" letterSpacing="2" fill="#C9A84C" opacity="0.85" textAnchor="middle">
+                      <textPath href="#botArc" startOffset="50%">★ CERTIFIED QUALITY ★</textPath>
                     </text>
                   </g>
                 </svg>
