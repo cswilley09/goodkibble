@@ -187,8 +187,8 @@ function ProductMarquee({ onCardClick }) {
 function StatsStrip({ productCount, brandCount }) {
   const [ref, visible] = useFadeIn(0.2);
   const stats = [
-    { number: productCount ? productCount.toLocaleString() : '—', label: 'products scored' },
-    { number: brandCount || '—', label: 'brands analyzed' },
+    { number: '900+', label: 'products scored' },
+    { number: '50+', label: 'brands analyzed' },
     { number: '8', label: 'scoring categories' },
     { number: '100%', label: 'manufacturer-sourced' },
   ];
