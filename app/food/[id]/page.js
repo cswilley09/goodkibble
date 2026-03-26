@@ -143,7 +143,7 @@ function normalizeIngredient(ing) {
   return s;
 }
 
-const STRIP_PREFIXES = ['whole grain ', 'ground whole grain ', 'ground whole ', 'whole ', 'ground ', 'dried ', 'dehydrated ', 'deboned ', 'freeze-dried ', 'freeze dried ', 'pressed ', 'organic ', 'raw ', 'roasted ', 'smoke-flavored '];
+const STRIP_PREFIXES = ['whole grain ', 'ground whole grain ', 'ground whole ', 'whole ', 'ground ', 'dried ', 'dehydrated ', 'deboned ', 'freeze-dried ', 'freeze dried ', 'pressed ', 'organic ', 'raw ', 'roasted ', 'smoke-flavored ', 'yellow ', 'white '];
 
 function lookupIngredient(ing, ingredientInfo) {
   if (!ingredientInfo || !ing) return null;
@@ -171,6 +171,25 @@ function lookupIngredient(ing, ingredientInfo) {
   // 5. "oat meal" → "oatmeal" (space removal)
   const nospace = norm.replace(/\s+/g, '');
   if (ingredientInfo[nospace]) return ingredientInfo[nospace];
+  // 6. Try stripping multiple prefixes: "ground yellow corn" → "yellow corn" → "corn"
+  let multi = norm;
+  for (let attempts = 0; attempts < 3; attempts++) {
+    let stripped = false;
+    for (const prefix of STRIP_PREFIXES) {
+      if (multi.startsWith(prefix)) {
+        multi = multi.slice(prefix.length);
+        stripped = true;
+        break;
+      }
+    }
+    if (!stripped) break;
+    if (ingredientInfo[multi]) return ingredientInfo[multi];
+    if (ingredientInfo[multi + 's']) return ingredientInfo[multi + 's'];
+    if (multi.endsWith('s') && ingredientInfo[multi.slice(0, -1)]) return ingredientInfo[multi.slice(0, -1)];
+  }
+  // 7. Strip trailing "]" or ")" that leaked from bracket groups
+  const cleanTrail = norm.replace(/[)\]]+$/, '').trim();
+  if (cleanTrail !== norm && ingredientInfo[cleanTrail]) return ingredientInfo[cleanTrail];
   return null;
 }
 
