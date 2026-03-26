@@ -136,7 +136,7 @@ function MarqueeCard({ p, onClick }) {
 
 function ProductMarquee({ onCardClick }) {
   const [products, setProducts] = useState([]);
-  const [ref, visible] = useFadeIn(0.1);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     supabase
@@ -151,6 +151,7 @@ function ProductMarquee({ onCardClick }) {
         const pool = withImage.length >= 6 ? withImage : data;
         const shuffled = pool.sort(() => Math.random() - 0.5).slice(0, 6);
         setProducts(shuffled);
+        setLoaded(true);
       });
   }, []);
 
@@ -158,7 +159,11 @@ function ProductMarquee({ onCardClick }) {
   const doubled = [...products, ...products];
 
   return (
-    <div ref={ref} style={{ padding: '72px 0 64px', overflow: 'hidden', position: 'relative', ...fade(visible) }}>
+    <div style={{
+      padding: '72px 0 64px', overflow: 'hidden', position: 'relative',
+      opacity: loaded ? 1 : 0, transform: loaded ? 'translateY(0)' : 'translateY(24px)',
+      transition: 'opacity 0.7s ease, transform 0.7s ease',
+    }}>
       {/* header */}
       <div style={{ textAlign: 'center', marginBottom: 40, padding: '0 24px' }}>
         <h2 style={{
