@@ -56,78 +56,66 @@ function MarqueeCard({ p, onClick }) {
   const color = getScoreColor(p.quality_score);
   return (
     <div onClick={() => onClick(p.id)} className="marquee-card" style={{
-      width: 260, flexShrink: 0, background: '#fff', borderRadius: 16,
+      width: 240, flexShrink: 0, background: '#fff', borderRadius: 16,
       border: '1px solid #ede8df', cursor: 'pointer',
       transition: 'transform 0.25s, box-shadow 0.25s',
       overflow: 'hidden',
     }}>
-      {/* image area */}
-      <div style={{
-        height: 155, background: '#f2efe9', display: 'flex',
-        alignItems: 'center', justifyContent: 'center',
-      }}>
+      {/* image area with overlapping score badge */}
+      <div style={{ height: 140, background: '#f2efe9', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         {p.image_url && !imgErr ? (
           <img src={p.image_url} alt="" onError={() => setImgErr(true)}
-            style={{ maxWidth: '70%', maxHeight: '85%', objectFit: 'contain' }} />
+            style={{ maxHeight: 110, maxWidth: '70%', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.08))' }} />
         ) : (
           <span style={{ fontSize: 40, opacity: 0.3 }}>🐕</span>
         )}
+        {p.quality_score != null && (
+          <div style={{
+            position: 'absolute', bottom: -18, left: '50%', transform: 'translateX(-50%)',
+            width: 44, height: 44, borderRadius: '50%', background: color,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            border: '3px solid #fff', boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            zIndex: 1,
+          }}>
+            <span style={{ fontSize: 16, fontWeight: 800, color: '#fff', fontFamily: "'DM Sans', sans-serif" }}>{p.quality_score}</span>
+          </div>
+        )}
       </div>
 
-      {/* info */}
-      <div style={{ padding: '14px 16px 16px' }}>
+      {/* card body */}
+      <div style={{ padding: '28px 16px 18px', textAlign: 'center' }}>
         <div style={{
-          fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase',
-          color: '#b5aa99', marginBottom: 4, fontFamily: "'DM Sans', sans-serif",
+          fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase',
+          color: '#8a7e72', marginBottom: 4, fontFamily: "'DM Sans', sans-serif",
         }}>{p.brand}</div>
         <div style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 15, fontWeight: 700,
+          fontFamily: "'Playfair Display', serif", fontSize: 14, fontWeight: 700,
           color: '#1a1612', lineHeight: 1.3, marginBottom: 6,
-          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-          minHeight: 40,
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>{p.name}</div>
         {p.primary_protein && (
           <div style={{ fontSize: 11, color: '#8a7e72', marginBottom: 10, fontFamily: "'DM Sans', sans-serif" }}>
-            <span style={{ fontWeight: 600, color: '#6b6157' }}>Primary Protein:</span> {p.primary_protein}
+            Primary Protein: {p.primary_protein}
           </div>
         )}
 
-        {/* score + pills row */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 0 }}>
-          {/* score circle */}
-          {p.quality_score != null && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
-              <div style={{
-                width: 38, height: 38, borderRadius: '50%',
-                background: color, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: `0 0 0 3px ${color}33`,
-              }}>
-                <span style={{ fontSize: 14, fontWeight: 800, color: '#fff', fontFamily: "'DM Sans', sans-serif" }}>{p.quality_score}</span>
-              </div>
-              <span style={{ fontSize: 8, fontWeight: 600, color: '#b5aa99', marginTop: 3, fontFamily: "'DM Sans', sans-serif" }}>
-                {getScoreTier(p.quality_score)}
-              </span>
-            </div>
+        {/* nutrient pills */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
+          {p.protein_dmb != null && (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'DM Sans', sans-serif" }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#639922', flexShrink: 0 }} />{p.protein_dmb}%
+            </span>
           )}
-
-          {/* nutrient pills */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, flex: 1 }}>
-            {p.protein_dmb != null && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, fontSize: 10, fontWeight: 600, color: '#5a5248', background: '#f5f3ef', borderRadius: 100, padding: '3px 7px', fontFamily: "'DM Sans', sans-serif" }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#639922' }} />P {p.protein_dmb}%
-              </span>
-            )}
-            {p.fat_dmb != null && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, fontSize: 10, fontWeight: 600, color: '#5a5248', background: '#f5f3ef', borderRadius: 100, padding: '3px 7px', fontFamily: "'DM Sans', sans-serif" }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#EF9F27' }} />F {p.fat_dmb}%
-              </span>
-            )}
-            {p.carbs_dmb != null && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, fontSize: 10, fontWeight: 600, color: '#5a5248', background: '#f5f3ef', borderRadius: 100, padding: '3px 7px', fontFamily: "'DM Sans', sans-serif" }}>
-                <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#378ADD' }} />C {p.carbs_dmb}%
-              </span>
-            )}
-          </div>
+          {p.fat_dmb != null && (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'DM Sans', sans-serif" }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#EF9F27', flexShrink: 0 }} />{p.fat_dmb}%
+            </span>
+          )}
+          {p.carbs_dmb != null && (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'DM Sans', sans-serif" }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#378ADD', flexShrink: 0 }} />{p.carbs_dmb}%
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -525,7 +513,7 @@ export default function Home() {
 
       {/* ═══ SECTION 1: HERO ═══ */}
       <div style={{
-        padding: '72px 24px 56px', maxWidth: 680, width: '100%',
+        padding: '48px 24px 36px', maxWidth: 680, width: '100%',
         margin: '0 auto', textAlign: 'center',
       }}>
         <div style={{
@@ -627,7 +615,7 @@ export default function Home() {
           .scoring-cols { grid-template-columns: 1fr !important; gap: 28px !important; }
           .protein-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .value-grid { grid-template-columns: 1fr !important; }
-          .marquee-card { width: 230px !important; }
+          .marquee-card { width: 210px !important; }
         }
       `}</style>
     </div>
