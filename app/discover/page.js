@@ -147,11 +147,11 @@ function ProductCard({ food, onClick }) {
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
     >
       {food.image_url && !imgErr ? (
-        <div style={{ width: 56, height: 72, borderRadius: 10, overflow: 'hidden', background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <img src={food.image_url} alt="" onError={() => setImgErr(true)} style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }} />
+        <div style={{ width: 56, height: 72, borderRadius: 10, overflow: 'hidden', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <img src={food.image_url} alt="" onError={() => setImgErr(true)} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
         </div>
       ) : (
-        <div style={{ width: 56, height: 72, borderRadius: 10, background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🐕</div>
+        <div style={{ width: 56, height: 72, borderRadius: 10, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🐕</div>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 12, color: '#8a7e72', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
