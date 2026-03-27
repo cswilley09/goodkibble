@@ -149,7 +149,7 @@ export default function HowWeScorePage() {
             display: 'inline-block', padding: '5px 14px', borderRadius: 100,
             background: '#f0ebe3', fontSize: 12, color: '#8a7e72', fontWeight: 500,
             fontFamily: "'DM Sans', sans-serif",
-          }}>Methodology v1.4 · Last updated March 2026</span>
+          }}>Methodology v1.3 · Last updated March 2026</span>
         </div>
 
         {/* ─── Section 2: Principles ─── */}
@@ -528,13 +528,12 @@ export default function HowWeScorePage() {
           <div style={{ marginTop: 20, padding: '20px 24px', background: '#fff', borderRadius: 16, border: '1px solid #ede8df' }}>
             <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Version history</div>
             {[
-              { v: 'v1.4 (current)', desc: 'Separated verified facts (Layer 1) from scoring design (Layer 2). Removed Kealy (2002) — study is about caloric restriction, not protein. Corrected Carciofi and Xenoulis journal references. Added Templeman & Shoveller (2022) and Sieja/Oba (2023) to protein sources.' },
-              { v: 'v1.3', desc: 'Fat threshold adjusted from 18% to 20% based on full-database validation.' },
-              { v: 'v1.2', desc: 'Plant protein concentrate detection added.' },
+              { v: 'v1.3 (current)', desc: 'Separated verified facts (Layer 1) from scoring design (Layer 2). Removed Kealy (2002) — study is about caloric restriction, not protein. Corrected Carciofi and Xenoulis journal references. Added Templeman & Shoveller (2022) and Sieja/Oba (2023) to protein sources.' },
+              { v: 'v1.2', desc: 'Plant protein concentrate detection added. Fat threshold adjusted based on full-database validation.' },
               { v: 'v1.1', desc: 'Sliding ash defaults, ingredient splitting detection, probiotic viability adjustment, preservative threshold refinement.' },
               { v: 'v1.0', desc: 'Initial methodology.' },
             ].map((ver, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 4 ? '1px solid #f0ebe3' : 'none' }}>
+              <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 3 ? '1px solid #f0ebe3' : 'none' }}>
                 <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', minWidth: 100, fontFamily: "'DM Sans', sans-serif" }}>{ver.v}</div>
                 <div style={{ fontSize: 12, color: '#8a7e72' }}>{ver.desc}</div>
               </div>
