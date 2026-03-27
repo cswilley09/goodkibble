@@ -248,7 +248,7 @@ function SearchResults() {
       </nav>
 
       {/* content */}
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 24px 80px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
@@ -284,7 +284,7 @@ function SearchResults() {
             <p style={{ fontSize: 14, color: '#b5aa99' }}>Try a different search term, brand name, or flavor.</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12, maxWidth: 912 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
             {results.map((p) => (
               <ProductCard key={p.id} food={p} onClick={() => goFood(p.id)} />
             ))}
