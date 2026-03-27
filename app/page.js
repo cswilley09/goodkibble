@@ -157,7 +157,7 @@ function ProductMarquee({ onCardClick }) {
 function StatsStrip() {
   const [ref, visible] = useFadeIn(0.2);
   const stats = [
-    { number: '900+', label: 'products scored' },
+    { number: '1,000+', label: 'products scored' },
     { number: '50+', label: 'brands analyzed' },
     { number: '8', label: 'scoring categories' },
     { number: '100%', label: 'manufacturer-sourced' },
@@ -475,7 +475,7 @@ function FooterCTA({ onNavigate, onSelect }) {
         }}
           onMouseEnter={(e) => { e.target.style.background = '#f0c930'; e.target.style.color = '#1a1612'; e.target.style.borderColor = '#f0c930'; }}
           onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#d4c9b8'; e.target.style.borderColor = '#3d352b'; }}
-        >Discover 900+ dog foods →</button>
+        >Discover 1,000+ dog foods →</button>
       </div>
     </div>
   );
@@ -551,7 +551,7 @@ export default function Home() {
           <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#C9A84C', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
             onMouseEnter={(e) => { e.target.style.color = '#a8882e'; e.target.style.textDecoration = 'underline'; }}
             onMouseLeave={(e) => { e.target.style.color = '#C9A84C'; e.target.style.textDecoration = 'none'; }}
-          >or discover 900+ dog foods by filter →</span>
+          >or discover 1,000+ dog foods by filter →</span>
         </div>
       </div>
 
