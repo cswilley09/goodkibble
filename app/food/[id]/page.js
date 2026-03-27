@@ -945,9 +945,11 @@ export default function FoodPage() {
             {ingredients.length > 0 && (() => {
               const first = ingredients[0];
               const info = lookupIngredient(first, ingredientInfo);
-              const isCaution = info?.quality_signal === 'caution';
-              const bg = isCaution ? '#fdf0e0' : '#eef5e4';
-              const dotColor = isCaution ? '#d4760a' : '#639922';
+              const sig = info?.quality_signal;
+              const bgMap = { good: '#eef5e4', neutral: '#f5f2ec', caution: '#fdf0e0' };
+              const dotMap = { good: '#639922', neutral: '#8a7e72', caution: '#d4760a' };
+              const bg = bgMap[sig] || '#f5f2ec';
+              const dotColor = dotMap[sig] || '#8a7e72';
               const desc = info?.short_description
                 ? `${first} — ${info.short_description}`
                 : `${first} — the most prominent ingredient by weight.`;
