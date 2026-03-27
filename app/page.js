@@ -542,7 +542,7 @@ export default function Home() {
           What&apos;s really in<br />your dog&apos;s food?
         </h1>
         <p style={{ fontSize: 18, color: '#8a7e72', lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px', fontFamily: "'DM Sans', sans-serif", animation: 'fadeUp 0.6s ease 0.2s both' }}>
-          Search any dog food brand. Get a clear breakdown of ingredients and nutrition — no fluff.
+          Search any dog food. See exactly what's inside — ingredients, nutrition, and an honest score.
         </p>
         <div style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, margin: '0 auto' }}>
           <SearchBox onSelect={handleSelect} variant="hero" />
