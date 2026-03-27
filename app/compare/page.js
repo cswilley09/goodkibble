@@ -454,7 +454,7 @@ export default function ComparePage() {
 
                   /* product value cells */
                   ...items.map((f, idx) => {
-                    const val = f[n.key] || 0;
+                    const val = Math.round((f[n.key] || 0) * 10) / 10;
                     return (
                       <div key={`${n.key}-${f.id}`} style={{
                         padding: isMobile ? '10px 10px' : '14px 16px',
