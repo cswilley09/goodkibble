@@ -287,7 +287,7 @@ function ScoringDemo({ onNavigate }) {
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
             opacity: animated ? 0.78 : 0,
             transform: animated ? 'scale(1) rotate(-7deg)' : 'scale(0.7) rotate(-15deg)',
-            transition: 'opacity 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 2500ms, transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 2500ms',
+            transition: 'opacity 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 2000ms, transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 2000ms',
           }}>
             {demoProduct ? (
               <div style={{ width: 190 }}>
