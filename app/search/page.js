@@ -284,7 +284,7 @@ function SearchResults() {
             <p style={{ fontSize: 14, color: '#b5aa99' }}>Try a different search term, brand name, or flavor.</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12, maxWidth: 912 }}>
             {results.map((p) => (
               <ProductCard key={p.id} food={p} onClick={() => goFood(p.id)} />
             ))}
