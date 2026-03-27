@@ -143,13 +143,13 @@ export default function HowWeScorePage() {
             lineHeight: 1.1, letterSpacing: -1, marginBottom: 16,
           }}>How we score dog food</h1>
           <p style={{ fontSize: 17, color: '#5a5248', lineHeight: 1.6, maxWidth: 600, marginBottom: 16 }}>
-            The GoodKibble Score is an evidence-informed scoring model built on regulatory standards and published veterinary research. This page separates verified science from our scoring design choices — so you can see exactly what&apos;s fact and what&apos;s our framework.
+            We built a scoring system to answer one question: how does this dog food actually stack up? Here&apos;s exactly how it works — the science we relied on, the choices we made, and where we drew the line.
           </p>
           <span style={{
             display: 'inline-block', padding: '5px 14px', borderRadius: 100,
             background: '#f0ebe3', fontSize: 12, color: '#8a7e72', fontWeight: 500,
             fontFamily: "'DM Sans', sans-serif",
-          }}>Methodology v1.4 · Last updated March 2026</span>
+          }}>Methodology v1.3 · Last updated March 2026</span>
         </div>
 
         {/* ─── Section 2: Principles ─── */}
@@ -202,6 +202,56 @@ export default function HowWeScorePage() {
           <p style={{ fontSize: 13, color: '#8a7e72', lineHeight: 1.6, marginTop: 16 }}>
             When we state a fact, it is cited. When we make a scoring decision, we say so. The scoring brackets should be interpreted as a comparative ranking system, not clinical recommendations.
           </p>
+        </div>
+
+        {/* ─── Section 2b: Why Dry Matter Basis? ─── */}
+        <div style={{ marginBottom: 56, background: '#fff', borderRadius: 24, border: '1px solid #ede8df', padding: '36px 32px' }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8, textAlign: 'center' }}>Why Dry Matter Basis?</h2>
+          <p style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.6, marginBottom: 32, textAlign: 'center', maxWidth: 560, margin: '0 auto 32px' }}>
+            The guaranteed analysis on the bag includes moisture. We remove it so you see the real nutrition.
+          </p>
+
+          {/* Flow boxes */}
+          <div className="dmb-flow" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 24 }}>
+            {/* Box 1 — Label says */}
+            <div style={{ flex: '1 1 0', maxWidth: 200, background: '#f5f2ec', border: '1px solid #ede8df', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 8 }}>Label says</div>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: '#8a7e72', lineHeight: 1 }}>26%</div>
+              <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>protein</div>
+            </div>
+
+            <span className="dmb-arrow" style={{ fontSize: 20, color: '#b5aa99', flexShrink: 0 }}>&rarr;</span>
+
+            {/* Box 2 — Remove moisture */}
+            <div style={{ flex: '1 1 0', maxWidth: 200, background: '#e8f1fb', border: '1px solid #c4d9f0', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#378ADD', marginBottom: 8 }}>Remove moisture</div>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: '#378ADD', lineHeight: 1 }}>10%</div>
+              <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>water content</div>
+            </div>
+
+            <span className="dmb-arrow" style={{ fontSize: 20, color: '#b5aa99', flexShrink: 0 }}>&rarr;</span>
+
+            {/* Box 3 — Real nutrition */}
+            <div style={{ flex: '1 1 0', maxWidth: 200, background: '#eef5e4', border: '1px solid #c8e0a8', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#639922', marginBottom: 8 }}>Real nutrition</div>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: '#639922', lineHeight: 1 }}>28.9%</div>
+              <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>DMB protein</div>
+            </div>
+          </div>
+
+          {/* Equation bar */}
+          <div style={{ background: '#f5f2ec', borderRadius: 12, padding: '16px 20px', textAlign: 'center', fontSize: 16, fontWeight: 600, color: '#3d352b' }}>
+            26% protein <span style={{ color: '#b5aa99' }}>&divide;</span> (100% <span style={{ color: '#b5aa99' }}>&minus;</span> 10% moisture) <span style={{ color: '#b5aa99' }}>=</span>{' '}
+            <span style={{ color: '#639922', fontWeight: 800, fontSize: 18 }}>28.9% DMB</span>
+          </div>
+
+          <style>{`
+            @media (max-width: 600px) {
+              .dmb-flow { flex-direction: column !important; }
+              .dmb-flow > div { max-width: 100% !important; }
+              .dmb-arrow { transform: rotate(90deg); }
+            }
+          `}</style>
         </div>
 
         {/* ─── Section 3: Score at a Glance ─── */}
@@ -478,13 +528,12 @@ export default function HowWeScorePage() {
           <div style={{ marginTop: 20, padding: '20px 24px', background: '#fff', borderRadius: 16, border: '1px solid #ede8df' }}>
             <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Version history</div>
             {[
-              { v: 'v1.4 (current)', desc: 'Separated verified facts (Layer 1) from scoring design (Layer 2). Removed Kealy (2002) — study is about caloric restriction, not protein. Corrected Carciofi and Xenoulis journal references. Added Templeman & Shoveller (2022) and Sieja/Oba (2023) to protein sources.' },
-              { v: 'v1.3', desc: 'Fat threshold adjusted from 18% to 20% based on full-database validation.' },
-              { v: 'v1.2', desc: 'Plant protein concentrate detection added.' },
+              { v: 'v1.3 (current)', desc: 'Separated verified facts (Layer 1) from scoring design (Layer 2). Removed Kealy (2002) — study is about caloric restriction, not protein. Corrected Carciofi and Xenoulis journal references. Added Templeman & Shoveller (2022) and Sieja/Oba (2023) to protein sources.' },
+              { v: 'v1.2', desc: 'Plant protein concentrate detection added. Fat threshold adjusted based on full-database validation.' },
               { v: 'v1.1', desc: 'Sliding ash defaults, ingredient splitting detection, probiotic viability adjustment, preservative threshold refinement.' },
               { v: 'v1.0', desc: 'Initial methodology.' },
             ].map((ver, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 4 ? '1px solid #f0ebe3' : 'none' }}>
+              <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 3 ? '1px solid #f0ebe3' : 'none' }}>
                 <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', minWidth: 100, fontFamily: "'DM Sans', sans-serif" }}>{ver.v}</div>
                 <div style={{ fontSize: 12, color: '#8a7e72' }}>{ver.desc}</div>
               </div>
@@ -509,8 +558,15 @@ export default function HowWeScorePage() {
               <li>Bauer, J.E. (2011). Omega-3 fatty acids in companion animals. <em>JAVMA</em>, 239(11).</li>
               <li>Schmitz, S. &amp; Suchodolski, J. (2016). Canine intestinal microbiota. <em>Advances in Animal Biosciences</em>, 7(2).</li>
               <li>Swanson, K.S., et al. (2002). FOS and gut microbial populations in dogs. <em>Journal of Nutrition</em>, 132(6).</li>
+              <li>Laflamme, D.P. (2005). Nutrition for aging cats and dogs and the importance of body condition. <em>Veterinary Clinics of North America: Small Animal Practice</em>, 35(3):713-742.</li>
+              <li>Fascetti, A.J. &amp; Delaney, S.J. (2012). <em>Applied Veterinary Clinical Nutrition.</em> Wiley-Blackwell.</li>
+              <li>FDA (2018). <em>FDA Investigation into Potential Link Between Certain Diets and Canine Dilated Cardiomyopathy.</em></li>
+              <li>Freeman, L.M., et al. (2018). Diet-associated dilated cardiomyopathy in dogs. <em>JAVMA</em>, 253(11):1390-1394.</li>
+              <li>Buff, P.R., et al. (2014). Natural pet food: A review of natural diets and their impact on canine and feline physiology. <em>Journal of Animal Science</em>, 92(9):3781-3791.</li>
+              <li>Thompson, A. (2008). Ingredients: Where pet food starts. <em>Topics in Companion Animal Medicine</em>, 23(3):127-132.</li>
+              <li>Aldrich, G.C. &amp; Koppel, K. (2015). Pet food palatability evaluation: A review of standard assay techniques. <em>Animals</em>, 5(1):43-55.</li>
+              <li>Kanakubo, K., Fascetti, A.J., &amp; Larsen, J.A. (2015). Assessment of protein and amino acid concentrations and labeling adequacy of commercial vegetarian diets for dogs and cats. <em>JAVMA</em>, 247(4):385-392.</li>
             </ol>
-            <p style={{ marginTop: 12, fontStyle: 'italic' }}>+ 8 additional references in full methodology document</p>
           </div>
         </div>
 
