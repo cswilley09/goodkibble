@@ -60,7 +60,7 @@ function MarqueeCard({ p, onClick }) {
       transition: 'transform 0.25s, box-shadow 0.25s',
       overflow: 'hidden',
     }}>
-      <div style={{ height: 140, background: '#f2efe9', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+      <div style={{ height: 140, background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         {p.image_url && !imgErr ? (
           <img src={p.image_url} alt="" onError={() => setImgErr(true)}
             style={{ maxHeight: 110, maxWidth: '70%', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.08))' }} />
