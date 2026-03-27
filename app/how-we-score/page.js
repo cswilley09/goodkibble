@@ -204,6 +204,56 @@ export default function HowWeScorePage() {
           </p>
         </div>
 
+        {/* ─── Section 2b: Why Dry Matter Basis? ─── */}
+        <div style={{ marginBottom: 56, background: '#fff', borderRadius: 24, border: '1px solid #ede8df', padding: '36px 32px' }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8, textAlign: 'center' }}>Why Dry Matter Basis?</h2>
+          <p style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.6, marginBottom: 32, textAlign: 'center', maxWidth: 560, margin: '0 auto 32px' }}>
+            The guaranteed analysis on the bag includes moisture. We remove it so you see the real nutrition.
+          </p>
+
+          {/* Flow boxes */}
+          <div className="dmb-flow" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 24 }}>
+            {/* Box 1 — Label says */}
+            <div style={{ flex: '1 1 0', maxWidth: 200, background: '#f5f2ec', border: '1px solid #ede8df', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 8 }}>Label says</div>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: '#8a7e72', lineHeight: 1 }}>26%</div>
+              <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>protein</div>
+            </div>
+
+            <span className="dmb-arrow" style={{ fontSize: 20, color: '#b5aa99', flexShrink: 0 }}>&rarr;</span>
+
+            {/* Box 2 — Remove moisture */}
+            <div style={{ flex: '1 1 0', maxWidth: 200, background: '#e8f1fb', border: '1px solid #c4d9f0', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#378ADD', marginBottom: 8 }}>Remove moisture</div>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: '#378ADD', lineHeight: 1 }}>10%</div>
+              <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>water content</div>
+            </div>
+
+            <span className="dmb-arrow" style={{ fontSize: 20, color: '#b5aa99', flexShrink: 0 }}>&rarr;</span>
+
+            {/* Box 3 — Real nutrition */}
+            <div style={{ flex: '1 1 0', maxWidth: 200, background: '#eef5e4', border: '1px solid #c8e0a8', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#639922', marginBottom: 8 }}>Real nutrition</div>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: '#639922', lineHeight: 1 }}>28.9%</div>
+              <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>DMB protein</div>
+            </div>
+          </div>
+
+          {/* Equation bar */}
+          <div style={{ background: '#f5f2ec', borderRadius: 12, padding: '16px 20px', textAlign: 'center', fontSize: 16, fontWeight: 600, color: '#3d352b' }}>
+            26% protein <span style={{ color: '#b5aa99' }}>&divide;</span> (100% <span style={{ color: '#b5aa99' }}>&minus;</span> 10% moisture) <span style={{ color: '#b5aa99' }}>=</span>{' '}
+            <span style={{ color: '#639922', fontWeight: 800, fontSize: 18 }}>28.9% DMB</span>
+          </div>
+
+          <style>{`
+            @media (max-width: 600px) {
+              .dmb-flow { flex-direction: column !important; }
+              .dmb-flow > div { max-width: 100% !important; }
+              .dmb-arrow { transform: rotate(90deg); }
+            }
+          `}</style>
+        </div>
+
         {/* ─── Section 3: Score at a Glance ─── */}
         <div style={{ marginBottom: 56 }}>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>The score at a glance</h2>
