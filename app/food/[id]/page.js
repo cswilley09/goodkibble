@@ -518,7 +518,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
 
   if (catKey === 'A_protein') {
     cells = [
-      { l: 'Protein (DMB)', v: `${c.protein_dmb}%` },
+      { l: 'Protein (DMB)', v: `${(Math.round(c.protein_dmb * 10) / 10)}%` },
       { l: 'Bracket', v: `${c.bracket} → ${c.score} pts` },
       { l: 'AAFCO adult min', v: '18.0%' },
       { l: 'AAFCO growth min', v: '22.5%' },
@@ -528,7 +528,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
     citation = 'AAFCO, 2016; NRC, 2006';
   } else if (catKey === 'B_fat') {
     cells = [
-      { l: 'Fat (DMB)', v: `${c.fat_dmb}%` },
+      { l: 'Fat (DMB)', v: `${(Math.round(c.fat_dmb * 10) / 10)}%` },
       { l: 'Fat level', v: `${c.fat_level_points}/8 pts` },
       { l: 'Fat:protein ratio', v: `${c.fat_protein_ratio}` },
       { l: 'Ratio score', v: `${c.ratio_points}/7 pts` },
@@ -537,7 +537,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
     citation = 'AAFCO, 2016; NRC, 2006';
   } else if (catKey === 'C_carbs') {
     cells = [
-      { l: 'Carbs (DMB)', v: `${c.carbs_dmb}%` },
+      { l: 'Carbs (DMB)', v: `${(Math.round(c.carbs_dmb * 10) / 10)}%` },
       { l: 'Bracket', v: `→ ${c.score} pts` },
       { l: 'NRC requirement', v: 'None established' },
     ];
@@ -545,7 +545,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
     citation = 'NRC, 2006';
   } else if (catKey === 'D_fiber') {
     cells = [
-      { l: 'Fiber (DMB)', v: `${c.fiber_dmb}%` },
+      { l: 'Fiber (DMB)', v: `${(Math.round(c.fiber_dmb * 10) / 10)}%` },
       { l: 'Bracket', v: `→ ${c.score} pts` },
     ];
     context = 'No minimum requirement established. This category functions as a formulation quality signal.';
@@ -888,10 +888,10 @@ export default function FoodPage() {
             </div>
 
             <div style={{ maxWidth: 560 }}>
-              <NutrientRow label="Protein" value={food.protein_dmb || 0} color="#2d7a4f" />
-              <NutrientRow label="Fat" value={food.fat_dmb || 0} color="#c47a20" />
-              <NutrientRow label="Carbohydrates" value={food.carbs_dmb || 0} color="#5a7a9e" />
-              {food.fiber_dmb > 0 && <NutrientRow label="Fiber" value={food.fiber_dmb} color="#8a6aaf" />}
+              <NutrientRow label="Protein" value={Math.round((food.protein_dmb || 0) * 10) / 10} color="#2d7a4f" />
+              <NutrientRow label="Fat" value={Math.round((food.fat_dmb || 0) * 10) / 10} color="#c47a20" />
+              <NutrientRow label="Carbohydrates" value={Math.round((food.carbs_dmb || 0) * 10) / 10} color="#5a7a9e" />
+              {food.fiber_dmb > 0 && <NutrientRow label="Fiber" value={Math.round(food.fiber_dmb * 10) / 10} color="#8a6aaf" />}
             </div>
           </div>
 
