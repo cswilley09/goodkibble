@@ -43,23 +43,94 @@ function buildOrFilter(variants, columns) {
   return clauses.join(',');
 }
 
-function Thumb({ src }) {
-  const [err, setErr] = useState(false);
-  if (!src || err) {
-    return (
-      <div style={{
-        width: 56, height: 72, borderRadius: 10, background: '#f5f0e8',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0,
-      }}>🐕</div>
-    );
-  }
+/* ── score tier helpers (same as discover page) ── */
+function getScoreColor(score) {
+  if (score >= 70) return '#2d7a4f';
+  if (score >= 50) return '#c47a20';
+  return '#b5483a';
+}
+
+function getScoreTier(score) {
+  if (score >= 90) return 'Excellent';
+  if (score >= 80) return 'Great';
+  if (score >= 70) return 'Good';
+  if (score >= 60) return 'Fair';
+  if (score >= 50) return 'Below Avg';
+  return 'Poor';
+}
+
+function ScoreRing({ score }) {
+  if (score == null) return null;
+  const color = getScoreColor(score);
+  const circumference = 106.8;
+  const offset = circumference * (1 - score / 100);
   return (
-    <div style={{
-      width: 56, height: 72, borderRadius: 10, overflow: 'hidden', background: '#f5f0e8',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-    }}>
-      <img src={src} alt="" onError={() => setErr(true)}
-        style={{ maxWidth: '90%', maxHeight: '90%', objectFit: 'contain' }} />
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, marginLeft: 'auto' }}>
+      <svg width={42} height={42} viewBox="0 0 42 42">
+        <circle cx={21} cy={21} r={17} fill="none" stroke="#ede8df" strokeWidth={3} />
+        <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
+          strokeDasharray={circumference} strokeDashoffset={offset}
+          strokeLinecap="round" transform="rotate(-90 21 21)" />
+        <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
+          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
+          {score}
+        </text>
+      </svg>
+      <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+        {getScoreTier(score)}
+      </span>
+    </div>
+  );
+}
+
+/* ── product card (same as discover page) ── */
+function ProductCard({ food, onClick }) {
+  const [imgErr, setImgErr] = useState(false);
+  return (
+    <div onClick={onClick} style={{
+      background: '#fff', borderRadius: 16, padding: 16, border: '1px solid #ede8df',
+      cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
+      display: 'flex', gap: 14, alignItems: 'center',
+    }}
+      onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(26,22,18,0.08)'; }}
+      onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+    >
+      {food.image_url && !imgErr ? (
+        <div style={{ width: 56, aspectRatio: '4/5', overflow: 'hidden', background: '#ffffff', flexShrink: 0 }}>
+          <img src={food.image_url} alt="" onError={() => setImgErr(true)} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
+        </div>
+      ) : (
+        <div style={{ width: 56, aspectRatio: '4/5', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🐕</div>
+      )}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 12, color: '#8a7e72', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
+        <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', lineHeight: 1.3, marginBottom: 6,
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>{food.name}</div>
+        {(food.flavor || food.primary_protein) && (
+          <div style={{ marginBottom: 6 }}>
+            {food.flavor && (
+              <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.4 }}>
+                <span style={{ fontWeight: 600, color: '#6b6157' }}>Flavor:</span> {food.flavor}
+              </div>
+            )}
+            {food.primary_protein && (
+              <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.4 }}>
+                <span style={{ fontWeight: 600, color: '#6b6157' }}>Primary Protein:</span> {food.primary_protein}
+              </div>
+            )}
+          </div>
+        )}
+        <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 100, background: '#e8f5ee', color: '#2d7a4f' }}>Protein {food.protein_dmb}%</span>
+          <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 100, background: '#fef3e2', color: '#c47a20' }}>Fat {food.fat_dmb}%</span>
+          <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 100, background: '#edf2f7', color: '#5a7a9e' }}>Carbs {food.carbs_dmb}%</span>
+          {food.fiber_dmb != null && (
+            <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 100, background: '#f0edf7', color: '#8a6aaf' }}>Fiber {food.fiber_dmb}%</span>
+          )}
+        </div>
+      </div>
+      <ScoreRing score={food.quality_score} />
     </div>
   );
 }
@@ -82,7 +153,7 @@ function SearchResults() {
       const variants = getSearchVariants(query);
       if (variants.length === 0) { setResults([]); setLoading(false); return; }
 
-      const selectCols = 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, image_url';
+      const selectCols = 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score';
 
       /* pass 1: brand matches */
       const brandFilter = buildOrFilter(variants, ['brand']);
@@ -213,34 +284,9 @@ function SearchResults() {
             <p style={{ fontSize: 14, color: '#b5aa99' }}>Try a different search term, brand name, or flavor.</p>
           </div>
         ) : (
-          <div className="brand-grid" style={{
-            display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16,
-          }}>
-            {results.map((p, i) => (
-              <div key={p.id} onClick={() => goFood(p.id)}
-                style={{
-                  background: '#fff', borderRadius: 20, padding: 24,
-                  border: '1px solid #ede8df', cursor: 'pointer',
-                  transition: 'transform 0.2s, box-shadow 0.2s',
-                  animationName: 'fadeUp', animationDuration: '0.4s',
-                  animationFillMode: 'both', animationDelay: `${Math.min(i, 12) * 40}ms`,
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(26,22,18,0.1)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
-              >
-                <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                  <Thumb src={p.image_url} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 4, lineHeight: 1.3 }}>{p.name}</div>
-                    {p.flavor && <div style={{ fontSize: 13, color: '#8a7e72', marginBottom: 12 }}>{p.flavor}</div>}
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#e8f5ee', color: '#2d7a4f' }}>Protein {p.protein_dmb}%</span>
-                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#fef3e2', color: '#c47a20' }}>Fat {p.fat_dmb}%</span>
-                      <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: '#edf2f7', color: '#5a7a9e' }}>Carbs {p.carbs_dmb}%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
+            {results.map((p) => (
+              <ProductCard key={p.id} food={p} onClick={() => goFood(p.id)} />
             ))}
           </div>
         )}
