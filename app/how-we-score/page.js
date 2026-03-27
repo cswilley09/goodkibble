@@ -143,7 +143,7 @@ export default function HowWeScorePage() {
             lineHeight: 1.1, letterSpacing: -1, marginBottom: 16,
           }}>How we score dog food</h1>
           <p style={{ fontSize: 17, color: '#5a5248', lineHeight: 1.6, maxWidth: 600, marginBottom: 16 }}>
-            The GoodKibble Score is an evidence-informed scoring model built on regulatory standards and published veterinary research. This page separates verified science from our scoring design choices — so you can see exactly what&apos;s fact and what&apos;s our framework.
+            We built a scoring system to answer one question: how does this dog food actually stack up? Here&apos;s exactly how it works — the science we relied on, the choices we made, and where we drew the line.
           </p>
           <span style={{
             display: 'inline-block', padding: '5px 14px', borderRadius: 100,
@@ -509,8 +509,15 @@ export default function HowWeScorePage() {
               <li>Bauer, J.E. (2011). Omega-3 fatty acids in companion animals. <em>JAVMA</em>, 239(11).</li>
               <li>Schmitz, S. &amp; Suchodolski, J. (2016). Canine intestinal microbiota. <em>Advances in Animal Biosciences</em>, 7(2).</li>
               <li>Swanson, K.S., et al. (2002). FOS and gut microbial populations in dogs. <em>Journal of Nutrition</em>, 132(6).</li>
+              <li>Laflamme, D.P. (2005). Nutrition for aging cats and dogs and the importance of body condition. <em>Veterinary Clinics of North America: Small Animal Practice</em>, 35(3):713-742.</li>
+              <li>Fascetti, A.J. &amp; Delaney, S.J. (2012). <em>Applied Veterinary Clinical Nutrition.</em> Wiley-Blackwell.</li>
+              <li>FDA (2018). <em>FDA Investigation into Potential Link Between Certain Diets and Canine Dilated Cardiomyopathy.</em></li>
+              <li>Freeman, L.M., et al. (2018). Diet-associated dilated cardiomyopathy in dogs. <em>JAVMA</em>, 253(11):1390-1394.</li>
+              <li>Buff, P.R., et al. (2014). Natural pet food: A review of natural diets and their impact on canine and feline physiology. <em>Journal of Animal Science</em>, 92(9):3781-3791.</li>
+              <li>Thompson, A. (2008). Ingredients: Where pet food starts. <em>Topics in Companion Animal Medicine</em>, 23(3):127-132.</li>
+              <li>Aldrich, G.C. &amp; Koppel, K. (2015). Pet food palatability evaluation: A review of standard assay techniques. <em>Animals</em>, 5(1):43-55.</li>
+              <li>Kanakubo, K., Fascetti, A.J., &amp; Larsen, J.A. (2015). Assessment of protein and amino acid concentrations and labeling adequacy of commercial vegetarian diets for dogs and cats. <em>JAVMA</em>, 247(4):385-392.</li>
             </ol>
-            <p style={{ marginTop: 12, fontStyle: 'italic' }}>+ 8 additional references in full methodology document</p>
           </div>
         </div>
 
