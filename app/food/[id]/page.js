@@ -941,27 +941,7 @@ export default function FoodPage() {
               );
             })()}
 
-            {/* First ingredient callout */}
-            {ingredients.length > 0 && (() => {
-              const first = ingredients[0];
-              const info = lookupIngredient(first, ingredientInfo);
-              const sig = info?.quality_signal;
-              const bgMap = { good: '#eef5e4', neutral: '#f5f2ec', caution: '#fdf0e0' };
-              const dotMap = { good: '#639922', neutral: '#8a7e72', caution: '#d4760a' };
-              const bg = bgMap[sig] || '#f5f2ec';
-              const dotColor = dotMap[sig] || '#8a7e72';
-              const desc = info?.short_description
-                ? `${first} — ${info.short_description}`
-                : `${first} — the most prominent ingredient by weight.`;
-              return (
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, background: bg, borderRadius: 12, padding: '12px 14px', marginBottom: 16 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: dotColor, flexShrink: 0, marginTop: 5 }} />
-                  <div style={{ fontSize: 13, color: '#3d352b', lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>
-                    <strong>First ingredient:</strong> {desc}
-                  </div>
-                </div>
-              );
-            })()}
+
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {ingredients.map((ing, i) => {
