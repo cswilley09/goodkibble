@@ -2,6 +2,8 @@ import { generateBreadcrumbSchema } from '@/lib/seo'
 import { fetchProductsBySlugs } from '../fetchProducts'
 import BestOfPageContent from '../BestOfPageContent'
 
+export const dynamic = 'force-dynamic'
+
 const SLUGS = [
   { brand_slug: 'wellness', slug: 'wellness-core-wholesome-grains-large-breed-deboned-chicken-chicken-meal-turkey-meal' },
   { brand_slug: 'wellness', slug: 'wellness-core-grain-free-large-breed-chicken-recipe' },

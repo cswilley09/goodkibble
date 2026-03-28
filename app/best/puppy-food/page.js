@@ -2,6 +2,8 @@ import { generateBreadcrumbSchema } from '@/lib/seo'
 import { fetchProductsBySlugs } from '../fetchProducts'
 import BestOfPageContent from '../BestOfPageContent'
 
+export const dynamic = 'force-dynamic'
+
 const SLUGS = [
   { brand_slug: 'orijen', slug: 'orijen-amazing-grains-puppy-large' },
   { brand_slug: 'blue-buffalo', slug: 'blue-buffalo-baby-blue-puppy-chicken-and-oatmeal' },

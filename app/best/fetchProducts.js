@@ -1,15 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
-
 /**
  * Fetch products by slug pairs and return them in the specified order.
  * @param {Array<{brand_slug: string, slug: string}>} slugPairs
  */
 export async function fetchProductsBySlugs(slugPairs) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
   const results = await Promise.all(
     slugPairs.map(({ brand_slug, slug }) =>
       supabase
@@ -18,8 +17,13 @@ export async function fetchProductsBySlugs(slugPairs) {
         .eq('brand_slug', brand_slug)
         .eq('slug', slug)
         .single()
-        .then(({ data }) => data)
+        .then(({ data, error }) => {
+          if (error) console.error(`[BestOf] Failed to fetch ${brand_slug}/${slug}:`, error.message)
+          return data
+        })
     )
   )
-  return results.filter(Boolean)
+  const found = results.filter(Boolean)
+  console.log(`[BestOf] Fetched ${found.length}/${slugPairs.length} products`)
+  return found
 }

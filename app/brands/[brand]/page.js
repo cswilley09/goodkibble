@@ -2,14 +2,13 @@ import { createClient } from '@supabase/supabase-js'
 import { generateBrandMeta, getBrandDisplayName } from '@/lib/seo'
 import BrandPageContent from './BrandPageContent'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+}
 
 export async function generateMetadata({ params }) {
   const { brand } = params
-  const { count } = await supabase
+  const { count } = await getSupabase()
     .from('dog_foods_v2')
     .select('id', { count: 'exact', head: true })
     .eq('brand_slug', brand)
@@ -25,7 +24,7 @@ export async function generateMetadata({ params }) {
 export default async function BrandPage({ params }) {
   const { brand } = params
   const brandName = getBrandDisplayName(brand)
-  const { data: products } = await supabase
+  const { data: products } = await getSupabase()
     .from('dog_foods_v2')
     .select('id, name, brand, slug, brand_slug, image_url, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, quality_score, primary_protein, flavor')
     .eq('brand_slug', brand)

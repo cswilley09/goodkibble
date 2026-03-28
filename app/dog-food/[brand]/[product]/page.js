@@ -2,13 +2,14 @@ import { createClient } from '@supabase/supabase-js'
 import { generateProductMeta, generateProductSchema, generateBreadcrumbSchema, getBrandDisplayName } from '@/lib/seo'
 import FoodPageContent from '@/app/components/FoodPageContent'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
+export const dynamic = 'force-dynamic'
+
+function getSupabase() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+}
 
 async function getProduct(brand, productSlug) {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('dog_foods_v2')
     .select('*')
     .eq('brand_slug', brand)
