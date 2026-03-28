@@ -198,9 +198,8 @@ const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.1
 
 function IngredientTooltip({ info, children }) {
   const [show, setShow] = useState(false);
-  const pillRef = useRef(null);
   const [mobile, setMobile] = useState(false);
-  const [pos, setPos] = useState({ top: 0, arrowLeft: 0, above: true });
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   useEffect(() => {
     const check = () => setMobile(window.innerWidth <= 768);
@@ -209,59 +208,28 @@ function IngredientTooltip({ info, children }) {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  function handleOpen() {
-    if (mobile && pillRef.current) {
-      const rect = pillRef.current.getBoundingClientRect();
-      const pillCenterX = rect.left + rect.width / 2;
-      const inTopHalf = rect.top < window.innerHeight / 2;
-      setPos({
-        above: !inTopHalf,
-        topVal: inTopHalf ? rect.bottom + 10 : undefined,
-        bottomVal: inTopHalf ? undefined : window.innerHeight - rect.top + 10,
-        arrowLeft: pillCenterX,
-      });
-    }
+  function openDrawer() {
     setShow(true);
+    requestAnimationFrame(() => setDrawerVisible(true));
   }
 
-  const tooltipContent = info && (
-    <>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-        <span style={{
-          width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
-          background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
-        }} />
-        <span style={{ fontWeight: 700, fontSize: 14 }}>{info.display_name}</span>
-        <span style={{
-          marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
-          textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100,
-          background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
-          color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
-        }}>{info.quality_signal}</span>
-      </div>
-      <div style={{ color: '#d4cfc6', marginBottom: info.source ? 10 : 0 }}>
-        {info.short_description}
-      </div>
-      {info.source && (
-        <div style={{ fontSize: 11, color: '#8a7e72', fontStyle: 'italic' }}>
-          Source: {info.source}
-        </div>
-      )}
-    </>
-  );
+  function closeDrawer() {
+    setDrawerVisible(false);
+    setTimeout(() => setShow(false), 300);
+  }
 
   return (
     <span style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={() => { if (!mobile) handleOpen(); }}
+      onMouseEnter={() => { if (!mobile) setShow(true); }}
       onMouseLeave={() => { if (!mobile) setShow(false); }}
     >
-      <span ref={pillRef} style={{ cursor: 'pointer' }}
-        onClick={(e) => { if (mobile) { e.stopPropagation(); handleOpen(); } }}
+      <span style={{ cursor: 'pointer' }}
+        onClick={(e) => { if (mobile) { e.stopPropagation(); openDrawer(); } }}
       >
         {children}
       </span>
 
-      {/* Desktop tooltip — absolute, above pill */}
+      {/* Desktop tooltip — position: absolute, above pill */}
       {show && info && !mobile && (
         <div style={{
           position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
@@ -273,7 +241,27 @@ function IngredientTooltip({ info, children }) {
           boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
           zIndex: 60, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
         }}>
-          {tooltipContent}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{
+              width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+              background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+            }} />
+            <span style={{ fontWeight: 700, fontSize: 14 }}>{info.display_name}</span>
+            <span style={{
+              marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+              textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100,
+              background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
+              color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+            }}>{info.quality_signal}</span>
+          </div>
+          <div style={{ color: '#d4cfc6', marginBottom: info.source ? 10 : 0 }}>
+            {info.short_description}
+          </div>
+          {info.source && (
+            <div style={{ fontSize: 11, color: '#8a7e72', fontStyle: 'italic' }}>
+              Source: {info.source}
+            </div>
+          )}
           <div style={{
             position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
             width: 0, height: 0, borderLeft: '7px solid transparent',
@@ -282,34 +270,55 @@ function IngredientTooltip({ info, children }) {
         </div>
       )}
 
-      {/* Mobile tooltip — fixed to viewport */}
+      {/* Mobile bottom sheet drawer */}
       {show && info && mobile && (
         <>
           {/* Backdrop */}
-          <div onClick={() => setShow(false)} style={{
-            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.1)', zIndex: 9998,
+          <div onClick={closeDrawer} style={{
+            position: 'fixed', inset: 0,
+            background: drawerVisible ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0)',
+            transition: 'background 0.3s ease',
+            zIndex: 999,
           }} />
-          {/* Tooltip */}
+          {/* Drawer */}
           <div style={{
-            position: 'fixed', left: 16, right: 16, width: 'auto',
-            ...(pos.above ? { bottom: pos.bottomVal } : { top: pos.topVal }),
-            padding: '16px 18px', overflowWrap: 'break-word',
-            borderRadius: 14, background: '#1a1612', color: '#faf8f5',
-            fontSize: 13, lineHeight: 1.55, fontWeight: 400,
-            fontFamily: "'DM Sans', sans-serif",
-            boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
-            zIndex: 9999, animation: 'fadeIn 0.15s ease',
+            position: 'fixed', bottom: 0, left: 0, right: 0,
+            background: '#fff', borderRadius: '20px 20px 0 0',
+            padding: '12px 24px 32px', zIndex: 1000,
+            boxShadow: '0 -8px 40px rgba(26,22,18,0.15)',
+            transform: drawerVisible ? 'translateY(0)' : 'translateY(100%)',
+            transition: 'transform 0.3s ease-out',
           }}>
-            {tooltipContent}
-            {/* Arrow pointing toward pill */}
-            <div style={{
-              position: 'absolute',
-              left: Math.max(24, Math.min(pos.arrowLeft - 16, (typeof window !== 'undefined' ? window.innerWidth : 375) - 32 - 24)),
-              ...(pos.above
-                ? { top: '100%', borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderTop: '7px solid #1a1612' }
-                : { bottom: '100%', borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderBottom: '7px solid #1a1612' }),
-              width: 0, height: 0,
-            }} />
+            {/* Drag handle */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+              <div style={{ width: 40, height: 4, borderRadius: 2, background: '#d4c9b8' }} />
+            </div>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+              <span style={{
+                width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
+                background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+              }} />
+              <span style={{ fontWeight: 700, fontSize: 16, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                {info.display_name}
+              </span>
+              <span style={{
+                marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+                textTransform: 'uppercase', padding: '3px 10px', borderRadius: 100,
+                background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
+                color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+              }}>{info.quality_signal}</span>
+            </div>
+            {/* Description */}
+            <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif", marginBottom: info.source ? 12 : 0 }}>
+              {info.short_description}
+            </div>
+            {/* Source */}
+            {info.source && (
+              <div style={{ fontSize: 12, color: '#8a7e72', fontStyle: 'italic', fontFamily: "'DM Sans', sans-serif" }}>
+                Source: {info.source}
+              </div>
+            )}
           </div>
         </>
       )}
