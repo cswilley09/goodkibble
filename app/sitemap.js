@@ -1,5 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 
+function ingredientSlug(name) {
+  if (!name) return ''
+  return name.toLowerCase().trim()
+    .replace(/[™®©]/g, '').replace(/&/g, 'and').replace(/[''']/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+}
+
 export default async function sitemap() {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
   const baseUrl = 'https://www.goodkibble.com'
@@ -17,6 +24,7 @@ export default async function sitemap() {
     { url: `${baseUrl}/best/puppy-food`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/best/large-breed-dog-food`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/best/grain-free-dog-food`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/ingredients`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
   ]
 
   const brandSlugs = [...new Set(products?.map(p => p.brand_slug).filter(Boolean))]
@@ -37,5 +45,21 @@ export default async function sitemap() {
     })
   })
 
-  return [...staticPages, ...brandPages, ...productPages]
+  // Ingredient pages
+  const { data: ingredients } = await supabase
+    .from('ingredient_info')
+    .select('ingredient_name')
+  const seenIngSlugs = new Set()
+  const ingredientPages = []
+  ingredients?.forEach(ing => {
+    const slug = ingredientSlug(ing.ingredient_name)
+    if (!slug || seenIngSlugs.has(slug)) return
+    seenIngSlugs.add(slug)
+    ingredientPages.push({
+      url: `${baseUrl}/ingredients/${slug}`,
+      lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5,
+    })
+  })
+
+  return [...staticPages, ...brandPages, ...productPages, ...ingredientPages]
 }
