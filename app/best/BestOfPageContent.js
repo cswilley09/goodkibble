@@ -233,8 +233,8 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
             </a>{' '}
             to normalize nutrition across foods with different moisture levels. Rankings are based entirely on
             nutritional data and ingredient analysis — no brand pays for placement. {' '}
-            <a href="/search" style={{ color: '#1a1612', textDecoration: 'underline', textUnderlineOffset: 3 }}>
-              Search all {totalAnalyzed || '1,000+'} products
+            <a href="/discover" style={{ color: '#1a1612', textDecoration: 'underline', textUnderlineOffset: 3 }}>
+              Discover all {totalAnalyzed || '1,000+'} products
             </a>{' '}
             in our database.
           </p>
