@@ -552,7 +552,11 @@ export default function ComparePage() {
         <div className="footer-logo" style={{ fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 24 : 32, fontWeight: 800, color: '#1a1612' }}>
           Good<span style={{ color: '#f0c930' }}>Kibble</span>
         </div>
-        <div style={{ fontSize: 13, color: '#b5aa99' }}>© 2026 GoodKibble. Not affiliated with any dog food brand.</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
+          <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
+        </div>
       </div>
     </div>
   );

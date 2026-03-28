@@ -579,7 +579,11 @@ export default function Home() {
       {/* ═══ FOOTER ═══ */}
       <div style={{ borderTop: '1px solid #3d352b', padding: '28px 40px', background: '#1a1612', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
         <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 800, color: '#faf8f4' }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
-        <div style={{ fontSize: 12, color: '#5a5248', fontFamily: "'DM Sans', sans-serif" }}>© 2026 GoodKibble. Not affiliated with any dog food brand.</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: '#5a5248', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: '#5a5248', textDecoration: 'none' }}>Privacy</a>
+          <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
+        </div>
       </div>
 
       {/* ═══ STYLES ═══ */}
