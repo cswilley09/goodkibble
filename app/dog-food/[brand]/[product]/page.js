@@ -19,7 +19,7 @@ async function getProduct(brand, productSlug) {
 }
 
 export async function generateMetadata({ params }) {
-  const { brand, product: productSlug } = await params
+  const { brand, product: productSlug } = params
   const product = await getProduct(brand, productSlug)
   if (!product) {
     return { title: 'Product Not Found | Good Kibble' }
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProductPage({ params }) {
-  const { brand, product: productSlug } = await params
+  const { brand, product: productSlug } = params
   const product = await getProduct(brand, productSlug)
 
   if (!product) {

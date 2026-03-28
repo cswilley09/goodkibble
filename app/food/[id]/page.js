@@ -7,7 +7,7 @@ const supabase = createClient(
 )
 
 export default async function OldFoodRedirect({ params }) {
-  const { id } = await params
+  const { id } = params
   const { data: product, error } = await supabase
     .from('dog_foods_v2')
     .select('slug, brand_slug')

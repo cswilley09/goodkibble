@@ -8,7 +8,7 @@ const supabase = createClient(
 )
 
 export async function generateMetadata({ params }) {
-  const { brand } = await params
+  const { brand } = params
   const { count } = await supabase
     .from('dog_foods_v2')
     .select('id', { count: 'exact', head: true })
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function BrandPage({ params }) {
-  const { brand } = await params
+  const { brand } = params
   const brandName = getBrandDisplayName(brand)
   const { data: products } = await supabase
     .from('dog_foods_v2')
