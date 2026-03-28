@@ -198,28 +198,72 @@ const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.1
 
 function IngredientTooltip({ info, children }) {
   const [show, setShow] = useState(false);
-  const tooltipRef = useRef(null);
+  const pillRef = useRef(null);
+  const [mobile, setMobile] = useState(false);
+  const [pos, setPos] = useState({ top: 0, arrowLeft: 0, above: true });
 
-  /* After render, nudge the tooltip if it overflows viewport edges */
   useEffect(() => {
-    if (!show || !tooltipRef.current) return;
-    const el = tooltipRef.current;
-    const rect = el.getBoundingClientRect();
-    const pad = 16;
-    if (rect.left < pad) el.style.transform = `translateX(${pad - rect.left}px)`;
-    else if (rect.right > window.innerWidth - pad) el.style.transform = `translateX(${window.innerWidth - pad - rect.right}px)`;
-  }, [show]);
+    const check = () => setMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  function handleOpen() {
+    if (mobile && pillRef.current) {
+      const rect = pillRef.current.getBoundingClientRect();
+      const pillCenterX = rect.left + rect.width / 2;
+      const inTopHalf = rect.top < window.innerHeight / 2;
+      setPos({
+        above: !inTopHalf,
+        topVal: inTopHalf ? rect.bottom + 10 : undefined,
+        bottomVal: inTopHalf ? undefined : window.innerHeight - rect.top + 10,
+        arrowLeft: pillCenterX,
+      });
+    }
+    setShow(true);
+  }
+
+  const tooltipContent = info && (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        <span style={{
+          width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+          background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+        }} />
+        <span style={{ fontWeight: 700, fontSize: 14 }}>{info.display_name}</span>
+        <span style={{
+          marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+          textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100,
+          background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
+          color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+        }}>{info.quality_signal}</span>
+      </div>
+      <div style={{ color: '#d4cfc6', marginBottom: info.source ? 10 : 0 }}>
+        {info.short_description}
+      </div>
+      {info.source && (
+        <div style={{ fontSize: 11, color: '#8a7e72', fontStyle: 'italic' }}>
+          Source: {info.source}
+        </div>
+      )}
+    </>
+  );
 
   return (
     <span style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
+      onMouseEnter={() => { if (!mobile) handleOpen(); }}
+      onMouseLeave={() => { if (!mobile) setShow(false); }}
     >
-      <span style={{ cursor: 'pointer' }}>
+      <span ref={pillRef} style={{ cursor: 'pointer' }}
+        onClick={(e) => { if (mobile) { e.stopPropagation(); handleOpen(); } }}
+      >
         {children}
       </span>
-      {show && info && (
-        <div ref={tooltipRef} style={{
+
+      {/* Desktop tooltip — absolute, above pill */}
+      {show && info && !mobile && (
+        <div style={{
           position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
           transform: 'translateX(-50%)', width: 300, maxWidth: 'calc(100vw - 32px)',
           padding: '16px 18px', overflowWrap: 'break-word',
@@ -229,37 +273,45 @@ function IngredientTooltip({ info, children }) {
           boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
           zIndex: 60, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
         }}>
-          {/* Header row with signal dot + display name */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{
-              width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
-              background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
-            }} />
-            <span style={{ fontWeight: 700, fontSize: 14 }}>{info.display_name}</span>
-            <span style={{
-              marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
-              textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100,
-              background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
-              color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
-            }}>{info.quality_signal}</span>
-          </div>
-          {/* Description */}
-          <div style={{ color: '#d4cfc6', marginBottom: info.source ? 10 : 0 }}>
-            {info.short_description}
-          </div>
-          {/* Source citation */}
-          {info.source && (
-            <div style={{ fontSize: 11, color: '#8a7e72', fontStyle: 'italic' }}>
-              Source: {info.source}
-            </div>
-          )}
-          {/* Arrow */}
+          {tooltipContent}
           <div style={{
             position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
             width: 0, height: 0, borderLeft: '7px solid transparent',
             borderRight: '7px solid transparent', borderTop: '7px solid #1a1612',
           }} />
         </div>
+      )}
+
+      {/* Mobile tooltip — fixed to viewport */}
+      {show && info && mobile && (
+        <>
+          {/* Backdrop */}
+          <div onClick={() => setShow(false)} style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.1)', zIndex: 9998,
+          }} />
+          {/* Tooltip */}
+          <div style={{
+            position: 'fixed', left: 16, right: 16, width: 'auto',
+            ...(pos.above ? { bottom: pos.bottomVal } : { top: pos.topVal }),
+            padding: '16px 18px', overflowWrap: 'break-word',
+            borderRadius: 14, background: '#1a1612', color: '#faf8f5',
+            fontSize: 13, lineHeight: 1.55, fontWeight: 400,
+            fontFamily: "'DM Sans', sans-serif",
+            boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
+            zIndex: 9999, animation: 'fadeIn 0.15s ease',
+          }}>
+            {tooltipContent}
+            {/* Arrow pointing toward pill */}
+            <div style={{
+              position: 'absolute',
+              left: Math.max(24, Math.min(pos.arrowLeft - 16, (typeof window !== 'undefined' ? window.innerWidth : 375) - 32 - 24)),
+              ...(pos.above
+                ? { top: '100%', borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderTop: '7px solid #1a1612' }
+                : { bottom: '100%', borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderBottom: '7px solid #1a1612' }),
+              width: 0, height: 0,
+            }} />
+          </div>
+        </>
       )}
     </span>
   );
