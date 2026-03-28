@@ -459,8 +459,8 @@ function WhyGoodKibble() {
 function FooterCTA({ onNavigate, onSelect }) {
   const [ref, visible] = useFadeIn(0.15);
   return (
-    <div ref={ref} style={{ background: '#1a1612', padding: '72px 24px 80px', textAlign: 'center' }}>
-      <div style={{ maxWidth: 560, margin: '0 auto', ...fade(visible) }}>
+    <div ref={ref} style={{ background: '#1a1612', padding: '72px 24px 80px', textAlign: 'center', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 560, margin: '0 auto', width: '100%', boxSizing: 'border-box', ...fade(visible) }}>
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800, color: '#faf8f4', letterSpacing: -0.5, marginBottom: 12 }}>
           Ready to see what&apos;s in your dog&apos;s food?
         </h2>
@@ -536,7 +536,7 @@ export default function Home() {
       </nav>
 
       {/* ═══ 1. HERO ═══ */}
-      <div style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 30 }}>
+      <div className="hero-section" style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 30, boxSizing: 'border-box', overflow: 'hidden' }}>
         <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 16, animation: 'fadeUp 0.6s ease both' }}>Know what&apos;s in the bowl</div>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(38px, 5vw, 58px)', fontWeight: 900, color: '#1a1612', lineHeight: 1.08, letterSpacing: -2, marginBottom: 20, animation: 'fadeUp 0.6s ease 0.1s both' }}>
           What&apos;s really in<br />your dog&apos;s food?
@@ -544,7 +544,7 @@ export default function Home() {
         <p style={{ fontSize: 18, color: '#8a7e72', lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px', fontFamily: "'DM Sans', sans-serif", animation: 'fadeUp 0.6s ease 0.2s both' }}>
           Search any dog food. See exactly what's inside — ingredients, nutrition, and an honest score.
         </p>
-        <div style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, margin: '0 auto' }}>
+        <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
           <SearchBox onSelect={handleSelect} variant="hero" />
         </div>
         <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both', textAlign: 'center' }}>
@@ -596,6 +596,8 @@ export default function Home() {
           .protein-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .value-grid { grid-template-columns: 1fr !important; }
           .marquee-card { width: 210px !important; }
+          .hero-section { padding-left: 16px !important; padding-right: 16px !important; }
+          .hero-search-wrap { max-width: 100% !important; }
         }
       `}</style>
     </div>

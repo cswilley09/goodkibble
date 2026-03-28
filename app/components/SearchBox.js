@@ -199,9 +199,9 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
   }
 
   return (
-    <div ref={boxRef} style={{ position: 'relative', width: '100%', maxWidth: isNav ? 380 : 560 }}>
-      <div style={{
-        display: 'flex', alignItems: 'center',
+    <div ref={boxRef} className="searchbox-root" style={{ position: 'relative', width: '100%', maxWidth: isNav ? 380 : 560, boxSizing: 'border-box' }}>
+      <div className="searchbox-bar" style={{
+        display: 'flex', alignItems: 'center', width: '100%', boxSizing: 'border-box',
         background: isNav ? '#f0ebe3' : '#fff',
         borderRadius: isNav ? 14 : 20,
         padding: isNav ? '4px 4px 4px 16px' : '6px 6px 6px 24px',
@@ -217,21 +217,29 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
           onKeyDown={handleKeyDown}
           onFocus={() => { if (results.length > 0) setOpen(true); }}
           style={{
-            flex: 1, border: 'none', outline: 'none',
+            flex: 1, border: 'none', outline: 'none', minWidth: 0,
             fontSize: isNav ? 14 : 17, padding: isNav ? '10px 8px' : '14px 12px',
             background: 'transparent', color: '#1a1612',
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
           }}
         />
         {!isNav && (
-          <button onClick={handleSearchButton}
+          <button className="searchbox-btn" onClick={handleSearchButton}
             style={{
               padding: '14px 28px', borderRadius: 14, border: 'none',
               background: '#1a1612', color: '#faf8f5', fontSize: 15,
-              fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap',
+              fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              whiteSpace: 'nowrap', flexShrink: 0,
             }}>Search</button>
         )}
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .searchbox-root { max-width: 100% !important; }
+          .searchbox-bar { max-width: 100% !important; padding-left: 16px !important; padding-right: 6px !important; }
+          .searchbox-btn { padding: 12px 18px !important; }
+        }
+      `}</style>
 
       {open && (
         <div style={{
