@@ -834,7 +834,7 @@ export default function FoodPage() {
   const saltIdx = findSaltIndex(ingredients);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#ffffff' }}>
+    <div style={{ minHeight: '100vh', background: '#ffffff', overflowX: 'hidden' }}>
       <style>{`
         @media (max-width: 480px) {
           .score-tile-pair { flex-direction: column; }
@@ -963,6 +963,7 @@ export default function FoodPage() {
           <div className="ingredients-section" style={{
             marginTop: 28, padding: '40px 32px', background: '#faf8f5', borderRadius: 24,
             border: '1px solid #ede8df', animation: 'scaleIn 0.5s ease 0.2s both',
+            overflowX: 'hidden',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
               <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99' }}>Ingredients</div>
