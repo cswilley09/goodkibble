@@ -17,6 +17,10 @@ export default async function sitemap() {
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },
     { url: `${baseUrl}/search`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/brands`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/best/dog-food`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/best/puppy-food`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/best/large-breed-dog-food`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/best/grain-free-dog-food`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
   ]
 
   const brandSlugs = [...new Set(products?.map(p => p.brand_slug).filter(Boolean))]
