@@ -245,7 +245,10 @@ export default function ComparePage() {
   const router = useRouter();
   const { items, addItem, removeItem, clearAll } = useCompare();
   const goHome = () => router.push('/');
-  const goFood = (id) => router.push(`/food/${id}`);
+  const goFood = (food) => {
+    if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
+    else router.push(`/food/${food?.id || food}`);
+  };
   const isMobile = useIsMobile();
 
   const hasAddSlot = items.length < 3;

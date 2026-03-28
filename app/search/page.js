@@ -143,7 +143,10 @@ function SearchResults() {
   const [loading, setLoading] = useState(true);
 
   const goHome = () => router.push('/');
-  const goFood = (id) => router.push(`/food/${id}`);
+  const goFood = (food) => {
+    if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
+    else router.push(`/food/${food?.id || food}`);
+  };
 
   useEffect(() => {
     if (!query.trim()) { setResults([]); setLoading(false); return; }
@@ -153,7 +156,7 @@ function SearchResults() {
       const variants = getSearchVariants(query);
       if (variants.length === 0) { setResults([]); setLoading(false); return; }
 
-      const selectCols = 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score';
+      const selectCols = 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug';
 
       /* pass 1: brand matches */
       const brandFilter = buildOrFilter(variants, ['brand']);
@@ -286,7 +289,7 @@ function SearchResults() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
             {results.map((p) => (
-              <ProductCard key={p.id} food={p} onClick={() => goFood(p.id)} />
+              <ProductCard key={p.id} food={p} onClick={() => goFood(p)} />
             ))}
           </div>
         )}

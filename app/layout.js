@@ -1,10 +1,8 @@
 import './globals.css';
 import { CompareProvider } from './components/CompareContext';
+import { defaultMetadata } from '@/lib/metadata';
 
-export const metadata = {
-  title: 'GoodKibble — Know What\'s In Your Dog\'s Food',
-  description: 'Search any dog food brand. Get a clear breakdown of ingredients and nutrition.',
-};
+export const metadata = defaultMetadata;
 
 export default function RootLayout({ children }) {
   return (

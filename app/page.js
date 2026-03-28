@@ -54,7 +54,7 @@ function MarqueeCard({ p, onClick }) {
   const [imgErr, setImgErr] = useState(false);
   const color = getScoreColor(p.quality_score);
   return (
-    <div onClick={() => onClick(p.id)} className="marquee-card" style={{
+    <div onClick={() => onClick(p)} className="marquee-card" style={{
       width: 240, flexShrink: 0, background: '#fff', borderRadius: 16,
       border: '1px solid #ede8df', cursor: 'pointer',
       transition: 'transform 0.25s, box-shadow 0.25s',
@@ -115,7 +115,7 @@ function ProductMarquee({ onCardClick }) {
   useEffect(() => {
     supabase
       .from('dog_foods_v2')
-      .select('id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url')
+      .select('id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug')
       .not('quality_score', 'is', null)
       .limit(200)
       .then(({ data, error }) => {
@@ -509,7 +509,10 @@ export default function Home() {
   }, []);
 
   const goTo = useCallback((path) => router.push(path), [router]);
-  const handleSelect = useCallback((id) => router.push(`/food/${id}`), [router]);
+  const handleSelect = useCallback((food) => {
+    if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
+    else router.push(`/food/${food?.id || food}`);
+  }, [router]);
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4' }}>

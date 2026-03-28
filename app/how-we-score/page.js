@@ -112,7 +112,10 @@ function GlanceBar({ label, pts, max, color }) {
 export default function HowWeScorePage() {
   const router = useRouter();
   const goHome = () => router.push('/');
-  const goFood = (id) => router.push(`/food/${id}`);
+  const goFood = (food) => {
+    if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
+    else router.push(`/food/${food?.id || food}`);
+  };
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f5' }}>

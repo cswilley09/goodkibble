@@ -210,7 +210,10 @@ function DiscoverContent() {
   const [sortValue, setSortValue] = useState(initialSort);
 
   const goHome = () => router.push('/');
-  const goFood = (id) => router.push(`/food/${id}`);
+  const goFood = (food) => {
+    if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
+    else router.push(`/food/${food?.id || food}`);
+  };
 
   /* update URL when sort changes */
   function handleSortChange(val) {
@@ -229,7 +232,7 @@ function DiscoverContent() {
       while (true) {
         const { data } = await supabase
           .from('dog_foods_v2')
-          .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score')
+          .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug')
           .range(offset, offset + batch - 1);
         if (!data || data.length === 0) break;
         all = all.concat(data);
@@ -543,7 +546,7 @@ function DiscoverContent() {
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
                 {sorted.map((f) => (
-                  <ProductCard key={f.id} food={f} onClick={() => goFood(f.id)} />
+                  <ProductCard key={f.id} food={f} onClick={() => goFood(f)} />
                 ))}
               </div>
             )}

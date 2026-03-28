@@ -57,7 +57,7 @@ export default function BrandPage() {
     setLoading(true);
     supabase
       .from('dog_foods_v2')
-      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score')
+      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug')
       .eq('brand', brandName)
       .order('name')
       .then(({ data }) => { setProducts(data || []); setLoading(false); })
@@ -65,7 +65,10 @@ export default function BrandPage() {
   }, [brandName]);
 
   const goHome = () => router.push('/');
-  const goFood = (id) => router.push(`/food/${id}`);
+  const goFood = (food) => {
+    if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
+    else router.push(`/food/${food?.id || food}`);
+  };
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f5' }}>
@@ -114,7 +117,7 @@ export default function BrandPage() {
             display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12,
           }}>
             {products.map((p, i) => (
-              <div key={p.id} onClick={() => goFood(p.id)}
+              <div key={p.id} onClick={() => goFood(p)}
                 style={{
                   background: '#fff', borderRadius: 16, padding: 16,
                   border: '1px solid #ede8df', cursor: 'pointer',
