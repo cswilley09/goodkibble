@@ -199,7 +199,6 @@ const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.1
 function IngredientTooltip({ info, children }) {
   const [show, setShow] = useState(false);
   const [mobile, setMobile] = useState(false);
-  const [drawerVisible, setDrawerVisible] = useState(false);
 
   useEffect(() => {
     const check = () => setMobile(window.innerWidth <= 768);
@@ -208,23 +207,13 @@ function IngredientTooltip({ info, children }) {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  function openDrawer() {
-    setShow(true);
-    requestAnimationFrame(() => setDrawerVisible(true));
-  }
-
-  function closeDrawer() {
-    setDrawerVisible(false);
-    setTimeout(() => setShow(false), 300);
-  }
-
   return (
     <span style={{ position: 'relative', display: 'inline-block' }}
       onMouseEnter={() => { if (!mobile) setShow(true); }}
       onMouseLeave={() => { if (!mobile) setShow(false); }}
     >
       <span style={{ cursor: 'pointer' }}
-        onClick={(e) => { if (mobile) { e.stopPropagation(); openDrawer(); } }}
+        onClick={(e) => { if (mobile) { e.stopPropagation(); setShow(true); } }}
       >
         {children}
       </span>
@@ -270,52 +259,51 @@ function IngredientTooltip({ info, children }) {
         </div>
       )}
 
-      {/* Mobile bottom sheet drawer */}
+      {/* Mobile centered modal */}
       {show && info && mobile && (
         <>
-          {/* Backdrop */}
-          <div onClick={closeDrawer} style={{
-            position: 'fixed', inset: 0,
-            background: drawerVisible ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0)',
-            transition: 'background 0.3s ease',
-            zIndex: 999,
+          <div onClick={() => setShow(false)} style={{
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+            background: 'rgba(0,0,0,0.3)', zIndex: 9998,
           }} />
-          {/* Drawer */}
           <div style={{
-            position: 'fixed', bottom: 0, left: 0, right: 0,
-            background: '#fff', borderRadius: '20px 20px 0 0',
-            padding: '12px 24px 32px', zIndex: 1000,
-            boxShadow: '0 -8px 40px rgba(26,22,18,0.15)',
-            transform: drawerVisible ? 'translateY(0)' : 'translateY(100%)',
-            transition: 'transform 0.3s ease-out',
+            position: 'fixed', top: '50%', left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 'calc(100vw - 48px)', maxWidth: 340,
+            background: '#1a1612', color: '#faf8f5',
+            borderRadius: 16, padding: '20px 24px',
+            fontFamily: "'DM Sans', sans-serif",
+            boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
+            zIndex: 9999,
+            animation: 'ingredientModalIn 0.2s ease both',
           }}>
-            {/* Drag handle */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-              <div style={{ width: 40, height: 4, borderRadius: 2, background: '#d4c9b8' }} />
-            </div>
+            {/* Close button */}
+            <div onClick={() => setShow(false)} style={{
+              position: 'absolute', top: 12, right: 14,
+              fontSize: 16, color: 'rgba(255,255,255,0.5)', cursor: 'pointer',
+              lineHeight: 1, padding: 4,
+            }}>✕</div>
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingRight: 24 }}>
               <span style={{
                 width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
                 background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
               }} />
-              <span style={{ fontWeight: 700, fontSize: 16, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
-                {info.display_name}
-              </span>
+              <span style={{ fontWeight: 700, fontSize: 16 }}>{info.display_name}</span>
               <span style={{
                 marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
-                textTransform: 'uppercase', padding: '3px 10px', borderRadius: 100,
+                textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
                 background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
                 color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
               }}>{info.quality_signal}</span>
             </div>
             {/* Description */}
-            <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif", marginBottom: info.source ? 12 : 0 }}>
+            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, marginBottom: info.source ? 10 : 0 }}>
               {info.short_description}
             </div>
             {/* Source */}
             {info.source && (
-              <div style={{ fontSize: 12, color: '#8a7e72', fontStyle: 'italic', fontFamily: "'DM Sans', sans-serif" }}>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic' }}>
                 Source: {info.source}
               </div>
             )}
@@ -838,6 +826,10 @@ export default function FoodPage() {
       <style>{`
         @media (max-width: 480px) {
           .score-tile-pair { flex-direction: column; }
+        }
+        @keyframes ingredientModalIn {
+          from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+          to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
       `}</style>
       <nav className="nav-bar" style={{
