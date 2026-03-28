@@ -1,10 +1,7 @@
-import { createClient } from '@supabase/supabase-js'
+import { getSupabase } from '@/lib/supabaseServer'
 import { generateBrandMeta, getBrandDisplayName } from '@/lib/seo'
 import BrandPageContent from './BrandPageContent'
 
-function getSupabase() {
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
-}
 
 export async function generateMetadata({ params }) {
   const { brand } = params

@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
 import SearchBox from './components/SearchBox';
 import CompareBubble from './components/CompareBubble';
 import { useRouter } from 'next/navigation';
@@ -113,13 +112,10 @@ function ProductMarquee({ onCardClick }) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    supabase
-      .from('dog_foods_v2')
-      .select('id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug')
-      .not('quality_score', 'is', null)
-      .limit(200)
-      .then(({ data, error }) => {
-        if (error || !data || data.length === 0) return;
+    fetch('/api/foods?featured=marquee')
+      .then(r => r.json())
+      .then(data => {
+        if (!data || data.length === 0) return;
         const withImage = data.filter(d => d.image_url && d.image_url.trim() !== '');
         const pool = withImage.length >= 6 ? withImage : data;
         const shuffled = pool.sort(() => Math.random() - 0.5).slice(0, 6);
@@ -220,13 +216,9 @@ function ScoringDemo({ onNavigate }) {
   const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
-    supabase
-      .from('dog_foods_v2')
-      .select('name, brand, quality_score, score_breakdown')
-      .not('score_breakdown', 'is', null)
-      .gte('quality_score', 80)
-      .limit(20)
-      .then(({ data }) => {
+    fetch('/api/foods?featured=scoring-demo')
+      .then(r => r.json())
+      .then(data => {
         if (!data || data.length === 0) return;
         const valid = data.filter(d => d.score_breakdown && d.score_breakdown.categories);
         if (valid.length === 0) return;
@@ -491,10 +483,9 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    supabase
-      .from('dog_foods_v2')
-      .select('primary_protein')
-      .then(({ data }) => {
+    fetch('/api/foods?featured=marquee')
+      .then(r => r.json())
+      .then(data => {
         if (!data) return;
         const pCounts = {};
         data.forEach(r => { if (r.primary_protein) pCounts[r.primary_protein] = (pCounts[r.primary_protein] || 0) + 1; });

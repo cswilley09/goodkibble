@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../../lib/supabase';
 import SearchBox from './SearchBox';
 import CompareBubble from './CompareBubble';
 import { useCompare } from './CompareContext';
@@ -793,16 +792,18 @@ export default function FoodPageContent({ productId }) {
 
   useEffect(() => {
     setLoading(true);
-    supabase.from('dog_foods_v2').select('*').eq('id', productId).single()
-      .then(({ data }) => { setFood(data); setLoading(false); })
+    fetch(`/api/foods/${productId}`)
+      .then(r => r.json())
+      .then(data => { if (data && !data.error) setFood(data); setLoading(false); })
       .catch(() => setLoading(false));
   }, [productId]);
 
   /* Fetch ingredient_info lookup table once */
   useEffect(() => {
-    supabase.from('ingredient_info').select('*')
-      .then(({ data }) => {
-        if (!data) return;
+    fetch('/api/ingredients')
+      .then(r => r.json())
+      .then(data => {
+        if (!data || data.error) return;
         const map = {};
         data.forEach(row => { map[row.ingredient_name] = row; });
         setIngredientInfo(map);
@@ -811,8 +812,9 @@ export default function FoodPageContent({ productId }) {
 
   const goHome = () => router.push('/');
   const goFood = (id) => {
-    supabase.from('dog_foods_v2').select('slug, brand_slug').eq('id', id).single()
-      .then(({ data }) => {
+    fetch(`/api/foods/${id}`)
+      .then(r => r.json())
+      .then(data => {
         if (data?.slug && data?.brand_slug) router.push(`/dog-food/${data.brand_slug}/${data.slug}`);
         else router.push(`/food/${id}`);
       });

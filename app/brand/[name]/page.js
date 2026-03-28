@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { supabase } from '../../../lib/supabase';
 import SearchBox from '../../components/SearchBox';
 import CompareBubble from '../../components/CompareBubble';
 
@@ -55,12 +54,9 @@ export default function BrandPage() {
 
   useEffect(() => {
     setLoading(true);
-    supabase
-      .from('dog_foods_v2')
-      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug')
-      .eq('brand', brandName)
-      .order('name')
-      .then(({ data }) => { setProducts(data || []); setLoading(false); })
+    fetch(`/api/foods?brand=${encodeURIComponent(brandName)}`)
+      .then(r => r.json())
+      .then(data => { setProducts(data || []); setLoading(false); })
       .catch(() => setLoading(false));
   }, [brandName]);
 

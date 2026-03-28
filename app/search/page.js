@@ -1,47 +1,8 @@
 'use client';
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { supabase } from '../../lib/supabase';
 import SearchBox from '../components/SearchBox';
 import CompareBubble from '../components/CompareBubble';
-
-/* ── same normalization helpers as SearchBox ── */
-function getSearchVariants(query) {
-  const q = query.trim();
-  if (!q) return [];
-  const variants = new Set();
-  variants.add(q);
-  const stripped = q.replace(/[''`]/g, '');
-  variants.add(stripped);
-  const withApostrophe = stripped.replace(/(\w)s\b/g, "$1's");
-  variants.add(withApostrophe);
-  const words = stripped.split(/\s+/);
-  const firstWordApos = words.map((w, i) => {
-    if (i === 0 && w.length > 2 && w.endsWith('s')) return w.slice(0, -1) + "'s";
-    return w;
-  }).join(' ');
-  variants.add(firstWordApos);
-  /* for long queries, extract key words */
-  if (words.length >= 4) {
-    const stopWords = new Set(['and', 'the', 'for', 'with', 'dry', 'dog', 'food', 'recipe', 'formula', 'adult', 'puppy', 'senior', 'natural', 'grain', 'free']);
-    const significant = words.filter(w => w.length > 2 && !stopWords.has(w.toLowerCase()));
-    if (significant.length >= 2) {
-      variants.add(significant.slice(0, 3).join(' '));
-      variants.add(significant.slice(0, 2).join(' '));
-    }
-  }
-  return [...variants].filter(v => v.length > 0);
-}
-
-function buildOrFilter(variants, columns) {
-  const clauses = [];
-  for (const col of columns) {
-    for (const v of variants) {
-      clauses.push(`${col}.ilike.%${v}%`);
-    }
-  }
-  return clauses.join(',');
-}
 
 /* ── score tier helpers (same as discover page) ── */
 function getScoreColor(score) {
@@ -153,79 +114,11 @@ function SearchResults() {
     setLoading(true);
 
     async function search() {
-      const variants = getSearchVariants(query);
-      if (variants.length === 0) { setResults([]); setLoading(false); return; }
-
-      const selectCols = 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug';
-
-      /* pass 1: brand matches */
-      const brandFilter = buildOrFilter(variants, ['brand']);
-      const { data: brandMatches } = await supabase
-        .from('dog_foods_v2')
-        .select(selectCols)
-        .or(brandFilter)
-        .limit(200);
-
-      /* pass 2: name/flavor matches */
-      const nameFilter = buildOrFilter(variants, ['name', 'flavor']);
-      const { data: nameMatches } = await supabase
-        .from('dog_foods_v2')
-        .select(selectCols)
-        .or(nameFilter)
-        .limit(200);
-
-      /* pass 3: individual word search across all columns */
-      let wordMatches = [];
-      const queryWords = query.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 2);
-      if (queryWords.length >= 2) {
-        const stopWords = new Set(['and', 'the', 'for', 'with', 'dry', 'dog', 'food', 'recipe', 'formula', 'adult', 'puppy', 'senior', 'natural', 'grain', 'free']);
-        const meaningful = queryWords.filter(w => !stopWords.has(w));
-        if (meaningful.length >= 1) {
-          const bestWord = meaningful.sort((a, b) => b.length - a.length)[0];
-          const wordFilter = buildOrFilter([bestWord], ['name', 'brand', 'flavor']);
-          const { data } = await supabase
-            .from('dog_foods_v2')
-            .select(selectCols)
-            .or(wordFilter)
-            .limit(200);
-          wordMatches = data || [];
-        }
-      }
-
-      /* merge and dedupe */
-      const seen = new Set();
-      const merged = [];
-      for (const item of (brandMatches || [])) {
-        if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
-      }
-      for (const item of (nameMatches || [])) {
-        if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
-      }
-      for (const item of wordMatches) {
-        if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
-      }
-
-      /* relevance sort */
-      const allWords = query.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 1);
-      function relevanceScore(item) {
-        const text = `${item.brand} ${item.name} ${item.flavor || ''}`.toLowerCase();
-        let score = 0;
-        for (const word of allWords) {
-          if (text.includes(word)) score += 1;
-        }
-        /* bonus for exact phrase match in name */
-        const strippedQuery = query.toLowerCase().replace(/[''`]/g, '').trim();
-        if (item.name.toLowerCase().includes(strippedQuery)) score += 10;
-        /* bonus for brand+name combo match */
-        const combined = `${item.brand} ${item.name}`.toLowerCase();
-        if (combined.includes(strippedQuery)) score += 10;
-        /* bonus for brand match */
-        if (allWords[0] && item.brand.toLowerCase().includes(allWords[0])) score += 3;
-        return score;
-      }
-      merged.sort((a, b) => relevanceScore(b) - relevanceScore(a));
-
-      setResults(merged);
+      try {
+        const res = await fetch(`/api/foods/search?q=${encodeURIComponent(query)}`);
+        const merged = await res.json();
+        setResults(merged);
+      } catch { setResults([]); }
       setLoading(false);
     }
 

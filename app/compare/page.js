@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { useCompare } from '../components/CompareContext';
 import CompareBubble from '../components/CompareBubble';
 import SearchBox from '../components/SearchBox';
-import { supabase } from '../../lib/supabase';
 
 /* ── fixed nutrient colors (same as product page) ── */
 const NC = {
@@ -154,12 +153,10 @@ function AddCardSearch({ onSelect, compact }) {
   useEffect(() => {
     if (query.length < 2) { setResults([]); return; }
     const t = setTimeout(() => {
-      supabase
-        .from('dog_foods_v2')
-        .select('id, name, brand, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, moisture, ingredients, image_url, quality_score')
-        .ilike('name', `%${query}%`)
-        .limit(6)
-        .then(({ data }) => setResults(data || []));
+      fetch(`/api/foods/search?q=${encodeURIComponent(query)}&limit=6&compact=true`)
+        .then(r => r.json())
+        .then(data => setResults(data || []))
+        .catch(() => setResults([]));
     }, 250);
     return () => clearTimeout(t);
   }, [query]);

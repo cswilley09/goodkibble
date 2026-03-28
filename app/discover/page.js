@@ -2,7 +2,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import { supabase } from '../../lib/supabase';
 import CompareBubble from '../components/CompareBubble';
 import SearchBox from '../components/SearchBox';
 
@@ -230,10 +229,8 @@ function DiscoverContent() {
       let offset = 0;
       const batch = 1000;
       while (true) {
-        const { data } = await supabase
-          .from('dog_foods_v2')
-          .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug')
-          .range(offset, offset + batch - 1);
+        const res = await fetch(`/api/foods?all=true&offset=${offset}&batch=${batch}`);
+        const data = await res.json();
         if (!data || data.length === 0) break;
         all = all.concat(data);
         if (data.length < batch) break;

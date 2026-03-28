@@ -1,14 +1,11 @@
-import { createClient } from '@supabase/supabase-js'
+import { getSupabase } from '@/lib/supabaseServer'
 
 /**
  * Fetch products by slug pairs and return them in the specified order.
  * @param {Array<{brand_slug: string, slug: string}>} slugPairs
  */
 export async function fetchProductsBySlugs(slugPairs) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  )
+  const supabase = getSupabase()
   const results = await Promise.all(
     slugPairs.map(({ brand_slug, slug }) =>
       supabase

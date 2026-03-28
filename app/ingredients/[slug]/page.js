@@ -1,13 +1,10 @@
-import { createClient } from '@supabase/supabase-js'
+import { getSupabase } from '@/lib/supabaseServer'
 import { generateBreadcrumbSchema } from '@/lib/seo'
 import { ingredientSlug, CATEGORY_INFO, QUALITY_INFO } from '@/lib/ingredients'
 import IngredientPageContent from './IngredientPageContent'
 
 export const dynamic = 'force-dynamic'
 
-function getSupabase() {
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
-}
 
 async function getIngredient(slug) {
   const supabase = getSupabase()

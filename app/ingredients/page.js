@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { getSupabase } from '@/lib/supabaseServer'
 import IngredientsIndexContent from './IngredientsIndexContent'
 
 export const dynamic = 'force-dynamic'
@@ -17,7 +17,7 @@ export async function generateMetadata() {
 }
 
 export default async function IngredientsIndexPage() {
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+  const supabase = getSupabase()
   const { data: allIngredients } = await supabase
     .from('ingredient_info')
     .select('ingredient_name, display_name, category, quality_signal')

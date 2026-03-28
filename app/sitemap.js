@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { getSupabase } from '@/lib/supabaseServer'
 
 function ingredientSlug(name) {
   if (!name) return ''
@@ -8,7 +8,7 @@ function ingredientSlug(name) {
 }
 
 export default async function sitemap() {
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+  const supabase = getSupabase()
   const baseUrl = 'https://www.goodkibble.com'
   const { data: products, error } = await supabase
     .from('dog_foods_v2')

@@ -1,65 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '../../lib/supabase';
-
-/* ── search normalization helpers ── */
-
-/* generate search variants to handle apostrophes, hyphens, etc.
-   e.g. "hills" → ["hills", "hill's"]
-        "hill's" → ["hill's", "hills"]
-        "stella chewys" → ["stella chewys", "stella chewy's"] */
-function getSearchVariants(query) {
-  const q = query.trim();
-  if (!q) return [];
-
-  const variants = new Set();
-  variants.add(q);
-
-  /* variant without any apostrophes/special chars */
-  const stripped = q.replace(/[''`]/g, '');
-  variants.add(stripped);
-
-  /* variant with apostrophe before trailing 's' in each word
-     "hills" → "hill's", "chewys" → "chewy's" */
-  const withApostrophe = stripped.replace(/(\w)s\b/g, "$1's");
-  variants.add(withApostrophe);
-
-  /* also try adding apostrophe just before final 's' of the whole query
-     handles "hills science" → "hill's science" */
-  const words = stripped.split(/\s+/);
-  const firstWordApos = words.map((w, i) => {
-    if (i === 0 && w.length > 2 && w.endsWith('s')) {
-      return w.slice(0, -1) + "'s";
-    }
-    return w;
-  }).join(' ');
-  variants.add(firstWordApos);
-
-  /* for long queries (4+ words), also try just the first 2-3 significant words
-     so pasting a full product name still finds results even if slightly different */
-  if (words.length >= 4) {
-    const stopWords = new Set(['and', 'the', 'for', 'with', 'dry', 'dog', 'food', 'recipe', 'formula', 'adult', 'puppy', 'senior', 'natural', 'grain', 'free']);
-    const significant = words.filter(w => w.length > 2 && !stopWords.has(w.toLowerCase()));
-    if (significant.length >= 2) {
-      variants.add(significant.slice(0, 3).join(' '));
-      variants.add(significant.slice(0, 2).join(' '));
-    }
-  }
-
-  return [...variants].filter(v => v.length > 0);
-}
-
-/* build Supabase OR filter string for a set of variants across given columns */
-function buildOrFilter(variants, columns) {
-  const clauses = [];
-  for (const col of columns) {
-    for (const v of variants) {
-      clauses.push(`${col}.ilike.%${v}%`);
-    }
-  }
-  return clauses.join(',');
-}
 
 export default function SearchBox({ onSelect, variant = 'hero' }) {
   const [text, setText] = useState('');
@@ -87,84 +28,13 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
     if (!val.trim()) { setResults([]); setTotalCount(0); setOpen(false); return; }
     setLoading(true);
     debounceRef.current = setTimeout(async () => {
-      const variants = getSearchVariants(val);
-      if (variants.length === 0) { setResults([]); setTotalCount(0); setLoading(false); return; }
-
-      /* ── three-pass search ── */
-
-      /* pass 1: brand matches (full phrase variants) */
-      const brandFilter = buildOrFilter(variants, ['brand']);
-      const { data: brandMatches } = await supabase
-        .from('dog_foods_v2')
-        .select('id, name, brand, flavor, image_url')
-        .or(brandFilter)
-        .limit(20);
-
-      /* pass 2: name/flavor matches (full phrase variants) */
-      const nameFilter = buildOrFilter(variants, ['name', 'flavor']);
-      const { data: nameMatches } = await supabase
-        .from('dog_foods_v2')
-        .select('id, name, brand, flavor, image_url')
-        .or(nameFilter)
-        .limit(20);
-
-      /* pass 3: individual word search across ALL columns
-         This catches "Royal Canin French Bulldog" where brand = "Royal Canin"
-         and name = "French Bulldog Adult..." — neither column has the full query */
-      let wordMatches = [];
-      const queryWords = val.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 2);
-      if (queryWords.length >= 2) {
-        /* search for the longest meaningful word that isn't a stop word */
-        const stopWords = new Set(['and', 'the', 'for', 'with', 'dry', 'dog', 'food', 'recipe', 'formula', 'adult', 'puppy', 'senior', 'natural', 'grain', 'free']);
-        const meaningful = queryWords.filter(w => !stopWords.has(w));
-        if (meaningful.length >= 1) {
-          /* pick the most unique word (longest) to search, to keep results tight */
-          const bestWord = meaningful.sort((a, b) => b.length - a.length)[0];
-          const wordFilter = buildOrFilter([bestWord], ['name', 'brand', 'flavor']);
-          const { data } = await supabase
-            .from('dog_foods_v2')
-            .select('id, name, brand, flavor, image_url')
-            .or(wordFilter)
-            .limit(30);
-          wordMatches = data || [];
-        }
-      }
-
-      /* merge all three passes (deduped) */
-      const seen = new Set();
-      const merged = [];
-
-      for (const item of (brandMatches || [])) {
-        if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
-      }
-      for (const item of (nameMatches || [])) {
-        if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
-      }
-      for (const item of wordMatches) {
-        if (!seen.has(item.id)) { seen.add(item.id); merged.push(item); }
-      }
-
-      /* relevance sort */
-      const allWords = val.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 1);
-      function relevanceScore(item) {
-        const text = `${item.brand} ${item.name} ${item.flavor || ''}`.toLowerCase();
-        let score = 0;
-        for (const word of allWords) {
-          if (text.includes(word)) score += 1;
-        }
-        const strippedQuery = val.toLowerCase().replace(/[''`]/g, '').trim();
-        if (item.name.toLowerCase().includes(strippedQuery)) score += 10;
-        /* bonus for brand+name combo match */
-        const combined = `${item.brand} ${item.name}`.toLowerCase();
-        if (combined.includes(strippedQuery)) score += 10;
-        if (allWords[0] && item.brand.toLowerCase().includes(allWords[0])) score += 3;
-        return score;
-      }
-      merged.sort((a, b) => relevanceScore(b) - relevanceScore(a));
-
-      setTotalCount(merged.length);
-      setResults(merged.slice(0, 6)); /* show top 6 in dropdown */
-      setOpen(true);
+      try {
+        const res = await fetch(`/api/foods/search?q=${encodeURIComponent(val)}&limit=30`);
+        const merged = await res.json();
+        setTotalCount(merged.length);
+        setResults(merged.slice(0, 6));
+        setOpen(true);
+      } catch { setResults([]); setTotalCount(0); }
       setLoading(false);
     }, 250);
   }
