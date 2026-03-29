@@ -789,6 +789,17 @@ export default function FoodPageContent({ productId }) {
   const [food, setFood] = useState(null);
   const [loading, setLoading] = useState(true);
   const [ingredientInfo, setIngredientInfo] = useState({});
+  const [showStickyBuy, setShowStickyBuy] = useState(false);
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    if (!heroRef.current) return;
+    const obs = new IntersectionObserver(([e]) => {
+      setShowStickyBuy(!e.isIntersecting);
+    }, { threshold: 0 });
+    obs.observe(heroRef.current);
+    return () => obs.disconnect();
+  }, [food]);
 
   useEffect(() => {
     setLoading(true);
@@ -875,7 +886,7 @@ export default function FoodPageContent({ productId }) {
           </button>
 
           {/* Hero */}
-          <div className="product-hero" style={{
+          <div ref={heroRef} className="product-hero" style={{
             display: 'flex', gap: 40, alignItems: 'flex-start', flexWrap: 'wrap',
             animation: 'fadeUp 0.5s ease', marginBottom: 40,
           }}>
@@ -926,7 +937,26 @@ export default function FoodPageContent({ productId }) {
                 </div>
               )}
 
-              <CompareToggle food={food} />
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+                <CompareToggle food={food} />
+                {food.affiliate_url && (
+                  <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '10px 22px', borderRadius: 100, border: 'none',
+                    background: '#C9A84C', color: '#fff', fontSize: 13, fontWeight: 600,
+                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none',
+                    transition: 'background 0.2s',
+                  }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = '#b5952f'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#C9A84C'}
+                  >Buy on Amazon &rarr;</a>
+                )}
+              </div>
+              {food.affiliate_url && (
+                <div style={{ fontSize: 10, color: '#b5aa99', fontStyle: 'italic', marginTop: 8 }}>
+                  As an Amazon Associate, GoodKibble earns from qualifying purchases.
+                </div>
+              )}
             </div>
           </div>
 
@@ -1156,6 +1186,59 @@ export default function FoodPageContent({ productId }) {
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>
+
+      {/* Sticky mobile buy bar */}
+      {food && food.affiliate_url && (
+        <div className="sticky-buy-bar" style={{
+          position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100,
+          background: '#fff', borderTop: '1px solid #ede8df',
+          boxShadow: '0 -2px 12px rgba(0,0,0,0.06)',
+          padding: '12px 16px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          transform: showStickyBuy ? 'translateY(0)' : 'translateY(100%)',
+          transition: 'transform 0.3s ease',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
+            {food.quality_score != null && (() => {
+              const tier = getScoreTier(food.quality_score);
+              const r = 14.5;
+              const c = 2 * Math.PI * r;
+              const o = c - (c * food.quality_score / 100);
+              return (
+                <div style={{ position: 'relative', width: 34, height: 34, flexShrink: 0 }}>
+                  <svg width={34} height={34} style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx={17} cy={17} r={r} fill="none" stroke="#ede8df" strokeWidth={2.5} />
+                    <circle cx={17} cy={17} r={r} fill="none" stroke={tier.color} strokeWidth={2.5}
+                      strokeDasharray={c} strokeDashoffset={o} strokeLinecap="round" />
+                  </svg>
+                  <div style={{
+                    position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 13, fontWeight: 800, fontFamily: "'DM Sans', sans-serif", color: '#1a1612',
+                  }}>{food.quality_score}</div>
+                </div>
+              );
+            })()}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{food.name}</div>
+              <div style={{ fontSize: 10, color: '#b5aa99' }}>{food.brand}</div>
+            </div>
+          </div>
+          <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '9px 16px', borderRadius: 100, border: 'none',
+            background: '#C9A84C', color: '#fff', fontSize: 12, fontWeight: 600,
+            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none',
+            flexShrink: 0, whiteSpace: 'nowrap',
+          }}>Buy &rarr;</a>
+        </div>
+      )}
+
+      <style>{`
+        .sticky-buy-bar { display: none !important; }
+        @media (max-width: 768px) {
+          .sticky-buy-bar { display: flex !important; }
+        }
+      `}</style>
     </div>
   );
 }
