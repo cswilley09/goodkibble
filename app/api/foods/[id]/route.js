@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server'
 import { getSupabase } from '@/lib/supabaseServer'
 import { checkRateLimit } from '@/lib/rateLimit'
 
@@ -13,6 +14,6 @@ export async function GET(request, { params }) {
     .eq('id', id)
     .single()
 
-  if (error) return Response.json({ error: error.message }, { status: 404 })
-  return Response.json(data)
+  if (error) return NextResponse.json({ error: error.message }, { status: 404 })
+  return NextResponse.json(data)
 }

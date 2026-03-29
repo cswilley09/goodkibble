@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server'
 import { getSupabase } from '@/lib/supabaseServer'
 import { checkRateLimit } from '@/lib/rateLimit'
 
@@ -46,7 +47,7 @@ export async function GET(request) {
   const supabase = getSupabase()
 
   const variants = getSearchVariants(q)
-  if (variants.length === 0) return Response.json([])
+  if (variants.length === 0) return NextResponse.json([])
 
   const selectCols = compact
     ? 'id, name, brand, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, moisture, ingredients, image_url, quality_score'
@@ -54,13 +55,15 @@ export async function GET(request) {
 
   // Pass 1: brand matches
   const brandFilter = buildOrFilter(variants, ['brand'])
-  const { data: brandMatches } = await supabase
+  const { data: brandMatches, error: e1 } = await supabase
     .from('dog_foods_v2').select(selectCols).or(brandFilter).limit(limit)
+  if (e1) console.error('[search] pass1 error:', e1.message)
 
   // Pass 2: name/flavor matches
   const nameFilter = buildOrFilter(variants, ['name', 'flavor'])
-  const { data: nameMatches } = await supabase
+  const { data: nameMatches, error: e2 } = await supabase
     .from('dog_foods_v2').select(selectCols).or(nameFilter).limit(limit)
+  if (e2) console.error('[search] pass2 error:', e2.message)
 
   // Pass 3: individual word search
   let wordMatches = []
@@ -71,8 +74,9 @@ export async function GET(request) {
     if (meaningful.length >= 1) {
       const bestWord = meaningful.sort((a, b) => b.length - a.length)[0]
       const wordFilter = buildOrFilter([bestWord], ['name', 'brand', 'flavor'])
-      const { data } = await supabase
+      const { data, error: e3 } = await supabase
         .from('dog_foods_v2').select(selectCols).or(wordFilter).limit(limit)
+      if (e3) console.error('[search] pass3 error:', e3.message)
       wordMatches = data || []
     }
   }
@@ -99,5 +103,5 @@ export async function GET(request) {
   }
   merged.sort((a, b) => relevanceScore(b) - relevanceScore(a))
 
-  return Response.json(merged)
+  return NextResponse.json(merged)
 }

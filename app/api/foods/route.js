@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server'
 import { getSupabase } from '@/lib/supabaseServer'
 import { checkRateLimit } from '@/lib/rateLimit'
 
@@ -16,7 +17,7 @@ export async function GET(request) {
       .select('id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug')
       .not('quality_score', 'is', null)
       .limit(200)
-    return Response.json(data || [])
+    return NextResponse.json(data || [])
   }
   if (featured === 'scoring-demo') {
     const { data } = await supabase
@@ -25,7 +26,7 @@ export async function GET(request) {
       .not('score_breakdown', 'is', null)
       .gte('quality_score', 80)
       .limit(20)
-    return Response.json(data || [])
+    return NextResponse.json(data || [])
   }
 
   // Brand filter
@@ -36,7 +37,7 @@ export async function GET(request) {
       .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug')
       .eq('brand', brand)
       .order('name')
-    return Response.json(data || [])
+    return NextResponse.json(data || [])
   }
 
   // All products (for discover page) - paginated
@@ -48,8 +49,8 @@ export async function GET(request) {
       .from('dog_foods_v2')
       .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug')
       .range(offset, offset + batch - 1)
-    return Response.json(data || [])
+    return NextResponse.json(data || [])
   }
 
-  return Response.json({ error: 'Missing query parameter' }, { status: 400 })
+  return NextResponse.json({ error: 'Missing query parameter' }, { status: 400 })
 }

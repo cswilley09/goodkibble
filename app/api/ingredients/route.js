@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server'
 import { getSupabase } from '@/lib/supabaseServer'
 import { checkRateLimit } from '@/lib/rateLimit'
 
@@ -10,7 +11,7 @@ export async function GET(request) {
     .from('ingredient_info')
     .select('*')
 
-  if (error) return Response.json({ error: error.message }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   // Dedupe by ingredient_name
   const seen = new Set()
@@ -20,5 +21,5 @@ export async function GET(request) {
     return true
   })
 
-  return Response.json(deduped)
+  return NextResponse.json(deduped)
 }
