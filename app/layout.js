@@ -7,8 +7,8 @@ export const metadata = defaultMetadata;
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" style={{ background: '#faf8f4' }}>
+      <body style={{ background: '#faf8f4', margin: 0 }}>
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-37RJW3BJTX" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
