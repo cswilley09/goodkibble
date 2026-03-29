@@ -530,7 +530,7 @@ export default function Home() {
       </nav>
 
       {/* ═══ 1. HERO ═══ */}
-      <div className="hero-section" style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 30, boxSizing: 'border-box', overflow: 'hidden' }}>
+      <div className="hero-section" style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 30, boxSizing: 'border-box' }}>
         <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 16, animation: 'fadeUp 0.6s ease both' }}>Know what&apos;s in the bowl</div>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(38px, 5vw, 58px)', fontWeight: 900, color: '#1a1612', lineHeight: 1.08, letterSpacing: -2, marginBottom: 20, animation: 'fadeUp 0.6s ease 0.1s both' }}>
           What&apos;s really in<br />your dog&apos;s food?

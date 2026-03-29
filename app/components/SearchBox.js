@@ -35,6 +35,7 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
         const items = Array.isArray(data) ? data : [];
         setTotalCount(items.length);
         setResults(items.slice(0, 6));
+        console.log('DROPDOWN OPEN, results:', items.length, 'showing:', Math.min(items.length, 6));
         setOpen(true);
       } catch (e) {
         setResults([]);
@@ -120,8 +121,8 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
         <div style={{
           position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0,
           background: '#fff', borderRadius: 16, overflow: 'hidden',
-          boxShadow: '0 12px 48px rgba(26,22,18,0.15)', zIndex: 100,
-          maxHeight: 440, overflowY: 'auto', animation: 'slideDown 0.15s ease',
+          boxShadow: '0 12px 48px rgba(26,22,18,0.15)', zIndex: 9999,
+          maxHeight: 440, overflowY: 'auto',
         }}>
           {loading && results.length === 0 ? (
             <div style={{ padding: 24, textAlign: 'center', color: '#8a7e72', fontSize: 15 }}>Searching...</div>
