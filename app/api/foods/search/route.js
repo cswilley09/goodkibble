@@ -36,6 +36,8 @@ function buildOrFilter(variants, columns) {
   return clauses.join(',')
 }
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request) {
   const limited = checkRateLimit(request)
   if (limited) return limited

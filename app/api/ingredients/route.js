@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { getSupabase } from '@/lib/supabaseServer'
 import { checkRateLimit } from '@/lib/rateLimit'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request) {
   const limited = checkRateLimit(request)
   if (limited) return limited
