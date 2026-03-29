@@ -44,7 +44,14 @@ export async function GET(request) {
   const q = searchParams.get('q') || ''
   const limit = Math.min(parseInt(searchParams.get('limit') || '200'), 200)
   const compact = searchParams.get('compact') === 'true'
-  const supabase = getSupabase()
+
+  let supabase
+  try {
+    supabase = getSupabase()
+  } catch (err) {
+    console.error('[search] Supabase init error:', err.message)
+    return NextResponse.json({ error: 'Database unavailable' }, { status: 500 })
+  }
 
   const variants = getSearchVariants(q)
   if (variants.length === 0) return NextResponse.json([])

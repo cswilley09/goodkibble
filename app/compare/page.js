@@ -155,7 +155,7 @@ function AddCardSearch({ onSelect, compact }) {
     const t = setTimeout(() => {
       fetch(`/api/foods/search?q=${encodeURIComponent(query)}&limit=6&compact=true`)
         .then(r => r.json())
-        .then(data => setResults(data || []))
+        .then(data => setResults(Array.isArray(data) ? data : []))
         .catch(() => setResults([]));
     }, 250);
     return () => clearTimeout(t);

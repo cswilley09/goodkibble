@@ -116,8 +116,8 @@ function SearchResults() {
     async function search() {
       try {
         const res = await fetch(`/api/foods/search?q=${encodeURIComponent(query)}`);
-        const merged = await res.json();
-        setResults(merged);
+        const data = await res.json();
+        setResults(Array.isArray(data) ? data : []);
       } catch { setResults([]); }
       setLoading(false);
     }

@@ -30,11 +30,16 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
     debounceRef.current = setTimeout(async () => {
       try {
         const res = await fetch(`/api/foods/search?q=${encodeURIComponent(val)}&limit=30`);
-        const merged = await res.json();
+        const data = await res.json();
+        const merged = Array.isArray(data) ? data : [];
         setTotalCount(merged.length);
         setResults(merged.slice(0, 6));
         setOpen(true);
-      } catch { setResults([]); setTotalCount(0); }
+      } catch (err) {
+        console.error('[SearchBox] fetch error:', err);
+        setResults([]);
+        setTotalCount(0);
+      }
       setLoading(false);
     }, 250);
   }
