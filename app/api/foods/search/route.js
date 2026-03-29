@@ -49,8 +49,8 @@ export async function GET(request) {
   if (variants.length === 0) return Response.json([])
 
   const selectCols = compact
-    ? 'id, name, brand, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, moisture, ingredients, image_url, quality_score, is_canary'
-    : 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary'
+    ? 'id, name, brand, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, moisture, ingredients, image_url, quality_score'
+    : 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug'
 
   // Pass 1: brand matches
   const brandFilter = buildOrFilter(variants, ['brand'])
@@ -77,13 +77,12 @@ export async function GET(request) {
     }
   }
 
-  // Merge, dedupe, and filter out canary products
+  // Merge & dedupe
   const seen = new Set()
   const merged = []
-  const isVisible = (item) => !item.is_canary
-  for (const item of (brandMatches || [])) { if (!seen.has(item.id) && isVisible(item)) { seen.add(item.id); merged.push(item) } }
-  for (const item of (nameMatches || [])) { if (!seen.has(item.id) && isVisible(item)) { seen.add(item.id); merged.push(item) } }
-  for (const item of wordMatches) { if (!seen.has(item.id) && isVisible(item)) { seen.add(item.id); merged.push(item) } }
+  for (const item of (brandMatches || [])) { if (!seen.has(item.id)) { seen.add(item.id); merged.push(item) } }
+  for (const item of (nameMatches || [])) { if (!seen.has(item.id)) { seen.add(item.id); merged.push(item) } }
+  for (const item of wordMatches) { if (!seen.has(item.id)) { seen.add(item.id); merged.push(item) } }
 
   // Relevance sort
   const allWords = q.toLowerCase().replace(/[''`]/g, '').split(/\s+/).filter(w => w.length > 1)
