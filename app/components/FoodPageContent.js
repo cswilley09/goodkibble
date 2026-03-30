@@ -197,69 +197,115 @@ const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.1
 
 function IngredientTooltip({ info, children }) {
   const [show, setShow] = useState(false);
+  const [mobile, setMobile] = useState(false);
 
-  const tooltipContent = info && (
-    <>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, paddingRight: 24 }}>
-        <span style={{
-          width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
-          background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
-        }} />
-        <span style={{ fontWeight: 700, fontSize: 14 }}>{info.display_name}</span>
-        <span style={{
-          marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
-          textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
-          background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
-          color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
-        }}>{info.quality_signal}</span>
-      </div>
-      <div style={{ color: '#d4cfc6', marginBottom: info.source ? 10 : 0 }}>
-        {info.short_description}
-      </div>
-      {info.source && (
-        <div style={{ fontSize: 11, color: '#8a7e72', fontStyle: 'italic' }}>
-          Source: {info.source}
-        </div>
-      )}
-    </>
-  );
+  useEffect(() => {
+    const check = () => setMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   return (
     <span style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
+      onMouseEnter={() => { if (!mobile) setShow(true); }}
+      onMouseLeave={() => { if (!mobile) setShow(false); }}
     >
       <span style={{ cursor: 'pointer' }}
-        onClick={(e) => { e.stopPropagation(); setShow(!show); }}
+        onClick={(e) => { if (mobile) { e.stopPropagation(); setShow(true); } }}
       >
         {children}
       </span>
 
-      {/* Centered modal — works on both desktop and mobile, never clips */}
-      {show && info && (
+      {/* Desktop tooltip — position: absolute, above pill */}
+      {show && info && !mobile && (
+        <div style={{
+          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
+          transform: 'translateX(-50%)', width: 300, maxWidth: 'calc(100vw - 32px)',
+          padding: '16px 18px', overflowWrap: 'break-word',
+          borderRadius: 14, background: '#1a1612', color: '#faf8f5',
+          fontSize: 13, lineHeight: 1.55, fontWeight: 400,
+          fontFamily: "'DM Sans', sans-serif",
+          boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
+          zIndex: 60, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <span style={{
+              width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+              background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+            }} />
+            <span style={{ fontWeight: 700, fontSize: 14 }}>{info.display_name}</span>
+            <span style={{
+              marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+              textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100,
+              background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
+              color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+            }}>{info.quality_signal}</span>
+          </div>
+          <div style={{ color: '#d4cfc6', marginBottom: info.source ? 10 : 0 }}>
+            {info.short_description}
+          </div>
+          {info.source && (
+            <div style={{ fontSize: 11, color: '#8a7e72', fontStyle: 'italic' }}>
+              Source: {info.source}
+            </div>
+          )}
+          <div style={{
+            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+            width: 0, height: 0, borderLeft: '7px solid transparent',
+            borderRight: '7px solid transparent', borderTop: '7px solid #1a1612',
+          }} />
+        </div>
+      )}
+
+      {/* Mobile centered modal */}
+      {show && info && mobile && (
         <>
           <div onClick={() => setShow(false)} style={{
             position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-            background: 'rgba(0,0,0,0.2)', zIndex: 9998,
+            background: 'rgba(0,0,0,0.3)', zIndex: 9998,
           }} />
           <div style={{
             position: 'fixed', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 'calc(100vw - 48px)', maxWidth: 360,
+            width: 'calc(100vw - 48px)', maxWidth: 340,
             background: '#1a1612', color: '#faf8f5',
             borderRadius: 16, padding: '20px 24px',
             fontFamily: "'DM Sans', sans-serif",
             boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
             zIndex: 9999,
             animation: 'ingredientModalIn 0.2s ease both',
-            overflowWrap: 'break-word',
           }}>
+            {/* Close button */}
             <div onClick={() => setShow(false)} style={{
               position: 'absolute', top: 12, right: 14,
               fontSize: 16, color: 'rgba(255,255,255,0.5)', cursor: 'pointer',
               lineHeight: 1, padding: 4,
             }}>✕</div>
-            {tooltipContent}
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingRight: 24 }}>
+              <span style={{
+                width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
+                background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+              }} />
+              <span style={{ fontWeight: 700, fontSize: 16 }}>{info.display_name}</span>
+              <span style={{
+                marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+                textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
+                background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
+                color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+              }}>{info.quality_signal}</span>
+            </div>
+            {/* Description */}
+            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, marginBottom: info.source ? 10 : 0 }}>
+              {info.short_description}
+            </div>
+            {/* Source */}
+            {info.source && (
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic' }}>
+                Source: {info.source}
+              </div>
+            )}
           </div>
         </>
       )}
