@@ -3,6 +3,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import SearchBox from '../components/SearchBox';
 import CompareBubble from '../components/CompareBubble';
+import SignUpButton from '../components/SignUpButton';
 
 /* ── score tier helpers (same as discover page) ── */
 function getScoreColor(score) {
@@ -141,6 +142,7 @@ function SearchResults() {
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
         <CompareBubble />
+          <SignUpButton />
       </nav>
 
       {/* content */}

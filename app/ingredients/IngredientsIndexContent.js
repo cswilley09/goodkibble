@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SearchBox from '@/app/components/SearchBox';
 import CompareBubble from '@/app/components/CompareBubble';
+import SignUpButton from '@/app/components/SignUpButton';
 import { ingredientSlug, CATEGORY_INFO, QUALITY_INFO } from '@/lib/ingredients';
 
 const CATEGORY_ORDER = ['protein', 'fat', 'grain', 'fiber', 'fruit_veg', 'legume', 'vitamin', 'mineral', 'supplement', 'preservative', 'additive', 'other'];
@@ -38,6 +39,7 @@ export default function IngredientsIndexContent({ ingredients }) {
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
         <CompareBubble />
+          <SignUpButton />
       </nav>
 
       <div style={{ maxWidth: 960, margin: '0 auto', padding: '32px 24px 80px' }}>

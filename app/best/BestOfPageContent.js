@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import SearchBox from '@/app/components/SearchBox';
 import CompareBubble from '@/app/components/CompareBubble';
+import SignUpButton from '@/app/components/SignUpButton';
 
 function getScoreTier(score) {
   if (score >= 90) return { label: 'Excellent', color: '#639922' };
@@ -179,6 +180,7 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
         <CompareBubble />
+          <SignUpButton />
       </nav>
 
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 24px 80px' }}>

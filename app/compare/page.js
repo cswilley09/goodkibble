@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCompare } from '../components/CompareContext';
 import CompareBubble from '../components/CompareBubble';
+import SignUpButton from '../components/SignUpButton';
 import SearchBox from '../components/SearchBox';
 
 /* ── fixed nutrient colors (same as product page) ── */
@@ -292,6 +293,7 @@ export default function ComparePage() {
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
         <CompareBubble />
+          <SignUpButton />
       </nav>
 
       {/* content */}

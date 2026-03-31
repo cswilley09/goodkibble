@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import SearchBox from './SearchBox';
 import CompareBubble from './CompareBubble';
+import SignUpButton from './SignUpButton';
 import { useCompare } from './CompareContext';
 
 function capitalize(str) {
@@ -863,6 +864,7 @@ export default function FoodPageContent({ productId }) {
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
         <CompareBubble />
+          <SignUpButton />
       </nav>
 
       {loading ? (

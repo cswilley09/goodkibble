@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SearchBox from '../components/SearchBox';
 import CompareBubble from '../components/CompareBubble';
+import SignUpButton from '../components/SignUpButton';
 
 /* ── Score tier colors ── */
 const TIER_COLORS = {
@@ -133,6 +134,7 @@ export default function HowWeScorePage() {
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
         <CompareBubble />
+          <SignUpButton />
       </nav>
 
       <div style={{ maxWidth: 780, margin: '0 auto', padding: '48px 24px 80px' }}>

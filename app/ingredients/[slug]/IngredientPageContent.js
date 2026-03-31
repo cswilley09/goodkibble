@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import SearchBox from '@/app/components/SearchBox';
 import CompareBubble from '@/app/components/CompareBubble';
+import SignUpButton from '@/app/components/SignUpButton';
 import { ingredientSlug, CATEGORY_INFO, QUALITY_INFO } from '@/lib/ingredients';
 
 function ScoreRing({ score }) {
@@ -75,6 +76,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
         <CompareBubble />
+          <SignUpButton />
       </nav>
 
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 24px 80px' }}>

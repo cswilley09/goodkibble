@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import SignUpButton from '../components/SignUpButton';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -232,11 +233,7 @@ function Nav() {
           letterSpacing: -0.5,
         }}>GoodKibble</span>
       </a>
-      <a href="/signup" style={{
-        fontFamily: "'DM Sans', sans-serif",
-        fontSize: 13, fontWeight: 600, color: '#8a7e72',
-        textDecoration: 'none',
-      }}>Sign Up</a>
+      <SignUpButton />
     </nav>
   );
 }

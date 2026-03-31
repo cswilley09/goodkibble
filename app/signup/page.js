@@ -368,10 +368,13 @@ export default function SignupPage() {
         throw new Error(data.error || 'Something went wrong. Please try again.');
       }
       const data = await res.json();
-      // Store profile IDs for profile page
+      // Store profile IDs and user info for profile page + nav
       if (typeof window !== 'undefined') {
         localStorage.setItem('gk_user_id', data.user_id);
         localStorage.setItem('gk_dog_id', data.dog_id);
+        localStorage.setItem('gk_user_name', firstName.trim());
+        localStorage.setItem('gk_user_email', email.trim());
+        window.dispatchEvent(new Event('gk_profile_updated'));
       }
       goTo(6);
     } catch (err) {
