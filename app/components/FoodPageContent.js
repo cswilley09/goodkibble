@@ -46,10 +46,34 @@ function ProductImage({ src, alt }) {
   );
 }
 
+function useTooltipPosition(show, triggerRef, tooltipWidth = 300) {
+  const [pos, setPos] = useState({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
+  useEffect(() => {
+    if (!show || !triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const centerX = rect.left + rect.width / 2;
+    const halfTip = Math.min(tooltipWidth, vw - 32) / 2;
+    const pad = 16;
+    if (centerX - halfTip < pad) {
+      const shift = pad - (centerX - halfTip);
+      setPos({ left: `calc(50% + ${shift}px)`, transform: 'translateX(-50%)', arrowLeft: `calc(50% - ${shift}px)` });
+    } else if (centerX + halfTip > vw - pad) {
+      const shift = (centerX + halfTip) - (vw - pad);
+      setPos({ left: `calc(50% - ${shift}px)`, transform: 'translateX(-50%)', arrowLeft: `calc(50% + ${shift}px)` });
+    } else {
+      setPos({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
+    }
+  }, [show, tooltipWidth]);
+  return pos;
+}
+
 function InfoTooltip({ text }) {
   const [show, setShow] = useState(false);
+  const ref = useRef(null);
+  const pos = useTooltipPosition(show, ref);
   return (
-    <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', marginLeft: 8 }}
+    <span ref={ref} style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', marginLeft: 8 }}
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
       onClick={() => setShow(!show)}
@@ -62,8 +86,8 @@ function InfoTooltip({ text }) {
       }}>i</span>
       {show && (
         <div style={{
-          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
-          transform: 'translateX(-50%)', width: 300, padding: '14px 16px',
+          position: 'absolute', bottom: 'calc(100% + 10px)', left: pos.left,
+          transform: pos.transform, width: 300, maxWidth: 'calc(100vw - 32px)', padding: '14px 16px',
           borderRadius: 12, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.5, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
@@ -72,7 +96,7 @@ function InfoTooltip({ text }) {
         }}>
           {text}
           <div style={{
-            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+            position: 'absolute', top: '100%', left: pos.arrowLeft, transform: 'translateX(-50%)',
             width: 0, height: 0, borderLeft: '6px solid transparent',
             borderRight: '6px solid transparent', borderTop: '6px solid #1a1612',
           }} />
@@ -84,34 +108,33 @@ function InfoTooltip({ text }) {
 
 function SaltTooltip({ children }) {
   const [show, setShow] = useState(false);
+  const ref = useRef(null);
+  const pos = useTooltipPosition(show, ref);
   return (
-    <span style={{ position: 'relative', display: 'inline-block' }}
+    <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
     >
       {children}
       {show && (
         <div style={{
-          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
-          transform: 'translateX(-50%)', width: 300, padding: '16px 18px',
+          position: 'absolute', bottom: 'calc(100% + 10px)', left: pos.left,
+          transform: pos.transform, width: 300, maxWidth: 'calc(100vw - 32px)', padding: '16px 18px',
           borderRadius: 14, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.55, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
           boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
           zIndex: 60, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
         }}>
-          {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: '#d4852a' }} />
             <span style={{ fontWeight: 700, fontSize: 14 }}>Salt Divider</span>
           </div>
-          {/* Description */}
           <div style={{ color: '#d4cfc6' }}>
             Any ingredient listed after salt typically makes up less than 1% of the total formula, as salt itself usually represents &lt;1% of the recipe.
           </div>
-          {/* Arrow */}
           <div style={{
-            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+            position: 'absolute', top: '100%', left: pos.arrowLeft, transform: 'translateX(-50%)',
             width: 0, height: 0, borderLeft: '7px solid transparent',
             borderRight: '7px solid transparent', borderTop: '7px solid #1a1612',
           }} />
@@ -199,6 +222,8 @@ const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.1
 function IngredientTooltip({ info, children }) {
   const [show, setShow] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const ref = useRef(null);
+  const pos = useTooltipPosition(show && !mobile, ref);
 
   useEffect(() => {
     const check = () => setMobile(window.innerWidth <= 768);
@@ -208,7 +233,7 @@ function IngredientTooltip({ info, children }) {
   }, []);
 
   return (
-    <span style={{ position: 'relative', display: 'inline-block' }}
+    <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}
       onMouseEnter={() => { if (!mobile) setShow(true); }}
       onMouseLeave={() => { if (!mobile) setShow(false); }}
     >
@@ -218,11 +243,11 @@ function IngredientTooltip({ info, children }) {
         {children}
       </span>
 
-      {/* Desktop tooltip — position: absolute, above pill */}
+      {/* Desktop tooltip — viewport-aware positioning */}
       {show && info && !mobile && (
         <div style={{
-          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
-          transform: 'translateX(-50%)', width: 300, maxWidth: 'calc(100vw - 32px)',
+          position: 'absolute', bottom: 'calc(100% + 10px)', left: pos.left,
+          transform: pos.transform, width: 300, maxWidth: 'calc(100vw - 32px)',
           padding: '16px 18px', overflowWrap: 'break-word',
           borderRadius: 14, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.55, fontWeight: 400,
@@ -252,7 +277,7 @@ function IngredientTooltip({ info, children }) {
             </div>
           )}
           <div style={{
-            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+            position: 'absolute', top: '100%', left: pos.arrowLeft, transform: 'translateX(-50%)',
             width: 0, height: 0, borderLeft: '7px solid transparent',
             borderRight: '7px solid transparent', borderTop: '7px solid #1a1612',
           }} />
