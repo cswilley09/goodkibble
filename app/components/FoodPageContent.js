@@ -1033,8 +1033,7 @@ export default function FoodPageContent({ productId }) {
           {/* Ingredients */}
           <div className="ingredients-section" style={{
             marginTop: 28, padding: '40px 32px', background: '#faf8f5', borderRadius: 24,
-            border: '1px solid #ede8df', animation: 'scaleIn 0.5s ease 0.2s both',
-            overflowX: 'hidden',
+            border: '1px solid #ede8df', animation: 'fadeIn 0.5s ease 0.2s both',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
               <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99' }}>Ingredients</div>
@@ -1076,7 +1075,7 @@ export default function FoodPageContent({ productId }) {
 
 
 
-            <div data-ingredient-container style={{ display: 'flex', flexWrap: 'wrap', gap: 6, position: 'relative' }}>
+            <div data-ingredient-container style={{ display: 'flex', flexWrap: 'wrap', gap: 6, position: 'relative', overflow: 'visible' }}>
               {ingredients.map((ing, i) => {
                 const isSalt = isSaltIngredient(ing);
                 const isFirst = i === 0;
