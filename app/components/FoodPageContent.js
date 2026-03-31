@@ -52,27 +52,28 @@ function useTooltipPosition(show, triggerRef, tooltipWidth = 280) {
     if (!show || !triggerRef.current) return;
     const trigger = triggerRef.current;
     const triggerRect = trigger.getBoundingClientRect();
+    const containerRect = (trigger.closest('[data-ingredient-container]') || trigger.offsetParent)?.getBoundingClientRect()
+      || { left: 0, right: window.innerWidth, width: window.innerWidth };
 
-    // Find the nearest positioned ancestor (the ingredient container)
-    const container = trigger.closest('[data-ingredient-container]') || trigger.offsetParent;
-    const containerRect = container ? container.getBoundingClientRect() : { left: 0, width: window.innerWidth };
-    const containerWidth = containerRect.width;
+    // Center tooltip on trigger
+    const triggerCenter = triggerRect.left + triggerRect.width / 2;
+    let tooltipLeft = triggerCenter - tooltipWidth / 2;
+    let tooltipRight = tooltipLeft + tooltipWidth;
 
-    // Trigger center relative to container
-    const triggerCenterInContainer = (triggerRect.left + triggerRect.width / 2) - containerRect.left;
+    // If overflowing right side of container, shift left
+    if (tooltipRight > containerRect.right) {
+      tooltipLeft -= (tooltipRight - containerRect.right);
+    }
+    // If overflowing left side of container, shift right
+    if (tooltipLeft < containerRect.left) {
+      tooltipLeft = containerRect.left;
+    }
 
-    // Desired left edge of tooltip (centered on trigger), relative to container
-    let left = triggerCenterInContainer - tooltipWidth / 2;
+    // Convert to offset relative to trigger element
+    const offsetFromTrigger = tooltipLeft - triggerRect.left;
 
-    // Clamp within container bounds with 4px padding
-    left = Math.max(4, Math.min(left, containerWidth - tooltipWidth - 4));
-
-    // Convert to offset relative to the trigger element
-    const triggerLeftInContainer = triggerRect.left - containerRect.left;
-    const offsetFromTrigger = left - triggerLeftInContainer;
-
-    // Arrow points at trigger center relative to tooltip
-    const arrowLeft = Math.max(16, Math.min(triggerCenterInContainer - left, tooltipWidth - 16));
+    // Arrow points at trigger center within tooltip
+    const arrowLeft = Math.max(16, Math.min(triggerCenter - tooltipLeft, tooltipWidth - 16));
 
     setPos({
       left: `${offsetFromTrigger}px`,
