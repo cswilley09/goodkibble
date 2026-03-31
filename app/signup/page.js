@@ -358,16 +358,14 @@ function InlineInput({ value, onChange, placeholder, width, type = 'text', min, 
 function FoodSearch({ onSelect, selectedFood }) {
   const [text, setText] = useState('');
   const [results, setResults] = useState([]);
-  const [allResults, setAllResults] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   const boxRef = useRef(null);
   const debounceRef = useRef(null);
 
   useEffect(() => {
     const handler = (e) => {
-      if (boxRef.current && !boxRef.current.contains(e.target)) { setOpen(false); setExpanded(false); }
+      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -376,37 +374,65 @@ function FoodSearch({ onSelect, selectedFood }) {
   function handleChange(e) {
     const val = e.target.value;
     setText(val);
-    setExpanded(false);
     clearTimeout(debounceRef.current);
-    if (!val.trim()) { setResults([]); setAllResults([]); setOpen(false); return; }
+    if (!val.trim()) { setResults([]); setOpen(false); return; }
     setLoading(true);
     debounceRef.current = setTimeout(async () => {
       try {
-        const res = await fetch('/api/foods/search?q=' + encodeURIComponent(val) + '&limit=200');
+        const res = await fetch('/api/foods/search?q=' + encodeURIComponent(val) + '&limit=20');
         if (!res.ok) throw new Error(res.status);
         const data = await res.json();
         const items = Array.isArray(data) ? data : [];
-        setAllResults(items);
         setResults(items.slice(0, 20));
         setOpen(true);
       } catch {
         setResults([]);
-        setAllResults([]);
       }
       setLoading(false);
     }, 250);
   }
 
-  function handleSelect(food) {
-    onSelect({ name: `${food.brand} ${food.name}`, slug: food.slug, brand_slug: food.brand_slug });
-    setText(`${food.brand} ${food.name}`);
-    setResults([]);
-    setAllResults([]);
-    setOpen(false);
-    setExpanded(false);
+  function formatFoodName(food) {
+    const name = food.name || '';
+    const brand = food.brand || '';
+    // Avoid repeating brand if it's already at the start of the product name
+    if (name.toUpperCase().startsWith(brand.toUpperCase())) {
+      return { brand, product: name.slice(brand.length).trim() };
+    }
+    return { brand, product: name };
   }
 
-  const displayResults = expanded ? allResults : results;
+  function handleSelect(food) {
+    const { brand, product } = formatFoodName(food);
+    const displayName = product ? `${brand} \u2014 ${product}` : brand;
+    onSelect({ name: displayName, slug: food.slug, brand_slug: food.brand_slug });
+    setText('');
+    setResults([]);
+    setOpen(false);
+  }
+
+  // If food is selected, show confirmation pill instead of search bar
+  if (selectedFood) {
+    return (
+      <div style={{ width: '100%', maxWidth: 500, margin: '0 auto' }}>
+        <div style={{
+          background: '#f7efd8', border: '1.5px solid #C9A84C', borderRadius: 12,
+          padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
+            <span style={{ color: '#2d7a4f', fontSize: 16, fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>
+            <span style={{ fontSize: 14, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {selectedFood.name}
+            </span>
+          </div>
+          <button onClick={() => { onSelect(null); setText(''); }} style={{
+            background: 'none', border: 'none', cursor: 'pointer', color: '#8a7e72',
+            fontSize: 16, padding: '0 0 0 8px', flexShrink: 0, fontFamily: "'DM Sans', sans-serif",
+          }}>&times;</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={boxRef} style={{ position: 'relative', width: '100%', maxWidth: 500, margin: '0 auto' }}>
@@ -435,18 +461,6 @@ function FoodSearch({ onSelect, selectedFood }) {
           }}
         />
       </div>
-      {selectedFood && (
-        <div style={{
-          marginTop: 10, padding: '10px 16px', background: '#f7efd8',
-          borderRadius: 12, fontSize: 14, fontWeight: 600, color: '#1a1612',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        }}>
-          <span>{selectedFood.name}</span>
-          <button onClick={() => { onSelect(null); setText(''); }} style={{
-            background: 'none', border: 'none', cursor: 'pointer', color: '#8a7e72', fontSize: 18,
-          }}>&times;</button>
-        </div>
-      )}
       {open && (
         <div style={{
           position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
@@ -454,53 +468,34 @@ function FoodSearch({ onSelect, selectedFood }) {
           boxShadow: '0 12px 48px rgba(26,22,18,0.15)', zIndex: 9999,
           maxHeight: 400, overflowY: 'auto',
         }}>
-          {loading && displayResults.length === 0 ? (
+          {loading && results.length === 0 ? (
             <div style={{ padding: 20, textAlign: 'center', color: '#8a7e72', fontSize: 14 }}>Searching...</div>
-          ) : displayResults.length === 0 ? (
+          ) : results.length === 0 ? (
             <div style={{ padding: 20, textAlign: 'center', color: '#8a7e72', fontSize: 14 }}>No results found.</div>
-          ) : (
-            <>
-              {displayResults.map((f) => (
-                <div key={f.id}
-                  onMouseDown={(e) => { e.preventDefault(); handleSelect(f); }}
-                  style={{
-                    padding: '12px 18px', cursor: 'pointer',
-                    borderBottom: '1px solid #f0ebe3',
-                    display: 'flex', alignItems: 'center', gap: 10,
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#faf8f5')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                >
-                  {f.image_url ? (
-                    <img src={f.image_url} alt="" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain', background: '#f5f0e8', flexShrink: 0 }} />
-                  ) : (
-                    <div style={{ width: 36, height: 36, borderRadius: 8, background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
-                      {'\u{1F415}'}
-                    </div>
-                  )}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
-                    <div style={{ fontSize: 12, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
-                  </div>
-                </div>
-              ))}
-              {!expanded && allResults.length > 20 && (
-                <div
-                  onMouseDown={(e) => { e.preventDefault(); setExpanded(true); }}
-                  style={{
-                    padding: '14px 18px', cursor: 'pointer', textAlign: 'center',
-                    fontSize: 14, fontWeight: 600, color: '#C9A84C',
-                    background: '#faf8f5', borderTop: '1px solid #f0ebe3',
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#f0ebe3')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = '#faf8f5')}
-                >
-                  Show all {allResults.length} results
+          ) : results.map((f) => (
+            <div key={f.id}
+              onMouseDown={(e) => { e.preventDefault(); handleSelect(f); }}
+              style={{
+                padding: '12px 18px', cursor: 'pointer',
+                borderBottom: '1px solid #f0ebe3',
+                display: 'flex', alignItems: 'center', gap: 10,
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = '#faf8f5')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+            >
+              {f.image_url ? (
+                <img src={f.image_url} alt="" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain', background: '#f5f0e8', flexShrink: 0 }} />
+              ) : (
+                <div style={{ width: 36, height: 36, borderRadius: 8, background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
+                  {'\u{1F415}'}
                 </div>
               )}
-            </>
-          )}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
+                <div style={{ fontSize: 12, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
@@ -530,6 +525,7 @@ export default function SignupPage() {
   // Step 4
   const [currentFood, setCurrentFood] = useState(null);
   const [foodAlt, setFoodAlt] = useState('');
+  const [foodAltText, setFoodAltText] = useState('');
 
   // Step 5
   const [priorities, setPriorities] = useState([]);
@@ -539,6 +535,14 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [zipCode, setZipCode] = useState('');
   const [heardFrom, setHeardFrom] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  function isValidEmail(e) {
+    const atIdx = e.indexOf('@');
+    if (atIdx < 1) return false;
+    const afterAt = e.slice(atIdx + 1);
+    return afterAt.includes('.') && afterAt.indexOf('.') < afterAt.length - 1;
+  }
 
   const pronounHe = gender === 'male' ? 'He' : gender === 'female' ? 'She' : 'They';
 
@@ -547,9 +551,9 @@ export default function SignupPage() {
       case 0: return true;
       case 1: return dogCount && parseInt(dogCount) > 0 && dogName.trim();
       case 2: return gender && age && parseInt(age) > 0 && weight && parseInt(weight) > 0 && breed;
-      case 3: return currentFood || foodAlt;
+      case 3: return currentFood || foodAlt === 'not_sure' || ((foodAlt === 'no_kibble' || foodAlt === 'cant_find') && foodAltText.trim());
       case 4: return priorities.length > 0;
-      case 5: return firstName.trim() && email.trim() && zipCode.trim();
+      case 5: return firstName.trim() && email.trim() && isValidEmail(email.trim()) && zipCode.trim();
       default: return true;
     }
   }
@@ -566,6 +570,11 @@ export default function SignupPage() {
   }, [animating]);
 
   function handleNext() {
+    if (step === 5 && email.trim() && !isValidEmail(email.trim())) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
+    setEmailError('');
     if (!canContinue()) return;
     if (step === 5) {
       handleSubmit();
@@ -595,7 +604,7 @@ export default function SignupPage() {
           weight_lbs: parseInt(weight),
           gender,
           is_neutered: neutered === 'is',
-          current_food: currentFood ? currentFood.name : foodAlt,
+          current_food: currentFood ? currentFood.name : (foodAltText.trim() ? `${foodAlt}: ${foodAltText.trim()}` : foodAlt),
           current_food_slug: currentFood ? `${currentFood.brand_slug}/${currentFood.slug}` : null,
           priorities,
         },
@@ -860,7 +869,7 @@ export default function SignupPage() {
             }}>Right now I feed {displayName}</h2>
 
             <FoodSearch
-              onSelect={(food) => { setCurrentFood(food); if (food) setFoodAlt(''); }}
+              onSelect={(food) => { setCurrentFood(food); if (food) { setFoodAlt(''); setFoodAltText(''); } }}
               selectedFood={currentFood}
             />
 
@@ -871,13 +880,14 @@ export default function SignupPage() {
               {[
                 { key: 'not_sure', label: "I'm not sure" },
                 { key: 'no_kibble', label: "I don't feed kibble" },
-                { key: 'want_switch', label: 'I want to switch' },
+                { key: 'cant_find', label: "Can't find my food" },
               ].map(opt => {
                 const selected = foodAlt === opt.key;
                 return (
                   <button key={opt.key} onClick={() => {
-                    setFoodAlt(selected ? '' : opt.key);
-                    if (!selected) setCurrentFood(null);
+                    const newVal = selected ? '' : opt.key;
+                    setFoodAlt(newVal);
+                    if (!selected) { setCurrentFood(null); setFoodAltText(''); }
                   }} style={{
                     padding: '10px 20px', borderRadius: 100,
                     border: selected ? '2px solid #C9A84C' : '1.5px solid #ede8df',
@@ -889,6 +899,30 @@ export default function SignupPage() {
                 );
               })}
             </div>
+
+            {(foodAlt === 'no_kibble' || foodAlt === 'cant_find') && (
+              <div style={{ maxWidth: 500, margin: '16px auto 0' }}>
+                <input
+                  type="text"
+                  value={foodAltText}
+                  onChange={e => setFoodAltText(e.target.value)}
+                  placeholder={foodAlt === 'no_kibble'
+                    ? 'What do you feed? (e.g., raw diet, homemade, fresh food...)'
+                    : "Type your dog's food brand and product name"
+                  }
+                  className="food-alt-input"
+                  style={{
+                    width: '100%', padding: '12px 16px', borderRadius: 12,
+                    border: '1.5px solid #ede8df', fontSize: 15,
+                    fontFamily: "'DM Sans', sans-serif", background: '#fff',
+                    outline: 'none', boxSizing: 'border-box',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => (e.target.style.borderColor = '#C9A84C')}
+                  onBlur={e => (e.target.style.borderColor = '#ede8df')}
+                />
+              </div>
+            )}
           </div>
         )}
 
@@ -966,20 +1000,35 @@ export default function SignupPage() {
                 style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
               />
             </div>
-            <div style={sentenceFontStyle}>
-              My email is{' '}
-              <InlineInput
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="email@example.com"
-                width={300}
-                type="email"
-                className="signup-email-input"
-                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
-              />
+
+            <div className="account-field-row" style={{
+              ...sentenceFontStyle,
+              display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap',
+            }}>
+              <span style={{ flexShrink: 0 }}>My email is</span>
+              <span style={{ flex: 1, minWidth: 0, display: 'inline-flex', alignItems: 'baseline', gap: 6 }}>
+                <InlineInput
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); setEmailError(''); }}
+                  placeholder="email@example.com"
+                  type="email"
+                  className="signup-email-input"
+                  style={{ fontSize: 'clamp(20px, 3.5vw, 28px)', width: '100%', textAlign: 'left' }}
+                />
+                {email.trim() && isValidEmail(email.trim()) && (
+                  <span style={{ color: '#2d7a4f', fontSize: 18, fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>
+                )}
+              </span>
             </div>
-            <div style={sentenceFontStyle}>
-              My zip code is{' '}
+            {emailError && (
+              <p style={{ color: '#d4760a', fontSize: 12, marginTop: 2, fontFamily: "'DM Sans', sans-serif", textAlign: 'center' }}>{emailError}</p>
+            )}
+
+            <div className="account-field-row" style={{
+              ...sentenceFontStyle,
+              display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap',
+            }}>
+              <span style={{ flexShrink: 0 }}>My zip code is</span>
               <InlineInput
                 value={zipCode}
                 onChange={e => {
@@ -987,12 +1036,16 @@ export default function SignupPage() {
                   setZipCode(v);
                 }}
                 placeholder="00000"
-                width={100}
+                width={120}
                 style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
               />
             </div>
-            <div style={sentenceFontStyle}>
-              I heard about GoodKibble from{' '}
+
+            <div className="account-field-row" style={{
+              ...sentenceFontStyle,
+              display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap',
+            }}>
+              <span style={{ flexShrink: 0 }}>I heard about GoodKibble from</span>
               <InlineDropdown
                 value={heardFrom}
                 onChange={setHeardFrom}
@@ -1121,7 +1174,8 @@ export default function SignupPage() {
       <style>{`
         @media (max-width: 768px) {
           nav { padding: 12px 16px !important; }
-          .signup-email-input { width: 100% !important; }
+          .account-field-row { flex-direction: column !important; align-items: center !important; }
+          .signup-email-input { width: 100% !important; text-align: center !important; }
         }
       `}</style>
     </div>
