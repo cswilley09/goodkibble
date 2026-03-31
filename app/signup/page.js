@@ -325,7 +325,7 @@ function FoodSearch({ onSelect, selectedFood }) {
     );
   }
   return (
-    <div ref={boxRef} style={{ position: 'relative', width: '100%', maxWidth: 500, margin: '0 auto' }}>
+    <div ref={boxRef} data-food-search style={{ position: 'relative', width: '100%', maxWidth: 500, margin: '0 auto' }}>
       <div style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 16, padding: '6px 6px 6px 20px', boxShadow: '0 4px 24px rgba(26,22,18,0.08)', border: '1.5px solid #ede8df' }}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b5aa99" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" /></svg>
         <input type="text" placeholder="Search for your dog's current food..." value={text} onChange={handleChange}
@@ -556,6 +556,21 @@ export default function SignupPage() {
     }
     setSubmitting(false);
   }
+
+  // Enter key advances to next step
+  useEffect(() => {
+    function onKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey && step < STEP_CONFIRM) {
+        // Don't intercept Enter inside the food search input
+        const tag = e.target.tagName;
+        if (tag === 'INPUT' && e.target.closest('[data-food-search]')) return;
+        e.preventDefault();
+        handleNext();
+      }
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  });
 
   function togglePriority(label) {
     setPriorities(prev => prev.includes(label) ? prev.filter(p => p !== label) : [...prev, label]);
