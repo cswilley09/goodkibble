@@ -850,8 +850,8 @@ export default function SignupPage() {
                 placeholder="00000" minW={80} style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }} />
             </div>
 
-            <div className="account-field-row" style={{ ...sentenceFontStyle, display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
-              <span style={{ flexShrink: 0 }}>I heard about GoodKibble from</span>
+            <div style={sentenceFontStyle}>
+              I heard about GoodKibble from{' '}
               <InlineDropdown value={heardFrom} onChange={setHeardFrom} options={HEARD_FROM} width={160} placeholder="---" />
             </div>
 
