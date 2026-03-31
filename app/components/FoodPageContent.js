@@ -46,24 +46,37 @@ function ProductImage({ src, alt }) {
   );
 }
 
-function useTooltipPosition(show, triggerRef, tooltipWidth = 300) {
+function useTooltipPosition(show, triggerRef, tooltipWidth = 280) {
   const [pos, setPos] = useState({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
   useEffect(() => {
     if (!show || !triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
     const vw = window.innerWidth;
-    const centerX = rect.left + rect.width / 2;
-    const halfTip = Math.min(tooltipWidth, vw - 32) / 2;
-    const pad = 16;
-    if (centerX - halfTip < pad) {
-      const shift = pad - (centerX - halfTip);
-      setPos({ left: `calc(50% + ${shift}px)`, transform: 'translateX(-50%)', arrowLeft: `calc(50% - ${shift}px)` });
-    } else if (centerX + halfTip > vw - pad) {
-      const shift = (centerX + halfTip) - (vw - pad);
-      setPos({ left: `calc(50% - ${shift}px)`, transform: 'translateX(-50%)', arrowLeft: `calc(50% + ${shift}px)` });
-    } else {
-      setPos({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
+    const triggerCenter = rect.left + rect.width / 2;
+
+    // Desired tooltip left edge in viewport coords
+    let left = triggerCenter - tooltipWidth / 2;
+
+    // If overflowing right, shift left
+    if (left + tooltipWidth > vw - 8) {
+      left = vw - tooltipWidth - 8;
     }
+    // If overflowing left, shift right
+    if (left < 8) {
+      left = 8;
+    }
+
+    // Convert viewport left to offset relative to trigger element
+    const offsetLeft = left - rect.left;
+
+    // Arrow points at center of trigger relative to tooltip
+    const arrowLeft = Math.max(16, Math.min(triggerCenter - left, tooltipWidth - 16));
+
+    setPos({
+      left: `${offsetLeft}px`,
+      transform: 'none',
+      arrowLeft: `${arrowLeft}px`,
+    });
   }, [show, tooltipWidth]);
   return pos;
 }
@@ -87,7 +100,7 @@ function InfoTooltip({ text }) {
       {show && (
         <div style={{
           position: 'absolute', bottom: 'calc(100% + 10px)', left: pos.left,
-          transform: pos.transform, width: 300, maxWidth: 'calc(100vw - 32px)', padding: '14px 16px',
+          transform: pos.transform, width: 280, maxWidth: 'calc(100vw - 16px)', padding: '14px 16px',
           borderRadius: 12, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.5, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
@@ -119,7 +132,7 @@ function SaltTooltip({ children }) {
       {show && (
         <div style={{
           position: 'absolute', bottom: 'calc(100% + 10px)', left: pos.left,
-          transform: pos.transform, width: 300, maxWidth: 'calc(100vw - 32px)', padding: '16px 18px',
+          transform: pos.transform, width: 280, maxWidth: 'calc(100vw - 16px)', padding: '16px 18px',
           borderRadius: 14, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.55, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
@@ -247,7 +260,7 @@ function IngredientTooltip({ info, children }) {
       {show && info && !mobile && (
         <div style={{
           position: 'absolute', bottom: 'calc(100% + 10px)', left: pos.left,
-          transform: pos.transform, width: 300, maxWidth: 'calc(100vw - 32px)',
+          transform: pos.transform, width: 280, maxWidth: 'calc(100vw - 16px)',
           padding: '16px 18px', overflowWrap: 'break-word',
           borderRadius: 14, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.55, fontWeight: 400,
