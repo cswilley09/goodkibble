@@ -3,14 +3,50 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 const BREEDS = [
-  'Mixed Breed', 'Labrador Retriever', 'French Bulldog', 'Golden Retriever',
-  'German Shepherd', 'Poodle', 'Bulldog', 'Beagle', 'Rottweiler', 'Dachshund',
-  'German Shorthaired Pointer', 'Pembroke Welsh Corgi', 'Australian Shepherd',
-  'Yorkshire Terrier', 'Cavalier King Charles Spaniel', 'Doberman Pinscher',
-  'Boxer', 'Miniature Schnauzer', 'Cane Corso', 'Great Dane',
-  'Shih Tzu', 'Siberian Husky', 'Bernese Mountain Dog', 'Pomeranian',
-  'Boston Terrier', 'Havanese', 'Shetland Sheepdog', 'Brittany',
-  'English Springer Spaniel', 'Cocker Spaniel', 'Border Collie', 'Other',
+  'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akita', 'Alaskan Malamute',
+  'American Bulldog', 'American English Coonhound', 'American Eskimo Dog', 'American Foxhound',
+  'American Pit Bull Terrier', 'American Staffordshire Terrier', 'Anatolian Shepherd',
+  'Australian Cattle Dog', 'Australian Shepherd', 'Australian Terrier', 'Basenji',
+  'Basset Hound', 'Beagle', 'Bearded Collie', 'Beauce Shepherd', 'Belgian Malinois',
+  'Belgian Sheepdog', 'Belgian Tervuren', 'Bernedoodle', 'Bernese Mountain Dog', 'Bichon Frise',
+  'Black and Tan Coonhound', 'Black Russian Terrier', 'Bloodhound', 'Blue Heeler', 'Blue Lacy',
+  'Bluetick Coonhound', 'Boerboel', 'Bolognese', 'Border Collie', 'Border Terrier', 'Borzoi',
+  'Boston Terrier', 'Bouvier des Flandres', 'Boxer', 'Boykin Spaniel', 'Briard', 'Brittany',
+  'Brussels Griffon', 'Bull Terrier', 'Bulldog', 'Bullmastiff', 'Cairn Terrier', 'Cane Corso',
+  'Cardigan Welsh Corgi', 'Cavalier King Charles Spaniel', 'Cavapoo', 'Chesapeake Bay Retriever',
+  'Chihuahua', 'Chinese Crested', 'Chinese Shar-Pei', 'Chinook', 'Chow Chow', 'Clumber Spaniel',
+  'Cockapoo', 'Cocker Spaniel', 'Collie', 'Corgi', 'Coton de Tulear', 'Dachshund', 'Dalmatian',
+  'Dandie Dinmont Terrier', 'Doberman Pinscher', 'Dogo Argentino', 'Dogue de Bordeaux',
+  'Dutch Shepherd', 'English Bulldog', 'English Cocker Spaniel', 'English Foxhound',
+  'English Setter', 'English Springer Spaniel', 'English Toy Spaniel', 'Entlebucher Mountain Dog',
+  'Field Spaniel', 'Finnish Lapphund', 'Finnish Spitz', 'Flat-Coated Retriever', 'Fox Terrier',
+  'French Bulldog', 'German Pinscher', 'German Shepherd', 'German Shorthaired Pointer',
+  'German Wirehaired Pointer', 'Giant Schnauzer', 'Glen of Imaal Terrier', 'Goldador',
+  'Golden Retriever', 'Goldendoodle', 'Gordon Setter', 'Great Dane', 'Great Pyrenees',
+  'Greater Swiss Mountain Dog', 'Greyhound', 'Harrier', 'Havanese', 'Hovawart', 'Ibizan Hound',
+  'Icelandic Sheepdog', 'Irish Red and White Setter', 'Irish Setter', 'Irish Terrier',
+  'Irish Water Spaniel', 'Irish Wolfhound', 'Italian Greyhound', 'Jack Russell Terrier',
+  'Japanese Chin', 'Japanese Spitz', 'Keeshond', 'Kerry Blue Terrier', 'King Charles Spaniel',
+  'Komondor', 'Kuvasz', 'Labradoodle', 'Labrador Retriever', 'Lagotto Romagnolo',
+  'Lakeland Terrier', 'Lancashire Heeler', 'Leonberger', 'Lhasa Apso', 'Lowchen', 'Maltese',
+  'Maltipoo', 'Manchester Terrier', 'Maremma Sheepdog', 'Mastiff', 'Miniature American Shepherd',
+  'Miniature Bull Terrier', 'Miniature Pinscher', 'Miniature Poodle', 'Miniature Schnauzer',
+  'Morkie', 'Mudi', 'Neapolitan Mastiff', 'Newfoundland', 'Norfolk Terrier', 'Norwegian Buhund',
+  'Norwegian Elkhound', 'Norwegian Lundehund', 'Norwich Terrier',
+  'Nova Scotia Duck Tolling Retriever', 'Old English Sheepdog', 'Otterhound', 'Papillon',
+  'Peekapoo', 'Pekingese', 'Pembroke Welsh Corgi', 'Petit Basset Griffon Vendeen',
+  'Pharaoh Hound', 'Plott Hound', 'Pointer', 'Polish Lowland Sheepdog', 'Pomeranian', 'Pomsky',
+  'Poodle', 'Portuguese Water Dog', 'Pug', 'Puggle', 'Puli', 'Pumi', 'Pyrenean Shepherd',
+  'Rat Terrier', 'Redbone Coonhound', 'Rhodesian Ridgeback', 'Rottweiler', 'Russell Terrier',
+  'Saint Bernard', 'Saluki', 'Samoyed', 'Schipperke', 'Schnauzer', 'Schnoodle',
+  'Scottish Deerhound', 'Scottish Terrier', 'Sealyham Terrier', 'Shetland Sheepdog', 'Shiba Inu',
+  'Shih Tzu', 'Shih-Poo', 'Siberian Husky', 'Silky Terrier', 'Skye Terrier', 'Sloughi',
+  'Soft Coated Wheaten Terrier', 'Spanish Water Dog', 'Spinone Italiano',
+  'Staffordshire Bull Terrier', 'Standard Poodle', 'Standard Schnauzer', 'Sussex Spaniel',
+  'Swedish Vallhund', 'Tibetan Mastiff', 'Tibetan Spaniel', 'Tibetan Terrier', 'Toy Fox Terrier',
+  'Toy Poodle', 'Treeing Walker Coonhound', 'Vizsla', 'Weimaraner', 'Welsh Springer Spaniel',
+  'Welsh Terrier', 'West Highland White Terrier', 'Whippet', 'Wirehaired Pointing Griffon',
+  'Xoloitzcuintli', 'Yorkipoo', 'Yorkshire Terrier', 'Mixed Breed', 'Other',
 ];
 
 const PRIORITIES = [
@@ -30,6 +66,217 @@ const HEARD_FROM = [
   'Google search', 'A friend', 'Social media', 'My vet',
   'TikTok', 'Instagram', 'Reddit', 'Other',
 ];
+
+/* ── Shared dropdown panel styles ── */
+const dropdownPanelStyle = {
+  position: 'absolute',
+  top: 'calc(100% + 4px)',
+  left: '50%',
+  transform: 'translateX(-50%)',
+  background: '#fff',
+  borderRadius: 12,
+  border: '1px solid #ede8df',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+  padding: 4,
+  maxHeight: 240,
+  overflowY: 'auto',
+  zIndex: 9999,
+  minWidth: 140,
+};
+
+const dropdownOptionStyle = (isSelected) => ({
+  padding: '10px 16px',
+  fontSize: 15,
+  fontWeight: isSelected ? 600 : 500,
+  color: isSelected ? '#C9A84C' : '#1a1612',
+  background: isSelected ? '#f7efd8' : 'transparent',
+  borderRadius: 8,
+  cursor: 'pointer',
+  fontFamily: "'DM Sans', sans-serif",
+  transition: 'background 0.15s',
+  whiteSpace: 'nowrap',
+});
+
+/* ── Custom Dropdown ── */
+function InlineDropdown({ value, onChange, options, width, placeholder, style: extraStyle }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const selectedLabel = (() => {
+    if (!value) return placeholder || '---';
+    const opt = options.find(o => (typeof o === 'string' ? o : o.value) === value);
+    return opt ? (typeof opt === 'string' ? opt : opt.label) : value;
+  })();
+
+  return (
+    <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}>
+      <span
+        onClick={() => setOpen(!open)}
+        style={{
+          border: 'none',
+          borderBottom: '2.5px dotted #C9A84C',
+          background: 'transparent',
+          color: '#C9A84C',
+          fontWeight: 700,
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 'inherit',
+          textAlign: 'center',
+          cursor: 'pointer',
+          padding: '2px 20px 2px 4px',
+          display: 'inline-block',
+          position: 'relative',
+          minWidth: width || 60,
+          ...extraStyle,
+        }}
+      >
+        {selectedLabel}
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{
+          position: 'absolute', right: 2, top: '50%', transform: 'translateY(-50%)',
+        }}>
+          <path d="M1 1l4 4 4-4" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      </span>
+      {open && (
+        <div style={dropdownPanelStyle}>
+          {options.map(opt => {
+            const val = typeof opt === 'string' ? opt : opt.value;
+            const label = typeof opt === 'string' ? opt : opt.label;
+            const isSelected = val === value;
+            return (
+              <div
+                key={val}
+                onMouseDown={(e) => { e.preventDefault(); onChange(val); setOpen(false); }}
+                style={dropdownOptionStyle(isSelected)}
+                onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = '#f5f2ec'; }}
+                onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
+              >{label}</div>
+            );
+          })}
+        </div>
+      )}
+    </span>
+  );
+}
+
+/* ── Breed Autocomplete ── */
+function BreedAutocomplete({ value, onChange, style: extraStyle }) {
+  const [text, setText] = useState(value || '');
+  const [open, setOpen] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => { setText(value || ''); }, [value]);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) { setOpen(false); setShowAll(false); }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const query = text.trim().toLowerCase();
+  const allMatches = query
+    ? BREEDS.filter(b => b.toLowerCase().includes(query))
+    : [];
+  const displayMatches = showAll ? allMatches : allMatches.slice(0, 6);
+
+  function highlightMatch(breedName) {
+    const idx = breedName.toLowerCase().indexOf(query);
+    if (idx === -1 || !query) return breedName;
+    return (
+      <>
+        {breedName.slice(0, idx)}
+        <span style={{ color: '#C9A84C', fontWeight: 700 }}>{breedName.slice(idx, idx + query.length)}</span>
+        {breedName.slice(idx + query.length)}
+      </>
+    );
+  }
+
+  return (
+    <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}>
+      <input
+        type="text"
+        value={text}
+        placeholder="start typing..."
+        onChange={(e) => {
+          setText(e.target.value);
+          onChange('');
+          setOpen(true);
+          setShowAll(false);
+        }}
+        onFocus={() => { if (query && allMatches.length > 0) setOpen(true); }}
+        style={{
+          border: 'none',
+          borderBottom: '2.5px dotted #C9A84C',
+          background: 'transparent',
+          color: '#C9A84C',
+          fontWeight: 700,
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 'inherit',
+          textAlign: 'center',
+          outline: 'none',
+          padding: '2px 4px',
+          width: 220,
+          minWidth: 40,
+          ...extraStyle,
+        }}
+      />
+      {open && query && (
+        <div style={{ ...dropdownPanelStyle, minWidth: 240 }}>
+          {displayMatches.length === 0 ? (
+            <div style={{ padding: '10px 16px', fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
+              No breeds found
+            </div>
+          ) : (
+            <>
+              {displayMatches.map(b => {
+                const isSelected = b === value;
+                return (
+                  <div
+                    key={b}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      setText(b);
+                      onChange(b);
+                      setOpen(false);
+                      setShowAll(false);
+                    }}
+                    style={dropdownOptionStyle(isSelected)}
+                    onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = '#f5f2ec'; }}
+                    onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
+                  >{highlightMatch(b)}</div>
+                );
+              })}
+              {!showAll && allMatches.length > 6 && (
+                <div
+                  onMouseDown={(e) => { e.preventDefault(); setShowAll(true); }}
+                  style={{
+                    padding: '10px 16px', fontSize: 13, fontWeight: 600,
+                    color: '#C9A84C', cursor: 'pointer', textAlign: 'center',
+                    borderTop: '1px solid #f0ebe3', fontFamily: "'DM Sans', sans-serif",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#f5f2ec')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                >
+                  Show all {allMatches.length} results
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </span>
+  );
+}
 
 function DogIcon() {
   return (
@@ -78,7 +325,7 @@ function ProgressDots({ step, total }) {
   );
 }
 
-function InlineInput({ value, onChange, placeholder, width, type = 'text', min, max, style: extraStyle }) {
+function InlineInput({ value, onChange, placeholder, width, type = 'text', min, max, className, style: extraStyle }) {
   const baseStyle = {
     border: 'none',
     borderBottom: '2.5px dotted #C9A84C',
@@ -102,56 +349,25 @@ function InlineInput({ value, onChange, placeholder, width, type = 'text', min, 
       placeholder={placeholder}
       min={min}
       max={max}
+      className={className}
       style={baseStyle}
     />
-  );
-}
-
-function InlineSelect({ value, onChange, options, width, style: extraStyle }) {
-  const baseStyle = {
-    border: 'none',
-    borderBottom: '2.5px dotted #C9A84C',
-    background: 'transparent',
-    color: '#C9A84C',
-    fontWeight: 700,
-    fontFamily: "'Playfair Display', serif",
-    fontSize: 'inherit',
-    textAlign: 'center',
-    outline: 'none',
-    padding: '2px 4px',
-    width: width || 'auto',
-    cursor: 'pointer',
-    appearance: 'none',
-    WebkitAppearance: 'none',
-    backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23C9A84C' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")`,
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'right 4px center',
-    paddingRight: 20,
-    ...extraStyle,
-  };
-  return (
-    <select value={value} onChange={onChange} style={baseStyle}>
-      <option value="" disabled>---</option>
-      {options.map(opt => {
-        const val = typeof opt === 'string' ? opt : opt.value;
-        const label = typeof opt === 'string' ? opt : opt.label;
-        return <option key={val} value={val}>{label}</option>;
-      })}
-    </select>
   );
 }
 
 function FoodSearch({ onSelect, selectedFood }) {
   const [text, setText] = useState('');
   const [results, setResults] = useState([]);
+  const [allResults, setAllResults] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const boxRef = useRef(null);
   const debounceRef = useRef(null);
 
   useEffect(() => {
     const handler = (e) => {
-      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
+      if (boxRef.current && !boxRef.current.contains(e.target)) { setOpen(false); setExpanded(false); }
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -160,19 +376,22 @@ function FoodSearch({ onSelect, selectedFood }) {
   function handleChange(e) {
     const val = e.target.value;
     setText(val);
+    setExpanded(false);
     clearTimeout(debounceRef.current);
-    if (!val.trim()) { setResults([]); setOpen(false); return; }
+    if (!val.trim()) { setResults([]); setAllResults([]); setOpen(false); return; }
     setLoading(true);
     debounceRef.current = setTimeout(async () => {
       try {
-        const res = await fetch('/api/foods/search?q=' + encodeURIComponent(val) + '&limit=30');
+        const res = await fetch('/api/foods/search?q=' + encodeURIComponent(val) + '&limit=200');
         if (!res.ok) throw new Error(res.status);
         const data = await res.json();
         const items = Array.isArray(data) ? data : [];
-        setResults(items.slice(0, 6));
+        setAllResults(items);
+        setResults(items.slice(0, 20));
         setOpen(true);
       } catch {
         setResults([]);
+        setAllResults([]);
       }
       setLoading(false);
     }, 250);
@@ -182,8 +401,12 @@ function FoodSearch({ onSelect, selectedFood }) {
     onSelect({ name: `${food.brand} ${food.name}`, slug: food.slug, brand_slug: food.brand_slug });
     setText(`${food.brand} ${food.name}`);
     setResults([]);
+    setAllResults([]);
     setOpen(false);
+    setExpanded(false);
   }
+
+  const displayResults = expanded ? allResults : results;
 
   return (
     <div ref={boxRef} style={{ position: 'relative', width: '100%', maxWidth: 500, margin: '0 auto' }}>
@@ -229,36 +452,55 @@ function FoodSearch({ onSelect, selectedFood }) {
           position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
           background: '#fff', borderRadius: 14, overflow: 'hidden',
           boxShadow: '0 12px 48px rgba(26,22,18,0.15)', zIndex: 9999,
-          maxHeight: 340, overflowY: 'auto',
+          maxHeight: 400, overflowY: 'auto',
         }}>
-          {loading && results.length === 0 ? (
+          {loading && displayResults.length === 0 ? (
             <div style={{ padding: 20, textAlign: 'center', color: '#8a7e72', fontSize: 14 }}>Searching...</div>
-          ) : results.length === 0 ? (
+          ) : displayResults.length === 0 ? (
             <div style={{ padding: 20, textAlign: 'center', color: '#8a7e72', fontSize: 14 }}>No results found.</div>
-          ) : results.map((f) => (
-            <div key={f.id}
-              onMouseDown={(e) => { e.preventDefault(); handleSelect(f); }}
-              style={{
-                padding: '12px 18px', cursor: 'pointer',
-                borderBottom: '1px solid #f0ebe3',
-                display: 'flex', alignItems: 'center', gap: 10,
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#faf8f5')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-            >
-              {f.image_url ? (
-                <img src={f.image_url} alt="" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain', background: '#f5f0e8', flexShrink: 0 }} />
-              ) : (
-                <div style={{ width: 36, height: 36, borderRadius: 8, background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
-                  {'\u{1F415}'}
+          ) : (
+            <>
+              {displayResults.map((f) => (
+                <div key={f.id}
+                  onMouseDown={(e) => { e.preventDefault(); handleSelect(f); }}
+                  style={{
+                    padding: '12px 18px', cursor: 'pointer',
+                    borderBottom: '1px solid #f0ebe3',
+                    display: 'flex', alignItems: 'center', gap: 10,
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#faf8f5')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                >
+                  {f.image_url ? (
+                    <img src={f.image_url} alt="" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain', background: '#f5f0e8', flexShrink: 0 }} />
+                  ) : (
+                    <div style={{ width: 36, height: 36, borderRadius: 8, background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
+                      {'\u{1F415}'}
+                    </div>
+                  )}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
+                    <div style={{ fontSize: 12, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
+                  </div>
+                </div>
+              ))}
+              {!expanded && allResults.length > 20 && (
+                <div
+                  onMouseDown={(e) => { e.preventDefault(); setExpanded(true); }}
+                  style={{
+                    padding: '14px 18px', cursor: 'pointer', textAlign: 'center',
+                    fontSize: 14, fontWeight: 600, color: '#C9A84C',
+                    background: '#faf8f5', borderTop: '1px solid #f0ebe3',
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#f0ebe3')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = '#faf8f5')}
+                >
+                  Show all {allResults.length} results
                 </div>
               )}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
-                <div style={{ fontSize: 12, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
-              </div>
-            </div>
-          ))}
+            </>
+          )}
         </div>
       )}
     </div>
@@ -269,15 +511,15 @@ export default function SignupPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [animating, setAnimating] = useState(false);
-  const [fadeState, setFadeState] = useState('in'); // 'in', 'out'
+  const [fadeState, setFadeState] = useState('in');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  // Step 2 — dogs
+  // Step 2
   const [dogCount, setDogCount] = useState('');
   const [dogName, setDogName] = useState('');
 
-  // Step 3 — dog profile
+  // Step 3
   const [gender, setGender] = useState('');
   const [age, setAge] = useState('');
   const [ageUnit, setAgeUnit] = useState('years');
@@ -285,14 +527,14 @@ export default function SignupPage() {
   const [weight, setWeight] = useState('');
   const [breed, setBreed] = useState('');
 
-  // Step 4 — current food
-  const [currentFood, setCurrentFood] = useState(null); // { name, slug, brand_slug } or string
-  const [foodAlt, setFoodAlt] = useState(''); // "not_sure", "no_kibble", "want_switch"
+  // Step 4
+  const [currentFood, setCurrentFood] = useState(null);
+  const [foodAlt, setFoodAlt] = useState('');
 
-  // Step 5 — priorities
+  // Step 5
   const [priorities, setPriorities] = useState([]);
 
-  // Step 6 — account
+  // Step 6
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
   const [zipCode, setZipCode] = useState('');
@@ -368,7 +610,6 @@ export default function SignupPage() {
         throw new Error(data.error || 'Something went wrong. Please try again.');
       }
       const data = await res.json();
-      // Store profile IDs and user info for profile page + nav
       if (typeof window !== 'undefined') {
         localStorage.setItem('gk_user_id', data.user_id);
         localStorage.setItem('gk_dog_id', data.dog_id);
@@ -399,6 +640,14 @@ export default function SignupPage() {
 
   const displayName = dogName.trim() || 'your dog';
 
+  const sentenceFontStyle = {
+    fontFamily: "'Playfair Display', serif",
+    fontSize: 'clamp(20px, 3.5vw, 28px)',
+    fontWeight: 700,
+    color: '#1a1612',
+    lineHeight: 2.2,
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
       {/* Nav */}
@@ -425,10 +674,8 @@ export default function SignupPage() {
         )}
       </nav>
 
-      {/* Progress dots */}
       {step < 7 && <ProgressDots step={step} total={7} />}
 
-      {/* Content */}
       <div style={{
         maxWidth: 640, margin: '0 auto',
         padding: '32px 24px 80px',
@@ -532,18 +779,13 @@ export default function SignupPage() {
               fontSize: 14, color: '#8a7e72', marginBottom: 28,
             }}>This helps us personalize food recommendations.</p>
 
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(20px, 3.5vw, 28px)',
-              fontWeight: 700, color: '#1a1612',
-              lineHeight: 2.2,
-            }}>
-              <InlineSelect
+            <div style={sentenceFontStyle}>
+              <InlineDropdown
                 value={gender}
-                onChange={e => setGender(e.target.value)}
+                onChange={setGender}
                 options={[{ value: 'male', label: 'He' }, { value: 'female', label: 'She' }]}
-                width={80}
-                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
+                width={60}
+                placeholder="---"
               />
               {' '}is{' '}
               <InlineInput
@@ -558,29 +800,23 @@ export default function SignupPage() {
                 style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
               />
               {' '}
-              <InlineSelect
+              <InlineDropdown
                 value={ageUnit}
-                onChange={e => setAgeUnit(e.target.value)}
+                onChange={setAgeUnit}
                 options={['years', 'months']}
-                width={110}
-                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
+                width={90}
               />
               {' '}old.
             </div>
 
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(20px, 3.5vw, 28px)',
-              fontWeight: 700, color: '#1a1612',
-              lineHeight: 2.2, marginTop: 8,
-            }}>
+            <div style={{ ...sentenceFontStyle, marginTop: 8 }}>
               {pronounHe}{' '}
-              <InlineSelect
+              <InlineDropdown
                 value={neutered}
-                onChange={e => setNeutered(e.target.value)}
+                onChange={setNeutered}
                 options={[{ value: 'is', label: 'is' }, { value: 'is not', label: 'is not' }]}
-                width={90}
-                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
+                width={70}
+                placeholder="---"
               />
               {' '}neutered and weighs{' '}
               <InlineInput
@@ -597,18 +833,11 @@ export default function SignupPage() {
               {' '}lbs.
             </div>
 
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(20px, 3.5vw, 28px)',
-              fontWeight: 700, color: '#1a1612',
-              lineHeight: 2.2, marginTop: 8,
-            }}>
+            <div style={{ ...sentenceFontStyle, marginTop: 8 }}>
               Breed:{' '}
-              <InlineSelect
+              <BreedAutocomplete
                 value={breed}
-                onChange={e => setBreed(e.target.value)}
-                options={BREEDS}
-                width={220}
+                onChange={setBreed}
                 style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
               />
             </div>
@@ -727,12 +956,7 @@ export default function SignupPage() {
               fontSize: 14, color: '#8a7e72', marginBottom: 28,
             }}>We&rsquo;ll use this to personalize your recommendations and keep you updated on food scores.</p>
 
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(20px, 3.5vw, 28px)',
-              fontWeight: 700, color: '#1a1612',
-              lineHeight: 2.4,
-            }}>
+            <div style={sentenceFontStyle}>
               My first name is{' '}
               <InlineInput
                 value={firstName}
@@ -742,28 +966,19 @@ export default function SignupPage() {
                 style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
               />
             </div>
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(20px, 3.5vw, 28px)',
-              fontWeight: 700, color: '#1a1612',
-              lineHeight: 2.4,
-            }}>
+            <div style={sentenceFontStyle}>
               My email is{' '}
               <InlineInput
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="email@example.com"
-                width={260}
+                width={300}
                 type="email"
+                className="signup-email-input"
                 style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
               />
             </div>
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(20px, 3.5vw, 28px)',
-              fontWeight: 700, color: '#1a1612',
-              lineHeight: 2.4,
-            }}>
+            <div style={sentenceFontStyle}>
               My zip code is{' '}
               <InlineInput
                 value={zipCode}
@@ -776,19 +991,14 @@ export default function SignupPage() {
                 style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
               />
             </div>
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(20px, 3.5vw, 28px)',
-              fontWeight: 700, color: '#1a1612',
-              lineHeight: 2.4,
-            }}>
+            <div style={sentenceFontStyle}>
               I heard about GoodKibble from{' '}
-              <InlineSelect
+              <InlineDropdown
                 value={heardFrom}
-                onChange={e => setHeardFrom(e.target.value)}
+                onChange={setHeardFrom}
                 options={HEARD_FROM}
-                width={200}
-                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
+                width={160}
+                placeholder="---"
               />
             </div>
 
@@ -828,7 +1038,6 @@ export default function SignupPage() {
               fontSize: 16, color: '#8a7e72', marginBottom: 28,
             }}>{displayName}&rsquo;s profile is saved.</p>
 
-            {/* Summary card */}
             <div style={{
               background: '#fff', borderRadius: 16,
               border: '1px solid #ede8df',
@@ -912,6 +1121,7 @@ export default function SignupPage() {
       <style>{`
         @media (max-width: 768px) {
           nav { padding: 12px 16px !important; }
+          .signup-email-input { width: 100% !important; }
         }
       `}</style>
     </div>
