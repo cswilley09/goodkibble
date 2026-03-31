@@ -47,39 +47,22 @@ function ProductImage({ src, alt }) {
 }
 
 function useTooltipPosition(show, triggerRef, tooltipWidth = 280) {
-  const [pos, setPos] = useState({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
+  const [pos, setPos] = useState(null);
   useEffect(() => {
-    if (!show || !triggerRef.current) return;
-    const trigger = triggerRef.current;
-    const triggerRect = trigger.getBoundingClientRect();
-    const containerRect = (trigger.closest('[data-ingredient-container]') || trigger.offsetParent)?.getBoundingClientRect()
-      || { left: 0, right: window.innerWidth, width: window.innerWidth };
+    if (!show || !triggerRef.current) { setPos(null); return; }
+    const rect = triggerRef.current.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const triggerCenter = rect.left + rect.width / 2;
 
-    // Center tooltip on trigger
-    const triggerCenter = triggerRect.left + triggerRect.width / 2;
-    let tooltipLeft = triggerCenter - tooltipWidth / 2;
-    let tooltipRight = tooltipLeft + tooltipWidth;
+    // Position tooltip above the trigger using fixed coordinates
+    let left = triggerCenter - tooltipWidth / 2;
+    if (left + tooltipWidth > vw - 8) left = vw - tooltipWidth - 8;
+    if (left < 8) left = 8;
 
-    // If overflowing right side of container, shift left
-    if (tooltipRight > containerRect.right) {
-      tooltipLeft -= (tooltipRight - containerRect.right);
-    }
-    // If overflowing left side of container, shift right
-    if (tooltipLeft < containerRect.left) {
-      tooltipLeft = containerRect.left;
-    }
+    const top = rect.top - 10; // 10px gap above trigger
+    const arrowLeft = Math.max(16, Math.min(triggerCenter - left, tooltipWidth - 16));
 
-    // Convert to offset relative to trigger element
-    const offsetFromTrigger = tooltipLeft - triggerRect.left;
-
-    // Arrow points at trigger center within tooltip
-    const arrowLeft = Math.max(16, Math.min(triggerCenter - tooltipLeft, tooltipWidth - 16));
-
-    setPos({
-      left: `${offsetFromTrigger}px`,
-      transform: 'none',
-      arrowLeft: `${arrowLeft}px`,
-    });
+    setPos({ left, top, arrowLeft });
   }, [show, tooltipWidth]);
   return pos;
 }
@@ -89,7 +72,7 @@ function InfoTooltip({ text }) {
   const ref = useRef(null);
   const pos = useTooltipPosition(show, ref);
   return (
-    <span ref={ref} style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', marginLeft: 8 }}
+    <span ref={ref} style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 8 }}
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
       onClick={() => setShow(!show)}
@@ -100,15 +83,15 @@ function InfoTooltip({ text }) {
         fontSize: 12, fontWeight: 700, color: '#8a7e72', cursor: 'pointer',
         fontFamily: "'DM Sans', sans-serif",
       }}>i</span>
-      {show && (
+      {show && pos && (
         <div style={{
-          position: 'absolute', bottom: 'calc(100% + 10px)', left: pos.left,
-          transform: pos.transform, width: 280, maxWidth: 'calc(100vw - 16px)', padding: '14px 16px',
+          position: 'fixed', top: pos.top, left: pos.left, width: 280,
+          transform: 'translateY(-100%)', padding: '14px 16px',
           borderRadius: 12, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.5, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
           boxShadow: '0 8px 24px rgba(26,22,18,0.25)',
-          zIndex: 50, animation: 'fadeIn 0.15s ease',
+          zIndex: 9999, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
         }}>
           {text}
           <div style={{
@@ -127,20 +110,20 @@ function SaltTooltip({ children }) {
   const ref = useRef(null);
   const pos = useTooltipPosition(show, ref);
   return (
-    <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}
+    <span ref={ref} style={{ display: 'inline-block' }}
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
     >
       {children}
-      {show && (
+      {show && pos && (
         <div style={{
-          position: 'absolute', bottom: 'calc(100% + 10px)', left: pos.left,
-          transform: pos.transform, width: 280, maxWidth: 'calc(100vw - 16px)', padding: '16px 18px',
+          position: 'fixed', top: pos.top, left: pos.left, width: 280,
+          transform: 'translateY(-100%)', padding: '16px 18px',
           borderRadius: 14, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.55, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
           boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
-          zIndex: 60, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
+          zIndex: 9999, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: '#d4852a' }} />
@@ -249,7 +232,7 @@ function IngredientTooltip({ info, children }) {
   }, []);
 
   return (
-    <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}
+    <span ref={ref} style={{ display: 'inline-block' }}
       onMouseEnter={() => { if (!mobile) setShow(true); }}
       onMouseLeave={() => { if (!mobile) setShow(false); }}
     >
@@ -259,17 +242,17 @@ function IngredientTooltip({ info, children }) {
         {children}
       </span>
 
-      {/* Desktop tooltip — viewport-aware positioning */}
-      {show && info && !mobile && (
+      {/* Desktop tooltip — fixed positioning, immune to ancestor transforms/overflow */}
+      {show && info && !mobile && pos && (
         <div style={{
-          position: 'absolute', bottom: 'calc(100% + 10px)', left: pos.left,
-          transform: pos.transform, width: 280, maxWidth: 'calc(100vw - 16px)',
+          position: 'fixed', top: pos.top, left: pos.left, width: 280,
+          transform: 'translateY(-100%)',
           padding: '16px 18px', overflowWrap: 'break-word',
           borderRadius: 14, background: '#1a1612', color: '#faf8f5',
           fontSize: 13, lineHeight: 1.55, fontWeight: 400,
           fontFamily: "'DM Sans', sans-serif",
           boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
-          zIndex: 60, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
+          zIndex: 9999, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <span style={{
@@ -1076,7 +1059,7 @@ export default function FoodPageContent({ productId }) {
 
 
 
-            <div data-ingredient-container style={{ display: 'flex', flexWrap: 'wrap', gap: 6, position: 'relative', overflow: 'visible' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {ingredients.map((ing, i) => {
                 const isSalt = isSaltIngredient(ing);
                 const isFirst = i === 0;
@@ -1147,15 +1130,11 @@ export default function FoodPageContent({ productId }) {
                    because the fadeUp keyframe ends at opacity:1 which overrides inline opacity.
                    For tooltip/salt pills after salt, opacity lives on the pill itself so the
                    tooltip popover renders at full opacity. */
-                /* Pills with tooltips use opacity-only animation to avoid
-                   transform creating a new positioning context that breaks
-                   absolute tooltip placement relative to the container. */
                 const wrapStyle = afterSalt
                   ? { display: 'inline-block', opacity: (hasTooltip || isSalt) ? 1 : 0.4 }
                   : {
                       display: 'inline-block',
-                      animationName: (hasTooltip || isSalt) ? 'fadeUpNoTransform' : 'fadeUp',
-                      animationDuration: '0.4s',
+                      animationName: 'fadeUp', animationDuration: '0.4s',
                       animationFillMode: 'both', animationDelay: `${i * 20}ms`,
                     };
 
