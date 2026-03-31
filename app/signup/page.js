@@ -67,96 +67,92 @@ const HEARD_FROM = [
   'TikTok', 'Instagram', 'Reddit', 'Other',
 ];
 
-/* ── Shared dropdown panel styles ── */
+const EMPTY_DOG = { name: '', gender: '', age: '', ageUnit: 'years', neutered: '', weight: '', breed: '', food: null, foodAlt: '', foodAltText: '' };
+
+/* ── Shared dropdown styles ── */
 const dropdownPanelStyle = {
-  position: 'absolute',
-  top: 'calc(100% + 4px)',
-  left: '50%',
-  transform: 'translateX(-50%)',
-  background: '#fff',
-  borderRadius: 12,
-  border: '1px solid #ede8df',
-  boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-  padding: 4,
-  maxHeight: 240,
-  overflowY: 'auto',
-  zIndex: 9999,
-  minWidth: 140,
+  position: 'absolute', top: 'calc(100% + 4px)', left: '50%', transform: 'translateX(-50%)',
+  background: '#fff', borderRadius: 12, border: '1px solid #ede8df',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.08)', padding: 4, maxHeight: 240,
+  overflowY: 'auto', zIndex: 9999, minWidth: 140,
+};
+const dropdownOptionStyle = (sel) => ({
+  padding: '10px 16px', fontSize: 15, fontWeight: sel ? 600 : 500,
+  color: sel ? '#C9A84C' : '#1a1612', background: sel ? '#f7efd8' : 'transparent',
+  borderRadius: 8, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+  transition: 'background 0.15s', whiteSpace: 'nowrap',
+});
+const sentenceFontStyle = {
+  fontFamily: "'Playfair Display', serif", fontSize: 'clamp(20px, 3.5vw, 28px)',
+  fontWeight: 700, color: '#1a1612', lineHeight: 2.2,
 };
 
-const dropdownOptionStyle = (isSelected) => ({
-  padding: '10px 16px',
-  fontSize: 15,
-  fontWeight: isSelected ? 600 : 500,
-  color: isSelected ? '#C9A84C' : '#1a1612',
-  background: isSelected ? '#f7efd8' : 'transparent',
-  borderRadius: 8,
-  cursor: 'pointer',
-  fontFamily: "'DM Sans', sans-serif",
-  transition: 'background 0.15s',
-  whiteSpace: 'nowrap',
-});
+/* ── Auto-expanding input ── */
+function AutoInput({ value, onChange, placeholder, type = 'text', min, minW = 60, maxW, className, style: extra }) {
+  const spanRef = useRef(null);
+  const [w, setW] = useState(minW);
+  useEffect(() => {
+    if (spanRef.current) {
+      const sw = spanRef.current.offsetWidth + 20;
+      setW(Math.max(minW, Math.min(sw, maxW || 9999)));
+    }
+  }, [value, minW, maxW]);
+  const base = {
+    border: 'none', borderBottom: '2.5px dotted #C9A84C', background: 'transparent',
+    color: '#C9A84C', fontWeight: 700, fontFamily: "'Playfair Display', serif",
+    fontSize: 'inherit', textAlign: 'center', outline: 'none', padding: '2px 4px',
+    width: w, minWidth: minW, ...extra,
+  };
+  return (
+    <span style={{ position: 'relative', display: 'inline-block' }}>
+      <span ref={spanRef} style={{
+        position: 'absolute', visibility: 'hidden', whiteSpace: 'pre', pointerEvents: 'none',
+        fontWeight: 700, fontFamily: "'Playfair Display', serif", fontSize: 'inherit', ...extra,
+      }}>{value || placeholder || ''}</span>
+      <input type={type} value={value} onChange={onChange} placeholder={placeholder}
+        min={min} className={className} style={base} />
+    </span>
+  );
+}
 
 /* ── Custom Dropdown ── */
-function InlineDropdown({ value, onChange, options, width, placeholder, style: extraStyle }) {
+function InlineDropdown({ value, onChange, options, width, placeholder }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
-
   useEffect(() => {
-    const handler = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
   }, []);
-
   const selectedLabel = (() => {
     if (!value) return placeholder || '---';
     const opt = options.find(o => (typeof o === 'string' ? o : o.value) === value);
     return opt ? (typeof opt === 'string' ? opt : opt.label) : value;
   })();
-
   return (
     <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}>
-      <span
-        onClick={() => setOpen(!open)}
-        style={{
-          border: 'none',
-          borderBottom: '2.5px dotted #C9A84C',
-          background: 'transparent',
-          color: '#C9A84C',
-          fontWeight: 700,
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 'inherit',
-          textAlign: 'center',
-          cursor: 'pointer',
-          padding: '2px 20px 2px 4px',
-          display: 'inline-block',
-          position: 'relative',
-          minWidth: width || 60,
-          ...extraStyle,
-        }}
-      >
+      <span onClick={() => setOpen(!open)} style={{
+        border: 'none', borderBottom: '2.5px dotted #C9A84C', background: 'transparent',
+        color: '#C9A84C', fontWeight: 700, fontFamily: "'Playfair Display', serif",
+        fontSize: 'inherit', textAlign: 'center', cursor: 'pointer',
+        padding: '2px 20px 2px 4px', display: 'inline-block', position: 'relative', minWidth: width || 60,
+      }}>
         {selectedLabel}
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{
           position: 'absolute', right: 2, top: '50%', transform: 'translateY(-50%)',
-        }}>
-          <path d="M1 1l4 4 4-4" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
+        }}><path d="M1 1l4 4 4-4" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" /></svg>
       </span>
       {open && (
         <div style={dropdownPanelStyle}>
           {options.map(opt => {
             const val = typeof opt === 'string' ? opt : opt.value;
             const label = typeof opt === 'string' ? opt : opt.label;
-            const isSelected = val === value;
+            const isSel = val === value;
             return (
-              <div
-                key={val}
-                onMouseDown={(e) => { e.preventDefault(); onChange(val); setOpen(false); }}
-                style={dropdownOptionStyle(isSelected)}
-                onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = '#f5f2ec'; }}
-                onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
+              <div key={val} onMouseDown={(e) => { e.preventDefault(); onChange(val); setOpen(false); }}
+                style={dropdownOptionStyle(isSel)}
+                onMouseEnter={(e) => { if (!isSel) e.currentTarget.style.background = '#f5f2ec'; }}
+                onMouseLeave={(e) => { if (!isSel) e.currentTarget.style.background = 'transparent'; }}
               >{label}</div>
             );
           })}
@@ -167,111 +163,69 @@ function InlineDropdown({ value, onChange, options, width, placeholder, style: e
 }
 
 /* ── Breed Autocomplete ── */
-function BreedAutocomplete({ value, onChange, style: extraStyle }) {
+function BreedAutocomplete({ value, onChange, style: extra }) {
   const [text, setText] = useState(value || '');
   const [open, setOpen] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const ref = useRef(null);
-
+  const spanRef = useRef(null);
+  const [w, setW] = useState(160);
   useEffect(() => { setText(value || ''); }, [value]);
-
   useEffect(() => {
-    const handler = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) { setOpen(false); setShowAll(false); }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    if (spanRef.current) setW(Math.max(160, Math.min(spanRef.current.offsetWidth + 24, 340)));
+  }, [text]);
+  useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) { setOpen(false); setShowAll(false); } };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
   }, []);
-
   const query = text.trim().toLowerCase();
-  const allMatches = query
-    ? BREEDS.filter(b => b.toLowerCase().includes(query))
-    : [];
+  const allMatches = query ? BREEDS.filter(b => b.toLowerCase().includes(query)) : [];
   const displayMatches = showAll ? allMatches : allMatches.slice(0, 6);
-
-  function highlightMatch(breedName) {
-    const idx = breedName.toLowerCase().indexOf(query);
-    if (idx === -1 || !query) return breedName;
-    return (
-      <>
-        {breedName.slice(0, idx)}
-        <span style={{ color: '#C9A84C', fontWeight: 700 }}>{breedName.slice(idx, idx + query.length)}</span>
-        {breedName.slice(idx + query.length)}
-      </>
-    );
+  function highlight(b) {
+    const idx = b.toLowerCase().indexOf(query);
+    if (idx === -1 || !query) return b;
+    return <>{b.slice(0, idx)}<span style={{ color: '#C9A84C', fontWeight: 700 }}>{b.slice(idx, idx + query.length)}</span>{b.slice(idx + query.length)}</>;
   }
-
   return (
     <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}>
-      <input
-        type="text"
-        value={text}
-        placeholder="start typing..."
-        onChange={(e) => {
-          setText(e.target.value);
-          onChange('');
-          setOpen(true);
-          setShowAll(false);
-        }}
+      <span ref={spanRef} style={{
+        position: 'absolute', visibility: 'hidden', whiteSpace: 'pre', pointerEvents: 'none',
+        fontWeight: 700, fontFamily: "'Playfair Display', serif", fontSize: 'inherit', ...extra,
+      }}>{text || 'start typing...'}</span>
+      <input type="text" value={text} placeholder="start typing..."
+        onChange={(e) => { setText(e.target.value); onChange(''); setOpen(true); setShowAll(false); }}
         onFocus={() => { if (query && allMatches.length > 0) setOpen(true); }}
         style={{
-          border: 'none',
-          borderBottom: '2.5px dotted #C9A84C',
-          background: 'transparent',
-          color: '#C9A84C',
-          fontWeight: 700,
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 'inherit',
-          textAlign: 'center',
-          outline: 'none',
-          padding: '2px 4px',
-          width: 220,
-          minWidth: 40,
-          ...extraStyle,
+          border: 'none', borderBottom: '2.5px dotted #C9A84C', background: 'transparent',
+          color: '#C9A84C', fontWeight: 700, fontFamily: "'Playfair Display', serif",
+          fontSize: 'inherit', textAlign: 'center', outline: 'none', padding: '2px 4px',
+          width: w, minWidth: 120, ...extra,
         }}
       />
       {open && query && (
         <div style={{ ...dropdownPanelStyle, minWidth: 240 }}>
           {displayMatches.length === 0 ? (
-            <div style={{ padding: '10px 16px', fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
-              No breeds found
-            </div>
-          ) : (
-            <>
-              {displayMatches.map(b => {
-                const isSelected = b === value;
-                return (
-                  <div
-                    key={b}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      setText(b);
-                      onChange(b);
-                      setOpen(false);
-                      setShowAll(false);
-                    }}
-                    style={dropdownOptionStyle(isSelected)}
-                    onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = '#f5f2ec'; }}
-                    onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
-                  >{highlightMatch(b)}</div>
-                );
-              })}
-              {!showAll && allMatches.length > 6 && (
-                <div
-                  onMouseDown={(e) => { e.preventDefault(); setShowAll(true); }}
-                  style={{
-                    padding: '10px 16px', fontSize: 13, fontWeight: 600,
-                    color: '#C9A84C', cursor: 'pointer', textAlign: 'center',
-                    borderTop: '1px solid #f0ebe3', fontFamily: "'DM Sans', sans-serif",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#f5f2ec')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                >
-                  Show all {allMatches.length} results
-                </div>
-              )}
-            </>
-          )}
+            <div style={{ padding: '10px 16px', fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>No breeds found</div>
+          ) : (<>
+            {displayMatches.map(b => {
+              const isSel = b === value;
+              return (
+                <div key={b} onMouseDown={(e) => { e.preventDefault(); setText(b); onChange(b); setOpen(false); setShowAll(false); }}
+                  style={dropdownOptionStyle(isSel)}
+                  onMouseEnter={(e) => { if (!isSel) e.currentTarget.style.background = '#f5f2ec'; }}
+                  onMouseLeave={(e) => { if (!isSel) e.currentTarget.style.background = 'transparent'; }}
+                >{highlight(b)}</div>
+              );
+            })}
+            {!showAll && allMatches.length > 6 && (
+              <div onMouseDown={(e) => { e.preventDefault(); setShowAll(true); }}
+                style={{ padding: '10px 16px', fontSize: 13, fontWeight: 600, color: '#C9A84C', cursor: 'pointer', textAlign: 'center', borderTop: '1px solid #f0ebe3', fontFamily: "'DM Sans', sans-serif" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#f5f2ec')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+              >Show all {allMatches.length} results</div>
+            )}
+          </>)}
         </div>
       )}
     </span>
@@ -285,8 +239,7 @@ function DogIcon() {
       <path d="M18 28c-3-8-1-16 2-18s6 2 8 6" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" fill="none" />
       <path d="M46 28c3-8 1-16-2-18s-6 2-8 6" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" fill="none" />
       <ellipse cx="32" cy="34" rx="14" ry="12" stroke="#C9A84C" strokeWidth="2.5" fill="none" />
-      <circle cx="27" cy="31" r="2" fill="#C9A84C" />
-      <circle cx="37" cy="31" r="2" fill="#C9A84C" />
+      <circle cx="27" cy="31" r="2" fill="#C9A84C" /><circle cx="37" cy="31" r="2" fill="#C9A84C" />
       <ellipse cx="32" cy="36" rx="3" ry="2" fill="#C9A84C" />
       <path d="M29 40c1.5 2 4.5 2 6 0" stroke="#C9A84C" strokeWidth="2" strokeLinecap="round" fill="none" />
       <path d="M22 44c0 4 4 6 10 6s10-2 10-6" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" fill="none" />
@@ -303,55 +256,19 @@ function ProgressDots({ step, total }) {
         return (
           <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
             <div style={{
-              width: current ? 14 : 10,
-              height: current ? 14 : 10,
-              borderRadius: '50%',
-              background: completed ? '#C9A84C' : current ? '#C9A84C' : '#ede8df',
+              width: current ? 14 : 10, height: current ? 14 : 10, borderRadius: '50%',
+              background: completed || current ? '#C9A84C' : '#ede8df',
               border: current ? '3px solid rgba(201,168,76,0.3)' : 'none',
               transition: 'all 0.3s ease',
             }} />
             {i < total - 1 && (
-              <div style={{
-                width: 32,
-                height: 2,
-                background: completed ? '#C9A84C' : '#ede8df',
-                transition: 'background 0.3s ease',
-              }} />
+              <div style={{ width: Math.max(12, Math.min(32, 200 / total)), height: 2,
+                background: completed ? '#C9A84C' : '#ede8df', transition: 'background 0.3s ease' }} />
             )}
           </div>
         );
       })}
     </div>
-  );
-}
-
-function InlineInput({ value, onChange, placeholder, width, type = 'text', min, max, className, style: extraStyle }) {
-  const baseStyle = {
-    border: 'none',
-    borderBottom: '2.5px dotted #C9A84C',
-    background: 'transparent',
-    color: '#C9A84C',
-    fontWeight: 700,
-    fontFamily: "'Playfair Display', serif",
-    fontSize: 'inherit',
-    textAlign: 'center',
-    outline: 'none',
-    padding: '2px 4px',
-    width: width || 'auto',
-    minWidth: 40,
-    ...extraStyle,
-  };
-  return (
-    <input
-      type={type}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      min={min}
-      max={max}
-      className={className}
-      style={baseStyle}
-    />
   );
 }
 
@@ -362,15 +279,11 @@ function FoodSearch({ onSelect, selectedFood }) {
   const [loading, setLoading] = useState(false);
   const boxRef = useRef(null);
   const debounceRef = useRef(null);
-
   useEffect(() => {
-    const handler = (e) => {
-      if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    const h = (e) => { if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
   }, []);
-
   function handleChange(e) {
     const val = e.target.value;
     setText(val);
@@ -382,113 +295,60 @@ function FoodSearch({ onSelect, selectedFood }) {
         const res = await fetch('/api/foods/search?q=' + encodeURIComponent(val) + '&limit=20');
         if (!res.ok) throw new Error(res.status);
         const data = await res.json();
-        const items = Array.isArray(data) ? data : [];
-        setResults(items.slice(0, 20));
+        setResults((Array.isArray(data) ? data : []).slice(0, 20));
         setOpen(true);
-      } catch {
-        setResults([]);
-      }
+      } catch { setResults([]); }
       setLoading(false);
     }, 250);
   }
-
-  function formatFoodName(food) {
-    const name = food.name || '';
-    const brand = food.brand || '';
-    // Avoid repeating brand if it's already at the start of the product name
-    if (name.toUpperCase().startsWith(brand.toUpperCase())) {
-      return { brand, product: name.slice(brand.length).trim() };
-    }
-    return { brand, product: name };
+  function formatName(food) {
+    const n = food.name || '', b = food.brand || '';
+    if (n.toUpperCase().startsWith(b.toUpperCase())) return { brand: b, product: n.slice(b.length).trim() };
+    return { brand: b, product: n };
   }
-
   function handleSelect(food) {
-    const { brand, product } = formatFoodName(food);
-    const displayName = product ? `${brand} \u2014 ${product}` : brand;
-    onSelect({ name: displayName, slug: food.slug, brand_slug: food.brand_slug });
-    setText('');
-    setResults([]);
-    setOpen(false);
+    const { brand, product } = formatName(food);
+    onSelect({ name: product ? `${brand} \u2014 ${product}` : brand, slug: food.slug, brand_slug: food.brand_slug });
+    setText(''); setResults([]); setOpen(false);
   }
-
-  // If food is selected, show confirmation pill instead of search bar
   if (selectedFood) {
     return (
       <div style={{ width: '100%', maxWidth: 500, margin: '0 auto' }}>
-        <div style={{
-          background: '#f7efd8', border: '1.5px solid #C9A84C', borderRadius: 12,
-          padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        }}>
+        <div style={{ background: '#f7efd8', border: '1.5px solid #C9A84C', borderRadius: 12, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
             <span style={{ color: '#2d7a4f', fontSize: 16, fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>
-            <span style={{ fontSize: 14, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {selectedFood.name}
-            </span>
+            <span style={{ fontSize: 14, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selectedFood.name}</span>
           </div>
-          <button onClick={() => { onSelect(null); setText(''); }} style={{
-            background: 'none', border: 'none', cursor: 'pointer', color: '#8a7e72',
-            fontSize: 16, padding: '0 0 0 8px', flexShrink: 0, fontFamily: "'DM Sans', sans-serif",
-          }}>&times;</button>
+          <button onClick={() => { onSelect(null); setText(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8a7e72', fontSize: 16, padding: '0 0 0 8px', flexShrink: 0 }}>&times;</button>
         </div>
       </div>
     );
   }
-
   return (
     <div ref={boxRef} style={{ position: 'relative', width: '100%', maxWidth: 500, margin: '0 auto' }}>
-      <div style={{
-        display: 'flex', alignItems: 'center',
-        background: '#fff', borderRadius: 16,
-        padding: '6px 6px 6px 20px',
-        boxShadow: '0 4px 24px rgba(26,22,18,0.08)',
-        border: '1.5px solid #ede8df',
-      }}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-          stroke="#b5aa99" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}>
-          <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" />
-        </svg>
-        <input
-          type="text"
-          placeholder="Search for your dog's current food..."
-          value={text}
-          onChange={handleChange}
+      <div style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 16, padding: '6px 6px 6px 20px', boxShadow: '0 4px 24px rgba(26,22,18,0.08)', border: '1.5px solid #ede8df' }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b5aa99" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" /></svg>
+        <input type="text" placeholder="Search for your dog's current food..." value={text} onChange={handleChange}
           onFocus={() => { if (results.length > 0) setOpen(true); }}
-          style={{
-            flex: 1, border: 'none', outline: 'none', minWidth: 0,
-            fontSize: 15, padding: '12px 10px',
-            background: 'transparent', color: '#1a1612',
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
-          }}
+          style={{ flex: 1, border: 'none', outline: 'none', minWidth: 0, fontSize: 15, padding: '12px 10px', background: 'transparent', color: '#1a1612', fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}
         />
       </div>
       {open && (
-        <div style={{
-          position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
-          background: '#fff', borderRadius: 14, overflow: 'hidden',
-          boxShadow: '0 12px 48px rgba(26,22,18,0.15)', zIndex: 9999,
-          maxHeight: 400, overflowY: 'auto',
-        }}>
+        <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0, background: '#fff', borderRadius: 14, overflow: 'hidden', boxShadow: '0 12px 48px rgba(26,22,18,0.15)', zIndex: 9999, maxHeight: 400, overflowY: 'auto' }}>
           {loading && results.length === 0 ? (
             <div style={{ padding: 20, textAlign: 'center', color: '#8a7e72', fontSize: 14 }}>Searching...</div>
           ) : results.length === 0 ? (
             <div style={{ padding: 20, textAlign: 'center', color: '#8a7e72', fontSize: 14 }}>No results found.</div>
           ) : results.map((f) => (
-            <div key={f.id}
-              onMouseDown={(e) => { e.preventDefault(); handleSelect(f); }}
-              style={{
-                padding: '12px 18px', cursor: 'pointer',
-                borderBottom: '1px solid #f0ebe3',
-                display: 'flex', alignItems: 'center', gap: 10,
-              }}
+            <div key={f.id} onMouseDown={(e) => { e.preventDefault(); handleSelect(f); }}
+              style={{ padding: '12px 18px', cursor: 'pointer', borderBottom: '1px solid #f0ebe3', display: 'flex', alignItems: 'center', gap: 10 }}
               onMouseEnter={(e) => (e.currentTarget.style.background = '#faf8f5')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
             >
               {f.image_url ? (
                 <img src={f.image_url} alt="" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'contain', background: '#f5f0e8', flexShrink: 0 }} />
               ) : (
-                <div style={{ width: 36, height: 36, borderRadius: 8, background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
-                  {'\u{1F415}'}
-                </div>
+                <div style={{ width: 36, height: 36, borderRadius: 8, background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>{'\u{1F415}'}</div>
               )}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
@@ -502,6 +362,9 @@ function FoodSearch({ onSelect, selectedFood }) {
   );
 }
 
+/* ══════════════════════════════════════════════════
+   MAIN SIGNUP PAGE
+   ══════════════════════════════════════════════════ */
 export default function SignupPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -510,27 +373,21 @@ export default function SignupPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  // Step 2
+  // Step 2 — dog count + names
   const [dogCount, setDogCount] = useState('');
-  const [dogName, setDogName] = useState('');
+  const [dogNames, setDogNames] = useState(['']);
 
-  // Step 3
-  const [gender, setGender] = useState('');
-  const [age, setAge] = useState('');
-  const [ageUnit, setAgeUnit] = useState('years');
-  const [neutered, setNeutered] = useState('');
-  const [weight, setWeight] = useState('');
-  const [breed, setBreed] = useState('');
+  // Per-dog profiles (array of objects)
+  const [dogs, setDogs] = useState([{ ...EMPTY_DOG }]);
 
-  // Step 4
-  const [currentFood, setCurrentFood] = useState(null);
-  const [foodAlt, setFoodAlt] = useState('');
-  const [foodAltText, setFoodAltText] = useState('');
+  // Which dog we're profiling / feeding (index)
+  const [profileIdx, setProfileIdx] = useState(0);
+  const [foodIdx, setFoodIdx] = useState(0);
 
-  // Step 5
+  // Step 5 — priorities
   const [priorities, setPriorities] = useState([]);
 
-  // Step 6
+  // Step 6 — account
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
   const [zipCode, setZipCode] = useState('');
@@ -538,22 +395,88 @@ export default function SignupPage() {
   const [emailError, setEmailError] = useState('');
 
   function isValidEmail(e) {
-    const atIdx = e.indexOf('@');
-    if (atIdx < 1) return false;
-    const afterAt = e.slice(atIdx + 1);
-    return afterAt.includes('.') && afterAt.indexOf('.') < afterAt.length - 1;
+    const a = e.indexOf('@');
+    if (a < 1) return false;
+    const after = e.slice(a + 1);
+    return after.includes('.') && after.indexOf('.') < after.length - 1;
   }
 
-  const pronounHe = gender === 'male' ? 'He' : gender === 'female' ? 'She' : 'They';
+  const numDogs = Math.min(Math.max(parseInt(dogCount) || 0, 0), 5);
+
+  // Sync dogNames/dogs arrays when count changes
+  useEffect(() => {
+    if (numDogs < 1) return;
+    setDogNames(prev => {
+      const a = [...prev];
+      while (a.length < numDogs) a.push('');
+      return a.slice(0, numDogs);
+    });
+    setDogs(prev => {
+      const a = [...prev];
+      while (a.length < numDogs) a.push({ ...EMPTY_DOG });
+      return a.slice(0, numDogs);
+    });
+  }, [numDogs]);
+
+  // Update dog helper
+  function updateDog(idx, field, val) {
+    setDogs(prev => {
+      const a = [...prev];
+      a[idx] = { ...a[idx], [field]: val };
+      return a;
+    });
+  }
+
+  /*
+    Step layout (dynamic):
+    0: Welcome
+    1: My Dogs (count + names)
+    2 .. 2+N-1: Dog Profile for dog 0..N-1
+    2+N .. 2+2N-1: Current Food for dog 0..N-1
+    2+2N: Priorities
+    2+2N+1: Account
+    2+2N+2: Confirmation
+  */
+  const N = Math.max(numDogs, 1);
+  const STEP_PROFILE_START = 2;
+  const STEP_FOOD_START = 2 + N;
+  const STEP_PRIORITIES = 2 + 2 * N;
+  const STEP_ACCOUNT = STEP_PRIORITIES + 1;
+  const STEP_CONFIRM = STEP_ACCOUNT + 1;
+  const TOTAL_STEPS = STEP_CONFIRM; // confirmation is last but not counted in progress
+
+  // Map step to type
+  function stepType(s) {
+    if (s === 0) return 'welcome';
+    if (s === 1) return 'dogs';
+    if (s >= STEP_PROFILE_START && s < STEP_FOOD_START) return 'profile';
+    if (s >= STEP_FOOD_START && s < STEP_PRIORITIES) return 'food';
+    if (s === STEP_PRIORITIES) return 'priorities';
+    if (s === STEP_ACCOUNT) return 'account';
+    return 'confirm';
+  }
+
+  function dogIdxForStep(s) {
+    const t = stepType(s);
+    if (t === 'profile') return s - STEP_PROFILE_START;
+    if (t === 'food') return s - STEP_FOOD_START;
+    return 0;
+  }
+
+  const curType = stepType(step);
+  const curDogIdx = dogIdxForStep(step);
+  const curDog = dogs[curDogIdx] || dogs[0];
+  const curDogName = dogNames[curDogIdx] || 'your dog';
+  const pronounHe = curDog.gender === 'male' ? 'He' : curDog.gender === 'female' ? 'She' : 'They';
 
   function canContinue() {
-    switch (step) {
-      case 0: return true;
-      case 1: return dogCount && parseInt(dogCount) > 0 && dogName.trim();
-      case 2: return gender && age && parseInt(age) > 0 && weight && parseInt(weight) > 0 && breed;
-      case 3: return currentFood || foodAlt === 'not_sure' || ((foodAlt === 'no_kibble' || foodAlt === 'cant_find') && foodAltText.trim());
-      case 4: return priorities.length > 0;
-      case 5: return firstName.trim() && email.trim() && isValidEmail(email.trim()) && zipCode.trim();
+    switch (curType) {
+      case 'welcome': return true;
+      case 'dogs': return numDogs > 0 && dogNames.slice(0, numDogs).every(n => n.trim());
+      case 'profile': return curDog.gender && curDog.age && parseInt(curDog.age) > 0 && curDog.weight && parseInt(curDog.weight) > 0 && curDog.breed;
+      case 'food': return curDog.food || curDog.foodAlt === 'not_sure' || ((curDog.foodAlt === 'no_kibble' || curDog.foodAlt === 'cant_find') && curDog.foodAltText.trim());
+      case 'priorities': return priorities.length > 0;
+      case 'account': return firstName.trim() && email.trim() && isValidEmail(email.trim()) && zipCode.trim();
       default: return true;
     }
   }
@@ -570,13 +493,13 @@ export default function SignupPage() {
   }, [animating]);
 
   function handleNext() {
-    if (step === 5 && email.trim() && !isValidEmail(email.trim())) {
+    if (curType === 'account' && email.trim() && !isValidEmail(email.trim())) {
       setEmailError('Please enter a valid email address');
       return;
     }
     setEmailError('');
     if (!canContinue()) return;
-    if (step === 5) {
+    if (curType === 'account') {
       handleSubmit();
     } else {
       goTo(step + 1);
@@ -591,23 +514,24 @@ export default function SignupPage() {
     setSubmitting(true);
     setError('');
     try {
+      const dogsPayload = dogs.slice(0, numDogs).map((d, i) => ({
+        dog_name: dogNames[i].trim(),
+        breed: d.breed,
+        age_value: parseInt(d.age),
+        age_unit: d.ageUnit,
+        weight_lbs: parseInt(d.weight),
+        gender: d.gender,
+        is_neutered: d.neutered === 'is',
+        current_food: d.food ? d.food.name : (d.foodAltText.trim() ? `${d.foodAlt}: ${d.foodAltText.trim()}` : d.foodAlt),
+        current_food_slug: d.food ? `${d.food.brand_slug}/${d.food.slug}` : null,
+        priorities,
+      }));
       const payload = {
         first_name: firstName.trim(),
         email: email.trim(),
         zip_code: zipCode.trim(),
         heard_from: heardFrom || null,
-        dog: {
-          dog_name: dogName.trim(),
-          breed,
-          age_value: parseInt(age),
-          age_unit: ageUnit,
-          weight_lbs: parseInt(weight),
-          gender,
-          is_neutered: neutered === 'is',
-          current_food: currentFood ? currentFood.name : (foodAltText.trim() ? `${foodAlt}: ${foodAltText.trim()}` : foodAlt),
-          current_food_slug: currentFood ? `${currentFood.brand_slug}/${currentFood.slug}` : null,
-          priorities,
-        },
+        dogs: dogsPayload,
       };
       const res = await fetch('/api/signup', {
         method: 'POST',
@@ -621,12 +545,12 @@ export default function SignupPage() {
       const data = await res.json();
       if (typeof window !== 'undefined') {
         localStorage.setItem('gk_user_id', data.user_id);
-        localStorage.setItem('gk_dog_id', data.dog_id);
+        localStorage.setItem('gk_dog_id', data.dog_ids?.[0] || '');
         localStorage.setItem('gk_user_name', firstName.trim());
         localStorage.setItem('gk_user_email', email.trim());
         window.dispatchEvent(new Event('gk_profile_updated'));
       }
-      goTo(6);
+      goTo(STEP_CONFIRM);
     } catch (err) {
       setError(err.message);
     }
@@ -634,290 +558,213 @@ export default function SignupPage() {
   }
 
   function togglePriority(label) {
-    setPriorities(prev =>
-      prev.includes(label) ? prev.filter(p => p !== label) : [...prev, label]
-    );
+    setPriorities(prev => prev.includes(label) ? prev.filter(p => p !== label) : [...prev, label]);
+  }
+
+  // "Same food" shortcut for multi-dog
+  function copyFoodFromFirst(idx) {
+    const first = dogs[0];
+    setDogs(prev => {
+      const a = [...prev];
+      a[idx] = { ...a[idx], food: first.food, foodAlt: first.foodAlt, foodAltText: first.foodAltText };
+      return a;
+    });
   }
 
   const fadeStyle = {
     opacity: fadeState === 'in' ? 1 : 0,
     transform: fadeState === 'in' ? 'translateY(0)' : 'translateY(-12px)',
-    transition: fadeState === 'in'
-      ? 'opacity 0.4s ease, transform 0.4s ease'
-      : 'opacity 0.25s ease, transform 0.25s ease',
+    transition: fadeState === 'in' ? 'opacity 0.4s ease, transform 0.4s ease' : 'opacity 0.25s ease, transform 0.25s ease',
   };
 
-  const displayName = dogName.trim() || 'your dog';
-
-  const sentenceFontStyle = {
-    fontFamily: "'Playfair Display', serif",
-    fontSize: 'clamp(20px, 3.5vw, 28px)',
-    fontWeight: 700,
-    color: '#1a1612',
-    lineHeight: 2.2,
-  };
+  const allDogNames = dogNames.slice(0, numDogs).filter(n => n.trim());
+  const firstDogName = dogNames[0]?.trim() || 'your dog';
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
       {/* Nav */}
       <nav style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px',
-        borderBottom: '1px solid #ede8df',
-        background: '#faf8f4',
-        position: 'sticky', top: 0, zIndex: 40,
+        padding: '16px 24px', borderBottom: '1px solid #ede8df',
+        background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40,
       }}>
-        <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 22, fontWeight: 800, color: '#1a1612',
-            letterSpacing: -0.5,
-          }}>GoodKibble</span>
+        <a href="/" style={{ textDecoration: 'none' }}>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
-        {step < 7 && (
-          <span style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 13, fontWeight: 600, color: '#8a7e72',
-            letterSpacing: 1, textTransform: 'uppercase',
-          }}>Step {step + 1} of 7</span>
+        {step < STEP_CONFIRM && (
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: '#8a7e72', letterSpacing: 1, textTransform: 'uppercase' }}>
+            Step {step + 1} of {TOTAL_STEPS}
+          </span>
         )}
       </nav>
 
-      {step < 7 && <ProgressDots step={step} total={7} />}
+      {step < STEP_CONFIRM && <ProgressDots step={step} total={TOTAL_STEPS} />}
 
-      <div style={{
-        maxWidth: 640, margin: '0 auto',
-        padding: '32px 24px 80px',
-        ...fadeStyle,
-      }}>
+      <div style={{ maxWidth: 640, margin: '0 auto', padding: '32px 24px 80px', ...fadeStyle }}>
 
-        {/* STEP 1 — Welcome */}
-        {step === 0 && (
+        {/* ── WELCOME ── */}
+        {curType === 'welcome' && (
           <div style={{ textAlign: 'center' }}>
             <DogIcon />
-            <h1 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(28px, 5vw, 42px)',
-              fontWeight: 800, color: '#1a1612',
-              margin: '20px 0 16px',
-              letterSpacing: -1,
-              lineHeight: 1.15,
-            }}>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 5vw, 42px)', fontWeight: 800, color: '#1a1612', margin: '20px 0 16px', letterSpacing: -1, lineHeight: 1.15 }}>
               Let&rsquo;s find the best food for your dog
             </h1>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 16, color: '#8a7e72',
-              lineHeight: 1.6, maxWidth: 440, margin: '0 auto 12px',
-            }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: '#8a7e72', lineHeight: 1.6, maxWidth: 440, margin: '0 auto 12px' }}>
               Tell us about your pup and we&rsquo;ll show you how their current food stacks up &mdash; plus smarter alternatives.
             </p>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 13, color: '#b5aa99',
-            }}>Takes about 2 minutes.</p>
-            <button onClick={() => goTo(1)} style={{
-              marginTop: 32,
-              padding: '14px 48px', borderRadius: 100,
-              background: '#1a1612', color: '#faf8f4',
-              fontSize: 16, fontWeight: 700, border: 'none',
-              cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-            }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#b5aa99' }}>Takes about 2 minutes.</p>
+            <button onClick={() => goTo(1)} style={{ marginTop: 32, padding: '14px 48px', borderRadius: 100, background: '#1a1612', color: '#faf8f4', fontSize: 16, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
               Get Started &rarr;
             </button>
           </div>
         )}
 
-        {/* STEP 2 — My Dogs */}
-        {step === 1 && (
+        {/* ── MY DOGS ── */}
+        {curType === 'dogs' && (
           <div style={{ textAlign: 'center' }}>
             <DogIcon />
-            <div style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(24px, 4vw, 32px)',
-              fontWeight: 700, color: '#1a1612',
-              lineHeight: 1.6, marginTop: 24,
-            }}>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 700, color: '#1a1612', lineHeight: 1.8, marginTop: 24 }}>
               I have{' '}
-              <InlineInput
-                value={dogCount}
-                onChange={e => {
-                  const v = e.target.value.replace(/\D/g, '');
-                  if (v === '' || (parseInt(v) >= 0 && parseInt(v) <= 9)) setDogCount(v);
-                }}
-                placeholder="#"
-                width={50}
-                type="text"
-                style={{ fontSize: 'clamp(24px, 4vw, 32px)' }}
-              />
+              <AutoInput value={dogCount} onChange={e => {
+                const v = e.target.value.replace(/\D/g, '');
+                if (v === '' || (parseInt(v) >= 0 && parseInt(v) <= 9)) setDogCount(v);
+              }} placeholder="#" minW={50} style={{ fontSize: 'clamp(24px, 4vw, 32px)' }} />
               {' '}{dogCount === '1' ? 'dog' : 'dogs'}
-              {dogCount && parseInt(dogCount) > 0 && (
-                <>
-                  {' '}named{' '}
-                  <InlineInput
-                    value={dogName}
-                    onChange={e => setDogName(e.target.value)}
-                    placeholder="name"
-                    width={180}
-                    style={{ fontSize: 'clamp(24px, 4vw, 32px)' }}
-                  />
+              {numDogs > 0 && numDogs <= 5 && (
+                <>{' '}named{' '}
+                  {dogNames.slice(0, numDogs).map((name, i) => (
+                    <span key={i}>
+                      {i > 0 && i < numDogs - 1 && ', '}
+                      {i > 0 && i === numDogs - 1 && (numDogs === 2 ? ' and ' : ', and ')}
+                      <AutoInput
+                        value={name}
+                        onChange={e => {
+                          const a = [...dogNames];
+                          a[i] = e.target.value;
+                          setDogNames(a);
+                        }}
+                        placeholder={`name ${numDogs > 1 ? i + 1 : ''}`}
+                        minW={100}
+                        maxW={220}
+                        style={{ fontSize: 'clamp(24px, 4vw, 32px)' }}
+                      />
+                    </span>
+                  ))}
                 </>
               )}
             </div>
-            {dogCount && parseInt(dogCount) > 1 && (
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13, color: '#b5aa99', marginTop: 12,
-              }}>
-                Multi-dog support coming soon &mdash; for now, tell us about your first pup!
+            {parseInt(dogCount) > 5 && (
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#b5aa99', marginTop: 12 }}>
+                We support up to 5 dog profiles right now.
               </p>
             )}
           </div>
         )}
 
-        {/* STEP 3 — Dog Profile */}
-        {step === 2 && (
+        {/* ── DOG PROFILE ── */}
+        {curType === 'profile' && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12, fontWeight: 700, color: '#C9A84C',
-              textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6,
-            }}>Tell us about {displayName}</div>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14, color: '#8a7e72', marginBottom: 28,
-            }}>This helps us personalize food recommendations.</p>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>
+              {numDogs > 1 ? `Dog ${curDogIdx + 1} of ${numDogs}: ${curDogName}` : `Tell us about ${curDogName}`}
+            </div>
+            {numDogs > 1 && curDogIdx === 0 && (
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 28 }}>
+                Let&rsquo;s learn about {curDogName} first.{numDogs > 1 && ` You\u2019ll do ${dogNames.slice(1, numDogs).filter(n=>n.trim()).join(', ') || 'the others'} next.`}
+              </p>
+            )}
+            {(numDogs === 1 || curDogIdx > 0) && (
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 28 }}>
+                This helps us personalize food recommendations.
+              </p>
+            )}
 
             <div style={sentenceFontStyle}>
-              <InlineDropdown
-                value={gender}
-                onChange={setGender}
-                options={[{ value: 'male', label: 'He' }, { value: 'female', label: 'She' }]}
-                width={60}
-                placeholder="---"
-              />
+              <InlineDropdown value={curDog.gender} onChange={v => updateDog(curDogIdx, 'gender', v)}
+                options={[{ value: 'male', label: 'He' }, { value: 'female', label: 'She' }]} width={60} placeholder="---" />
               {' '}is{' '}
-              <InlineInput
-                value={age}
-                onChange={e => {
-                  const v = e.target.value.replace(/\D/g, '');
-                  setAge(v);
-                }}
-                placeholder="age"
-                width={55}
-                type="text"
-                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
-              />
+              <AutoInput value={curDog.age} onChange={e => updateDog(curDogIdx, 'age', e.target.value.replace(/\D/g, ''))}
+                placeholder="age" minW={50} style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }} />
               {' '}
-              <InlineDropdown
-                value={ageUnit}
-                onChange={setAgeUnit}
-                options={['years', 'months']}
-                width={90}
-              />
+              <InlineDropdown value={curDog.ageUnit} onChange={v => updateDog(curDogIdx, 'ageUnit', v)}
+                options={['years', 'months']} width={90} />
               {' '}old.
             </div>
 
             <div style={{ ...sentenceFontStyle, marginTop: 8 }}>
               {pronounHe}{' '}
-              <InlineDropdown
-                value={neutered}
-                onChange={setNeutered}
-                options={[{ value: 'is', label: 'is' }, { value: 'is not', label: 'is not' }]}
-                width={70}
-                placeholder="---"
-              />
+              <InlineDropdown value={curDog.neutered} onChange={v => updateDog(curDogIdx, 'neutered', v)}
+                options={[{ value: 'is', label: 'is' }, { value: 'is not', label: 'is not' }]} width={70} placeholder="---" />
               {' '}neutered and weighs{' '}
-              <InlineInput
-                value={weight}
-                onChange={e => {
-                  const v = e.target.value.replace(/\D/g, '');
-                  setWeight(v);
-                }}
-                placeholder="lbs"
-                width={65}
-                type="text"
-                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
-              />
+              <AutoInput value={curDog.weight} onChange={e => updateDog(curDogIdx, 'weight', e.target.value.replace(/\D/g, ''))}
+                placeholder="lbs" minW={55} style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }} />
               {' '}lbs.
             </div>
 
             <div style={{ ...sentenceFontStyle, marginTop: 8 }}>
               Breed:{' '}
-              <BreedAutocomplete
-                value={breed}
-                onChange={setBreed}
-                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
-              />
+              <BreedAutocomplete value={curDog.breed} onChange={v => updateDog(curDogIdx, 'breed', v)}
+                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }} />
             </div>
           </div>
         )}
 
-        {/* STEP 4 — Current Food */}
-        {step === 3 && (
+        {/* ── CURRENT FOOD ── */}
+        {curType === 'food' && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12, fontWeight: 700, color: '#C9A84C',
-              textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6,
-            }}>{displayName}&rsquo;s current food</div>
-            <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(24px, 4vw, 32px)',
-              fontWeight: 800, color: '#1a1612',
-              margin: '8px 0 28px', letterSpacing: -0.5,
-            }}>Right now I feed {displayName}</h2>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>
+              {numDogs > 1 ? `${curDogName}\u2019s current food (${curDogIdx + 1} of ${numDogs})` : `${curDogName}\u2019s current food`}
+            </div>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 28px', letterSpacing: -0.5 }}>
+              Right now I feed {curDogName}
+            </h2>
+
+            {/* Same-food shortcut for dog 2+ */}
+            {curDogIdx > 0 && dogs[0].food && !curDog.food && !curDog.foodAlt && (
+              <div style={{ marginBottom: 20 }}>
+                <button onClick={() => { copyFoodFromFirst(curDogIdx); }} style={{
+                  padding: '10px 20px', borderRadius: 100, border: '1.5px solid #C9A84C',
+                  background: '#f7efd8', color: '#1a1612', fontSize: 14, fontWeight: 600,
+                  cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                }}>
+                  {curDogName} eats the same food as {dogNames[0]?.trim() || 'Dog 1'}
+                </button>
+              </div>
+            )}
 
             <FoodSearch
-              onSelect={(food) => { setCurrentFood(food); if (food) { setFoodAlt(''); setFoodAltText(''); } }}
-              selectedFood={currentFood}
+              onSelect={(food) => { updateDog(curDogIdx, 'food', food); if (food) { updateDog(curDogIdx, 'foodAlt', ''); updateDog(curDogIdx, 'foodAltText', ''); } }}
+              selectedFood={curDog.food}
             />
 
-            <div style={{
-              display: 'flex', flexWrap: 'wrap', gap: 10,
-              justifyContent: 'center', marginTop: 24,
-            }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginTop: 24 }}>
               {[
                 { key: 'not_sure', label: "I'm not sure" },
                 { key: 'no_kibble', label: "I don't feed kibble" },
                 { key: 'cant_find', label: "Can't find my food" },
               ].map(opt => {
-                const selected = foodAlt === opt.key;
+                const selected = curDog.foodAlt === opt.key;
                 return (
                   <button key={opt.key} onClick={() => {
                     const newVal = selected ? '' : opt.key;
-                    setFoodAlt(newVal);
-                    if (!selected) { setCurrentFood(null); setFoodAltText(''); }
+                    updateDog(curDogIdx, 'foodAlt', newVal);
+                    if (!selected) { updateDog(curDogIdx, 'food', null); updateDog(curDogIdx, 'foodAltText', ''); }
                   }} style={{
                     padding: '10px 20px', borderRadius: 100,
                     border: selected ? '2px solid #C9A84C' : '1.5px solid #ede8df',
                     background: selected ? '#f7efd8' : '#fff',
                     color: '#1a1612', fontSize: 14, fontWeight: 600,
-                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                    transition: 'all 0.2s ease',
+                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s ease',
                   }}>{opt.label}</button>
                 );
               })}
             </div>
 
-            {(foodAlt === 'no_kibble' || foodAlt === 'cant_find') && (
+            {(curDog.foodAlt === 'no_kibble' || curDog.foodAlt === 'cant_find') && (
               <div style={{ maxWidth: 500, margin: '16px auto 0' }}>
-                <input
-                  type="text"
-                  value={foodAltText}
-                  onChange={e => setFoodAltText(e.target.value)}
-                  placeholder={foodAlt === 'no_kibble'
-                    ? 'What do you feed? (e.g., raw diet, homemade, fresh food...)'
-                    : "Type your dog's food brand and product name"
-                  }
-                  className="food-alt-input"
-                  style={{
-                    width: '100%', padding: '12px 16px', borderRadius: 12,
-                    border: '1.5px solid #ede8df', fontSize: 15,
-                    fontFamily: "'DM Sans', sans-serif", background: '#fff',
-                    outline: 'none', boxSizing: 'border-box',
-                    transition: 'border-color 0.2s',
-                  }}
+                <input type="text" value={curDog.foodAltText}
+                  onChange={e => updateDog(curDogIdx, 'foodAltText', e.target.value)}
+                  placeholder={curDog.foodAlt === 'no_kibble' ? 'What do you feed? (e.g., raw diet, homemade, fresh food...)' : "Type your dog's food brand and product name"}
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1.5px solid #ede8df', fontSize: 15, fontFamily: "'DM Sans', sans-serif", background: '#fff', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' }}
                   onFocus={e => (e.target.style.borderColor = '#C9A84C')}
                   onBlur={e => (e.target.style.borderColor = '#ede8df')}
                 />
@@ -926,30 +773,15 @@ export default function SignupPage() {
           </div>
         )}
 
-        {/* STEP 5 — Priorities */}
-        {step === 4 && (
+        {/* ── PRIORITIES ── */}
+        {curType === 'priorities' && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12, fontWeight: 700, color: '#C9A84C',
-              textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6,
-            }}>What matters to you</div>
-            <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(24px, 4vw, 32px)',
-              fontWeight: 800, color: '#1a1612',
-              margin: '8px 0 8px', letterSpacing: -0.5,
-            }}>When it comes to {displayName}&rsquo;s food, I care most about...</h2>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14, color: '#8a7e72', marginBottom: 24,
-            }}>Select all that apply.</p>
-
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-              gap: 10, maxWidth: 500, margin: '0 auto',
-            }}>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>What matters to you</div>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 8px', letterSpacing: -0.5 }}>
+              When it comes to {numDogs > 1 ? 'your dogs\u2019' : `${firstDogName}\u2019s`} food, I care most about...
+            </h2>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 24 }}>Select all that apply.</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10, maxWidth: 500, margin: '0 auto' }}>
               {PRIORITIES.map(p => {
                 const selected = priorities.includes(p.label);
                 return (
@@ -959,184 +791,100 @@ export default function SignupPage() {
                     background: selected ? '#f7efd8' : '#fff',
                     color: '#1a1612', fontSize: 14, fontWeight: 600,
                     cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                    display: 'flex', alignItems: 'center', gap: 8,
-                    transition: 'all 0.2s ease', textAlign: 'left',
-                  }}>
-                    <span style={{ fontSize: 18 }}>{p.emoji}</span>
-                    {p.label}
-                  </button>
+                    display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s ease', textAlign: 'left',
+                  }}><span style={{ fontSize: 18 }}>{p.emoji}</span>{p.label}</button>
                 );
               })}
             </div>
           </div>
         )}
 
-        {/* STEP 6 — Account */}
-        {step === 5 && (
+        {/* ── ACCOUNT ── */}
+        {curType === 'account' && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12, fontWeight: 700, color: '#C9A84C',
-              textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6,
-            }}>Almost done</div>
-            <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(24px, 4vw, 32px)',
-              fontWeight: 800, color: '#1a1612',
-              margin: '8px 0 8px', letterSpacing: -0.5,
-            }}>Save {displayName}&rsquo;s profile</h2>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14, color: '#8a7e72', marginBottom: 28,
-            }}>We&rsquo;ll use this to personalize your recommendations and keep you updated on food scores.</p>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>Almost done</div>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 8px', letterSpacing: -0.5 }}>
+              Save {numDogs > 1 ? 'your dogs\u2019 profiles' : `${firstDogName}\u2019s profile`}
+            </h2>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 28 }}>
+              We&rsquo;ll use this to personalize your recommendations and keep you updated on food scores.
+            </p>
 
             <div style={sentenceFontStyle}>
               My first name is{' '}
-              <InlineInput
-                value={firstName}
-                onChange={e => setFirstName(e.target.value)}
-                placeholder="first name"
-                width={180}
-                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
-              />
+              <AutoInput value={firstName} onChange={e => setFirstName(e.target.value)}
+                placeholder="first name" minW={120} style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }} />
             </div>
 
-            <div className="account-field-row" style={{
-              ...sentenceFontStyle,
-              display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap',
-            }}>
+            <div className="account-field-row" style={{ ...sentenceFontStyle, display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
               <span style={{ flexShrink: 0 }}>My email is</span>
               <span style={{ flex: 1, minWidth: 0, display: 'inline-flex', alignItems: 'baseline', gap: 6 }}>
-                <InlineInput
-                  value={email}
-                  onChange={e => { setEmail(e.target.value); setEmailError(''); }}
-                  placeholder="email@example.com"
-                  type="email"
-                  className="signup-email-input"
-                  style={{ fontSize: 'clamp(20px, 3.5vw, 28px)', width: '100%', textAlign: 'left' }}
-                />
+                <AutoInput value={email} onChange={e => { setEmail(e.target.value); setEmailError(''); }}
+                  placeholder="email@example.com" type="email" minW={180} className="signup-email-input"
+                  style={{ fontSize: 'clamp(20px, 3.5vw, 28px)', width: '100%', textAlign: 'left' }} />
                 {email.trim() && isValidEmail(email.trim()) && (
                   <span style={{ color: '#2d7a4f', fontSize: 18, fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>
                 )}
               </span>
             </div>
-            {emailError && (
-              <p style={{ color: '#d4760a', fontSize: 12, marginTop: 2, fontFamily: "'DM Sans', sans-serif", textAlign: 'center' }}>{emailError}</p>
-            )}
+            {emailError && <p style={{ color: '#d4760a', fontSize: 12, marginTop: 2, fontFamily: "'DM Sans', sans-serif", textAlign: 'center' }}>{emailError}</p>}
 
-            <div className="account-field-row" style={{
-              ...sentenceFontStyle,
-              display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap',
-            }}>
+            <div className="account-field-row" style={{ ...sentenceFontStyle, display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
               <span style={{ flexShrink: 0 }}>My zip code is</span>
-              <InlineInput
-                value={zipCode}
-                onChange={e => {
-                  const v = e.target.value.replace(/\D/g, '').slice(0, 5);
-                  setZipCode(v);
-                }}
-                placeholder="00000"
-                width={120}
-                style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }}
-              />
+              <AutoInput value={zipCode} onChange={e => setZipCode(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                placeholder="00000" minW={80} style={{ fontSize: 'clamp(20px, 3.5vw, 28px)' }} />
             </div>
 
-            <div className="account-field-row" style={{
-              ...sentenceFontStyle,
-              display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap',
-            }}>
+            <div className="account-field-row" style={{ ...sentenceFontStyle, display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
               <span style={{ flexShrink: 0 }}>I heard about GoodKibble from</span>
-              <InlineDropdown
-                value={heardFrom}
-                onChange={setHeardFrom}
-                options={HEARD_FROM}
-                width={160}
-                placeholder="---"
-              />
+              <InlineDropdown value={heardFrom} onChange={setHeardFrom} options={HEARD_FROM} width={160} placeholder="---" />
             </div>
 
-            {error && (
-              <p style={{
-                color: '#b5483a', fontSize: 14, marginTop: 16,
-                fontFamily: "'DM Sans', sans-serif",
-              }}>{error}</p>
-            )}
+            {error && <p style={{ color: '#b5483a', fontSize: 14, marginTop: 16, fontFamily: "'DM Sans', sans-serif" }}>{error}</p>}
 
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 10, color: '#b5aa99', fontStyle: 'italic',
-              marginTop: 20, lineHeight: 1.5,
-            }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#b5aa99', fontStyle: 'italic', marginTop: 20, lineHeight: 1.5 }}>
               By creating a profile, you agree to receive occasional emails from GoodKibble. Unsubscribe anytime. We never share your data.
             </p>
           </div>
         )}
 
-        {/* STEP 7 — Confirmation */}
-        {step === 6 && (
+        {/* ── CONFIRMATION ── */}
+        {curType === 'confirm' && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{
-              width: 64, height: 64, borderRadius: '50%',
-              background: '#e6f4e0', display: 'flex', alignItems: 'center',
-              justifyContent: 'center', fontSize: 32, margin: '0 auto 20px',
-            }}>{'\u{1F389}'}</div>
-            <h1 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 'clamp(28px, 5vw, 40px)',
-              fontWeight: 800, color: '#1a1612',
-              margin: '0 0 8px', letterSpacing: -1,
-            }}>Welcome, {firstName}!</h1>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 16, color: '#8a7e72', marginBottom: 28,
-            }}>{displayName}&rsquo;s profile is saved.</p>
+            <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#e6f4e0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 20px' }}>{'\u{1F389}'}</div>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 5vw, 40px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -1 }}>
+              Welcome, {firstName}!
+            </h1>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: '#8a7e72', marginBottom: 28 }}>
+              {numDogs > 1 ? `${numDogs} dog profiles saved.` : `${firstDogName}\u2019s profile is saved.`}
+            </p>
 
-            <div style={{
-              background: '#fff', borderRadius: 16,
-              border: '1px solid #ede8df',
-              padding: 24, textAlign: 'left',
-              maxWidth: 420, margin: '0 auto 32px',
-            }}>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12, fontWeight: 700, color: '#C9A84C',
-                textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16,
-              }}>{displayName}&rsquo;s Profile</div>
-              {[
-                { label: 'Breed', value: breed },
-                { label: 'Age', value: `${age} ${ageUnit}` },
-                { label: 'Weight', value: `${weight} lbs` },
-                { label: 'Gender', value: gender === 'male' ? 'Male' : 'Female' },
-                { label: 'Neutered', value: neutered === 'is' ? 'Yes' : 'No' },
-                { label: 'Current Food', value: currentFood ? currentFood.name : foodAlt.replace('_', ' ') },
-              ].map((row, i) => (
-                <div key={row.label} style={{
-                  display: 'flex', justifyContent: 'space-between',
-                  padding: '10px 0',
-                  borderBottom: i < 5 ? '1px solid #f5f2ec' : 'none',
-                }}>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72' }}>{row.label}</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color: '#1a1612' }}>{row.value}</span>
+            {dogs.slice(0, numDogs).map((d, i) => (
+              <div key={i} style={{ background: '#fff', borderRadius: 16, border: '1px solid #ede8df', padding: 24, textAlign: 'left', maxWidth: 420, margin: '0 auto 16px' }}>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16 }}>
+                  {dogNames[i]?.trim() || `Dog ${i + 1}`}
                 </div>
-              ))}
-            </div>
+                {[
+                  { label: 'Breed', value: d.breed },
+                  { label: 'Age', value: `${d.age} ${d.ageUnit}` },
+                  { label: 'Weight', value: `${d.weight} lbs` },
+                  { label: 'Gender', value: d.gender === 'male' ? 'Male' : 'Female' },
+                  { label: 'Neutered', value: d.neutered === 'is' ? 'Yes' : 'No' },
+                  { label: 'Current Food', value: d.food ? d.food.name : (d.foodAltText.trim() || d.foodAlt.replace('_', ' ')) },
+                ].map((row, j) => (
+                  <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: j < 5 ? '1px solid #f5f2ec' : 'none' }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72' }}>{row.label}</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color: '#1a1612', textAlign: 'right', maxWidth: '55%' }}>{row.value}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
 
-            <button onClick={() => router.push('/discover')} style={{
-              padding: '14px 48px', borderRadius: 100,
-              background: '#1a1612', color: '#faf8f4',
-              fontSize: 16, fontWeight: 700, border: 'none',
-              cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-            }}>
-              See {displayName}&rsquo;s Recommendations &rarr;
+            <button onClick={() => router.push('/discover')} style={{ padding: '14px 48px', borderRadius: 100, background: '#1a1612', color: '#faf8f4', fontSize: 16, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
+              See Recommendations &rarr;
             </button>
-
             <div style={{ marginTop: 16 }}>
-              <button onClick={() => router.push('/profile')} style={{
-                padding: '10px 32px', borderRadius: 100,
-                background: 'transparent', color: '#8a7e72',
-                fontSize: 14, fontWeight: 600, border: '1.5px solid #ede8df',
-                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-              }}>
+              <button onClick={() => router.push('/profile')} style={{ padding: '10px 32px', borderRadius: 100, background: 'transparent', color: '#8a7e72', fontSize: 14, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
                 View My Profile
               </button>
             </div>
@@ -1144,17 +892,9 @@ export default function SignupPage() {
         )}
 
         {/* Navigation buttons */}
-        {step >= 1 && step <= 5 && (
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            gap: 12, marginTop: 40,
-          }}>
-            <button onClick={handleBack} style={{
-              padding: '12px 28px', borderRadius: 100,
-              background: 'transparent', color: '#8a7e72',
-              fontSize: 15, fontWeight: 600, border: '1.5px solid #ede8df',
-              cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-            }}>&larr; Back</button>
+        {step >= 1 && step < STEP_CONFIRM && (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginTop: 40 }}>
+            <button onClick={handleBack} style={{ padding: '12px 28px', borderRadius: 100, background: 'transparent', color: '#8a7e72', fontSize: 15, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>&larr; Back</button>
             <button onClick={handleNext} disabled={!canContinue() || submitting} style={{
               padding: '14px 48px', borderRadius: 100,
               background: canContinue() ? '#1a1612' : '#ede8df',
@@ -1162,10 +902,9 @@ export default function SignupPage() {
               fontSize: 16, fontWeight: 700, border: 'none',
               cursor: canContinue() ? 'pointer' : 'default',
               fontFamily: "'DM Sans', sans-serif",
-              opacity: submitting ? 0.7 : 1,
-              transition: 'background 0.2s, color 0.2s',
+              opacity: submitting ? 0.7 : 1, transition: 'background 0.2s, color 0.2s',
             }}>
-              {submitting ? 'Saving...' : step === 5 ? 'Create My Profile \u2192' : 'Continue'}
+              {submitting ? 'Saving...' : curType === 'account' ? 'Create My Profile \u2192' : 'Continue'}
             </button>
           </div>
         )}

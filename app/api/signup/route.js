@@ -10,13 +10,16 @@ function getSupabase() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { first_name, email, zip_code, heard_from, dog } = body;
+    const { first_name, email, zip_code, heard_from, dogs, dog } = body;
 
     if (!first_name || !email || !zip_code) {
       return NextResponse.json({ error: 'First name, email, and zip code are required.' }, { status: 400 });
     }
-    if (!dog || !dog.dog_name || !dog.breed || !dog.gender) {
-      return NextResponse.json({ error: 'Dog profile information is required.' }, { status: 400 });
+
+    // Support both single dog (legacy) and multi-dog payloads
+    const dogList = dogs || (dog ? [dog] : []);
+    if (dogList.length === 0 || !dogList[0].dog_name) {
+      return NextResponse.json({ error: 'At least one dog profile is required.' }, { status: 400 });
     }
 
     const supabase = getSupabase();
@@ -24,17 +27,11 @@ export async function POST(request) {
     // Insert user profile
     const { data: user, error: userError } = await supabase
       .from('user_profiles')
-      .insert({
-        first_name,
-        email,
-        zip_code,
-        heard_from: heard_from || null,
-      })
+      .insert({ first_name, email, zip_code, heard_from: heard_from || null })
       .select('id')
       .single();
 
     if (userError) {
-      // Check for duplicate email
       if (userError.code === '23505') {
         return NextResponse.json({ error: 'An account with this email already exists.' }, { status: 409 });
       }
@@ -42,35 +39,37 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Failed to create account. Please try again.' }, { status: 500 });
     }
 
-    // Insert dog profile
-    const { data: dogProfile, error: dogError } = await supabase
+    // Insert all dog profiles
+    const dogRows = dogList.map(d => ({
+      user_id: user.id,
+      dog_name: d.dog_name,
+      breed: d.breed,
+      age_value: d.age_value,
+      age_unit: d.age_unit,
+      weight_lbs: d.weight_lbs,
+      gender: d.gender,
+      is_neutered: d.is_neutered,
+      current_food: d.current_food,
+      current_food_slug: d.current_food_slug || null,
+      priorities: d.priorities || [],
+    }));
+
+    const { data: dogProfiles, error: dogError } = await supabase
       .from('dog_profiles')
-      .insert({
-        user_id: user.id,
-        dog_name: dog.dog_name,
-        breed: dog.breed,
-        age_value: dog.age_value,
-        age_unit: dog.age_unit,
-        weight_lbs: dog.weight_lbs,
-        gender: dog.gender,
-        is_neutered: dog.is_neutered,
-        current_food: dog.current_food,
-        current_food_slug: dog.current_food_slug || null,
-        priorities: dog.priorities || [],
-      })
-      .select('id')
-      .single();
+      .insert(dogRows)
+      .select('id');
 
     if (dogError) {
       console.error('Dog insert error:', dogError);
-      // Clean up the user if dog insert fails
       await supabase.from('user_profiles').delete().eq('id', user.id);
-      return NextResponse.json({ error: 'Failed to save dog profile. Please try again.' }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to save dog profiles. Please try again.' }, { status: 500 });
     }
 
     return NextResponse.json({
       user_id: user.id,
-      dog_id: dogProfile.id,
+      dog_ids: dogProfiles.map(d => d.id),
+      // Legacy compat
+      dog_id: dogProfiles[0]?.id,
     });
   } catch (err) {
     console.error('Signup error:', err);
