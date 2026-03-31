@@ -1147,11 +1147,15 @@ export default function FoodPageContent({ productId }) {
                    because the fadeUp keyframe ends at opacity:1 which overrides inline opacity.
                    For tooltip/salt pills after salt, opacity lives on the pill itself so the
                    tooltip popover renders at full opacity. */
+                /* Pills with tooltips use opacity-only animation to avoid
+                   transform creating a new positioning context that breaks
+                   absolute tooltip placement relative to the container. */
                 const wrapStyle = afterSalt
                   ? { display: 'inline-block', opacity: (hasTooltip || isSalt) ? 1 : 0.4 }
                   : {
                       display: 'inline-block',
-                      animationName: 'fadeUp', animationDuration: '0.4s',
+                      animationName: (hasTooltip || isSalt) ? 'fadeUpNoTransform' : 'fadeUp',
+                      animationDuration: '0.4s',
                       animationFillMode: 'both', animationDelay: `${i * 20}ms`,
                     };
 
