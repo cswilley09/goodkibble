@@ -27,7 +27,7 @@ export async function POST(request) {
     // Insert user profile
     const { data: user, error: userError } = await supabase
       .from('user_profiles')
-      .insert({ first_name, email, zip_code, heard_from: heard_from || null })
+      .insert({ first_name, email, zip_code, heard_from: heard_from || null, signup_data: body })
       .select('id')
       .single();
 
