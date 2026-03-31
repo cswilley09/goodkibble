@@ -50,30 +50,32 @@ function useTooltipPosition(show, triggerRef, tooltipWidth = 280) {
   const [pos, setPos] = useState({ left: '50%', transform: 'translateX(-50%)', arrowLeft: '50%' });
   useEffect(() => {
     if (!show || !triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const triggerCenter = rect.left + rect.width / 2;
+    const trigger = triggerRef.current;
+    const triggerRect = trigger.getBoundingClientRect();
 
-    // Desired tooltip left edge in viewport coords
-    let left = triggerCenter - tooltipWidth / 2;
+    // Find the nearest positioned ancestor (the ingredient container)
+    const container = trigger.closest('[data-ingredient-container]') || trigger.offsetParent;
+    const containerRect = container ? container.getBoundingClientRect() : { left: 0, width: window.innerWidth };
+    const containerWidth = containerRect.width;
 
-    // If overflowing right, shift left
-    if (left + tooltipWidth > vw - 8) {
-      left = vw - tooltipWidth - 8;
-    }
-    // If overflowing left, shift right
-    if (left < 8) {
-      left = 8;
-    }
+    // Trigger center relative to container
+    const triggerCenterInContainer = (triggerRect.left + triggerRect.width / 2) - containerRect.left;
 
-    // Convert viewport left to offset relative to trigger element
-    const offsetLeft = left - rect.left;
+    // Desired left edge of tooltip (centered on trigger), relative to container
+    let left = triggerCenterInContainer - tooltipWidth / 2;
 
-    // Arrow points at center of trigger relative to tooltip
-    const arrowLeft = Math.max(16, Math.min(triggerCenter - left, tooltipWidth - 16));
+    // Clamp within container bounds with 4px padding
+    left = Math.max(4, Math.min(left, containerWidth - tooltipWidth - 4));
+
+    // Convert to offset relative to the trigger element
+    const triggerLeftInContainer = triggerRect.left - containerRect.left;
+    const offsetFromTrigger = left - triggerLeftInContainer;
+
+    // Arrow points at trigger center relative to tooltip
+    const arrowLeft = Math.max(16, Math.min(triggerCenterInContainer - left, tooltipWidth - 16));
 
     setPos({
-      left: `${offsetLeft}px`,
+      left: `${offsetFromTrigger}px`,
       transform: 'none',
       arrowLeft: `${arrowLeft}px`,
     });
@@ -1074,7 +1076,7 @@ export default function FoodPageContent({ productId }) {
 
 
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            <div data-ingredient-container style={{ display: 'flex', flexWrap: 'wrap', gap: 6, position: 'relative' }}>
               {ingredients.map((ing, i) => {
                 const isSalt = isSaltIngredient(ing);
                 const isFirst = i === 0;
