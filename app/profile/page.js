@@ -246,6 +246,7 @@ export default function ProfilePage() {
   const [editData, setEditData] = useState({});
   const [editFood, setEditFood] = useState(null); // { name, slug, brand_slug } or null
   const [saving, setSaving] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Current food data from dog_foods_v2
   const [currentFoodData, setCurrentFoodData] = useState(null);
@@ -294,7 +295,7 @@ export default function ProfilePage() {
         if (data && !data.error) setCurrentFoodData(data);
       })
       .catch(() => {});
-  }, [dog?.current_food_slug]);
+  }, [dog?.current_food_slug, refreshKey]);
 
   // Calculate percentile and fetch alternatives
   useEffect(() => {
@@ -569,10 +570,15 @@ export default function ProfilePage() {
                   <button onClick={() => {
                     setEditing(true);
                     setEditData({
-                      breed: dog.breed, age_value: String(dog.age_value), age_unit: dog.age_unit,
-                      weight_lbs: String(dog.weight_lbs), gender: dog.gender, is_neutered: dog.is_neutered,
+                      breed: dog.breed || '', age_value: String(dog.age_value || ''), age_unit: dog.age_unit || 'years',
+                      weight_lbs: String(dog.weight_lbs || ''), gender: dog.gender || '', is_neutered: !!dog.is_neutered,
                     });
-                    setEditFood(dog.current_food_slug ? { name: dog.current_food, slug: dog.current_food_slug.split('/').slice(1).join('/'), brand_slug: dog.current_food_slug.split('/')[0] } : null);
+                    if (dog.current_food_slug) {
+                      const parts = dog.current_food_slug.split('/');
+                      setEditFood({ name: dog.current_food, slug: parts.slice(1).join('/'), brand_slug: parts[0] });
+                    } else {
+                      setEditFood(undefined); // undefined = not changed, null = cleared
+                    }
                   }} style={{
                     padding: '6px 16px', borderRadius: 100, background: 'transparent', color: '#C9A84C',
                     fontSize: 12, fontWeight: 600, border: '1.5px solid #C9A84C',
@@ -670,6 +676,7 @@ export default function ProfilePage() {
                     <button disabled={saving} onClick={async () => {
                       if (!editData.breed || !editData.age_value || !editData.weight_lbs) return;
                       setSaving(true);
+                      // Build updates — only include food fields if user changed them
                       const updates = {
                         breed: editData.breed,
                         age_value: parseInt(editData.age_value),
@@ -677,22 +684,37 @@ export default function ProfilePage() {
                         weight_lbs: parseInt(editData.weight_lbs),
                         gender: editData.gender,
                         is_neutered: editData.is_neutered,
-                        current_food: editFood ? editFood.name : dog.current_food,
-                        current_food_slug: editFood ? `${editFood.brand_slug}/${editFood.slug}` : (editFood === null && dog.current_food_slug ? null : dog.current_food_slug),
                       };
+                      // editFood: undefined = not touched, null = cleared, object = new selection
+                      if (editFood !== undefined) {
+                        if (editFood && editFood.slug) {
+                          updates.current_food = editFood.name;
+                          updates.current_food_slug = `${editFood.brand_slug}/${editFood.slug}`;
+                        } else {
+                          updates.current_food = null;
+                          updates.current_food_slug = null;
+                        }
+                      }
                       try {
                         const res = await fetch('/api/profile', {
                           method: 'PATCH',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({ dog_id: dog.id, updates }),
                         });
+                        const result = await res.json();
                         if (res.ok) {
-                          const updated = await res.json();
-                          setDogs(prev => prev.map((d, i) => i === activeDogIdx ? updated : d));
+                          setDogs(prev => prev.map((d, i) => i === activeDogIdx ? result : d));
                           setEditing(false);
-                          setCurrentFoodData(null); // trigger re-fetch
+                          setEditFood(null);
+                          setCurrentFoodData(null);
+                          setPercentile(null);
+                          setAlternatives([]);
+                          setRefreshKey(k => k + 1); // force food re-fetch
+                          setTab('dashboard'); // go back to dashboard to see updated scores
                         }
-                      } catch {}
+                      } catch (err) {
+                        console.error('Save failed:', err);
+                      }
                       setSaving(false);
                     }} style={{
                       flex: 1, padding: '12px 0', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
