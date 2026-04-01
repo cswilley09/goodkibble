@@ -756,6 +756,13 @@ export default function FoodPageContent({ productId }) {
         ?.map((s) => s.trim()).filter(Boolean) || []
     : [];
   const saltIdx = findSaltIndex(ingredients);
+  const [pillsAnimated, setPillsAnimated] = useState(false);
+  useEffect(() => {
+    if (ingredients.length > 0 && !pillsAnimated) {
+      const t = setTimeout(() => setPillsAnimated(true), ingredients.length * 20 + 500);
+      return () => clearTimeout(t);
+    }
+  }, [ingredients.length, pillsAnimated]);
 
   return (
     <div style={{ minHeight: '100vh', background: '#ffffff', overflowX: 'hidden' }}>
@@ -1032,11 +1039,13 @@ export default function FoodPageContent({ productId }) {
                    tooltip popover renders at full opacity. */
                 const wrapStyle = afterSalt
                   ? { display: 'inline-block', opacity: (hasTooltip || isSalt) ? 1 : 0.4 }
-                  : {
-                      display: 'inline-block',
-                      animationName: 'fadeUp', animationDuration: '0.4s',
-                      animationFillMode: 'both', animationDelay: `${i * 20}ms`,
-                    };
+                  : pillsAnimated
+                    ? { display: 'inline-block' }
+                    : {
+                        display: 'inline-block',
+                        animationName: 'fadeUp', animationDuration: '0.4s',
+                        animationFillMode: 'both', animationDelay: `${i * 20}ms`,
+                      };
 
                 /* quality dot color */
                 const signal = info?.quality_signal;
