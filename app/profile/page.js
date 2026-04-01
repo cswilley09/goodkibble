@@ -1,7 +1,28 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import SignUpButton from '../components/SignUpButton';
+
+const BREEDS = [
+  'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akita', 'Alaskan Malamute',
+  'American Bulldog', 'American Pit Bull Terrier', 'Australian Cattle Dog', 'Australian Shepherd',
+  'Basenji', 'Basset Hound', 'Beagle', 'Belgian Malinois', 'Bernedoodle',
+  'Bernese Mountain Dog', 'Bichon Frise', 'Border Collie', 'Boston Terrier', 'Boxer',
+  'Bulldog', 'Bullmastiff', 'Cairn Terrier', 'Cane Corso', 'Cavalier King Charles Spaniel',
+  'Cavapoo', 'Chihuahua', 'Chow Chow', 'Cockapoo', 'Cocker Spaniel', 'Collie', 'Corgi',
+  'Dachshund', 'Dalmatian', 'Doberman Pinscher', 'English Bulldog', 'French Bulldog',
+  'German Shepherd', 'German Shorthaired Pointer', 'Golden Retriever', 'Goldendoodle',
+  'Great Dane', 'Great Pyrenees', 'Greyhound', 'Havanese', 'Irish Setter', 'Italian Greyhound',
+  'Jack Russell Terrier', 'Labradoodle', 'Labrador Retriever', 'Lhasa Apso', 'Maltese',
+  'Maltipoo', 'Mastiff', 'Miniature Pinscher', 'Miniature Poodle', 'Miniature Schnauzer',
+  'Newfoundland', 'Old English Sheepdog', 'Papillon', 'Pekingese', 'Pembroke Welsh Corgi',
+  'Pomeranian', 'Pomsky', 'Poodle', 'Portuguese Water Dog', 'Pug', 'Puggle', 'Rat Terrier',
+  'Rhodesian Ridgeback', 'Rottweiler', 'Saint Bernard', 'Samoyed', 'Schnauzer', 'Schnoodle',
+  'Shetland Sheepdog', 'Shiba Inu', 'Shih Tzu', 'Siberian Husky', 'Staffordshire Bull Terrier',
+  'Standard Poodle', 'Standard Schnauzer', 'Tibetan Mastiff', 'Toy Poodle', 'Vizsla',
+  'Weimaraner', 'West Highland White Terrier', 'Whippet', 'Yorkshire Terrier',
+  'Mixed Breed', 'Other',
+];
 
 const cardStyle = {
   background: '#fff', borderRadius: 20, border: '1px solid #ede8df', padding: 28, marginBottom: 24,
@@ -11,6 +32,139 @@ const eyebrow = (text) => ({
   textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16,
 });
 const mobileCardPad = { padding: 28 };
+
+/* ── Breed Autocomplete (reused from signup) ── */
+function BreedPicker({ value, onChange }) {
+  const [text, setText] = useState(value || '');
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => { setText(value || ''); }, [value]);
+  useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+  const q = text.trim().toLowerCase();
+  const matches = q ? BREEDS.filter(b => b.toLowerCase().includes(q)).slice(0, 8) : [];
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <input type="text" value={text} placeholder="Search breed..."
+        onChange={e => { setText(e.target.value); onChange(''); setOpen(true); }}
+        onFocus={() => { if (q && matches.length) setOpen(true); }}
+        style={{
+          width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df',
+          fontSize: 14, fontFamily: "'DM Sans', sans-serif", background: '#fff', outline: 'none',
+          color: '#1a1612', fontWeight: 600, boxSizing: 'border-box',
+        }}
+        onFocus={e => (e.target.style.borderColor = '#C9A84C')}
+        onBlur={e => { if (!open) e.target.style.borderColor = '#ede8df'; }}
+      />
+      {open && q && matches.length > 0 && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0,
+          background: '#fff', borderRadius: 10, border: '1px solid #ede8df',
+          boxShadow: '0 6px 20px rgba(0,0,0,0.08)', zIndex: 100, maxHeight: 200, overflowY: 'auto',
+        }}>
+          {matches.map(b => (
+            <div key={b} onMouseDown={e => { e.preventDefault(); setText(b); onChange(b); setOpen(false); }}
+              style={{ padding: '9px 14px', fontSize: 14, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", color: b === value ? '#C9A84C' : '#1a1612', fontWeight: b === value ? 600 : 400 }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#f5f2ec')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >{b}</div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Food Search (reused from signup) ── */
+function FoodPicker({ value, onChange }) {
+  const [text, setText] = useState('');
+  const [results, setResults] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const boxRef = useRef(null);
+  const debounceRef = useRef(null);
+  useEffect(() => {
+    const h = (e) => { if (boxRef.current && !boxRef.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+  function handleChange(e) {
+    const val = e.target.value;
+    setText(val);
+    clearTimeout(debounceRef.current);
+    if (!val.trim()) { setResults([]); setOpen(false); return; }
+    setLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch('/api/foods/search?q=' + encodeURIComponent(val) + '&limit=10');
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        setResults((Array.isArray(data) ? data : []).slice(0, 10));
+        setOpen(true);
+      } catch { setResults([]); }
+      setLoading(false);
+    }, 250);
+  }
+  function handleSelect(food) {
+    const n = food.name.toUpperCase().startsWith(food.brand.toUpperCase())
+      ? `${food.brand} \u2014 ${food.name.slice(food.brand.length).trim()}`
+      : `${food.brand} \u2014 ${food.name}`;
+    onChange({ name: n, slug: food.slug, brand_slug: food.brand_slug });
+    setText('');
+    setResults([]);
+    setOpen(false);
+  }
+  if (value) {
+    return (
+      <div style={{ background: '#f7efd8', border: '1.5px solid #C9A84C', borderRadius: 10, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1, minWidth: 0 }}>
+          <span style={{ color: '#2d7a4f', fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>
+          <span style={{ fontSize: 13, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value.name}</span>
+        </div>
+        <button onClick={() => onChange(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8a7e72', fontSize: 16, padding: '0 0 0 8px' }}>&times;</button>
+      </div>
+    );
+  }
+  return (
+    <div ref={boxRef} style={{ position: 'relative' }}>
+      <div style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 10, padding: '4px 4px 4px 14px', border: '1.5px solid #ede8df' }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b5aa99" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" /></svg>
+        <input type="text" placeholder="Search for a food..." value={text} onChange={handleChange}
+          onFocus={() => { if (results.length) setOpen(true); }}
+          style={{ flex: 1, border: 'none', outline: 'none', fontSize: 14, padding: '8px 8px', background: 'transparent', color: '#1a1612', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, minWidth: 0 }}
+        />
+      </div>
+      {open && (
+        <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, background: '#fff', borderRadius: 10, overflow: 'hidden', boxShadow: '0 8px 32px rgba(26,22,18,0.12)', zIndex: 100, maxHeight: 300, overflowY: 'auto' }}>
+          {loading && results.length === 0 ? (
+            <div style={{ padding: 16, textAlign: 'center', color: '#8a7e72', fontSize: 13 }}>Searching...</div>
+          ) : results.length === 0 ? (
+            <div style={{ padding: 16, textAlign: 'center', color: '#8a7e72', fontSize: 13 }}>No results found.</div>
+          ) : results.map(f => (
+            <div key={f.id} onMouseDown={e => { e.preventDefault(); handleSelect(f); }}
+              style={{ padding: '10px 14px', cursor: 'pointer', borderBottom: '1px solid #f0ebe3', display: 'flex', alignItems: 'center', gap: 10 }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#faf8f5')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >
+              {f.image_url ? (
+                <img src={f.image_url} alt="" style={{ width: 32, height: 32, borderRadius: 6, objectFit: 'contain', background: '#f5f0e8', flexShrink: 0 }} />
+              ) : (
+                <div style={{ width: 32, height: 32, borderRadius: 6, background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>{'\u{1F415}'}</div>
+              )}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
+                <div style={{ fontSize: 11, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function ScoreCircle({ score, size = 48 }) {
   if (score == null) return null;
@@ -88,6 +242,10 @@ export default function ProfilePage() {
   const [activeDogIdx, setActiveDogIdx] = useState(0);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('dashboard');
+  const [editing, setEditing] = useState(false);
+  const [editData, setEditData] = useState({});
+  const [editFood, setEditFood] = useState(null); // { name, slug, brand_slug } or null
+  const [saving, setSaving] = useState(false);
 
   // Current food data from dog_foods_v2
   const [currentFoodData, setCurrentFoodData] = useState(null);
@@ -234,7 +392,7 @@ export default function ProfilePage() {
         {dogs.length > 1 && (
           <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 24 }}>
             {dogs.map((d, i) => (
-              <button key={d.id} onClick={() => setActiveDogIdx(i)} style={{
+              <button key={d.id} onClick={() => { setActiveDogIdx(i); setEditing(false); }} style={{
                 padding: '8px 20px', borderRadius: 100, fontSize: 13, fontWeight: 600,
                 fontFamily: "'DM Sans', sans-serif", cursor: 'pointer', transition: 'all 0.2s',
                 background: i === activeDogIdx ? '#C9A84C' : 'transparent',
@@ -405,34 +563,154 @@ export default function ProfilePage() {
         {tab === 'profile' && dog && (
           <>
             <div style={cardStyle}>
-              <div style={eyebrow()}>{displayName}&rsquo;s Profile</div>
-              {[
-                { label: 'Breed', value: dog.breed },
-                { label: 'Age', value: `${dog.age_value} ${dog.age_unit}` },
-                { label: 'Weight', value: `${dog.weight_lbs} lbs` },
-                { label: 'Gender', value: dog.gender === 'male' ? 'Male' : 'Female' },
-                { label: 'Neutered', value: dog.is_neutered ? 'Yes' : 'No' },
-                { label: 'Current Food', value: dog.current_food || 'Not specified' },
-              ].map((row, i, arr) => (
-                <div key={row.label} style={{
-                  display: 'flex', justifyContent: 'space-between', padding: '11px 0',
-                  borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
-                }}>
-                  <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{row.label}</span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", textAlign: 'right', maxWidth: '60%' }}>{row.value}</span>
-                </div>
-              ))}
-              <div style={{ marginTop: 16 }}>
-                <button style={{
-                  padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#1a1612',
-                  fontSize: 13, fontWeight: 600, border: '1.5px solid #ede8df',
-                  cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                }}>Edit Profile</button>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <div style={eyebrow()}>{displayName}&rsquo;s Profile</div>
+                {!editing && (
+                  <button onClick={() => {
+                    setEditing(true);
+                    setEditData({
+                      breed: dog.breed, age_value: String(dog.age_value), age_unit: dog.age_unit,
+                      weight_lbs: String(dog.weight_lbs), gender: dog.gender, is_neutered: dog.is_neutered,
+                    });
+                    setEditFood(dog.current_food_slug ? { name: dog.current_food, slug: dog.current_food_slug.split('/').slice(1).join('/'), brand_slug: dog.current_food_slug.split('/')[0] } : null);
+                  }} style={{
+                    padding: '6px 16px', borderRadius: 100, background: 'transparent', color: '#C9A84C',
+                    fontSize: 12, fontWeight: 600, border: '1.5px solid #C9A84C',
+                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                  }}>Edit</button>
+                )}
               </div>
+
+              {!editing ? (
+                <>
+                  {[
+                    { label: 'Breed', value: dog.breed },
+                    { label: 'Age', value: `${dog.age_value} ${dog.age_unit}` },
+                    { label: 'Weight', value: `${dog.weight_lbs} lbs` },
+                    { label: 'Gender', value: dog.gender === 'male' ? 'Male' : 'Female' },
+                    { label: 'Neutered', value: dog.is_neutered ? 'Yes' : 'No' },
+                    { label: 'Current Food', value: dog.current_food || 'Not specified' },
+                  ].map((row, i, arr) => (
+                    <div key={row.label} style={{
+                      display: 'flex', justifyContent: 'space-between', padding: '11px 0',
+                      borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
+                    }}>
+                      <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{row.label}</span>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", textAlign: 'right', maxWidth: '60%' }}>{row.value}</span>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  {/* Breed */}
+                  <div>
+                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Breed</label>
+                    <BreedPicker value={editData.breed} onChange={v => setEditData(d => ({ ...d, breed: v }))} />
+                  </div>
+                  {/* Age */}
+                  <div style={{ display: 'flex', gap: 10 }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Age</label>
+                      <input type="number" min="0" value={editData.age_value} onChange={e => setEditData(d => ({ ...d, age_value: e.target.value }))}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, fontFamily: "'DM Sans', sans-serif", background: '#fff', outline: 'none', fontWeight: 600, color: '#1a1612', boxSizing: 'border-box' }} />
+                    </div>
+                    <div style={{ width: 120 }}>
+                      <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Unit</label>
+                      <select value={editData.age_unit} onChange={e => setEditData(d => ({ ...d, age_unit: e.target.value }))}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, fontFamily: "'DM Sans', sans-serif", background: '#fff', outline: 'none', fontWeight: 600, color: '#1a1612', boxSizing: 'border-box' }}>
+                        <option value="years">Years</option>
+                        <option value="months">Months</option>
+                      </select>
+                    </div>
+                  </div>
+                  {/* Weight */}
+                  <div>
+                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Weight (lbs)</label>
+                    <input type="number" min="0" value={editData.weight_lbs} onChange={e => setEditData(d => ({ ...d, weight_lbs: e.target.value }))}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, fontFamily: "'DM Sans', sans-serif", background: '#fff', outline: 'none', fontWeight: 600, color: '#1a1612', boxSizing: 'border-box' }} />
+                  </div>
+                  {/* Gender */}
+                  <div>
+                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Gender</label>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      {['male', 'female'].map(g => (
+                        <button key={g} onClick={() => setEditData(d => ({ ...d, gender: g }))} style={{
+                          flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 14, fontWeight: 600,
+                          fontFamily: "'DM Sans', sans-serif", cursor: 'pointer',
+                          background: editData.gender === g ? '#f7efd8' : '#fff',
+                          color: editData.gender === g ? '#1a1612' : '#8a7e72',
+                          border: editData.gender === g ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
+                        }}>{g === 'male' ? 'Male' : 'Female'}</button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Neutered */}
+                  <div>
+                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Neutered</label>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      {[true, false].map(v => (
+                        <button key={String(v)} onClick={() => setEditData(d => ({ ...d, is_neutered: v }))} style={{
+                          flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 14, fontWeight: 600,
+                          fontFamily: "'DM Sans', sans-serif", cursor: 'pointer',
+                          background: editData.is_neutered === v ? '#f7efd8' : '#fff',
+                          color: editData.is_neutered === v ? '#1a1612' : '#8a7e72',
+                          border: editData.is_neutered === v ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
+                        }}>{v ? 'Yes' : 'No'}</button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Current Food */}
+                  <div>
+                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Current Food</label>
+                    <FoodPicker value={editFood} onChange={setEditFood} />
+                  </div>
+
+                  {/* Save / Cancel */}
+                  <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+                    <button disabled={saving} onClick={async () => {
+                      if (!editData.breed || !editData.age_value || !editData.weight_lbs) return;
+                      setSaving(true);
+                      const updates = {
+                        breed: editData.breed,
+                        age_value: parseInt(editData.age_value),
+                        age_unit: editData.age_unit,
+                        weight_lbs: parseInt(editData.weight_lbs),
+                        gender: editData.gender,
+                        is_neutered: editData.is_neutered,
+                        current_food: editFood ? editFood.name : dog.current_food,
+                        current_food_slug: editFood ? `${editFood.brand_slug}/${editFood.slug}` : (editFood === null && dog.current_food_slug ? null : dog.current_food_slug),
+                      };
+                      try {
+                        const res = await fetch('/api/profile', {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ dog_id: dog.id, updates }),
+                        });
+                        if (res.ok) {
+                          const updated = await res.json();
+                          setDogs(prev => prev.map((d, i) => i === activeDogIdx ? updated : d));
+                          setEditing(false);
+                          setCurrentFoodData(null); // trigger re-fetch
+                        }
+                      } catch {}
+                      setSaving(false);
+                    }} style={{
+                      flex: 1, padding: '12px 0', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
+                      fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      opacity: saving ? 0.6 : 1,
+                    }}>{saving ? 'Saving...' : 'Save Changes'}</button>
+                    <button onClick={() => { setEditing(false); setEditFood(null); }} style={{
+                      padding: '12px 24px', borderRadius: 100, background: 'transparent', color: '#8a7e72',
+                      fontSize: 14, fontWeight: 600, border: '1.5px solid #ede8df',
+                      cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    }}>Cancel</button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Priorities */}
-            {dog.priorities && dog.priorities.length > 0 && (
+            {!editing && dog.priorities && dog.priorities.length > 0 && (
               <div style={cardStyle}>
                 <div style={eyebrow()}>Your Priorities</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>

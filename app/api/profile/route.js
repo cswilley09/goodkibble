@@ -42,3 +42,39 @@ export async function GET(request) {
     return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 });
   }
 }
+
+export async function PATCH(request) {
+  try {
+    const body = await request.json();
+    const { dog_id, updates } = body;
+
+    if (!dog_id || !updates) {
+      return NextResponse.json({ error: 'dog_id and updates are required' }, { status: 400 });
+    }
+
+    const supabase = getSupabase();
+
+    const allowed = ['dog_name', 'breed', 'age_value', 'age_unit', 'weight_lbs', 'gender', 'is_neutered', 'current_food', 'current_food_slug'];
+    const clean = {};
+    for (const key of allowed) {
+      if (updates[key] !== undefined) clean[key] = updates[key];
+    }
+
+    const { data, error } = await supabase
+      .from('dog_profiles')
+      .update(clean)
+      .eq('id', dog_id)
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Dog update error:', error);
+      return NextResponse.json({ error: 'Failed to update profile.' }, { status: 500 });
+    }
+
+    return NextResponse.json(data);
+  } catch (err) {
+    console.error('Profile update error:', err);
+    return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 });
+  }
+}
