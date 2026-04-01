@@ -11,48 +11,32 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('user_id');
-    const dogId = searchParams.get('dog_id');
+    const email = searchParams.get('email');
 
-    if (!userId) {
-      return NextResponse.json({ error: 'user_id is required' }, { status: 400 });
+    if (!userId && !email) {
+      return NextResponse.json({ error: 'user_id or email is required' }, { status: 400 });
     }
 
     const supabase = getSupabase();
 
-    // Fetch user profile
-    const { data: user, error: userError } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
+    // Fetch user profile by id or email
+    let userQuery = supabase.from('user_profiles').select('*');
+    if (userId) userQuery = userQuery.eq('id', userId);
+    else userQuery = userQuery.eq('email', email);
+    const { data: user, error: userError } = await userQuery.single();
 
     if (userError || !user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Fetch dog profile
-    let dog = null;
-    if (dogId) {
-      const { data, error: dogError } = await supabase
-        .from('dog_profiles')
-        .select('*')
-        .eq('id', dogId)
-        .eq('user_id', userId)
-        .single();
-      if (!dogError) dog = data;
-    } else {
-      // Fallback: get first dog for this user
-      const { data, error: dogError } = await supabase
-        .from('dog_profiles')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: true })
-        .limit(1)
-        .single();
-      if (!dogError) dog = data;
-    }
+    // Fetch ALL dog profiles for this user
+    const { data: dogs, error: dogError } = await supabase
+      .from('dog_profiles')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true });
 
-    return NextResponse.json({ user, dog });
+    return NextResponse.json({ user, dogs: dogs || [] });
   } catch (err) {
     console.error('Profile fetch error:', err);
     return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 });
