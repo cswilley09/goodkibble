@@ -141,8 +141,10 @@ function SearchResults() {
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
-        <CompareBubble />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <CompareBubble />
           <SignUpButton />
+        </div>
       </nav>
 
       {/* content */}

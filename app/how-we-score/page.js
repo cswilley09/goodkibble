@@ -133,8 +133,10 @@ export default function HowWeScorePage() {
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
-        <CompareBubble />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <CompareBubble />
           <SignUpButton />
+        </div>
       </nav>
 
       <div style={{ maxWidth: 780, margin: '0 auto', padding: '48px 24px 80px' }}>

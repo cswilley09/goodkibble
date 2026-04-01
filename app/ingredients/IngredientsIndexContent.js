@@ -38,8 +38,10 @@ export default function IngredientsIndexContent({ ingredients }) {
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
-        <CompareBubble />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <CompareBubble />
           <SignUpButton />
+        </div>
       </nav>
 
       <div style={{ maxWidth: 960, margin: '0 auto', padding: '32px 24px 80px' }}>
