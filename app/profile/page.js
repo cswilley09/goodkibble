@@ -50,14 +50,13 @@ function BreedPicker({ value, onChange }) {
     <div ref={ref} style={{ position: 'relative' }}>
       <input type="text" value={text} placeholder="Search breed..."
         onChange={e => { setText(e.target.value); onChange(''); setOpen(true); }}
-        onFocus={() => { if (q && matches.length) setOpen(true); }}
+        onFocus={e => { e.target.style.borderColor = '#C9A84C'; if (q && matches.length) setOpen(true); }}
+        onBlur={e => { if (!open) e.target.style.borderColor = '#ede8df'; }}
         style={{
           width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df',
           fontSize: 14, fontFamily: "'DM Sans', sans-serif", background: '#fff', outline: 'none',
           color: '#1a1612', fontWeight: 600, boxSizing: 'border-box',
         }}
-        onFocus={e => (e.target.style.borderColor = '#C9A84C')}
-        onBlur={e => { if (!open) e.target.style.borderColor = '#ede8df'; }}
       />
       {open && q && matches.length > 0 && (
         <div style={{
@@ -117,7 +116,7 @@ function FoodPicker({ value, onChange }) {
     setResults([]);
     setOpen(false);
   }
-  if (value) {
+  if (value && value.name) {
     return (
       <div style={{ background: '#f7efd8', border: '1.5px solid #C9A84C', borderRadius: 10, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1, minWidth: 0 }}>
@@ -702,18 +701,21 @@ export default function ProfilePage() {
                           body: JSON.stringify({ dog_id: dog.id, updates }),
                         });
                         const result = await res.json();
-                        if (res.ok) {
+                        if (res.ok && result && !result.error) {
                           setDogs(prev => prev.map((d, i) => i === activeDogIdx ? result : d));
                           setEditing(false);
                           setEditFood(null);
                           setCurrentFoodData(null);
                           setPercentile(null);
                           setAlternatives([]);
-                          setRefreshKey(k => k + 1); // force food re-fetch
-                          setTab('dashboard'); // go back to dashboard to see updated scores
+                          setRefreshKey(k => k + 1);
+                          setTab('dashboard');
+                        } else {
+                          alert('Failed to save: ' + (result?.error || 'Unknown error. You may need to add an UPDATE policy in Supabase.'));
                         }
                       } catch (err) {
                         console.error('Save failed:', err);
+                        alert('Failed to save changes. Please try again.');
                       }
                       setSaving(false);
                     }} style={{
