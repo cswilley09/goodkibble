@@ -1065,7 +1065,7 @@ export default function FoodPageContent({ productId }) {
                   </span>
                 );
 
-                return (
+                const pillEl = (
                   <span key={i} style={wrapStyle} onClick={() => {
                     if (!clickable) return;
                     if (isActive) { setActiveIngredient(null); return; }
@@ -1076,13 +1076,23 @@ export default function FoodPageContent({ productId }) {
                     }
                   }}>{pill}</span>
                 );
+
+                // On desktop, insert the info card inline right after the active pill
+                // width:100% forces a flex line break so it sits below the current row
+                if (isActive && !isMobile) {
+                  return [
+                    pillEl,
+                    <div key={`info-${i}`} style={{ flexBasis: '100%', width: '100%' }}>
+                      <IngredientInfoCard info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
+                    </div>,
+                  ];
+                }
+
+                return pillEl;
               })}
             </div>
 
-            {/* Ingredient info card — in document flow below pills */}
-            {activeIngredient && !isMobile && (
-              <IngredientInfoCard info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
-            )}
+            {/* Mobile bottom sheet only */}
             {activeIngredient && isMobile && (
               <IngredientBottomSheet info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
             )}
