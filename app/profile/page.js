@@ -202,7 +202,7 @@ export default function ProfilePage() {
 
   if (!user) return null;
 
-  const tabs = ['Dashboard', 'Saved', 'Settings'];
+  const tabs = ['Dashboard', 'Profile', 'Saved', 'Settings'];
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
@@ -321,10 +321,6 @@ export default function ProfilePage() {
                       padding: '10px 24px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
                       fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
                     }}>View Full Breakdown &rarr;</button>
-                    <button style={{
-                      padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#C9A84C',
-                      fontSize: 13, fontWeight: 600, border: '1.5px solid #C9A84C', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                    }}>Change Food</button>
                     {currentFoodData.affiliate_url && (
                       <a href={currentFoodData.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
                         padding: '10px 24px', borderRadius: 100, background: '#C9A84C', color: '#fff',
@@ -350,7 +346,7 @@ export default function ProfilePage() {
               <div style={cardStyle}>
                 <div style={eyebrow()}>Higher-Scored {altProteinOnly && currentFoodData.primary_protein ? currentFoodData.primary_protein : ''} Kibbles</div>
                 <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
-                  These foods {altProteinOnly && currentFoodData.primary_protein ? `share the same primary protein as ${displayName}\u2019s current food and ` : ''}scored higher on our 0\u2013100 scale.
+                  These foods {altProteinOnly && currentFoodData.primary_protein ? (<>share the same primary protein as {displayName}&rsquo;s current food and </>) : null}scored higher on our 0&ndash;100 scale.
                 </p>
                 <p style={{ fontSize: 11, color: '#b5aa99', fontStyle: 'italic', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
                   Switching foods should always be done gradually. Consult your vet before making changes.
@@ -385,7 +381,7 @@ export default function ProfilePage() {
                 ) : (
                   <div style={{ fontSize: 13, color: '#8a7e72', textAlign: 'center', padding: '20px 0', fontFamily: "'DM Sans', sans-serif" }}>
                     {currentFoodData.quality_score >= 90
-                      ? `${displayName}\u2019s food is already top-tier! No higher-scored alternatives found.`
+                      ? <>{displayName}&rsquo;s food is already top-tier! No higher-scored alternatives found.</>
                       : 'No alternatives found with the current filter.'}
                   </div>
                 )}
@@ -402,31 +398,52 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* Dog Profile Quick View */}
-            {dog && (
+          </>
+        )}
+
+        {/* ═══ PROFILE TAB ═══ */}
+        {tab === 'profile' && dog && (
+          <>
+            <div style={cardStyle}>
+              <div style={eyebrow()}>{displayName}&rsquo;s Profile</div>
+              {[
+                { label: 'Breed', value: dog.breed },
+                { label: 'Age', value: `${dog.age_value} ${dog.age_unit}` },
+                { label: 'Weight', value: `${dog.weight_lbs} lbs` },
+                { label: 'Gender', value: dog.gender === 'male' ? 'Male' : 'Female' },
+                { label: 'Neutered', value: dog.is_neutered ? 'Yes' : 'No' },
+                { label: 'Current Food', value: dog.current_food || 'Not specified' },
+              ].map((row, i, arr) => (
+                <div key={row.label} style={{
+                  display: 'flex', justifyContent: 'space-between', padding: '11px 0',
+                  borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
+                }}>
+                  <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{row.label}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", textAlign: 'right', maxWidth: '60%' }}>{row.value}</span>
+                </div>
+              ))}
+              <div style={{ marginTop: 16 }}>
+                <button style={{
+                  padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#1a1612',
+                  fontSize: 13, fontWeight: 600, border: '1.5px solid #ede8df',
+                  cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                }}>Edit Profile</button>
+              </div>
+            </div>
+
+            {/* Priorities */}
+            {dog.priorities && dog.priorities.length > 0 && (
               <div style={cardStyle}>
-                <div style={eyebrow()}>{displayName}&rsquo;s Profile</div>
-                {[
-                  { label: 'Breed', value: dog.breed },
-                  { label: 'Age', value: `${dog.age_value} ${dog.age_unit}` },
-                  { label: 'Weight', value: `${dog.weight_lbs} lbs` },
-                  { label: 'Gender', value: dog.gender === 'male' ? 'Male' : 'Female' },
-                  { label: 'Neutered', value: dog.is_neutered ? 'Yes' : 'No' },
-                ].map((row, i, arr) => (
-                  <div key={row.label} style={{
-                    display: 'flex', justifyContent: 'space-between', padding: '11px 0',
-                    borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
-                  }}>
-                    <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{row.label}</span>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{row.value}</span>
-                  </div>
-                ))}
-                <div style={{ marginTop: 16 }}>
-                  <button style={{
-                    padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#1a1612',
-                    fontSize: 13, fontWeight: 600, border: '1.5px solid #ede8df',
-                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                  }}>Edit Profile</button>
+                <div style={eyebrow()}>Your Priorities</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {dog.priorities.map(p => (
+                    <span key={p} style={{
+                      padding: '8px 16px', borderRadius: 100,
+                      background: '#f7efd8', border: '1.5px solid #C9A84C',
+                      fontSize: 13, fontWeight: 600, color: '#1a1612',
+                      fontFamily: "'DM Sans', sans-serif",
+                    }}>{p}</span>
+                  ))}
                 </div>
               </div>
             )}
@@ -530,23 +547,6 @@ export default function ProfilePage() {
                 </div>
               ))}
             </div>
-
-            {/* Priorities */}
-            {dog?.priorities && dog.priorities.length > 0 && (
-              <div style={cardStyle}>
-                <div style={eyebrow()}>Your Priorities</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
-                  {dog.priorities.map(p => (
-                    <span key={p} style={{
-                      padding: '8px 16px', borderRadius: 100,
-                      background: '#f7efd8', border: '1.5px solid #C9A84C',
-                      fontSize: 13, fontWeight: 600, color: '#1a1612',
-                      fontFamily: "'DM Sans', sans-serif",
-                    }}>{p}</span>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Actions */}
             <div style={{ textAlign: 'center', marginTop: 16 }}>
