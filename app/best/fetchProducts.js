@@ -13,6 +13,7 @@ export async function fetchProductsBySlugs(slugPairs) {
         .select('*')
         .eq('brand_slug', brand_slug)
         .eq('slug', slug)
+        .or('is_canary.is.null,is_canary.eq.false')
         .single()
         .then(({ data, error }) => {
           if (error) console.error(`[BestOf] Failed to fetch ${brand_slug}/${slug}:`, error.message)

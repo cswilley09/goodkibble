@@ -14,6 +14,7 @@ export async function GET(request, { params }) {
     .from('dog_foods_v2')
     .select('*')
     .eq('id', id)
+    .or('is_canary.is.null,is_canary.eq.false')
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 404 })

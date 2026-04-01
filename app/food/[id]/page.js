@@ -8,6 +8,7 @@ export default async function OldFoodRedirect({ params }) {
     .from('dog_foods_v2')
     .select('slug, brand_slug')
     .eq('id', id)
+    .or('is_canary.is.null,is_canary.eq.false')
     .single()
 
   if (error || !product || !product.slug || !product.brand_slug) {

@@ -59,8 +59,8 @@ export async function GET(request) {
   if (variants.length === 0) return NextResponse.json([])
 
   const selectCols = compact
-    ? 'id, name, brand, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, moisture, ingredients, image_url, quality_score'
-    : 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug'
+    ? 'id, name, brand, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, moisture, ingredients, image_url, quality_score, is_canary'
+    : 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary'
 
   // Pass 1: brand matches
   const brandFilter = buildOrFilter(variants, ['brand'])
@@ -112,5 +112,8 @@ export async function GET(request) {
   }
   merged.sort((a, b) => relevanceScore(b) - relevanceScore(a))
 
-  return NextResponse.json(merged)
+  // Filter out canary/test products and strip the flag from responses
+  const filtered = merged.filter(item => !item.is_canary).map(({ is_canary, ...rest }) => rest)
+
+  return NextResponse.json(filtered)
 }

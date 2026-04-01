@@ -11,6 +11,7 @@ async function getProduct(brand, productSlug) {
     .select('*')
     .eq('brand_slug', brand)
     .eq('slug', productSlug)
+    .or('is_canary.is.null,is_canary.eq.false')
     .single()
   if (error) return null
   return data

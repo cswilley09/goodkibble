@@ -27,6 +27,7 @@ async function getProducts(ingredientName) {
     .from('dog_foods_v2')
     .select('id, name, brand, brand_slug, slug, quality_score, image_url, protein, fat, primary_protein')
     .ilike('ingredients', `%${ingredientName}%`)
+    .or('is_canary.is.null,is_canary.eq.false')
     .order('quality_score', { ascending: false, nullsFirst: false })
     .limit(20)
   return data || []
@@ -59,6 +60,7 @@ export async function generateMetadata({ params }) {
     .from('dog_foods_v2')
     .select('id', { count: 'exact', head: true })
     .ilike('ingredients', `%${ingredient.ingredient_name}%`)
+    .or('is_canary.is.null,is_canary.eq.false')
   return {
     title: `What is ${ingredient.display_name} in Dog Food? | Good Kibble`,
     description: `${ingredient.short_description} Found in ${count || 0} dog foods. See which products contain ${ingredient.display_name} and whether it's good for your dog.`,
@@ -92,6 +94,7 @@ export default async function IngredientPage({ params }) {
     .from('dog_foods_v2')
     .select('id', { count: 'exact', head: true })
     .ilike('ingredients', `%${ingredient.ingredient_name}%`)
+    .or('is_canary.is.null,is_canary.eq.false')
 
   const faqSchema = {
     '@context': 'https://schema.org',

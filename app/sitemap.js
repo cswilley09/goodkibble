@@ -13,6 +13,7 @@ export default async function sitemap() {
   const { data: products, error } = await supabase
     .from('dog_foods_v2')
     .select('id, name, brand, slug, brand_slug')
+    .or('is_canary.is.null,is_canary.eq.false')
 
   if (error) { console.error('Sitemap fetch error:', error); return [] }
 

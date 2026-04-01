@@ -9,6 +9,7 @@ export async function generateMetadata({ params }) {
     .from('dog_foods_v2')
     .select('id', { count: 'exact', head: true })
     .eq('brand_slug', brand)
+    .or('is_canary.is.null,is_canary.eq.false')
   const { title, description } = generateBrandMeta(brand, count || 0)
   return {
     title,
@@ -25,6 +26,7 @@ export default async function BrandPage({ params }) {
     .from('dog_foods_v2')
     .select('id, name, brand, slug, brand_slug, image_url, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, quality_score, primary_protein, flavor')
     .eq('brand_slug', brand)
+    .or('is_canary.is.null,is_canary.eq.false')
     .order('name')
 
   const items = products || []
