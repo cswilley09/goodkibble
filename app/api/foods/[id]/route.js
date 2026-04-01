@@ -10,12 +10,31 @@ export async function GET(request, { params }) {
 
   const { id } = params
   const supabase = getSupabase()
-  const { data, error } = await supabase
-    .from('dog_foods_v2')
-    .select('*')
-    .eq('id', id)
-    .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 404 })
-  return NextResponse.json(data)
+  // Support lookup by numeric ID or by "brand_slug/product_slug"
+  if (/^\d+$/.test(id)) {
+    const { data, error } = await supabase
+      .from('dog_foods_v2')
+      .select('*')
+      .eq('id', id)
+      .single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 404 })
+    return NextResponse.json(data)
+  }
+
+  // Slug-based lookup: id is "brand_slug" and product slug is in searchParams
+  const { searchParams } = new URL(request.url)
+  const productSlug = searchParams.get('slug')
+  if (productSlug) {
+    const { data, error } = await supabase
+      .from('dog_foods_v2')
+      .select('*')
+      .eq('brand_slug', id)
+      .eq('slug', productSlug)
+      .single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 404 })
+    return NextResponse.json(data)
+  }
+
+  return NextResponse.json({ error: 'Invalid id format' }, { status: 400 })
 }

@@ -120,23 +120,22 @@ export default function ProfilePage() {
     load();
   }, []);
 
-  // Load current food data when dog changes
+  // Load current food data when dog changes — use slug-based lookup
   useEffect(() => {
-    if (!dog?.current_food_slug) { setCurrentFoodData(null); return; }
-    const [brandSlug, slug] = dog.current_food_slug.split('/');
-    if (!brandSlug || !slug) return;
-    fetch(`/api/foods/search?q=${encodeURIComponent(dog.current_food || '')}&limit=5`)
+    setCurrentFoodData(null);
+    setPercentile(null);
+    setAlternatives([]);
+    if (!dog?.current_food_slug) return;
+    const parts = dog.current_food_slug.split('/');
+    if (parts.length < 2) return;
+    const [brandSlug, ...slugParts] = parts;
+    const productSlug = slugParts.join('/');
+    fetch(`/api/foods/${encodeURIComponent(brandSlug)}?slug=${encodeURIComponent(productSlug)}`)
       .then(r => r.json())
       .then(data => {
-        const match = (Array.isArray(data) ? data : []).find(f => f.slug === slug && f.brand_slug === brandSlug);
-        if (match) {
-          setCurrentFoodData(match);
-          // Fetch by ID for full data
-          fetch(`/api/foods/${match.id}`).then(r => r.json()).then(full => {
-            if (full && !full.error) setCurrentFoodData(full);
-          });
-        }
-      });
+        if (data && !data.error) setCurrentFoodData(data);
+      })
+      .catch(() => {});
   }, [dog?.current_food_slug]);
 
   // Calculate percentile and fetch alternatives
@@ -298,15 +297,15 @@ export default function ProfilePage() {
                   {percentile != null && (
                     <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #f5f2ec' }}>
                       <div style={{ fontSize: 13, color: '#5a5248', marginBottom: 10, fontFamily: "'DM Sans', sans-serif" }}>
-                        {displayName}&rsquo;s food scores better than <strong>{percentile}%</strong> of all kibbles
+                        {displayName}&rsquo;s food scores better than <strong style={{ color: '#639922' }}>{percentile}%</strong> of all kibbles
                       </div>
-                      <div style={{ position: 'relative', height: 8, borderRadius: 4, background: 'linear-gradient(to right, #b5483a, #c47a20, #EF9F27, #7BAF2E, #639922)', overflow: 'visible' }}>
+                      <div style={{ position: 'relative', height: 8, borderRadius: 100, background: 'linear-gradient(to right, #D97B2A, #EF9F27, #7BAF2E, #639922)', overflow: 'visible' }}>
                         <div style={{
                           position: 'absolute', top: '50%', left: `${percentile}%`,
                           transform: 'translate(-50%, -50%)',
-                          width: 14, height: 14, borderRadius: '50%',
-                          background: '#1a1612', border: '2px solid #fff',
-                          boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
+                          width: 20, height: 20, borderRadius: '50%',
+                          background: '#1a1612', border: '3px solid #fff',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
                         }} />
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
@@ -322,6 +321,10 @@ export default function ProfilePage() {
                       padding: '10px 24px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
                       fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
                     }}>View Full Breakdown &rarr;</button>
+                    <button style={{
+                      padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#C9A84C',
+                      fontSize: 13, fontWeight: 600, border: '1.5px solid #C9A84C', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    }}>Change Food</button>
                     {currentFoodData.affiliate_url && (
                       <a href={currentFoodData.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
                         padding: '10px 24px', borderRadius: 100, background: '#C9A84C', color: '#fff',
@@ -418,6 +421,13 @@ export default function ProfilePage() {
                     <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{row.value}</span>
                   </div>
                 ))}
+                <div style={{ marginTop: 16 }}>
+                  <button style={{
+                    padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#1a1612',
+                    fontSize: 13, fontWeight: 600, border: '1.5px solid #ede8df',
+                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                  }}>Edit Profile</button>
+                </div>
               </div>
             )}
           </>
