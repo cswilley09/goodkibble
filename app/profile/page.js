@@ -774,7 +774,7 @@ export default function ProfilePage() {
 
                       {/* Horizontal scroll cards (mobile) / responsive grid (desktop) */}
                       <div className="saved-scroll-row" style={{
-                        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14,
+                        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14,
                       }}>
                         {comp.items.map(f => {
                           const isHighest = f.quality_score != null && f.quality_score === highestScore && comp.items.filter(x => x.quality_score === highestScore).length === 1;
