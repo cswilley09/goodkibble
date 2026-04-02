@@ -55,23 +55,38 @@ function getScoreTier(score) {
 function ScoreRing({ score, compact }) {
   if (score == null) return null;
   const color = getScoreColor(score);
-  const circumference = 106.8;
+  const size = compact ? 32 : 64;
+  const r = compact ? 12 : 27;
+  const sw = compact ? 3 : 3.5;
+  const circumference = 2 * Math.PI * r;
   const offset = circumference * (1 - score / 100);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <svg width={compact ? 32 : 42} height={compact ? 32 : 42} viewBox="0 0 42 42">
-        <circle cx={21} cy={21} r={17} fill="none" stroke="#ede8df" strokeWidth={3} />
-        <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#ede8df" strokeWidth={sw} />
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={sw}
           strokeDasharray={circumference} strokeDashoffset={offset}
-          strokeLinecap="round" transform="rotate(-90 21 21)" />
-        <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
+          strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`} />
+        <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="central"
+          style={{ fontSize: compact ? 12 : 26, fontWeight: 800, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
           {score}
         </text>
       </svg>
-      <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>
-        {getScoreTier(score)}
-      </span>
+      {!compact && (
+        <>
+          <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", color, marginTop: 4 }}>
+            {getScoreTier(score)}
+          </span>
+          <span style={{ fontSize: 10, fontFamily: "'DM Sans', sans-serif", color: '#b5aa99', marginTop: 1 }}>
+            GoodKibble Score
+          </span>
+        </>
+      )}
+      {compact && (
+        <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+          {getScoreTier(score)}
+        </span>
+      )}
     </div>
   );
 }
@@ -412,18 +427,38 @@ export default function ComparePage() {
 
               {items.map((f, idx) => (
                 <div key={f.id} style={{
-                  padding: isMobile ? '10px 8px 10px' : '28px 16px 22px',
+                  padding: isMobile ? '10px 8px 10px' : '28px 20px 22px',
                   textAlign: 'center',
                   borderLeft: '1px solid #ede8df',
                   borderBottom: '2px solid #ede8df',
                   background: colBg(idx),
                   cursor: 'pointer', transition: 'background 0.2s',
                   display: 'flex', flexDirection: 'column', alignItems: 'center',
+                  position: 'relative',
                 }}
                   onClick={() => goFood(f.id)}
                   onMouseEnter={(e) => { if (!isMobile) e.currentTarget.style.background = '#f0ebe3'; }}
                   onMouseLeave={(e) => { if (!isMobile) e.currentTarget.style.background = colBg(idx); }}
                 >
+                  {/* X close button */}
+                  {!isMobile ? (
+                    <div onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
+                      position: 'absolute', top: 8, right: 8, width: 24, height: 24, borderRadius: '50%',
+                      background: '#f0ebe3', color: '#8a7e72', fontSize: 14,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      cursor: 'pointer', zIndex: 2, transition: 'background 0.15s',
+                    }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = '#ede8df'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = '#f0ebe3'; }}
+                    >&times;</div>
+                  ) : (
+                    <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
+                      position: 'absolute', top: 4, right: 4, padding: '2px 6px', borderRadius: 100,
+                      border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
+                      fontSize: 10, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", zIndex: 2,
+                    }}>&times;</button>
+                  )}
+
                   {f.image_url && (
                     <div style={{
                       width: isMobile ? 44 : 80, height: isMobile ? 56 : 104,
@@ -443,24 +478,15 @@ export default function ComparePage() {
                   }}>{f.brand}</div>
                   <div style={{
                     fontSize: isMobile ? 11 : 15, fontWeight: 600, color: '#1a1612',
-                    lineHeight: 1.4, marginBottom: isMobile ? 6 : 10, padding: 0,
+                    lineHeight: 1.4, marginBottom: isMobile ? 6 : 14, padding: 0,
                     flex: 1, minHeight: isMobile ? 40 : 0,
                   }}>
                     {f.name}
                   </div>
-                  <div style={{ marginBottom: isMobile ? 4 : 8, flexShrink: 0 }}>
+                  <div style={{ flexShrink: 0 }}>
                     <ScoreRing score={f.quality_score} compact={isMobile} />
                   </div>
-                  <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
-                    padding: isMobile ? '3px 8px' : '6px 14px', borderRadius: 100,
-                    border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
-                    fontSize: isMobile ? 10 : 12, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                    transition: 'all 0.2s', position: 'relative', zIndex: 2, flexShrink: 0,
-                  }}
-                    onMouseEnter={(e) => { e.target.style.background = '#fce4e4'; e.target.style.color = '#c44'; e.target.style.borderColor = '#f0c4c4'; }}
-                    onMouseLeave={(e) => { e.target.style.background = '#fff'; e.target.style.color = '#8a7e72'; e.target.style.borderColor = '#e8e0d4'; }}
-                  >Remove</button>
-                  {!isMobile && <div style={{ fontSize: 10, color: '#c4b9a8', marginTop: 8, flexShrink: 0 }}>View details →</div>}
+                  {!isMobile && <div style={{ fontSize: 10, color: '#c4b9a8', marginTop: 10, flexShrink: 0 }}>View details &rarr;</div>}
                 </div>
               ))}
 
@@ -517,51 +543,73 @@ export default function ComparePage() {
                 ];
               })}
 
-              {/* ══ TOP 5 INGREDIENTS ROW ══ */}
-              {/* label cell */}
+              {/* ══ PRIMARY PROTEIN ROW ══ */}
               <div style={{
-                ...labelCell({ color: '#8a7e72', fontSize: 11 }),
+                ...labelCell(),
+                borderBottom: '1px solid #f0ebe3',
                 borderTop: '2px solid #ede8df',
-                display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
-                borderRight: '1px solid #ede8df',
+              }}>Primary Protein</div>
+              {items.map((f, idx) => (
+                <div key={`pp-${f.id}`} style={{
+                  padding: isMobile ? '10px 10px' : '18px 20px',
+                  borderLeft: '1px solid #f0ebe3',
+                  borderBottom: '1px solid #f0ebe3',
+                  borderTop: '2px solid #ede8df',
+                  background: colBg(idx),
+                  display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start',
+                }}>
+                  <span style={{ fontSize: isMobile ? 12 : 15, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                    {f.primary_protein || '\u2014'}
+                  </span>
+                </div>
+              ))}
+              {hasAddSlot && <div style={{ borderLeft: '1px dashed #e8e0d4', borderTop: '2px solid #ede8df', borderBottom: '1px solid #f0ebe3' }} />}
+
+              {/* ══ TOP 5 INGREDIENTS ══ */}
+              {/* section header */}
+              <div style={{
+                gridColumn: `1 / -1`,
+                background: '#faf8f4', borderTop: '2px solid #ede8df', borderBottom: '1px solid #ede8df',
+                padding: isMobile ? '10px 10px' : '12px 24px',
               }}>
-                <span>Top 5<br />Ingredients</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#C9A84C', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif" }}>
+                  Top 5 Ingredients
+                </span>
               </div>
 
-              {/* product ingredient cells */}
-              {items.map((f, idx) => {
-                const first5 = getFirst5(f.ingredients);
-                return (
-                  <div key={`ing-${f.id}`} style={{
-                    padding: isMobile ? '12px 10px' : '22px 20px',
-                    borderTop: '2px solid #ede8df',
-                    background: colBg(idx),
-                    display: 'flex', alignItems: 'center',
-                  }}>
-                    {first5.length > 0 ? (
-                      <ol style={{ margin: 0, paddingLeft: isMobile ? 16 : 20, width: '100%' }}>
-                        {first5.map((ing, i) => (
-                          <li key={i} style={{
-                            fontSize: isMobile ? 10 : 13,
-                            color: i === 0 ? '#1a1612' : '#5a5047',
-                            fontWeight: i === 0 ? 600 : 400,
-                            lineHeight: isMobile ? 1.4 : 1.8,
-                            fontFamily: "'DM Sans', sans-serif",
-                            listStyleType: 'decimal',
-                          }}>{ing}</li>
-                        ))}
-                      </ol>
-                    ) : (
-                      <div style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>N/A</div>
-                    )}
-                  </div>
-                );
+              {/* ingredient rows: 1st through 5th */}
+              {['1st', '2nd', '3rd', '4th', '5th'].map((ordinal, rowIdx) => {
+                const isLast = rowIdx === 4;
+                return [
+                  <div key={`ing-label-${rowIdx}`} style={{
+                    ...labelCell({ fontSize: isMobile ? 11 : 13 }),
+                    borderBottom: isLast ? 'none' : '1px solid #f5f2ec',
+                  }}>{ordinal}</div>,
+                  ...items.map((f, idx) => {
+                    const first5 = getFirst5(f.ingredients);
+                    const ing = first5[rowIdx] || null;
+                    return (
+                      <div key={`ing-${f.id}-${rowIdx}`} style={{
+                        padding: isMobile ? '8px 10px' : '12px 20px',
+                        borderLeft: '1px solid #f0ebe3',
+                        borderBottom: isLast ? 'none' : '1px solid #f5f2ec',
+                        background: colBg(idx),
+                        display: 'flex', alignItems: 'center', gap: 6,
+                      }}>
+                        {ing ? (
+                          <span style={{
+                            fontSize: isMobile ? 10 : 13, fontWeight: rowIdx === 0 ? 600 : 500,
+                            color: '#1a1612', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.4,
+                          }}>{ing}</span>
+                        ) : (
+                          <span style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>&mdash;</span>
+                        )}
+                      </div>
+                    );
+                  }),
+                  hasAddSlot && <div key={`ing-add-${rowIdx}`} style={{ borderLeft: '1px dashed #e8e0d4', borderBottom: isLast ? 'none' : '1px solid #f5f2ec' }} />,
+                ];
               })}
-
-              {/* add-slot cell */}
-              {hasAddSlot && (
-                <div style={{ borderLeft: '1px dashed #e8e0d4', borderTop: '2px solid #ede8df' }} />
-              )}
             </div>
           </div>
 
