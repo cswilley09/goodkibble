@@ -272,13 +272,27 @@ export default function ComparePage() {
   function lookupSignal(ingName) {
     if (!ingName) return null;
     const norm = ingName.toLowerCase().trim().replace(/\s*\([^)]*\)$/g, '').replace(/[.]+$/, '').trim();
-    const info = ingredientInfo[norm];
-    if (info) return info.quality_signal;
-    // Try stripping common prefixes
-    const prefixes = ['whole grain ', 'ground ', 'dried ', 'deboned ', 'organic ', 'raw '];
-    for (const p of prefixes) {
-      if (norm.startsWith(p) && ingredientInfo[norm.slice(p.length)]) return ingredientInfo[norm.slice(p.length)].quality_signal;
+    if (ingredientInfo[norm]) return ingredientInfo[norm].quality_signal;
+    // Multi-prefix stripping: "ground yellow corn" → "yellow corn" → "corn"
+    const prefixes = ['whole grain ', 'ground whole grain ', 'ground whole ', 'whole ', 'ground ', 'dried ', 'dehydrated ', 'deboned ', 'freeze-dried ', 'organic ', 'raw ', 'roasted ', 'yellow ', 'white '];
+    let stripped = norm;
+    for (let i = 0; i < 3; i++) {
+      let found = false;
+      for (const p of prefixes) {
+        if (stripped.startsWith(p)) {
+          stripped = stripped.slice(p.length);
+          found = true;
+          break;
+        }
+      }
+      if (!found) break;
+      if (ingredientInfo[stripped]) return ingredientInfo[stripped].quality_signal;
+      if (ingredientInfo[stripped + 's']) return ingredientInfo[stripped + 's'].quality_signal;
+      if (stripped.endsWith('s') && ingredientInfo[stripped.slice(0, -1)]) return ingredientInfo[stripped.slice(0, -1)].quality_signal;
     }
+    // Plural/singular on original norm
+    if (ingredientInfo[norm + 's']) return ingredientInfo[norm + 's'].quality_signal;
+    if (norm.endsWith('s') && ingredientInfo[norm.slice(0, -1)]) return ingredientInfo[norm.slice(0, -1)].quality_signal;
     return null;
   }
 
