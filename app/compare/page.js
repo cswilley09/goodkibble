@@ -556,7 +556,7 @@ export default function ComparePage() {
                   borderBottom: '1px solid #f0ebe3',
                   borderTop: '2px solid #ede8df',
                   background: colBg(idx),
-                  display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
                 }}>
                   <span style={{ fontSize: isMobile ? 12 : 15, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
                     {f.primary_protein || '\u2014'}
@@ -594,7 +594,7 @@ export default function ComparePage() {
                         borderLeft: '1px solid #f0ebe3',
                         borderBottom: isLast ? 'none' : '1px solid #f5f2ec',
                         background: colBg(idx),
-                        display: 'flex', alignItems: 'center', gap: 6,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 6,
                       }}>
                         {ing ? (
                           <span style={{
