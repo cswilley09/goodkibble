@@ -645,7 +645,7 @@ export default function ComparePage() {
                           <span style={{
                             fontSize: isMobile ? 10 : 13, fontWeight: rowIdx === 0 ? 700 : 500,
                             color: '#1a1612', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.4, textAlign: isMobile ? 'center' : 'left',
-                          }}>{ing}</span>
+                          }}>{ing.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</span>
                         </>) : (
                           <span style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>&mdash;</span>
                         )}
