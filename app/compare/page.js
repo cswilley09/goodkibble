@@ -226,12 +226,19 @@ function AddCardSearch({ onSelect, compact }) {
       <div style={{ marginTop: 6, maxHeight: 200, overflowY: 'auto' }}>
         {results.map((r) => (
           <div key={r.id} onClick={() => { onSelect(r); setActive(false); setQuery(''); setResults([]); }}
-            style={{ padding: '9px 10px', borderRadius: 8, cursor: 'pointer', fontSize: 13, color: '#1a1612', transition: 'background 0.15s', lineHeight: 1.4 }}
+            style={{ padding: '9px 10px', borderRadius: 8, cursor: 'pointer', fontSize: 13, color: '#1a1612', transition: 'background 0.15s', lineHeight: 1.4, display: 'flex', alignItems: 'center', gap: 10 }}
             onMouseEnter={(e) => e.currentTarget.style.background = '#f5f0e8'}
             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
           >
-            <div style={{ fontWeight: 600 }}>{r.brand}</div>
-            <div style={{ color: '#8a7e72', fontSize: 11 }}>{r.name?.length > 50 ? r.name.substring(0, 50) + '...' : r.name}</div>
+            {r.image_url ? (
+              <img src={r.image_url} alt="" style={{ width: 36, height: 36, borderRadius: 6, objectFit: 'contain', background: '#f2efe9', flexShrink: 0 }} />
+            ) : (
+              <div style={{ width: 36, height: 36, borderRadius: 6, background: '#f2efe9', flexShrink: 0 }} />
+            )}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontWeight: 600 }}>{r.brand}</div>
+              <div style={{ color: '#8a7e72', fontSize: 11, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{r.name}</div>
+            </div>
           </div>
         ))}
         {query.length >= 2 && results.length === 0 && (
