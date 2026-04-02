@@ -1,34 +1,16 @@
 'use client';
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from './AuthContext';
 
 export default function SignUpButton() {
   const router = useRouter();
-  const [userName, setUserName] = useState(null);
-  const [mounted, setMounted] = useState(false);
+  const { session, userProfile, loading } = useAuth();
 
-  useEffect(() => {
-    setMounted(true);
-    const name = localStorage.getItem('gk_user_name');
-    if (name) setUserName(name);
+  if (loading) return null;
 
-    function onStorage() {
-      const n = localStorage.getItem('gk_user_name');
-      setUserName(n || null);
-    }
-    window.addEventListener('storage', onStorage);
-    window.addEventListener('gk_profile_updated', onStorage);
-    return () => {
-      window.removeEventListener('storage', onStorage);
-      window.removeEventListener('gk_profile_updated', onStorage);
-    };
-  }, []);
-
-  if (!mounted) return null;
-
-  // Logged in — gold circle with initial (same on desktop and mobile)
-  if (userName) {
-    const initial = userName.charAt(0).toUpperCase();
+  // Logged in — gold circle with initial
+  if (session?.user && userProfile?.first_name) {
+    const initial = userProfile.first_name.charAt(0).toUpperCase();
     return (
       <div
         onClick={() => router.push('/profile')}
@@ -50,10 +32,9 @@ export default function SignUpButton() {
     );
   }
 
-  // Logged out — pill on desktop, person icon circle on mobile
+  // Logged out — pill on desktop, person icon on mobile
   return (
     <>
-      {/* Desktop pill */}
       <div
         onClick={() => router.push('/signup')}
         className="signup-btn-desktop"
@@ -71,7 +52,6 @@ export default function SignUpButton() {
       >
         Sign Up
       </div>
-      {/* Mobile circle icon */}
       <div
         onClick={() => router.push('/signup')}
         className="signup-btn-mobile"

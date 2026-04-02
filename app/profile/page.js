@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import SignUpButton from '../components/SignUpButton';
+import { useAuth } from '../components/AuthContext';
 
 const BREEDS = [
   'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akita', 'Alaskan Malamute',
@@ -236,6 +237,7 @@ function ProductCard({ food, onClick }) {
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { session, signOut, loading: authLoading } = useAuth();
   const [user, setUser] = useState(null);
   const [dogs, setDogs] = useState([]);
   const [activeDogIdx, setActiveDogIdx] = useState(0);
@@ -260,23 +262,23 @@ export default function ProfilePage() {
   const dog = dogs[activeDogIdx] || null;
   const displayName = dog?.dog_name || 'Your dog';
 
-  // Load profile
+  // Load profile using Supabase session
   useEffect(() => {
+    if (authLoading) return;
+    if (!session?.user) { router.push('/login'); return; }
     async function load() {
-      const email = localStorage.getItem('gk_user_email');
-      if (!email) { router.push('/signup'); return; }
       try {
-        const res = await fetch(`/api/profile?email=${encodeURIComponent(email)}`);
-        if (!res.ok) { router.push('/signup'); return; }
+        const res = await fetch(`/api/profile?user_id=${session.user.id}`);
+        if (!res.ok) { router.push('/login'); return; }
         const data = await res.json();
-        if (!data.user) { router.push('/signup'); return; }
+        if (!data.user) { router.push('/login'); return; }
         setUser(data.user);
         setDogs(data.dogs || []);
-      } catch { router.push('/signup'); }
+      } catch { router.push('/login'); }
       setLoading(false);
     }
     load();
-  }, []);
+  }, [authLoading, session]);
 
   // Load current food data when dog changes — use slug-based lookup
   useEffect(() => {
@@ -338,12 +340,8 @@ export default function ProfilePage() {
     localStorage.setItem('gk_saved_comparisons', JSON.stringify(updated));
   }
 
-  function handleLogout() {
-    localStorage.removeItem('gk_user_id');
-    localStorage.removeItem('gk_dog_id');
-    localStorage.removeItem('gk_user_name');
-    localStorage.removeItem('gk_user_email');
-    window.dispatchEvent(new Event('gk_profile_updated'));
+  async function handleLogout() {
+    await signOut();
     router.push('/');
   }
 

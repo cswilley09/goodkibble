@@ -10,7 +10,7 @@ function getSupabase() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { first_name, email, zip_code, heard_from, dogs, dog } = body;
+    const { auth_user_id, first_name, email, zip_code, heard_from, dogs, dog } = body;
 
     if (!first_name || !email || !zip_code) {
       return NextResponse.json({ error: 'First name, email, and zip code are required.' }, { status: 400 });
@@ -27,7 +27,7 @@ export async function POST(request) {
     // Insert user profile
     const { data: user, error: userError } = await supabase
       .from('user_profiles')
-      .insert({ first_name, email, zip_code, heard_from: heard_from || null, signup_data: body })
+      .insert({ ...(auth_user_id ? { id: auth_user_id } : {}), first_name, email, zip_code, heard_from: heard_from || null, signup_data: body })
       .select('id')
       .single();
 

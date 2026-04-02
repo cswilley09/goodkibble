@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 const BREEDS = [
   'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akita', 'Alaskan Malamute',
@@ -514,6 +515,24 @@ export default function SignupPage() {
     setSubmitting(true);
     setError('');
     try {
+      // 1. Create Supabase auth account
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: email.trim(),
+        options: { emailRedirectTo: window.location.origin + '/profile' },
+      });
+      if (authError) {
+        if (authError.message?.includes('already registered')) {
+          setError('already_registered');
+          setSubmitting(false);
+          return;
+        }
+        throw new Error(authError.message);
+      }
+
+      const userId = authData.user?.id;
+      if (!userId) throw new Error('Failed to create account.');
+
+      // 2. Save profile data via API, using auth user ID
       const dogsPayload = dogs.slice(0, numDogs).map((d, i) => ({
         dog_name: dogNames[i].trim(),
         breed: d.breed,
@@ -527,6 +546,7 @@ export default function SignupPage() {
         priorities,
       }));
       const payload = {
+        auth_user_id: userId,
         first_name: firstName.trim(),
         email: email.trim(),
         zip_code: zipCode.trim(),
@@ -542,19 +562,19 @@ export default function SignupPage() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'Something went wrong. Please try again.');
       }
-      const data = await res.json();
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('gk_user_id', data.user_id);
-        localStorage.setItem('gk_dog_id', data.dog_ids?.[0] || '');
-        localStorage.setItem('gk_user_name', firstName.trim());
-        localStorage.setItem('gk_user_email', email.trim());
-        window.dispatchEvent(new Event('gk_profile_updated'));
-      }
+
       goTo(STEP_CONFIRM);
     } catch (err) {
       setError(err.message);
     }
     setSubmitting(false);
+  }
+
+  async function resendEmail() {
+    await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: { emailRedirectTo: window.location.origin + '/profile' },
+    });
   }
 
   // Enter key advances to next step
@@ -863,46 +883,33 @@ export default function SignupPage() {
           </div>
         )}
 
-        {/* ── CONFIRMATION ── */}
+        {/* ── CHECK YOUR EMAIL ── */}
         {curType === 'confirm' && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#e6f4e0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 20px' }}>{'\u{1F389}'}</div>
+            <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#f7efd8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 20px' }}>{'\u2709\uFE0F'}</div>
             <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 5vw, 40px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -1 }}>
-              Welcome, {firstName}!
+              Check your email!
             </h1>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: '#8a7e72', marginBottom: 28 }}>
-              {numDogs > 1 ? `${numDogs} dog profiles saved.` : `${firstDogName}\u2019s profile is saved.`}
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: '#8a7e72', marginBottom: 8, lineHeight: 1.6 }}>
+              We sent a magic link to <strong style={{ color: '#C9A84C' }}>{email.trim()}</strong>.
+              <br />Click the link in your email to activate your profile.
             </p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#b5aa99', marginBottom: 28 }}>
+              Didn&rsquo;t get it? Check your spam folder, or wait a moment and try again.
+            </p>
+            <button onClick={resendEmail} style={{
+              padding: '10px 28px', borderRadius: 100, background: 'transparent', color: '#8a7e72',
+              fontSize: 14, fontWeight: 600, border: '1.5px solid #ede8df',
+              cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            }}>Resend Email</button>
+          </div>
+        )}
 
-            {dogs.slice(0, numDogs).map((d, i) => (
-              <div key={i} style={{ background: '#fff', borderRadius: 16, border: '1px solid #ede8df', padding: 24, textAlign: 'left', maxWidth: 420, margin: '0 auto 16px' }}>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16 }}>
-                  {dogNames[i]?.trim() || `Dog ${i + 1}`}
-                </div>
-                {[
-                  { label: 'Breed', value: d.breed },
-                  { label: 'Age', value: `${d.age} ${d.ageUnit}` },
-                  { label: 'Weight', value: `${d.weight} lbs` },
-                  { label: 'Gender', value: d.gender === 'male' ? 'Male' : 'Female' },
-                  { label: 'Neutered', value: d.neutered === 'is' ? 'Yes' : 'No' },
-                  { label: 'Current Food', value: d.food ? d.food.name : (d.foodAltText.trim() || d.foodAlt.replace('_', ' ')) },
-                ].map((row, j) => (
-                  <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: j < 5 ? '1px solid #f5f2ec' : 'none' }}>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72' }}>{row.label}</span>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600, color: '#1a1612', textAlign: 'right', maxWidth: '55%' }}>{row.value}</span>
-                  </div>
-                ))}
-              </div>
-            ))}
-
-            <button onClick={() => router.push('/discover')} style={{ padding: '14px 48px', borderRadius: 100, background: '#1a1612', color: '#faf8f4', fontSize: 16, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
-              See Recommendations &rarr;
-            </button>
-            <div style={{ marginTop: 16 }}>
-              <button onClick={() => router.push('/profile')} style={{ padding: '10px 32px', borderRadius: 100, background: 'transparent', color: '#8a7e72', fontSize: 14, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
-                View My Profile
-              </button>
-            </div>
+        {/* Already registered error */}
+        {error === 'already_registered' && curType === 'account' && (
+          <div style={{ textAlign: 'center', marginTop: 16, padding: '16px 20px', background: '#f7efd8', borderRadius: 14, fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 14, color: '#1a1612', marginBottom: 8 }}>Looks like you already have an account!</p>
+            <a href="/login" style={{ fontSize: 14, fontWeight: 600, color: '#C9A84C', textDecoration: 'none' }}>Sign in instead &rarr;</a>
           </div>
         )}
 
