@@ -418,6 +418,7 @@ export default function ComparePage() {
                   borderBottom: '2px solid #ede8df',
                   background: colBg(idx),
                   cursor: 'pointer', transition: 'background 0.2s',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center',
                 }}
                   onClick={() => goFood(f.id)}
                   onMouseEnter={(e) => { if (!isMobile) e.currentTarget.style.background = '#f0ebe3'; }}
@@ -429,7 +430,7 @@ export default function ComparePage() {
                       margin: isMobile ? '0 auto 6px' : '0 auto 12px', borderRadius: isMobile ? 8 : 10,
                       overflow: 'hidden', background: '#fff', display: 'flex',
                       alignItems: 'center', justifyContent: 'center',
-                      border: '1px solid #ede8df',
+                      border: '1px solid #ede8df', flexShrink: 0,
                     }}>
                       <img src={f.image_url} alt={f.name}
                         style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }}
@@ -440,29 +441,26 @@ export default function ComparePage() {
                     fontSize: isMobile ? 9 : 12, color: '#8a7e72', fontWeight: 600,
                     letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 1,
                   }}>{f.brand}</div>
-                  {/* title: fixed height for alignment */}
                   <div style={{
                     fontSize: isMobile ? 11 : 15, fontWeight: 600, color: '#1a1612',
                     lineHeight: 1.4, marginBottom: isMobile ? 6 : 10, padding: 0,
-                    display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden', textOverflow: 'ellipsis',
-                    height: isMobile ? 46 : 55,
+                    flex: 1, minHeight: isMobile ? 40 : 0,
                   }}>
                     {f.name}
                   </div>
-                  <div style={{ marginBottom: isMobile ? 4 : 8 }}>
+                  <div style={{ marginBottom: isMobile ? 4 : 8, flexShrink: 0 }}>
                     <ScoreRing score={f.quality_score} compact={isMobile} />
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
                     padding: isMobile ? '3px 8px' : '6px 14px', borderRadius: 100,
                     border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
                     fontSize: isMobile ? 10 : 12, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                    transition: 'all 0.2s', position: 'relative', zIndex: 2,
+                    transition: 'all 0.2s', position: 'relative', zIndex: 2, flexShrink: 0,
                   }}
                     onMouseEnter={(e) => { e.target.style.background = '#fce4e4'; e.target.style.color = '#c44'; e.target.style.borderColor = '#f0c4c4'; }}
                     onMouseLeave={(e) => { e.target.style.background = '#fff'; e.target.style.color = '#8a7e72'; e.target.style.borderColor = '#e8e0d4'; }}
                   >Remove</button>
-                  {!isMobile && <div style={{ fontSize: 10, color: '#c4b9a8', marginTop: 8 }}>View details →</div>}
+                  {!isMobile && <div style={{ fontSize: 10, color: '#c4b9a8', marginTop: 8, flexShrink: 0 }}>View details →</div>}
                 </div>
               ))}
 
