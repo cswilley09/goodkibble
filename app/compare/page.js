@@ -254,7 +254,7 @@ export default function ComparePage() {
   const totalDataCols = items.length + (hasAddSlot ? 1 : 0);
 
   /* desktop: fixed label col + flex product cols */
-  const gridCols = `100px repeat(${totalDataCols}, 1fr)`;
+  const gridCols = `160px repeat(${totalDataCols}, 1fr)`;
 
   /* mobile: sticky narrow label col + fixed-width scrollable product cols */
   const mLabelW = 80;
@@ -265,8 +265,8 @@ export default function ComparePage() {
 
   /* shared label cell style (sticky on mobile) */
   const labelCell = (extra = {}) => ({
-    padding: isMobile ? '10px 6px 10px 10px' : '14px 8px 14px 20px',
-    fontSize: isMobile ? 12 : 13,
+    padding: isMobile ? '10px 6px 10px 10px' : '18px 12px 18px 24px',
+    fontSize: isMobile ? 12 : 15,
     fontWeight: 600,
     letterSpacing: 0.3,
     lineHeight: 1.2,
@@ -300,7 +300,7 @@ export default function ComparePage() {
       </nav>
 
       {/* content */}
-      <div style={{ maxWidth: 960, margin: '0 auto', padding: isMobile ? '24px 12px 60px' : '40px 24px 80px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '24px 12px 60px' : '40px 40px 80px' }}>
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
@@ -412,7 +412,7 @@ export default function ComparePage() {
 
               {items.map((f, idx) => (
                 <div key={f.id} style={{
-                  padding: isMobile ? '10px 8px 10px' : '24px 12px 18px',
+                  padding: isMobile ? '10px 8px 10px' : '28px 16px 22px',
                   textAlign: 'center',
                   borderLeft: '1px solid #ede8df',
                   borderBottom: '2px solid #ede8df',
@@ -437,12 +437,12 @@ export default function ComparePage() {
                     </div>
                   )}
                   <div style={{
-                    fontSize: isMobile ? 9 : 11, color: '#8a7e72', fontWeight: 600,
+                    fontSize: isMobile ? 9 : 12, color: '#8a7e72', fontWeight: 600,
                     letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 1,
                   }}>{f.brand}</div>
                   {/* title: fixed height for alignment */}
                   <div style={{
-                    fontSize: isMobile ? 11 : 13, fontWeight: 600, color: '#1a1612',
+                    fontSize: isMobile ? 11 : 15, fontWeight: 600, color: '#1a1612',
                     lineHeight: 1.4, marginBottom: isMobile ? 6 : 10, padding: 0,
                     display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
                     overflow: 'hidden', textOverflow: 'ellipsis',
@@ -454,9 +454,9 @@ export default function ComparePage() {
                     <ScoreRing score={f.quality_score} compact={isMobile} />
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
-                    padding: isMobile ? '3px 8px' : '5px 12px', borderRadius: 100,
+                    padding: isMobile ? '3px 8px' : '6px 14px', borderRadius: 100,
                     border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
-                    fontSize: isMobile ? 10 : 11, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    fontSize: isMobile ? 10 : 12, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
                     transition: 'all 0.2s', position: 'relative', zIndex: 2,
                   }}
                     onMouseEnter={(e) => { e.target.style.background = '#fce4e4'; e.target.style.color = '#c44'; e.target.style.borderColor = '#f0c4c4'; }}
@@ -489,7 +489,7 @@ export default function ComparePage() {
                     const val = Math.round((f[n.key] || 0) * 10) / 10;
                     return (
                       <div key={`${n.key}-${f.id}`} style={{
-                        padding: isMobile ? '10px 10px' : '14px 16px',
+                        padding: isMobile ? '10px 10px' : '18px 20px',
                         borderLeft: '1px solid #f0ebe3',
                         borderBottom: isLast ? 'none' : '1px solid #f0ebe3',
                         background: colBg(idx),
@@ -497,7 +497,7 @@ export default function ComparePage() {
                         justifyContent: isMobile ? 'center' : 'flex-start',
                       }}>
                         <div style={{
-                          fontSize: isMobile ? 16 : 18, fontWeight: 700, color: '#1a1612',
+                          fontSize: isMobile ? 16 : 22, fontWeight: 700, color: '#1a1612',
                           fontFamily: "'DM Sans', sans-serif", lineHeight: 1,
                           minWidth: isMobile ? undefined : 44, flexShrink: 0,
                         }}>
@@ -535,7 +535,7 @@ export default function ComparePage() {
                 const first5 = getFirst5(f.ingredients);
                 return (
                   <div key={`ing-${f.id}`} style={{
-                    padding: isMobile ? '12px 10px' : '18px 16px',
+                    padding: isMobile ? '12px 10px' : '22px 20px',
                     borderTop: '2px solid #ede8df',
                     background: colBg(idx),
                     display: 'flex', alignItems: 'center',
@@ -544,7 +544,7 @@ export default function ComparePage() {
                       <ol style={{ margin: 0, paddingLeft: isMobile ? 16 : 20, width: '100%' }}>
                         {first5.map((ing, i) => (
                           <li key={i} style={{
-                            fontSize: isMobile ? 10 : 12,
+                            fontSize: isMobile ? 10 : 13,
                             color: i === 0 ? '#1a1612' : '#5a5047',
                             fontWeight: i === 0 ? 600 : 400,
                             lineHeight: isMobile ? 1.4 : 1.8,
