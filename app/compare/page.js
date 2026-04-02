@@ -609,18 +609,20 @@ export default function ComparePage() {
                   /* empty left label cell to maintain grid alignment */
                   <div key={`ing-label-${rowIdx}`} style={{
                     borderBottom: isLast ? 'none' : '1px solid #f5f2ec',
+                    background: !isMobile && rowIdx % 2 === 1 ? 'rgba(0,0,0,0.015)' : 'transparent',
                   }} />,
                   ...items.map((f, idx) => {
                     const first5 = getFirst5(f.ingredients);
                     const ing = first5[rowIdx] || null;
                     const signal = ing && !isMobile ? lookupSignal(ing) : null;
+                    const stripe = !isMobile && rowIdx % 2 === 1 ? 'rgba(0,0,0,0.015)' : undefined;
                     return (
                       <div key={`ing-${f.id}-${rowIdx}`} style={{
-                        padding: isMobile ? '8px 10px' : '12px 20px',
+                        padding: isMobile ? '8px 10px' : '10px 20px',
                         borderLeft: '1px solid #f0ebe3',
                         borderBottom: isLast ? 'none' : '1px solid #f5f2ec',
-                        background: colBg(idx),
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                        background: stripe || colBg(idx),
+                        display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', gap: 6,
                       }}>
                         {ing ? (<>
                           {signal && !isMobile && (
@@ -628,7 +630,7 @@ export default function ComparePage() {
                           )}
                           <span style={{
                             fontSize: isMobile ? 10 : 13, fontWeight: rowIdx === 0 ? 700 : 500,
-                            color: '#1a1612', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.4, textAlign: 'center',
+                            color: '#1a1612', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.4, textAlign: isMobile ? 'center' : 'left',
                           }}>{ing}</span>
                         </>) : (
                           <span style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>&mdash;</span>
