@@ -258,6 +258,30 @@ export default function ComparePage() {
   const router = useRouter();
   const { items, addItem, removeItem, clearAll } = useCompare();
   const [saved, setSaved] = useState(false);
+  const [ingredientInfo, setIngredientInfo] = useState({});
+
+  useEffect(() => {
+    fetch('/api/ingredients').then(r => r.json()).then(data => {
+      if (!data || data.error) return;
+      const map = {};
+      data.forEach(row => { map[row.ingredient_name] = row; });
+      setIngredientInfo(map);
+    }).catch(() => {});
+  }, []);
+
+  function lookupSignal(ingName) {
+    if (!ingName) return null;
+    const norm = ingName.toLowerCase().trim().replace(/\s*\([^)]*\)$/g, '').replace(/[.]+$/, '').trim();
+    const info = ingredientInfo[norm];
+    if (info) return info.quality_signal;
+    // Try stripping common prefixes
+    const prefixes = ['whole grain ', 'ground ', 'dried ', 'deboned ', 'organic ', 'raw '];
+    for (const p of prefixes) {
+      if (norm.startsWith(p) && ingredientInfo[norm.slice(p.length)]) return ingredientInfo[norm.slice(p.length)].quality_signal;
+    }
+    return null;
+  }
+
   const goHome = () => router.push('/');
   const goFood = (food) => {
     if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
@@ -577,31 +601,36 @@ export default function ComparePage() {
                 </span>
               </div>
 
-              {/* ingredient rows: 1st through 5th */}
-              {['1st', '2nd', '3rd', '4th', '5th'].map((ordinal, rowIdx) => {
+              {/* ingredient rows: 5 rows, no labels in left column */}
+              {[0, 1, 2, 3, 4].map((rowIdx) => {
                 const isLast = rowIdx === 4;
+                const dotColors = { good: '#639922', neutral: '#8a7e72', caution: '#d4760a' };
                 return [
+                  /* empty left label cell to maintain grid alignment */
                   <div key={`ing-label-${rowIdx}`} style={{
-                    ...labelCell({ fontSize: isMobile ? 11 : 13 }),
                     borderBottom: isLast ? 'none' : '1px solid #f5f2ec',
-                  }}>{ordinal}</div>,
+                  }} />,
                   ...items.map((f, idx) => {
                     const first5 = getFirst5(f.ingredients);
                     const ing = first5[rowIdx] || null;
+                    const signal = ing && !isMobile ? lookupSignal(ing) : null;
                     return (
                       <div key={`ing-${f.id}-${rowIdx}`} style={{
                         padding: isMobile ? '8px 10px' : '12px 20px',
                         borderLeft: '1px solid #f0ebe3',
                         borderBottom: isLast ? 'none' : '1px solid #f5f2ec',
                         background: colBg(idx),
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 6,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                       }}>
-                        {ing ? (
+                        {ing ? (<>
+                          {signal && !isMobile && (
+                            <span style={{ width: 8, height: 8, borderRadius: '50%', background: dotColors[signal] || dotColors.neutral, flexShrink: 0 }} />
+                          )}
                           <span style={{
-                            fontSize: isMobile ? 10 : 13, fontWeight: rowIdx === 0 ? 600 : 500,
-                            color: '#1a1612', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.4,
+                            fontSize: isMobile ? 10 : 13, fontWeight: rowIdx === 0 ? 700 : 500,
+                            color: '#1a1612', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.4, textAlign: 'center',
                           }}>{ing}</span>
-                        ) : (
+                        </>) : (
                           <span style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>&mdash;</span>
                         )}
                       </div>
