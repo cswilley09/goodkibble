@@ -772,10 +772,9 @@ export default function ProfilePage() {
                         </span>
                       </div>
 
-                      {/* Horizontal scroll cards */}
+                      {/* Horizontal scroll cards (mobile) / responsive grid (desktop) */}
                       <div className="saved-scroll-row" style={{
-                        display: 'flex', gap: 14, overflowX: 'auto', paddingBottom: 8,
-                        scrollSnapType: 'x mandatory', scrollbarWidth: 'none',
+                        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14,
                       }}>
                         {comp.items.map(f => {
                           const isHighest = f.quality_score != null && f.quality_score === highestScore && comp.items.filter(x => x.quality_score === highestScore).length === 1;
@@ -787,8 +786,7 @@ export default function ProfilePage() {
                             { label: 'Carbs', key: 'carbs_dmb', color: '#378ADD', max: 60 },
                           ];
                           return (
-                            <div key={f.id} onClick={() => goToFood(f)} style={{
-                              flex: '0 0 200px', scrollSnapAlign: 'start',
+                            <div key={f.id} className="saved-card" onClick={() => goToFood(f)} style={{
                               background: '#faf8f4', borderRadius: 16,
                               border: isHighest ? '2px solid #C9A84C' : '1px solid #ede8df',
                               padding: 18, position: 'relative', cursor: 'pointer',
@@ -799,7 +797,7 @@ export default function ProfilePage() {
                             >
                               {isHighest && (
                                 <span style={{
-                                  position: 'absolute', top: -10, right: 12,
+                                  position: 'absolute', top: 8, right: 8,
                                   background: '#C9A84C', color: '#fff', padding: '3px 10px',
                                   borderRadius: 100, fontSize: 10, fontWeight: 700,
                                   fontFamily: "'DM Sans', sans-serif", letterSpacing: 0.5,
@@ -929,6 +927,18 @@ export default function ProfilePage() {
           .profile-container { padding: 20px 16px 60px !important; }
           .current-food-layout { flex-direction: column !important; align-items: center !important; text-align: center !important; }
           .current-food-img { width: 80px !important; }
+          .saved-scroll-row {
+            display: flex !important;
+            grid-template-columns: unset !important;
+            overflow-x: auto !important;
+            padding-bottom: 8px !important;
+            scroll-snap-type: x mandatory !important;
+            scrollbar-width: none !important;
+          }
+          .saved-card {
+            flex: 0 0 200px !important;
+            scroll-snap-align: start !important;
+          }
         }
       `}</style>
     </div>
