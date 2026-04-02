@@ -242,6 +242,7 @@ function getFirst5(ingredientsStr) {
 export default function ComparePage() {
   const router = useRouter();
   const { items, addItem, removeItem, clearAll } = useCompare();
+  const [saved, setSaved] = useState(false);
   const goHome = () => router.push('/');
   const goFood = (food) => {
     if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
@@ -325,7 +326,34 @@ export default function ComparePage() {
                   : `Comparing ${items.length} products side-by-side`}
             </p>
           </div>
-          {items.length > 0 && (
+          {items.length >= 2 && (
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={() => {
+                const comparisons = JSON.parse(localStorage.getItem('gk_saved_comparisons') || '[]');
+                const entry = {
+                  id: Date.now(),
+                  saved_at: new Date().toISOString(),
+                  items: items.map(f => ({ id: f.id, name: f.name, brand: f.brand, slug: f.slug, brand_slug: f.brand_slug, image_url: f.image_url, quality_score: f.quality_score, protein_dmb: f.protein_dmb, fat_dmb: f.fat_dmb, carbs_dmb: f.carbs_dmb, primary_protein: f.primary_protein })),
+                };
+                comparisons.unshift(entry);
+                localStorage.setItem('gk_saved_comparisons', JSON.stringify(comparisons.slice(0, 20)));
+                setSaved(true);
+                setTimeout(() => setSaved(false), 2500);
+              }} style={{
+                padding: '8px 16px', borderRadius: 100,
+                background: saved ? '#2d7a4f' : '#C9A84C', color: '#fff',
+                fontSize: 13, fontWeight: 600, border: 'none',
+                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                transition: 'background 0.2s',
+              }}>{saved ? '\u2713 Saved!' : 'Save Comparison'}</button>
+              <button onClick={clearAll} style={{
+                padding: '8px 16px', borderRadius: 100, border: '1px solid #e8e0d4',
+                background: '#fff', color: '#8a7e72', fontSize: 13, fontWeight: 500,
+                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              }}>Clear All</button>
+            </div>
+          )}
+          {items.length === 1 && (
             <button onClick={clearAll} style={{
               padding: '8px 16px', borderRadius: 100, border: '1px solid #e8e0d4',
               background: '#fff', color: '#8a7e72', fontSize: 13, fontWeight: 500,

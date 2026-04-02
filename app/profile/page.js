@@ -254,8 +254,8 @@ export default function ProfilePage() {
   const [altProteinOnly, setAltProteinOnly] = useState(true);
   const [totalProducts, setTotalProducts] = useState(0);
 
-  // Saved foods
-  const [savedFoods, setSavedFoods] = useState([]);
+  // Saved comparisons
+  const [savedComparisons, setSavedComparisons] = useState([]);
 
   const dog = dogs[activeDogIdx] || null;
   const displayName = dog?.dog_name || 'Your dog';
@@ -324,17 +324,19 @@ export default function ProfilePage() {
       });
   }, [currentFoodData?.id, currentFoodData?.quality_score, altProteinOnly]);
 
-  // Load saved foods from localStorage
+  // Load saved comparisons from localStorage
   useEffect(() => {
-    const slugs = JSON.parse(localStorage.getItem('gk_saved_foods') || '[]');
-    if (slugs.length === 0) { setSavedFoods([]); return; }
-    // Fetch each saved food
-    Promise.all(slugs.map(s =>
-      fetch(`/api/foods/search?q=${encodeURIComponent(s)}&limit=3`)
-        .then(r => r.json())
-        .then(data => (Array.isArray(data) ? data : [])[0] || null)
-    )).then(foods => setSavedFoods(foods.filter(Boolean)));
+    if (tab === 'saved') {
+      const data = JSON.parse(localStorage.getItem('gk_saved_comparisons') || '[]');
+      setSavedComparisons(data);
+    }
   }, [tab]);
+
+  function deleteComparison(id) {
+    const updated = savedComparisons.filter(c => c.id !== id);
+    setSavedComparisons(updated);
+    localStorage.setItem('gk_saved_comparisons', JSON.stringify(updated));
+  }
 
   function handleLogout() {
     localStorage.removeItem('gk_user_id');
@@ -757,71 +759,106 @@ export default function ProfilePage() {
           <>
             <div style={cardStyle}>
               <div style={eyebrow()}>Saved Comparisons</div>
-              {savedFoods.length > 0 ? (
-                <div style={{ display: 'grid', gap: 10 }}>
-                  {savedFoods.map(f => (
-                    <ProductCard key={f.id} food={f} onClick={() => goToFood(f)} />
+              {savedComparisons.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {savedComparisons.map(comp => (
+                    <div key={comp.id} style={{
+                      background: '#faf8f5', borderRadius: 14, border: '1px solid #ede8df', padding: 16,
+                    }}>
+                      {/* Header with date and delete */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                        <span style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
+                          {new Date(comp.saved_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          {' \u2022 '}{comp.items.length} products
+                        </span>
+                        <button onClick={() => deleteComparison(comp.id)} style={{
+                          background: 'none', border: 'none', cursor: 'pointer', color: '#b5aa99',
+                          fontSize: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                          padding: '4px 8px',
+                        }}
+                          onMouseEnter={e => (e.currentTarget.style.color = '#b5483a')}
+                          onMouseLeave={e => (e.currentTarget.style.color = '#b5aa99')}
+                        >Delete</button>
+                      </div>
+
+                      {/* Product pills */}
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
+                        {comp.items.map(f => (
+                          <div key={f.id} onClick={() => goToFood(f)} style={{
+                            display: 'flex', alignItems: 'center', gap: 8, padding: '6px 12px',
+                            borderRadius: 10, background: '#fff', border: '1px solid #ede8df',
+                            cursor: 'pointer', transition: 'border-color 0.15s',
+                          }}
+                            onMouseEnter={e => (e.currentTarget.style.borderColor = '#C9A84C')}
+                            onMouseLeave={e => (e.currentTarget.style.borderColor = '#ede8df')}
+                          >
+                            {f.image_url ? (
+                              <img src={f.image_url} alt="" style={{ width: 28, height: 28, borderRadius: 4, objectFit: 'contain', background: '#f5f0e8', flexShrink: 0 }} />
+                            ) : (
+                              <div style={{ width: 28, height: 28, borderRadius: 4, background: '#f5f0e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, flexShrink: 0 }}>{'\u{1F415}'}</div>
+                            )}
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ fontSize: 11, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 140 }}>{f.brand}</div>
+                              <div style={{ fontSize: 10, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 140 }}>{f.name}</div>
+                            </div>
+                            {f.quality_score != null && (
+                              <span style={{ fontSize: 12, fontWeight: 700, color: f.quality_score >= 70 ? '#2d7a4f' : f.quality_score >= 50 ? '#c47a20' : '#b5483a', flexShrink: 0 }}>
+                                {f.quality_score}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Quick compare table inline */}
+                      <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, fontFamily: "'DM Sans', sans-serif" }}>
+                          <thead>
+                            <tr>
+                              <th style={{ textAlign: 'left', padding: '6px 8px', color: '#8a7e72', fontWeight: 500, borderBottom: '1px solid #ede8df' }}></th>
+                              {comp.items.map(f => (
+                                <th key={f.id} style={{ padding: '6px 8px', color: '#1a1612', fontWeight: 600, borderBottom: '1px solid #ede8df', textAlign: 'center', whiteSpace: 'nowrap', fontSize: 11 }}>
+                                  {f.brand}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              { label: 'Score', key: 'quality_score', fmt: v => v ?? '\u2014' },
+                              { label: 'Protein', key: 'protein_dmb', fmt: v => v != null ? `${Math.round(v * 10) / 10}%` : '\u2014' },
+                              { label: 'Fat', key: 'fat_dmb', fmt: v => v != null ? `${Math.round(v * 10) / 10}%` : '\u2014' },
+                              { label: 'Carbs', key: 'carbs_dmb', fmt: v => v != null ? `${Math.round(v * 10) / 10}%` : '\u2014' },
+                            ].map(row => (
+                              <tr key={row.label}>
+                                <td style={{ padding: '6px 8px', color: '#8a7e72', borderBottom: '1px solid #f5f2ec' }}>{row.label}</td>
+                                {comp.items.map(f => (
+                                  <td key={f.id} style={{ padding: '6px 8px', color: '#1a1612', textAlign: 'center', borderBottom: '1px solid #f5f2ec', fontWeight: 500 }}>
+                                    {row.fmt(f[row.key])}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   ))}
                 </div>
               ) : (
                 <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                  <div style={{ fontSize: 40, opacity: 0.3, marginBottom: 12 }}>{'\u{1F516}'}</div>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>No saved foods yet</div>
+                  <div style={{ fontSize: 40, opacity: 0.3, marginBottom: 12 }}>{'\u{2696}\u{FE0F}'}</div>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>No saved comparisons yet</div>
                   <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
-                    Browse foods and tap &ldquo;Add to Compare&rdquo; to save them here.
+                    Compare two or more foods and tap &ldquo;Save Comparison&rdquo; to keep them here.
                   </p>
-                  <button onClick={() => router.push('/discover')} style={{
+                  <button onClick={() => router.push('/compare')} style={{
                     padding: '10px 28px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
                     fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                  }}>Discover Foods &rarr;</button>
+                  }}>Compare Foods &rarr;</button>
                 </div>
               )}
             </div>
-
-            {/* Quick Compare Table */}
-            {savedFoods.length > 0 && currentFoodData && (
-              <div style={cardStyle}>
-                <div style={eyebrow()}>Quick Compare with {displayName}&rsquo;s Food</div>
-                <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, fontFamily: "'DM Sans', sans-serif" }}>
-                    <thead>
-                      <tr>
-                        <th style={{ textAlign: 'left', padding: '8px 10px', color: '#8a7e72', fontWeight: 500, borderBottom: '1px solid #f5f2ec' }}></th>
-                        <th style={{ padding: '8px 10px', color: '#C9A84C', fontWeight: 700, borderBottom: '2px solid #C9A84C', textAlign: 'center', whiteSpace: 'nowrap' }}>
-                          {currentFoodData.brand}
-                        </th>
-                        {savedFoods.map(f => (
-                          <th key={f.id} style={{ padding: '8px 10px', color: '#1a1612', fontWeight: 600, borderBottom: '1px solid #f5f2ec', textAlign: 'center', whiteSpace: 'nowrap' }}>
-                            {f.brand}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        { label: 'Score', key: 'quality_score', fmt: v => v ?? '—' },
-                        { label: 'Protein %', key: 'protein_dmb', fmt: v => v != null ? `${Math.round(v * 10) / 10}%` : '—' },
-                        { label: 'Fat %', key: 'fat_dmb', fmt: v => v != null ? `${Math.round(v * 10) / 10}%` : '—' },
-                        { label: 'Carbs %', key: 'carbs_dmb', fmt: v => v != null ? `${Math.round(v * 10) / 10}%` : '—' },
-                        { label: 'Protein', key: 'primary_protein', fmt: v => v || '—' },
-                      ].map(row => (
-                        <tr key={row.label}>
-                          <td style={{ padding: '8px 10px', color: '#8a7e72', borderBottom: '1px solid #f5f2ec' }}>{row.label}</td>
-                          <td style={{ padding: '8px 10px', color: '#639922', fontWeight: 700, textAlign: 'center', borderBottom: '1px solid #f5f2ec' }}>
-                            {row.fmt(currentFoodData[row.key])}
-                          </td>
-                          {savedFoods.map(f => (
-                            <td key={f.id} style={{ padding: '8px 10px', color: '#1a1612', textAlign: 'center', borderBottom: '1px solid #f5f2ec' }}>
-                              {row.fmt(f[row.key])}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
           </>
         )}
 
