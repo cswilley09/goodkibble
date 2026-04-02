@@ -60,7 +60,7 @@ export async function GET(request) {
 
   const selectCols = compact
     ? 'id, name, brand, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, moisture, ingredients, image_url, quality_score'
-    : 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug'
+    : 'id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, ingredients'
 
   // Pass 1: brand matches
   const brandFilter = buildOrFilter(variants, ['brand'])
