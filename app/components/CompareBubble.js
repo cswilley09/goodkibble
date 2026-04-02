@@ -12,7 +12,11 @@ export default function CompareBubble() {
 
   useEffect(() => {
     if (nudge !== prevNudge.current && nudge > 0) {
-      setWiggle(true);
+      // Reset first to re-trigger animation on rapid clicks
+      setWiggle(false);
+      requestAnimationFrame(() => {
+        setWiggle(true);
+      });
       const t = setTimeout(() => setWiggle(false), 800);
       prevNudge.current = nudge;
       return () => clearTimeout(t);
