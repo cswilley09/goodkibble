@@ -169,7 +169,7 @@ function AddCardSearch({ onSelect, compact }) {
   useEffect(() => {
     if (query.length < 2) { setResults([]); return; }
     const t = setTimeout(() => {
-      fetch(`/api/foods/search?q=${encodeURIComponent(query)}&limit=6&compact=true`)
+      fetch(`/api/foods/search?q=${encodeURIComponent(query)}&limit=6`)
         .then(r => r.json())
         .then(data => setResults(Array.isArray(data) ? data : []))
         .catch(() => setResults([]));
