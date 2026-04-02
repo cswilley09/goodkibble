@@ -803,14 +803,14 @@ export default function FoodPageContent({ productId }) {
         </div>
       ) : (
         <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 80px' }}>
-          <button onClick={goHome} style={{
+          <button onClick={() => router.push('/discover')} style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
             cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
             marginBottom: 32, padding: 0,
           }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Back to search
+            Back to Discover Foods
           </button>
 
           {/* Hero */}
