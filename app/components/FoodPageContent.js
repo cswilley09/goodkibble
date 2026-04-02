@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import SearchBox from './SearchBox';
 import CompareBubble from './CompareBubble';
+import SignUpButton from './SignUpButton';
 import { useCompare } from './CompareContext';
 
 function capitalize(str) {
@@ -45,13 +46,11 @@ function ProductImage({ src, alt }) {
   );
 }
 
-function InfoTooltip({ text }) {
-  const [show, setShow] = useState(false);
+/* InfoTooltip — simple inline text, shown via parent's activeInfo state */
+function InfoTooltip({ text, onShow }) {
   return (
-    <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', marginLeft: 8 }}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
-      onClick={() => setShow(!show)}
+    <span style={{ display: 'inline-flex', alignItems: 'center', marginLeft: 8 }}
+      onClick={() => onShow(text)}
     >
       <span style={{
         width: 20, height: 20, borderRadius: '50%', background: '#e8e0d4',
@@ -59,63 +58,6 @@ function InfoTooltip({ text }) {
         fontSize: 12, fontWeight: 700, color: '#8a7e72', cursor: 'pointer',
         fontFamily: "'DM Sans', sans-serif",
       }}>i</span>
-      {show && (
-        <div style={{
-          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
-          transform: 'translateX(-50%)', width: 300, padding: '14px 16px',
-          borderRadius: 12, background: '#1a1612', color: '#faf8f5',
-          fontSize: 13, lineHeight: 1.5, fontWeight: 400,
-          fontFamily: "'DM Sans', sans-serif",
-          boxShadow: '0 8px 24px rgba(26,22,18,0.25)',
-          zIndex: 50, animation: 'fadeIn 0.15s ease',
-        }}>
-          {text}
-          <div style={{
-            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-            width: 0, height: 0, borderLeft: '6px solid transparent',
-            borderRight: '6px solid transparent', borderTop: '6px solid #1a1612',
-          }} />
-        </div>
-      )}
-    </span>
-  );
-}
-
-function SaltTooltip({ children }) {
-  const [show, setShow] = useState(false);
-  return (
-    <span style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
-    >
-      {children}
-      {show && (
-        <div style={{
-          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
-          transform: 'translateX(-50%)', width: 300, padding: '16px 18px',
-          borderRadius: 14, background: '#1a1612', color: '#faf8f5',
-          fontSize: 13, lineHeight: 1.55, fontWeight: 400,
-          fontFamily: "'DM Sans', sans-serif",
-          boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
-          zIndex: 60, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
-        }}>
-          {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: '#d4852a' }} />
-            <span style={{ fontWeight: 700, fontSize: 14 }}>Salt Divider</span>
-          </div>
-          {/* Description */}
-          <div style={{ color: '#d4cfc6' }}>
-            Any ingredient listed after salt typically makes up less than 1% of the total formula, as salt itself usually represents &lt;1% of the recipe.
-          </div>
-          {/* Arrow */}
-          <div style={{
-            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-            width: 0, height: 0, borderLeft: '7px solid transparent',
-            borderRight: '7px solid transparent', borderTop: '7px solid #1a1612',
-          }} />
-        </div>
-      )}
     </span>
   );
 }
@@ -195,121 +137,88 @@ function lookupIngredient(ing, ingredientInfo) {
 const SIGNAL_COLORS = { good: '#2d7a4f', neutral: '#8a7e72', caution: '#d4852a' };
 const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.12)', caution: 'rgba(212,133,42,0.12)' };
 
-function IngredientTooltip({ info, children }) {
-  const [show, setShow] = useState(false);
-  const [mobile, setMobile] = useState(false);
-
-  useEffect(() => {
-    const check = () => setMobile(window.innerWidth <= 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
+/* IngredientInfoCard — rendered in document flow below the pills */
+function IngredientInfoCard({ info, onClose }) {
+  if (!info) return null;
   return (
-    <span style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={() => { if (!mobile) setShow(true); }}
-      onMouseLeave={() => { if (!mobile) setShow(false); }}
-    >
-      <span style={{ cursor: 'pointer' }}
-        onClick={(e) => { if (mobile) { e.stopPropagation(); setShow(true); } }}
-      >
-        {children}
-      </span>
-
-      {/* Desktop tooltip — position: absolute, above pill */}
-      {show && info && !mobile && (
-        <div style={{
-          position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%',
-          transform: 'translateX(-50%)', width: 300, maxWidth: 'calc(100vw - 32px)',
-          padding: '16px 18px', overflowWrap: 'break-word',
-          borderRadius: 14, background: '#1a1612', color: '#faf8f5',
-          fontSize: 13, lineHeight: 1.55, fontWeight: 400,
-          fontFamily: "'DM Sans', sans-serif",
-          boxShadow: '0 8px 28px rgba(26,22,18,0.35)',
-          zIndex: 60, pointerEvents: 'none', animation: 'fadeIn 0.15s ease',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{
-              width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
-              background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
-            }} />
-            <span style={{ fontWeight: 700, fontSize: 14 }}>{info.display_name}</span>
-            <span style={{
-              marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
-              textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100,
-              background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
-              color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
-            }}>{info.quality_signal}</span>
-          </div>
-          <div style={{ color: '#d4cfc6', marginBottom: info.source ? 10 : 0 }}>
-            {info.short_description}
-          </div>
-          {info.source && (
-            <div style={{ fontSize: 11, color: '#8a7e72', fontStyle: 'italic' }}>
-              Source: {info.source}
-            </div>
-          )}
-          <div style={{
-            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
-            width: 0, height: 0, borderLeft: '7px solid transparent',
-            borderRight: '7px solid transparent', borderTop: '7px solid #1a1612',
-          }} />
+    <div style={{
+      marginTop: 12, padding: 16, borderRadius: 12,
+      background: '#1a1612', color: '#faf8f5',
+      fontSize: 13, lineHeight: 1.55, fontWeight: 400,
+      fontFamily: "'DM Sans', sans-serif",
+      animation: 'fadeIn 0.15s ease',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        <span style={{
+          width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+          background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+        }} />
+        <span style={{ fontWeight: 700, fontSize: 14 }}>{info.display_name}</span>
+        <span style={{
+          marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+          textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
+          background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
+          color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+        }}>{info.quality_signal}</span>
+        <span onClick={onClose} style={{
+          marginLeft: 8, fontSize: 14, color: 'rgba(255,255,255,0.5)',
+          cursor: 'pointer', lineHeight: 1, padding: '0 2px',
+        }}>&times;</span>
+      </div>
+      <div style={{ color: '#d4cfc6', marginBottom: info.source ? 10 : 0 }}>
+        {info.short_description}
+      </div>
+      {info.source && (
+        <div style={{ fontSize: 11, color: '#8a7e72', fontStyle: 'italic' }}>
+          Source: {info.source}
         </div>
       )}
+    </div>
+  );
+}
 
-      {/* Mobile centered modal */}
-      {show && info && mobile && (
-        <>
-          <div onClick={() => setShow(false)} style={{
-            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-            background: 'rgba(0,0,0,0.3)', zIndex: 9998,
+/* Mobile bottom sheet for ingredient info */
+function IngredientBottomSheet({ info, onClose }) {
+  if (!info) return null;
+  return (
+    <>
+      <div onClick={onClose} style={{
+        position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+        background: 'rgba(0,0,0,0.3)', zIndex: 9998,
+      }} />
+      <div style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0,
+        background: '#1a1612', color: '#faf8f5',
+        borderRadius: '20px 20px 0 0', padding: '24px 24px 32px',
+        fontFamily: "'DM Sans', sans-serif",
+        boxShadow: '0 -8px 32px rgba(0,0,0,0.3)',
+        zIndex: 9999,
+        animation: 'bottomSheetUp 0.25s ease both',
+      }}>
+        <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.2)', margin: '0 auto 16px' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingRight: 24 }}>
+          <span style={{
+            width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
+            background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
           }} />
-          <div style={{
-            position: 'fixed', top: '50%', left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 'calc(100vw - 48px)', maxWidth: 340,
-            background: '#1a1612', color: '#faf8f5',
-            borderRadius: 16, padding: '20px 24px',
-            fontFamily: "'DM Sans', sans-serif",
-            boxShadow: '0 16px 48px rgba(0,0,0,0.4)',
-            zIndex: 9999,
-            animation: 'ingredientModalIn 0.2s ease both',
-          }}>
-            {/* Close button */}
-            <div onClick={() => setShow(false)} style={{
-              position: 'absolute', top: 12, right: 14,
-              fontSize: 16, color: 'rgba(255,255,255,0.5)', cursor: 'pointer',
-              lineHeight: 1, padding: 4,
-            }}>✕</div>
-            {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingRight: 24 }}>
-              <span style={{
-                width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
-                background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
-              }} />
-              <span style={{ fontWeight: 700, fontSize: 16 }}>{info.display_name}</span>
-              <span style={{
-                marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
-                textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
-                background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
-                color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
-              }}>{info.quality_signal}</span>
-            </div>
-            {/* Description */}
-            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, marginBottom: info.source ? 10 : 0 }}>
-              {info.short_description}
-            </div>
-            {/* Source */}
-            {info.source && (
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic' }}>
-                Source: {info.source}
-              </div>
-            )}
+          <span style={{ fontWeight: 700, fontSize: 16 }}>{info.display_name}</span>
+          <span style={{
+            marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+            textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
+            background: SIGNAL_BG[info.quality_signal] || SIGNAL_BG.neutral,
+            color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
+          }}>{info.quality_signal}</span>
+        </div>
+        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, marginBottom: info.source ? 10 : 0 }}>
+          {info.short_description}
+        </div>
+        {info.source && (
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic' }}>
+            Source: {info.source}
           </div>
-        </>
-      )}
-    </span>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -790,6 +699,15 @@ export default function FoodPageContent({ productId }) {
   const [loading, setLoading] = useState(true);
   const [ingredientInfo, setIngredientInfo] = useState({});
   const [showStickyBuy, setShowStickyBuy] = useState(false);
+  const [activeIngredient, setActiveIngredient] = useState(null); // { type: 'ingredient'|'salt'|'info', info }
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
   const heroRef = useRef(null);
 
   useEffect(() => {
@@ -838,6 +756,13 @@ export default function FoodPageContent({ productId }) {
         ?.map((s) => s.trim()).filter(Boolean) || []
     : [];
   const saltIdx = findSaltIndex(ingredients);
+  const [pillsAnimated, setPillsAnimated] = useState(false);
+  useEffect(() => {
+    if (ingredients.length > 0 && !pillsAnimated) {
+      const t = setTimeout(() => setPillsAnimated(true), ingredients.length * 20 + 500);
+      return () => clearTimeout(t);
+    }
+  }, [ingredients.length, pillsAnimated]);
 
   return (
     <div style={{ minHeight: '100vh', background: '#ffffff', overflowX: 'hidden' }}>
@@ -845,9 +770,9 @@ export default function FoodPageContent({ productId }) {
         @media (max-width: 480px) {
           .score-tile-pair { flex-direction: column; }
         }
-        @keyframes ingredientModalIn {
-          from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
-          to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        @keyframes bottomSheetUp {
+          from { opacity: 0; transform: translateY(100%); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
       <nav className="nav-bar" style={{
@@ -862,7 +787,10 @@ export default function FoodPageContent({ productId }) {
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
-        <CompareBubble />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <CompareBubble />
+          <SignUpButton />
+        </div>
       </nav>
 
       {loading ? (
@@ -974,8 +902,15 @@ export default function FoodPageContent({ productId }) {
               <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99' }}>
                 Guaranteed Analysis (Dry Matter Basis)
               </span>
-              <InfoTooltip text="These values are calculated on a Dry Matter Basis (DMB), which removes moisture content to give you a more accurate comparison between foods. Dry matter percentages reflect the actual nutrient concentration in the food solids, making it easier to compare wet and dry foods fairly." />
+              <InfoTooltip text="These values are calculated on a Dry Matter Basis (DMB), which removes moisture content to give you a more accurate comparison between foods. Dry matter percentages reflect the actual nutrient concentration in the food solids, making it easier to compare wet and dry foods fairly."
+                onShow={(text) => setActiveIngredient(activeIngredient?.idx === 'dmb' ? null : { idx: 'dmb', info: { display_name: 'Dry Matter Basis', quality_signal: 'neutral', short_description: text, source: null } })} />
             </div>
+            {activeIngredient?.idx === 'dmb' && !isMobile && (
+              <IngredientInfoCard info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
+            )}
+            {activeIngredient?.idx === 'dmb' && isMobile && (
+              <IngredientBottomSheet info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
+            )}
 
             <div style={{ maxWidth: 560 }}>
               <NutrientRow label="Protein" value={Math.round((food.protein_dmb || 0) * 10) / 10} color="#2d7a4f" />
@@ -991,8 +926,7 @@ export default function FoodPageContent({ productId }) {
           {/* Ingredients */}
           <div className="ingredients-section" style={{
             marginTop: 28, padding: '40px 32px', background: '#faf8f5', borderRadius: 24,
-            border: '1px solid #ede8df', animation: 'scaleIn 0.5s ease 0.2s both',
-            overflowX: 'hidden',
+            border: '1px solid #ede8df', animation: 'fadeIn 0.5s ease 0.2s both',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
               <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99' }}>Ingredients</div>
@@ -1107,11 +1041,13 @@ export default function FoodPageContent({ productId }) {
                    tooltip popover renders at full opacity. */
                 const wrapStyle = afterSalt
                   ? { display: 'inline-block', opacity: (hasTooltip || isSalt) ? 1 : 0.4 }
-                  : {
-                      display: 'inline-block',
-                      animationName: 'fadeUp', animationDuration: '0.4s',
-                      animationFillMode: 'both', animationDelay: `${i * 20}ms`,
-                    };
+                  : pillsAnimated
+                    ? { display: 'inline-block' }
+                    : {
+                        display: 'inline-block',
+                        animationName: 'fadeUp', animationDuration: '0.4s',
+                        animationFillMode: 'both', animationDelay: `${i * 20}ms`,
+                      };
 
                 /* quality dot color */
                 const signal = info?.quality_signal;
@@ -1119,10 +1055,13 @@ export default function FoodPageContent({ productId }) {
                 const showDot = !isSalt && signal && dotColorMap[signal];
                 const dotColor = isFirst ? '#ffffff' : dotColorMap[signal];
 
+                const isActive = activeIngredient?.idx === i;
+                const clickable = hasTooltip || isSalt;
+
                 const pill = (
-                  <span style={pillStyle}
+                  <span style={{ ...pillStyle, ...(isActive ? { borderColor: '#C9A84C', background: isSalt ? '#f0c930' : isFirst ? '#1a1612' : '#f7efd8' } : {}) }}
                     onMouseEnter={(e) => { if (hasTooltip) e.currentTarget.style.borderColor = '#b5aa99'; }}
-                    onMouseLeave={(e) => { if (hasTooltip) e.currentTarget.style.borderColor = '#e8e0d4'; }}
+                    onMouseLeave={(e) => { if (hasTooltip && !isActive) e.currentTarget.style.borderColor = '#e8e0d4'; }}
                   >
                     {showDot && (
                       <span style={{ width: 6, height: 6, borderRadius: '50%', background: dotColor, flexShrink: 0 }} />
@@ -1137,23 +1076,37 @@ export default function FoodPageContent({ productId }) {
                   </span>
                 );
 
-                if (isSalt) {
-                  return <span key={i} style={wrapStyle}><SaltTooltip>{pill}</SaltTooltip></span>;
+                const pillEl = (
+                  <span key={i} style={wrapStyle} onClick={() => {
+                    if (!clickable) return;
+                    if (isActive) { setActiveIngredient(null); return; }
+                    if (isSalt) {
+                      setActiveIngredient({ idx: i, info: { display_name: 'Salt Divider', quality_signal: 'caution', short_description: 'Any ingredient listed after salt typically makes up less than 1% of the total formula, as salt itself usually represents <1% of the recipe.', source: null } });
+                    } else if (info) {
+                      setActiveIngredient({ idx: i, info });
+                    }
+                  }}>{pill}</span>
+                );
+
+                // On desktop, insert the info card inline right after the active pill
+                // width:100% forces a flex line break so it sits below the current row
+                if (isActive && !isMobile) {
+                  return [
+                    pillEl,
+                    <div key={`info-${i}`} style={{ flexBasis: '100%', width: '100%' }}>
+                      <IngredientInfoCard info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
+                    </div>,
+                  ];
                 }
 
-                if (hasTooltip) {
-                  return (
-                    <span key={i} style={wrapStyle}>
-                      <IngredientTooltip info={info}>
-                        {pill}
-                      </IngredientTooltip>
-                    </span>
-                  );
-                }
-
-                return <span key={i} style={wrapStyle}>{pill}</span>;
+                return pillEl;
               })}
             </div>
+
+            {/* Mobile bottom sheet only */}
+            {activeIngredient && isMobile && (
+              <IngredientBottomSheet info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
+            )}
             {saltIdx >= 0 && (
               <div style={{ marginTop: 16, fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>
                 * Ingredients after salt are dimmed — they typically represent &lt;1% of the formula.
