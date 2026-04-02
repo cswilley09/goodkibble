@@ -7,11 +7,23 @@ export function CompareProvider({ children }) {
   const [items, setItems] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount, refresh stale items
   useEffect(() => {
     try {
       const saved = localStorage.getItem('gk_compare_items');
-      if (saved) setItems(JSON.parse(saved));
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setItems(parsed);
+        // Refresh any items missing key fields (ingredients, primary_protein)
+        const stale = parsed.filter(f => !f.ingredients || !f.primary_protein);
+        if (stale.length > 0) {
+          Promise.all(parsed.map(f =>
+            (!f.ingredients || !f.primary_protein)
+              ? fetch(`/api/foods/${f.id}`).then(r => r.json()).then(fresh => (fresh && !fresh.error) ? fresh : f).catch(() => f)
+              : Promise.resolve(f)
+          )).then(refreshed => setItems(refreshed));
+        }
+      }
     } catch {}
     setLoaded(true);
   }, []);
