@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect, useRef } from 'react';
 import { useCompare } from './CompareContext';
 import { useRouter } from 'next/navigation';
 
@@ -6,12 +7,24 @@ export default function CompareBubble() {
   const { items } = useCompare();
   const router = useRouter();
   const active = items.length > 0;
+  const [wiggle, setWiggle] = useState(false);
+  const prevCount = useRef(items.length);
+
+  useEffect(() => {
+    if (items.length !== prevCount.current && items.length > 0) {
+      setWiggle(true);
+      const t = setTimeout(() => setWiggle(false), 800);
+      prevCount.current = items.length;
+      return () => clearTimeout(t);
+    }
+    prevCount.current = items.length;
+  }, [items.length]);
 
   return (
     <>
       <button
         onClick={() => { if (active) router.push('/compare'); }}
-        className="compare-bubble"
+        className={`compare-bubble${wiggle ? ' compare-wiggle' : ''}`}
         style={{
           padding: '8px 18px', borderRadius: 100,
           border: active ? '1.5px solid #1a1612' : '1.5px solid #d4c9b8',
@@ -29,6 +42,16 @@ export default function CompareBubble() {
         {active && <span>({items.length})</span>}
       </button>
       <style>{`
+        @keyframes wiggle {
+          0% { transform: rotate(0deg); }
+          15% { transform: rotate(-6deg) scale(1.1); }
+          30% { transform: rotate(6deg) scale(1.1); }
+          45% { transform: rotate(-4deg); }
+          60% { transform: rotate(4deg); }
+          75% { transform: rotate(-2deg); }
+          100% { transform: rotate(0deg); }
+        }
+        .compare-wiggle { animation: wiggle 0.6s ease; }
         @media (max-width: 768px) {
           .compare-bubble { padding: 6px 12px !important; font-size: 11px !important; gap: 4px !important; }
           .compare-text { display: none !important; }
