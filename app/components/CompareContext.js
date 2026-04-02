@@ -34,7 +34,10 @@ export function CompareProvider({ children }) {
     localStorage.setItem('gk_compare_items', JSON.stringify(items));
   }, [items, loaded]);
 
+  const [nudge, setNudge] = useState(0);
+
   function addItem(food) {
+    setNudge(n => n + 1); // always nudge to trigger wiggle
     if (items.length >= 3) return;
     if (items.find(f => f.id === food.id)) return;
     setItems([...items, food]);
@@ -49,7 +52,7 @@ export function CompareProvider({ children }) {
   }
 
   return (
-    <CompareContext.Provider value={{ items, addItem, removeItem, clearAll }}>
+    <CompareContext.Provider value={{ items, addItem, removeItem, clearAll, nudge }}>
       {children}
     </CompareContext.Provider>
   );

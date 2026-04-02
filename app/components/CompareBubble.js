@@ -4,21 +4,21 @@ import { useCompare } from './CompareContext';
 import { useRouter } from 'next/navigation';
 
 export default function CompareBubble() {
-  const { items } = useCompare();
+  const { items, nudge } = useCompare();
   const router = useRouter();
   const active = items.length > 0;
   const [wiggle, setWiggle] = useState(false);
-  const prevCount = useRef(items.length);
+  const prevNudge = useRef(nudge);
 
   useEffect(() => {
-    if (items.length !== prevCount.current && items.length > 0) {
+    if (nudge !== prevNudge.current && nudge > 0) {
       setWiggle(true);
       const t = setTimeout(() => setWiggle(false), 800);
-      prevCount.current = items.length;
+      prevNudge.current = nudge;
       return () => clearTimeout(t);
     }
-    prevCount.current = items.length;
-  }, [items.length]);
+    prevNudge.current = nudge;
+  }, [nudge]);
 
   return (
     <>
