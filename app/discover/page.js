@@ -261,6 +261,19 @@ function DiscoverContent() {
     return counts;
   }, [allFoods]);
 
+  /* derive score range counts */
+  const scoreCounts = useMemo(() => {
+    const counts = {};
+    SCORE_RANGES.forEach(r => { counts[r.label] = 0; });
+    allFoods.forEach(f => {
+      if (f.quality_score == null) return;
+      for (const r of SCORE_RANGES) {
+        if (f.quality_score >= r.min && f.quality_score <= r.max) { counts[r.label]++; break; }
+      }
+    });
+    return counts;
+  }, [allFoods]);
+
   /* filtered brands for the brand search */
   const filteredBrands = useMemo(() => {
     if (!brandSearch.trim()) return brands;
@@ -361,7 +374,7 @@ function DiscoverContent() {
     <>
       <FilterSection title="GoodKibble Score" defaultOpen={true} forceOpen={selectedScoreRange.length > 0}>
         {SCORE_RANGES.map(r => (
-          <CheckOption key={r.label} label={r.label}
+          <CheckOption key={r.label} label={r.label} count={scoreCounts[r.label] || 0}
             checked={selectedScoreRange.some(s => s.label === r.label)}
             onChange={() => toggleRange(r, selectedScoreRange, setSelectedScoreRange)} />
         ))}
