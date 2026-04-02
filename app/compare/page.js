@@ -481,8 +481,8 @@ export default function ComparePage() {
                   {/* X close button */}
                   {!isMobile ? (
                     <div onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
-                      position: 'absolute', top: 8, right: 8, width: 24, height: 24, borderRadius: '50%',
-                      background: '#f0ebe3', color: '#8a7e72', fontSize: 14,
+                      position: 'absolute', top: 8, right: 8, width: 30, height: 30, borderRadius: '50%',
+                      background: '#f0ebe3', color: '#8a7e72', fontSize: 16,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       cursor: 'pointer', zIndex: 2, transition: 'background 0.15s',
                     }}
