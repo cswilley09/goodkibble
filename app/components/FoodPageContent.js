@@ -178,7 +178,7 @@ function IngredientInfoCard({ info, onClose }) {
 }
 
 /* Mobile bottom sheet for ingredient info */
-function IngredientBottomSheet({ info, onClose }) {
+function IngredientBottomSheet({ info, onClose, bottomOffset = 0 }) {
   if (!info) return null;
   return (
     <>
@@ -187,7 +187,7 @@ function IngredientBottomSheet({ info, onClose }) {
         background: 'rgba(0,0,0,0.3)', zIndex: 9998,
       }} />
       <div style={{
-        position: 'fixed', bottom: 0, left: 0, right: 0,
+        position: 'fixed', bottom: bottomOffset, left: 0, right: 0,
         background: '#1a1612', color: '#faf8f5',
         borderRadius: '20px 20px 0 0', padding: '24px 24px 32px',
         fontFamily: "'DM Sans', sans-serif",
@@ -908,9 +908,6 @@ export default function FoodPageContent({ productId }) {
             {activeIngredient?.idx === 'dmb' && !isMobile && (
               <IngredientInfoCard info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
             )}
-            {activeIngredient?.idx === 'dmb' && isMobile && (
-              <IngredientBottomSheet info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
-            )}
 
             <div style={{ maxWidth: 560 }}>
               <NutrientRow label="Protein" value={Math.round((food.protein_dmb || 0) * 10) / 10} color="#2d7a4f" />
@@ -1103,10 +1100,7 @@ export default function FoodPageContent({ productId }) {
               })}
             </div>
 
-            {/* Mobile bottom sheet only */}
-            {activeIngredient && isMobile && (
-              <IngredientBottomSheet info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
-            )}
+            {/* Mobile bottom sheet rendered at component root level below */}
             {saltIdx >= 0 && (
               <div style={{ marginTop: 16, fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>
                 * Ingredients after salt are dimmed — they typically represent &lt;1% of the formula.
@@ -1184,6 +1178,15 @@ export default function FoodPageContent({ productId }) {
             flexShrink: 0, whiteSpace: 'nowrap',
           }}>Buy &rarr;</a>
         </div>
+      )}
+
+      {/* Single mobile bottom sheet — rendered at root level to avoid duplicates */}
+      {activeIngredient && isMobile && (
+        <IngredientBottomSheet
+          info={activeIngredient.info}
+          onClose={() => setActiveIngredient(null)}
+          bottomOffset={showStickyBuy && food?.affiliate_url ? 56 : 0}
+        />
       )}
 
       <style>{`
