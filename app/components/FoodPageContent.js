@@ -366,8 +366,8 @@ function CompareToggle({ food }) {
   function handleClick() {
     if (isAdded) {
       removeItem(food.id);
-    } else if (!isFull) {
-      addItem(food);
+    } else {
+      addItem(food); // nudges even when full
     }
   }
 
