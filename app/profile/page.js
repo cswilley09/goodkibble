@@ -378,7 +378,7 @@ export default function ProfilePage() {
         <SignUpButton />
       </nav>
 
-      <div className="profile-container" style={{ maxWidth: 700, margin: '0 auto', padding: '32px 24px 80px' }}>
+      <div className="profile-container" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>{'\u{1F436}'}</div>
@@ -424,141 +424,213 @@ export default function ProfilePage() {
 
         {/* ═══ DASHBOARD TAB ═══ */}
         {tab === 'dashboard' && (
-          <>
-            {/* Current Food Card */}
-            <div style={cardStyle}>
-              <div style={eyebrow()}>{displayName}&rsquo;s Current Food</div>
-              {currentFoodData ? (
-                <>
-                  <div className="current-food-layout" style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
-                    {currentFoodData.image_url && (
-                      <div className="current-food-img" style={{ width: 100, flexShrink: 0, borderRadius: 12, overflow: 'hidden', background: '#fff' }}>
-                        <img src={currentFoodData.image_url} alt="" style={{ width: '100%', objectFit: 'contain' }} />
-                      </div>
-                    )}
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 4 }}>{currentFoodData.brand}</div>
-                      <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#1a1612', lineHeight: 1.3, marginBottom: 6 }}>{currentFoodData.name}</div>
-                      {currentFoodData.primary_protein && (
-                        <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 10 }}>Primary Protein: {currentFoodData.primary_protein}</div>
+          <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20, alignItems: 'start' }}>
+            {/* ── LEFT COLUMN ── */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {/* Current Food Card */}
+              <div style={cardStyle}>
+                <div style={eyebrow()}>{displayName}&rsquo;s Current Food</div>
+                {currentFoodData ? (
+                  <>
+                    <div className="current-food-layout" style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+                      {currentFoodData.image_url && (
+                        <div className="current-food-img" style={{ width: 100, flexShrink: 0, borderRadius: 12, overflow: 'hidden', background: '#fff' }}>
+                          <img src={currentFoodData.image_url} alt="" style={{ width: '100%', objectFit: 'contain' }} />
+                        </div>
                       )}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <ScoreCircle score={currentFoodData.quality_score} size={48} />
-                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                          <NutrientPill label="Protein" value={currentFoodData.protein_dmb} color="#2d7a4f" />
-                          <NutrientPill label="Fat" value={currentFoodData.fat_dmb} color="#c47a20" />
-                          <NutrientPill label="Carbs" value={currentFoodData.carbs_dmb} color="#5a7a9e" />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 4 }}>{currentFoodData.brand}</div>
+                        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#1a1612', lineHeight: 1.3, marginBottom: 6 }}>{currentFoodData.name}</div>
+                        {currentFoodData.primary_protein && (
+                          <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 10 }}>Primary Protein: {currentFoodData.primary_protein}</div>
+                        )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <ScoreCircle score={currentFoodData.quality_score} size={48} />
+                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                            <NutrientPill label="Protein" value={currentFoodData.protein_dmb} color="#2d7a4f" />
+                            <NutrientPill label="Fat" value={currentFoodData.fat_dmb} color="#c47a20" />
+                            <NutrientPill label="Carbs" value={currentFoodData.carbs_dmb} color="#5a7a9e" />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Percentile bar */}
-                  {percentile != null && (
-                    <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #f5f2ec' }}>
-                      <div style={{ fontSize: 13, color: '#5a5248', marginBottom: 10, fontFamily: "'DM Sans', sans-serif" }}>
-                        {displayName}&rsquo;s food scores better than <strong style={{ color: '#639922' }}>{percentile}%</strong> of all kibbles
+                    {/* Percentile bar */}
+                    {percentile != null && (
+                      <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #f5f2ec' }}>
+                        <div style={{ fontSize: 13, color: '#5a5248', marginBottom: 10, fontFamily: "'DM Sans', sans-serif" }}>
+                          {displayName}&rsquo;s food scores better than <strong style={{ color: '#639922' }}>{percentile}%</strong> of all kibbles
+                        </div>
+                        <div style={{ position: 'relative', height: 8, borderRadius: 100, background: 'linear-gradient(to right, #D97B2A, #EF9F27, #7BAF2E, #639922)', overflow: 'visible' }}>
+                          <div style={{
+                            position: 'absolute', top: '50%', left: `${percentile}%`,
+                            transform: 'translate(-50%, -50%)',
+                            width: 20, height: 20, borderRadius: '50%',
+                            background: '#1a1612', border: '3px solid #fff',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+                          }} />
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
+                          <span style={{ fontSize: 10, color: '#b5aa99' }}>0 — Concerning</span>
+                          <span style={{ fontSize: 10, color: '#b5aa99' }}>100 — Excellent</span>
+                        </div>
                       </div>
-                      <div style={{ position: 'relative', height: 8, borderRadius: 100, background: 'linear-gradient(to right, #D97B2A, #EF9F27, #7BAF2E, #639922)', overflow: 'visible' }}>
-                        <div style={{
-                          position: 'absolute', top: '50%', left: `${percentile}%`,
-                          transform: 'translate(-50%, -50%)',
-                          width: 20, height: 20, borderRadius: '50%',
-                          background: '#1a1612', border: '3px solid #fff',
-                          boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-                        }} />
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-                        <span style={{ fontSize: 10, color: '#b5aa99' }}>0 — Concerning</span>
-                        <span style={{ fontSize: 10, color: '#b5aa99' }}>100 — Excellent</span>
-                      </div>
+                    )}
+
+                    {/* Buttons */}
+                    <div style={{ display: 'flex', gap: 10, marginTop: 20, flexWrap: 'wrap' }}>
+                      <button onClick={() => goToFood(currentFoodData)} style={{
+                        padding: '10px 24px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
+                        fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      }}>View Full Breakdown &rarr;</button>
+                      {currentFoodData.affiliate_url && (
+                        <a href={currentFoodData.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
+                          padding: '10px 24px', borderRadius: 100, background: '#C9A84C', color: '#fff',
+                          fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                          textDecoration: 'none', display: 'inline-block',
+                        }}>Buy on Amazon &rarr;</a>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
+                    {dog?.current_food ? (
+                      <span>Current food: <strong>{dog.current_food}</strong> — we couldn&rsquo;t match it to our database for scoring.</span>
+                    ) : (
+                      <span>No current food set. <a href="/signup" style={{ color: '#C9A84C' }}>Update your profile</a> to add one.</span>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Higher-Scored Alternatives */}
+              {currentFoodData && (
+                <div style={cardStyle}>
+                  <div style={eyebrow()}>Higher-Scored {altProteinOnly && currentFoodData.primary_protein ? currentFoodData.primary_protein : ''} Kibbles</div>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
+                    These foods {altProteinOnly && currentFoodData.primary_protein ? (<>share the same primary protein as {displayName}&rsquo;s current food and </>) : null}scored higher on our 0&ndash;100 scale.
+                  </p>
+                  <p style={{ fontSize: 11, color: '#b5aa99', fontStyle: 'italic', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+                    Switching foods should always be done gradually. Consult your vet before making changes.
+                  </p>
+
+                  {currentFoodData.primary_protein && (
+                    <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                      <button onClick={() => setAltProteinOnly(true)} style={{
+                        padding: '7px 16px', borderRadius: 100, fontSize: 12, fontWeight: 600,
+                        fontFamily: "'DM Sans', sans-serif", cursor: 'pointer',
+                        background: altProteinOnly ? '#f7efd8' : 'transparent',
+                        color: altProteinOnly ? '#1a1612' : '#8a7e72',
+                        border: altProteinOnly ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
+                      }}>{currentFoodData.primary_protein} only</button>
+                      <button onClick={() => setAltProteinOnly(false)} style={{
+                        padding: '7px 16px', borderRadius: 100, fontSize: 12, fontWeight: 600,
+                        fontFamily: "'DM Sans', sans-serif", cursor: 'pointer',
+                        background: !altProteinOnly ? '#f7efd8' : 'transparent',
+                        color: !altProteinOnly ? '#1a1612' : '#8a7e72',
+                        border: !altProteinOnly ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
+                      }}>All proteins</button>
                     </div>
                   )}
 
-                  {/* Buttons */}
-                  <div style={{ display: 'flex', gap: 10, marginTop: 20, flexWrap: 'wrap' }}>
-                    <button onClick={() => goToFood(currentFoodData)} style={{
-                      padding: '10px 24px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
-                      fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                    }}>View Full Breakdown &rarr;</button>
-                    {currentFoodData.affiliate_url && (
-                      <a href={currentFoodData.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
-                        padding: '10px 24px', borderRadius: 100, background: '#C9A84C', color: '#fff',
-                        fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                        textDecoration: 'none', display: 'inline-block',
-                      }}>Buy on Amazon &rarr;</a>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <div style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
-                  {dog?.current_food ? (
-                    <span>Current food: <strong>{dog.current_food}</strong> — we couldn&rsquo;t match it to our database for scoring.</span>
+                  {alternatives.length > 0 ? (
+                    <div className="alt-grid" style={{ display: 'grid', gap: 10 }}>
+                      {alternatives.map(f => (
+                        <ProductCard key={f.id} food={f} onClick={() => goToFood(f)} />
+                      ))}
+                    </div>
                   ) : (
-                    <span>No current food set. <a href="/signup" style={{ color: '#C9A84C' }}>Update your profile</a> to add one.</span>
+                    <div style={{ fontSize: 13, color: '#8a7e72', textAlign: 'center', padding: '20px 0', fontFamily: "'DM Sans', sans-serif" }}>
+                      {currentFoodData.quality_score >= 90
+                        ? <>{displayName}&rsquo;s food is already top-tier! No higher-scored alternatives found.</>
+                        : 'No alternatives found with the current filter.'}
+                    </div>
+                  )}
+
+                  {currentFoodData.primary_protein && (
+                    <div style={{ marginTop: 16, textAlign: 'center' }}>
+                      <button onClick={() => router.push(`/discover?protein=${encodeURIComponent(currentFoodData.primary_protein)}`)} style={{
+                        padding: '10px 24px', borderRadius: 100, fontSize: 13, fontWeight: 600,
+                        background: 'transparent', color: '#1a1612', border: '1.5px solid #ede8df',
+                        cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      }}>Browse All {currentFoodData.primary_protein} Kibbles &rarr;</button>
+                    </div>
                   )}
                 </div>
               )}
             </div>
 
-            {/* Higher-Scored Alternatives */}
-            {currentFoodData && (
-              <div style={cardStyle}>
-                <div style={eyebrow()}>Higher-Scored {altProteinOnly && currentFoodData.primary_protein ? currentFoodData.primary_protein : ''} Kibbles</div>
-                <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
-                  These foods {altProteinOnly && currentFoodData.primary_protein ? (<>share the same primary protein as {displayName}&rsquo;s current food and </>) : null}scored higher on our 0&ndash;100 scale.
-                </p>
-                <p style={{ fontSize: 11, color: '#b5aa99', fontStyle: 'italic', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
-                  Switching foods should always be done gradually. Consult your vet before making changes.
-                </p>
-
-                {/* Protein toggle */}
-                {currentFoodData.primary_protein && (
-                  <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-                    <button onClick={() => setAltProteinOnly(true)} style={{
-                      padding: '7px 16px', borderRadius: 100, fontSize: 12, fontWeight: 600,
-                      fontFamily: "'DM Sans', sans-serif", cursor: 'pointer',
-                      background: altProteinOnly ? '#f7efd8' : 'transparent',
-                      color: altProteinOnly ? '#1a1612' : '#8a7e72',
-                      border: altProteinOnly ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
-                    }}>{currentFoodData.primary_protein} only</button>
-                    <button onClick={() => setAltProteinOnly(false)} style={{
-                      padding: '7px 16px', borderRadius: 100, fontSize: 12, fontWeight: 600,
-                      fontFamily: "'DM Sans', sans-serif", cursor: 'pointer',
-                      background: !altProteinOnly ? '#f7efd8' : 'transparent',
-                      color: !altProteinOnly ? '#1a1612' : '#8a7e72',
-                      border: !altProteinOnly ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
-                    }}>All proteins</button>
+            {/* ── RIGHT COLUMN (sidebar) ── */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {/* Dog Profile */}
+              {dog && (
+                <div style={{ ...cardStyle, padding: 20 }}>
+                  <div style={eyebrow()}>{displayName}&rsquo;s Profile</div>
+                  {[
+                    { label: 'Breed', value: dog.breed },
+                    { label: 'Age', value: `${dog.age_value} ${dog.age_unit}` },
+                    { label: 'Weight', value: `${dog.weight_lbs} lbs` },
+                    { label: 'Gender', value: dog.gender === 'male' ? 'Male' : 'Female' },
+                    { label: 'Neutered', value: dog.is_neutered ? 'Yes' : 'No' },
+                  ].map((row, i, arr) => (
+                    <div key={row.label} style={{
+                      display: 'flex', justifyContent: 'space-between', padding: '8px 0',
+                      borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
+                    }}>
+                      <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{row.label}</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{row.value}</span>
+                    </div>
+                  ))}
+                  <div style={{ marginTop: 12 }}>
+                    <button onClick={() => { setTab('profile'); }} style={{
+                      padding: '6px 14px', borderRadius: 100, background: 'transparent', color: '#1a1612',
+                      fontSize: 11, fontWeight: 600, border: '1.5px solid #ede8df',
+                      cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    }}>Edit Profile</button>
                   </div>
-                )}
+                </div>
+              )}
 
-                {alternatives.length > 0 ? (
-                  <div style={{ display: 'grid', gap: 10 }}>
-                    {alternatives.map(f => (
-                      <ProductCard key={f.id} food={f} onClick={() => goToFood(f)} />
+              {/* Priorities */}
+              {dog?.priorities && dog.priorities.length > 0 && (
+                <div style={{ ...cardStyle, padding: 20 }}>
+                  <div style={eyebrow()}>Your Priorities</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {dog.priorities.map(p => (
+                      <span key={p} style={{
+                        padding: '5px 10px', borderRadius: 100,
+                        background: '#f7efd8', border: '1px solid #C9A84C',
+                        fontSize: 11, fontWeight: 600, color: '#1a1612',
+                        fontFamily: "'DM Sans', sans-serif",
+                      }}>{p}</span>
                     ))}
                   </div>
-                ) : (
-                  <div style={{ fontSize: 13, color: '#8a7e72', textAlign: 'center', padding: '20px 0', fontFamily: "'DM Sans', sans-serif" }}>
-                    {currentFoodData.quality_score >= 90
-                      ? <>{displayName}&rsquo;s food is already top-tier! No higher-scored alternatives found.</>
-                      : 'No alternatives found with the current filter.'}
-                  </div>
-                )}
+                </div>
+              )}
 
-                {currentFoodData.primary_protein && (
-                  <div style={{ marginTop: 16, textAlign: 'center' }}>
-                    <button onClick={() => router.push(`/discover?protein=${encodeURIComponent(currentFoodData.primary_protein)}`)} style={{
-                      padding: '10px 24px', borderRadius: 100, fontSize: 13, fontWeight: 600,
-                      background: 'transparent', color: '#1a1612', border: '1.5px solid #ede8df',
-                      cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                    }}>Browse All {currentFoodData.primary_protein} Kibbles &rarr;</button>
+              {/* Quick Actions */}
+              <div style={{ ...cardStyle, padding: 20 }}>
+                <div style={eyebrow()}>Quick Actions</div>
+                {[
+                  { label: 'Browse All Foods', action: () => router.push('/discover') },
+                  { label: 'View Saved Comparisons', action: () => setTab('saved') },
+                  { label: 'Account Settings', action: () => setTab('settings') },
+                ].map((item, i, arr) => (
+                  <div key={item.label} onClick={item.action} style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    padding: '10px 0', borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
+                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                  }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#C9A84C')}
+                    onMouseLeave={e => (e.currentTarget.style.color = '#1a1612')}
+                  >
+                    <span style={{ fontSize: 13, fontWeight: 600 }}>{item.label}</span>
+                    <span style={{ fontSize: 13, color: '#C9A84C', fontWeight: 600 }}>&rarr;</span>
                   </div>
-                )}
+                ))}
               </div>
-            )}
-
-          </>
+            </div>
+          </div>
         )}
 
         {/* ═══ PROFILE TAB ═══ */}
@@ -925,8 +997,10 @@ export default function ProfilePage() {
         .saved-scroll-row::-webkit-scrollbar { display: none; }
         @media (max-width: 768px) {
           .profile-container { padding: 20px 16px 60px !important; }
+          .dashboard-grid { grid-template-columns: 1fr !important; }
           .current-food-layout { flex-direction: column !important; align-items: center !important; text-align: center !important; }
           .current-food-img { width: 80px !important; }
+          .alt-grid { grid-template-columns: 1fr !important; }
           .saved-scroll-row {
             display: flex !important;
             grid-template-columns: unset !important;
