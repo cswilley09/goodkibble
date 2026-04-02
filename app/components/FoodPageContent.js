@@ -865,11 +865,11 @@ export default function FoodPageContent({ productId }) {
                 </div>
               )}
 
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+              <div className="product-actions" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
                 <CompareToggle food={food} />
                 {food.affiliate_url && (
-                  <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                  <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" className="buy-amazon-btn" style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                     padding: '10px 22px', borderRadius: 100, border: 'none',
                     background: '#C9A84C', color: '#fff', fontSize: 13, fontWeight: 600,
                     cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none',
@@ -1193,6 +1193,8 @@ export default function FoodPageContent({ productId }) {
         .sticky-buy-bar { display: none !important; }
         @media (max-width: 768px) {
           .sticky-buy-bar { display: flex !important; }
+          .product-actions { flex-direction: column !important; align-items: stretch !important; }
+          .buy-amazon-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; }
         }
       `}</style>
     </div>
