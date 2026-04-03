@@ -1,14 +1,25 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './AuthContext';
 
 export default function SignUpButton() {
   const router = useRouter();
   const { session, userProfile, loading } = useAuth();
+  const [legacyName, setLegacyName] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
-  if (loading) return null;
+  useEffect(() => {
+    setMounted(true);
+    if (!session?.user) {
+      const n = localStorage.getItem('gk_user_name');
+      if (n) setLegacyName(n);
+    }
+  }, [session]);
 
-  // Logged in — gold circle with initial
+  if (loading || !mounted) return null;
+
+  // Logged in via Supabase auth
   if (session?.user && userProfile?.first_name) {
     const initial = userProfile.first_name.charAt(0).toUpperCase();
     return (
@@ -29,6 +40,25 @@ export default function SignUpButton() {
       >
         {initial}
       </div>
+    );
+  }
+
+  // Legacy localStorage fallback
+  if (legacyName) {
+    const initial = legacyName.charAt(0).toUpperCase();
+    return (
+      <div
+        onClick={() => router.push('/profile')}
+        className="signup-btn-circle"
+        style={{
+          width: 36, height: 36, borderRadius: '50%',
+          background: '#C9A84C', color: '#fff',
+          fontSize: 14, fontWeight: 700,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', flexShrink: 0,
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >{initial}</div>
     );
   }
 

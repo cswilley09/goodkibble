@@ -262,13 +262,23 @@ export default function ProfilePage() {
   const dog = dogs[activeDogIdx] || null;
   const displayName = dog?.dog_name || 'Your dog';
 
-  // Load profile using Supabase session
+  // Load profile — try Supabase session first, fall back to localStorage
   useEffect(() => {
     if (authLoading) return;
-    if (!session?.user) { router.push('/login'); return; }
     async function load() {
+      let userId = session?.user?.id;
+      let queryParam = userId ? `user_id=${userId}` : null;
+
+      // Fallback to localStorage for legacy accounts
+      if (!queryParam) {
+        const legacyEmail = localStorage.getItem('gk_user_email');
+        if (legacyEmail) queryParam = `email=${encodeURIComponent(legacyEmail)}`;
+      }
+
+      if (!queryParam) { router.push('/login'); return; }
+
       try {
-        const res = await fetch(`/api/profile?user_id=${session.user.id}`);
+        const res = await fetch(`/api/profile?${queryParam}`);
         if (!res.ok) { router.push('/login'); return; }
         const data = await res.json();
         if (!data.user) { router.push('/login'); return; }
