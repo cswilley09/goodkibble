@@ -267,31 +267,37 @@ export default function ProfilePage() {
   useEffect(() => {
     if (authLoading) return;
 
-    let userId = session?.user?.id;
-    let queryParam = userId ? `user_id=${userId}` : null;
+    // Build a list of query params to try in order
+    const attempts = [];
+    if (session?.user?.id) attempts.push(`user_id=${session.user.id}`);
+    if (session?.user?.email) attempts.push(`email=${encodeURIComponent(session.user.email)}`);
+    const legacyEmail = typeof window !== 'undefined' ? localStorage.getItem('gk_user_email') : null;
+    if (legacyEmail) attempts.push(`email=${encodeURIComponent(legacyEmail)}`);
 
-    // Fallback to localStorage for legacy accounts
-    if (!queryParam) {
-      const legacyEmail = typeof window !== 'undefined' ? localStorage.getItem('gk_user_email') : null;
-      if (legacyEmail) queryParam = `email=${encodeURIComponent(legacyEmail)}`;
-    }
-
-    if (!queryParam) { setNoAuth(true); setLoading(false); return; }
+    if (attempts.length === 0) { setNoAuth(true); setLoading(false); return; }
 
     setNoAuth(false);
     setLoading(true);
-    fetch(`/api/profile?${queryParam}`)
-      .then(r => r.ok ? r.json() : Promise.reject())
-      .then(data => {
-        if (data?.user) {
-          setUser(data.user);
-          setDogs(data.dogs || []);
-        } else {
-          setNoAuth(true);
-        }
-        setLoading(false);
-      })
-      .catch(() => { setNoAuth(true); setLoading(false); });
+
+    // Try each query param until one works
+    async function tryLoad() {
+      for (const param of attempts) {
+        try {
+          const res = await fetch(`/api/profile?${param}`);
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data?.user) {
+            setUser(data.user);
+            setDogs(data.dogs || []);
+            setLoading(false);
+            return;
+          }
+        } catch {}
+      }
+      setNoAuth(true);
+      setLoading(false);
+    }
+    tryLoad();
   }, [authLoading, session?.user?.id]);
 
   // Load current food data when dog changes — use slug-based lookup
