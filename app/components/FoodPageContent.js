@@ -195,8 +195,18 @@ function IngredientBottomSheet({ info, onClose, bottomOffset = 0 }) {
         zIndex: 9999,
         animation: 'bottomSheetUp 0.25s ease both',
       }}>
+        {/* Drag handle */}
         <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.2)', margin: '0 auto 16px' }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingRight: 24 }}>
+        {/* Close X */}
+        <div onClick={onClose} style={{
+          position: 'absolute', top: 16, right: 16,
+          width: 28, height: 28, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', fontSize: 16, color: 'rgba(255,255,255,0.5)',
+        }}>&times;</div>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingRight: 36 }}>
           <span style={{
             width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
             background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
@@ -209,6 +219,7 @@ function IngredientBottomSheet({ info, onClose, bottomOffset = 0 }) {
             color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
           }}>{info.quality_signal}</span>
         </div>
+        {/* Description */}
         <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, marginBottom: info.source ? 10 : 0 }}>
           {info.short_description}
         </div>
