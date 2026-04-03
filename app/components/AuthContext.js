@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
     // Get initial session
     sb.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
-      if (s?.user) fetchProfile(s.user.id);
+      if (s?.user) fetchProfile(s.user.id, s.user.email);
       else setLoading(false);
     }).catch(() => setLoading(false));
 
@@ -35,7 +35,7 @@ export function AuthProvider({ children }) {
     const { data: { subscription } } = sb.auth.onAuthStateChange((_event, s) => {
       setSession(s);
       if (s?.user) {
-        fetchProfile(s.user.id);
+        fetchProfile(s.user.id, s.user.email);
       } else {
         setUserProfile(null);
         setLoading(false);
@@ -45,18 +45,29 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  async function fetchProfile(userId) {
+  async function fetchProfile(userId, userEmail) {
     const sb = getSupabase();
     if (!sb) { setLoading(false); return; }
     try {
-      const { data, error } = await sb
+      // Try by auth user ID first
+      const { data } = await sb
         .from('user_profiles')
         .select('id, first_name, email')
         .eq('id', userId)
         .maybeSingle();
-      // maybeSingle returns null instead of 406 error when no row found
-      if (!error) setUserProfile(data || null);
+      if (data) { setUserProfile(data); setLoading(false); return; }
+
+      // Fallback: try by email (for profiles created before auth)
+      if (userEmail) {
+        const { data: byEmail } = await sb
+          .from('user_profiles')
+          .select('id, first_name, email')
+          .eq('email', userEmail)
+          .maybeSingle();
+        if (byEmail) { setUserProfile(byEmail); setLoading(false); return; }
+      }
     } catch {}
+    setUserProfile(null);
     setLoading(false);
   }
 
