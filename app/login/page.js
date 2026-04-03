@@ -1,7 +1,14 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+}
 import { useAuth } from '../components/AuthContext';
 
 export default function LoginPage() {
@@ -30,7 +37,7 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
     try {
-      const { error: otpError } = await supabase.auth.signInWithOtp({
+      const { error: otpError } = await getSupabase().auth.signInWithOtp({
         email: email.trim(),
         options: { emailRedirectTo: window.location.origin + '/profile' },
       });
@@ -44,7 +51,7 @@ export default function LoginPage() {
 
   async function resendEmail() {
     setLoading(true);
-    await supabase.auth.signInWithOtp({
+    await getSupabase().auth.signInWithOtp({
       email: email.trim(),
       options: { emailRedirectTo: window.location.origin + '/profile' },
     });

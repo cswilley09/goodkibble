@@ -1,7 +1,14 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+}
 
 const BREEDS = [
   'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akita', 'Alaskan Malamute',
@@ -516,7 +523,7 @@ export default function SignupPage() {
     setError('');
     try {
       // 1. Create Supabase auth account
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      const { data: authData, error: authError } = await getSupabase().auth.signUp({
         email: email.trim(),
         options: { emailRedirectTo: window.location.origin + '/profile' },
       });
@@ -571,7 +578,7 @@ export default function SignupPage() {
   }
 
   async function resendEmail() {
-    await supabase.auth.signInWithOtp({
+    await getSupabase().auth.signInWithOtp({
       email: email.trim(),
       options: { emailRedirectTo: window.location.origin + '/profile' },
     });
