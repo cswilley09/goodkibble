@@ -1077,6 +1077,7 @@ export default function FoodPageContent({ productId }) {
 
                 return (
                   <span key={i} style={wrapStyle} onClick={(e) => {
+                    e.stopPropagation();
                     if (!clickable) return;
                     if (isActive) { setActiveIngredient(null); return; }
                     // Calculate position relative to pills container
