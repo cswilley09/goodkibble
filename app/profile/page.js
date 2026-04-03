@@ -264,34 +264,35 @@ export default function ProfilePage() {
 
   // Load profile — try Supabase session first, fall back to localStorage
   const [noAuth, setNoAuth] = useState(false);
-  const loadedRef = useRef(false);
   useEffect(() => {
-    if (authLoading || loadedRef.current) return;
-    loadedRef.current = true;
-    async function load() {
-      let userId = session?.user?.id;
-      let queryParam = userId ? `user_id=${userId}` : null;
+    if (authLoading) return;
 
-      // Fallback to localStorage for legacy accounts
-      if (!queryParam) {
-        const legacyEmail = typeof window !== 'undefined' ? localStorage.getItem('gk_user_email') : null;
-        if (legacyEmail) queryParam = `email=${encodeURIComponent(legacyEmail)}`;
-      }
+    let userId = session?.user?.id;
+    let queryParam = userId ? `user_id=${userId}` : null;
 
-      if (!queryParam) { setNoAuth(true); setLoading(false); return; }
-
-      try {
-        const res = await fetch(`/api/profile?${queryParam}`);
-        if (!res.ok) { setNoAuth(true); setLoading(false); return; }
-        const data = await res.json();
-        if (!data.user) { setNoAuth(true); setLoading(false); return; }
-        setUser(data.user);
-        setDogs(data.dogs || []);
-      } catch { setNoAuth(true); }
-      setLoading(false);
+    // Fallback to localStorage for legacy accounts
+    if (!queryParam) {
+      const legacyEmail = typeof window !== 'undefined' ? localStorage.getItem('gk_user_email') : null;
+      if (legacyEmail) queryParam = `email=${encodeURIComponent(legacyEmail)}`;
     }
-    load();
-  }, [authLoading]);
+
+    if (!queryParam) { setNoAuth(true); setLoading(false); return; }
+
+    setNoAuth(false);
+    setLoading(true);
+    fetch(`/api/profile?${queryParam}`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        if (data?.user) {
+          setUser(data.user);
+          setDogs(data.dogs || []);
+        } else {
+          setNoAuth(true);
+        }
+        setLoading(false);
+      })
+      .catch(() => { setNoAuth(true); setLoading(false); });
+  }, [authLoading, session?.user?.id]);
 
   // Load current food data when dog changes — use slug-based lookup
   useEffect(() => {
