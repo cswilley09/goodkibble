@@ -699,7 +699,9 @@ export default function FoodPageContent({ productId }) {
   const [loading, setLoading] = useState(true);
   const [ingredientInfo, setIngredientInfo] = useState({});
   const [showStickyBuy, setShowStickyBuy] = useState(false);
-  const [activeIngredient, setActiveIngredient] = useState(null); // { type: 'ingredient'|'salt'|'info', info }
+  const [activeIngredient, setActiveIngredient] = useState(null); // { idx, info }
+  const [tooltipTop, setTooltipTop] = useState(0);
+  const pillsContainerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -921,7 +923,7 @@ export default function FoodPageContent({ productId }) {
           <NutrientExplainer />
 
           {/* Ingredients */}
-          <div className="ingredients-section" style={{
+          <div className="ingredients-section" onClick={() => { if (activeIngredient && !isMobile) setActiveIngredient(null); }} style={{
             marginTop: 28, padding: '40px 32px', background: '#faf8f5', borderRadius: 24,
             border: '1px solid #ede8df', animation: 'fadeIn 0.5s ease 0.2s both',
           }}>
@@ -965,7 +967,7 @@ export default function FoodPageContent({ productId }) {
 
 
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            <div ref={pillsContainerRef} style={{ display: 'flex', flexWrap: 'wrap', gap: 6, position: 'relative' }}>
               {ingredients.map((ing, i) => {
                 const isSalt = isSaltIngredient(ing);
                 const isFirst = i === 0;
@@ -1073,10 +1075,16 @@ export default function FoodPageContent({ productId }) {
                   </span>
                 );
 
-                const pillEl = (
-                  <span key={i} style={wrapStyle} onClick={() => {
+                return (
+                  <span key={i} style={wrapStyle} onClick={(e) => {
                     if (!clickable) return;
                     if (isActive) { setActiveIngredient(null); return; }
+                    // Calculate position relative to pills container
+                    if (!isMobile && pillsContainerRef.current) {
+                      const pillRect = e.currentTarget.getBoundingClientRect();
+                      const containerRect = pillsContainerRef.current.getBoundingClientRect();
+                      setTooltipTop(pillRect.bottom - containerRect.top + 8);
+                    }
                     if (isSalt) {
                       setActiveIngredient({ idx: i, info: { display_name: 'Salt Divider', quality_signal: 'caution', short_description: 'Any ingredient listed after salt typically makes up less than 1% of the total formula, as salt itself usually represents <1% of the recipe.', source: null } });
                     } else if (info) {
@@ -1084,20 +1092,45 @@ export default function FoodPageContent({ productId }) {
                     }
                   }}>{pill}</span>
                 );
-
-                // On desktop, insert the info card inline right after the active pill
-                // width:100% forces a flex line break so it sits below the current row
-                if (isActive && !isMobile) {
-                  return [
-                    pillEl,
-                    <div key={`info-${i}`} style={{ flexBasis: '100%', width: '100%' }}>
-                      <IngredientInfoCard info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
-                    </div>,
-                  ];
-                }
-
-                return pillEl;
               })}
+
+              {/* Desktop overlay tooltip — full width of pills container, absolutely positioned */}
+              {activeIngredient && !isMobile && (
+                <div onClick={(e) => e.stopPropagation()} style={{
+                  position: 'absolute', left: 0, right: 0, top: tooltipTop,
+                  zIndex: 50, padding: '18px 24px',
+                  background: '#1a1612', color: '#faf8f5', borderRadius: 12,
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                  fontFamily: "'DM Sans', sans-serif",
+                  animation: 'fadeIn 0.15s ease',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <span style={{
+                      width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
+                      background: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral,
+                    }} />
+                    <span style={{ fontWeight: 700, fontSize: 16 }}>{activeIngredient.info.display_name}</span>
+                    <span style={{
+                      marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+                      textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
+                      background: SIGNAL_BG[activeIngredient.info.quality_signal] || SIGNAL_BG.neutral,
+                      color: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral,
+                    }}>{activeIngredient.info.quality_signal}</span>
+                    <span onClick={() => setActiveIngredient(null)} style={{
+                      marginLeft: 8, fontSize: 16, color: 'rgba(255,255,255,0.4)',
+                      cursor: 'pointer', lineHeight: 1, padding: '0 4px',
+                    }}>&times;</span>
+                  </div>
+                  <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, lineHeight: 1.6, marginBottom: activeIngredient.info.source ? 10 : 0 }}>
+                    {activeIngredient.info.short_description}
+                  </div>
+                  {activeIngredient.info.source && (
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>
+                      Source: {activeIngredient.info.source}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Mobile bottom sheet rendered at component root level below */}
