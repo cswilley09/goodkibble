@@ -263,32 +263,33 @@ export default function ProfilePage() {
   const displayName = dog?.dog_name || 'Your dog';
 
   // Load profile — try Supabase session first, fall back to localStorage
+  const [redirected, setRedirected] = useState(false);
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || redirected) return;
     async function load() {
       let userId = session?.user?.id;
       let queryParam = userId ? `user_id=${userId}` : null;
 
       // Fallback to localStorage for legacy accounts
       if (!queryParam) {
-        const legacyEmail = localStorage.getItem('gk_user_email');
+        const legacyEmail = typeof window !== 'undefined' ? localStorage.getItem('gk_user_email') : null;
         if (legacyEmail) queryParam = `email=${encodeURIComponent(legacyEmail)}`;
       }
 
-      if (!queryParam) { router.push('/login'); return; }
+      if (!queryParam) { setRedirected(true); router.replace('/login'); return; }
 
       try {
         const res = await fetch(`/api/profile?${queryParam}`);
-        if (!res.ok) { router.push('/login'); return; }
+        if (!res.ok) { setRedirected(true); router.replace('/login'); return; }
         const data = await res.json();
-        if (!data.user) { router.push('/login'); return; }
+        if (!data.user) { setRedirected(true); router.replace('/login'); return; }
         setUser(data.user);
         setDogs(data.dogs || []);
-      } catch { router.push('/login'); }
+      } catch { setRedirected(true); router.replace('/login'); }
       setLoading(false);
     }
     load();
-  }, [authLoading, session]);
+  }, [authLoading]);
 
   // Load current food data when dog changes — use slug-based lookup
   useEffect(() => {

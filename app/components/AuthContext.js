@@ -49,12 +49,13 @@ export function AuthProvider({ children }) {
     const sb = getSupabase();
     if (!sb) { setLoading(false); return; }
     try {
-      const { data } = await sb
+      const { data, error } = await sb
         .from('user_profiles')
         .select('id, first_name, email')
         .eq('id', userId)
-        .single();
-      setUserProfile(data || null);
+        .maybeSingle();
+      // maybeSingle returns null instead of 406 error when no row found
+      if (!error) setUserProfile(data || null);
     } catch {}
     setLoading(false);
   }

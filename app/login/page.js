@@ -19,9 +19,13 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Redirect if already logged in
+  // Redirect if already logged in (only once)
+  const [didRedirect, setDidRedirect] = useState(false);
   useEffect(() => {
-    if (session?.user) router.push('/profile');
+    if (session?.user && !didRedirect) {
+      setDidRedirect(true);
+      router.replace('/profile');
+    }
   }, [session]);
 
   function isValidEmail(e) {
