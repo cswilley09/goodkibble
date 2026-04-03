@@ -263,9 +263,11 @@ export default function ProfilePage() {
   const displayName = dog?.dog_name || 'Your dog';
 
   // Load profile — try Supabase session first, fall back to localStorage
-  const [redirected, setRedirected] = useState(false);
+  const [noAuth, setNoAuth] = useState(false);
+  const loadedRef = useRef(false);
   useEffect(() => {
-    if (authLoading || redirected) return;
+    if (authLoading || loadedRef.current) return;
+    loadedRef.current = true;
     async function load() {
       let userId = session?.user?.id;
       let queryParam = userId ? `user_id=${userId}` : null;
@@ -276,16 +278,16 @@ export default function ProfilePage() {
         if (legacyEmail) queryParam = `email=${encodeURIComponent(legacyEmail)}`;
       }
 
-      if (!queryParam) { setRedirected(true); router.replace('/login'); return; }
+      if (!queryParam) { setNoAuth(true); setLoading(false); return; }
 
       try {
         const res = await fetch(`/api/profile?${queryParam}`);
-        if (!res.ok) { setRedirected(true); router.replace('/login'); return; }
+        if (!res.ok) { setNoAuth(true); setLoading(false); return; }
         const data = await res.json();
-        if (!data.user) { setRedirected(true); router.replace('/login'); return; }
+        if (!data.user) { setNoAuth(true); setLoading(false); return; }
         setUser(data.user);
         setDogs(data.dogs || []);
-      } catch { setRedirected(true); router.replace('/login'); }
+      } catch { setNoAuth(true); }
       setLoading(false);
     }
     load();
@@ -369,7 +371,29 @@ export default function ProfilePage() {
     );
   }
 
-  if (!user) return null;
+  if (!user || noAuth) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
+        <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid #ede8df', background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40 }}>
+          <a href="/" style={{ textDecoration: 'none' }}><span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span></a>
+          <SignUpButton />
+        </nav>
+        <div style={{ maxWidth: 500, margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
+          <div style={{ fontSize: 48, marginBottom: 20 }}>{'\u{1F436}'}</div>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1a1612', marginBottom: 12 }}>
+            Sign in to view your profile
+          </h1>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: '#8a7e72', marginBottom: 32 }}>
+            Log in to see your dog&rsquo;s dashboard, food recommendations, and saved comparisons.
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
+            <a href="/login" style={{ padding: '14px 36px', borderRadius: 100, background: '#1a1612', color: '#faf8f4', fontSize: 16, fontWeight: 700, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" }}>Sign In</a>
+            <a href="/signup" style={{ padding: '14px 36px', borderRadius: 100, background: 'transparent', color: '#1a1612', fontSize: 16, fontWeight: 600, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif", border: '1.5px solid #ede8df' }}>Sign Up</a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const tabs = ['Dashboard', 'Profile', 'Saved', 'Settings'];
 

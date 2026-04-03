@@ -19,14 +19,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Redirect if already logged in (only once)
-  const [didRedirect, setDidRedirect] = useState(false);
-  useEffect(() => {
-    if (session?.user && !didRedirect) {
-      setDidRedirect(true);
-      router.replace('/profile');
-    }
-  }, [session]);
+  // If already logged in, show a link to profile instead of redirecting
+  const isLoggedIn = session?.user;
 
   function isValidEmail(e) {
     const a = e.indexOf('@');
@@ -76,7 +70,16 @@ export default function LoginPage() {
       </nav>
 
       <div style={{ maxWidth: 500, margin: '0 auto', padding: '60px 24px 80px' }}>
-        {!sent ? (
+        {isLoggedIn ? (
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 48, marginBottom: 16 }}>{'\u{2705}'}</div>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 8 }}>You&rsquo;re already signed in!</h1>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 24 }}>
+              You&rsquo;re logged in as <strong style={{ color: '#C9A84C' }}>{session.user.email}</strong>
+            </p>
+            <a href="/profile" style={{ padding: '14px 36px', borderRadius: 100, background: '#1a1612', color: '#faf8f4', fontSize: 16, fontWeight: 700, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" }}>Go to Profile &rarr;</a>
+          </div>
+        ) : !sent ? (
           <>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
