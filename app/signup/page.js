@@ -651,6 +651,10 @@ export default function SignupPage() {
             <button onClick={() => goTo(1)} style={{ marginTop: 32, padding: '14px 48px', borderRadius: 100, background: '#1a1612', color: '#faf8f4', fontSize: 16, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
               Get Started &rarr;
             </button>
+            <p style={{ marginTop: 16, fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8a7e72' }}>
+              Already have an account?{' '}
+              <a href="/login" style={{ color: '#C9A84C', fontWeight: 600, textDecoration: 'none' }}>Sign in &rarr;</a>
+            </p>
           </div>
         )}
 
