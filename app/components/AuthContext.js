@@ -85,9 +85,9 @@ export function AuthProvider({ children }) {
     } catch {}
   }
 
-  return (
   const isPro = !!userProfile?.is_pro;
 
+  return (
     <AuthContext.Provider value={{ session, userProfile, loading, signOut, fetchProfile, isPro }}>
       {children}
     </AuthContext.Provider>
