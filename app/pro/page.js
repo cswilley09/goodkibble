@@ -189,24 +189,7 @@ export default function ProPage() {
           </div>
         </div>
 
-        {/* Social Proof */}
-        <div style={{ marginBottom: 48 }}>
-          <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
-            Trusted by dog parents who care about what&rsquo;s in the bowl
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 40 }}>
-            {[
-              { num: '1,000+', label: 'Foods scored' },
-              { num: '8', label: 'Scoring categories' },
-              { num: '20+', label: 'Peer-reviewed sources' },
-            ].map(s => (
-              <div key={s.label} style={{ textAlign: 'center' }}>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 900, color: '#C9A84C' }}>{s.num}</div>
-                <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+
 
         {/* FAQ */}
         <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'left' }}>
