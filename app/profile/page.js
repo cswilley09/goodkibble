@@ -1004,7 +1004,18 @@ export default function ProfilePage() {
                     <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>GoodKibble Pro &mdash; Active</span>
                   </div>
                   <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>Renews annually. Manage your subscription through Stripe.</p>
-                  <button style={{ padding: '8px 20px', borderRadius: 100, background: 'transparent', color: '#1a1612', fontSize: 13, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Manage Subscription</button>
+                  <button onClick={async () => {
+                    try {
+                      const res = await fetch('/api/billing-portal', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: user.email }),
+                      });
+                      const data = await res.json();
+                      if (data.url) window.location.href = data.url;
+                      else alert(data.error || 'Could not open billing portal');
+                    } catch { alert('Something went wrong'); }
+                  }} style={{ padding: '8px 20px', borderRadius: 100, background: 'transparent', color: '#1a1612', fontSize: 13, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Manage Subscription</button>
                 </>
               ) : (
                 <>
