@@ -13,18 +13,20 @@ const FREE_FEATURES = [
   '1 dog profile',
 ];
 
-const PRO_FEATURES = [
-  { text: 'Everything in Free, plus:', gold: true },
-  { text: 'Ingredient deep-dive with quality signals' },
-  { text: 'Ingredient tooltips & sourcing info' },
-  { text: 'Compare unlimited foods side-by-side' },
-  { text: 'Save unlimited comparisons' },
-  { text: 'Up to 5 dog profiles' },
-  { text: '\u{1F6A8} Recall alerts sent to your email' },
-  { text: '\u{1F4CA} Score change notifications' },
-  { text: '\u{1F9EA} Algorithm update alerts' },
-  { text: 'Early access to new features' },
-  { text: 'Ad-free experience' },
+const PRO_ALERT_FEATURES = [
+  'Recall alerts sent to your email',
+  'Score change notifications',
+  'Algorithm update alerts',
+];
+
+const PRO_OTHER_FEATURES = [
+  'Ingredient deep-dive with quality signals',
+  'Ingredient tooltips & sourcing info',
+  'Compare unlimited foods side-by-side',
+  'Save unlimited comparisons',
+  'Up to 5 dog profiles',
+  'Early access to new features',
+  'Ad-free experience',
 ];
 
 const FAQS = [
@@ -165,10 +167,22 @@ export default function ProPage() {
             </div>
             <div style={{ fontSize: 13, color: '#8a7e72', marginBottom: 24, fontFamily: "'DM Sans', sans-serif" }}>{subtitle}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
-              {PRO_FEATURES.map((f, i) => (
-                <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, fontFamily: "'DM Sans', sans-serif", color: f.gold ? '#C9A84C' : 'rgba(255,255,255,0.8)' }}>
-                  {!f.gold && <span style={{ color: '#639922', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>{'\u2713'}</span>}
-                  <span style={{ fontWeight: f.gold ? 700 : 400 }}>{f.text}</span>
+              {/* "Everything in Free, plus:" */}
+              <div style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", color: '#C9A84C', fontWeight: 700 }}>Everything in Free, plus:</div>
+              {/* Alert features in gold box */}
+              <div style={{ border: '1px solid rgba(201,168,76,0.3)', borderRadius: 12, padding: '14px 16px', marginBottom: 4, background: 'rgba(201,168,76,0.04)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {PRO_ALERT_FEATURES.map(f => (
+                  <div key={f} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.8)' }}>
+                    <span style={{ color: '#639922', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>{'\u2713'}</span>
+                    {f}
+                  </div>
+                ))}
+              </div>
+              {/* Other features */}
+              {PRO_OTHER_FEATURES.map(f => (
+                <div key={f} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.8)' }}>
+                  <span style={{ color: '#639922', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>{'\u2713'}</span>
+                  {f}
                 </div>
               ))}
             </div>
