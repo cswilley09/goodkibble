@@ -872,108 +872,99 @@ export default function ProfilePage() {
         {tab === 'saved' && (
           <>
             {savedComparisons.length > 0 ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                {savedComparisons.map(comp => {
-                  const highestScore = Math.max(...comp.items.map(f => f.quality_score ?? 0));
-                  return (
-                    <div key={comp.id} style={cardStyle}>
-                      {/* Header */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                        <div style={eyebrow()}>Saved Comparison</div>
-                        <span style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
-                          {new Date(comp.saved_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                          {' \u00B7 '}{comp.items.length} products
-                        </span>
-                      </div>
+              <div style={cardStyle}>
+                <div style={eyebrow()}>Saved Comparisons</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                  {savedComparisons.map((comp, compIdx) => {
+                    const highestScore = Math.max(...comp.items.map(f => f.quality_score ?? 0));
+                    const nutrients = [
+                      { label: 'Protein', key: 'protein_dmb', color: '#639922', max: 50 },
+                      { label: 'Fat', key: 'fat_dmb', color: '#EF9F27', max: 25 },
+                      { label: 'Carbs', key: 'carbs_dmb', color: '#378ADD', max: 60 },
+                    ];
+                    return (
+                      <div key={comp.id} style={{ borderTop: compIdx > 0 ? '1px solid #ede8df' : 'none', paddingTop: compIdx > 0 ? 20 : 0, paddingBottom: 20 }}>
+                        {/* Date + actions */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                          <span style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
+                            {new Date(comp.saved_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            {' \u00B7 '}{comp.items.length} products
+                          </span>
+                          <button onClick={() => deleteComparison(comp.id)} style={{
+                            background: 'none', border: 'none', cursor: 'pointer', color: '#b5aa99',
+                            fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, padding: '2px 6px',
+                          }}
+                            onMouseEnter={e => (e.currentTarget.style.color = '#b5483a')}
+                            onMouseLeave={e => (e.currentTarget.style.color = '#b5aa99')}
+                          >Delete</button>
+                        </div>
 
-                      {/* Horizontal scroll cards (mobile) / responsive grid (desktop) */}
-                      <div className="saved-scroll-row" style={{
-                        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14,
-                      }}>
-                        {comp.items.map(f => {
-                          const isHighest = f.quality_score != null && f.quality_score === highestScore && comp.items.filter(x => x.quality_score === highestScore).length === 1;
-                          const scoreColor = f.quality_score >= 70 ? '#2d7a4f' : f.quality_score >= 50 ? '#c47a20' : '#b5483a';
-                          const tier = f.quality_score >= 90 ? 'Excellent' : f.quality_score >= 80 ? 'Great' : f.quality_score >= 70 ? 'Good' : f.quality_score >= 60 ? 'Fair' : f.quality_score >= 50 ? 'Below Avg' : 'Poor';
-                          const nutrients = [
-                            { label: 'Protein', key: 'protein_dmb', color: '#639922', max: 50 },
-                            { label: 'Fat', key: 'fat_dmb', color: '#EF9F27', max: 25 },
-                            { label: 'Carbs', key: 'carbs_dmb', color: '#378ADD', max: 60 },
-                          ];
-                          return (
-                            <div key={f.id} className="saved-card" onClick={() => goToFood(f)} style={{
-                              background: '#faf8f4', borderRadius: 16,
-                              border: isHighest ? '2px solid #C9A84C' : '1px solid #ede8df',
-                              padding: 18, position: 'relative', cursor: 'pointer',
-                              transition: 'box-shadow 0.2s',
-                            }}
-                              onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(26,22,18,0.06)')}
-                              onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
-                            >
-                              {isHighest && (
-                                <span style={{
-                                  position: 'absolute', top: 8, right: 8,
-                                  background: '#C9A84C', color: '#fff', padding: '3px 10px',
-                                  borderRadius: 100, fontSize: 10, fontWeight: 700,
-                                  fontFamily: "'DM Sans', sans-serif", letterSpacing: 0.5,
-                                }}>HIGHEST</span>
-                              )}
+                        {/* Scrollable product cards */}
+                        <div className="saved-scroll-row" style={{
+                          display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 4,
+                          scrollSnapType: 'x mandatory', scrollbarWidth: 'none',
+                        }}>
+                          {comp.items.map(f => {
+                            const isHighest = f.quality_score != null && f.quality_score === highestScore && comp.items.filter(x => x.quality_score === highestScore).length === 1;
+                            return (
+                              <div key={f.id} onClick={() => goToFood(f)} style={{
+                                flex: '0 0 180px', scrollSnapAlign: 'start',
+                                background: '#faf8f4', borderRadius: 14,
+                                border: isHighest ? '2px solid #C9A84C' : '1px solid #ede8df',
+                                padding: 16, position: 'relative', cursor: 'pointer',
+                                transition: 'box-shadow 0.2s',
+                              }}
+                                onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(26,22,18,0.06)')}
+                                onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
+                              >
+                                {isHighest && (
+                                  <span style={{
+                                    position: 'absolute', top: 8, right: 8,
+                                    background: '#C9A84C', color: '#fff', padding: '2px 8px',
+                                    borderRadius: 100, fontSize: 9, fontWeight: 700,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                  }}>BEST</span>
+                                )}
 
-                              {/* Score + tier */}
-                              {f.quality_score != null && (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                                  <ScoreCircle score={f.quality_score} size={42} />
-                                </div>
-                              )}
-
-                              {/* Brand */}
-                              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 2, fontFamily: "'DM Sans', sans-serif" }}>{f.brand}</div>
-
-                              {/* Product name */}
-                              <div style={{
-                                fontSize: 13, fontWeight: 700, color: '#1a1612', lineHeight: 1.3,
-                                marginBottom: 14, display: '-webkit-box', WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                                fontFamily: "'DM Sans', sans-serif",
-                              }}>{f.name}</div>
-
-                              {/* Nutrient bars */}
-                              {nutrients.map(n => {
-                                const val = f[n.key];
-                                const pct = val != null ? Math.min((val / n.max) * 100, 100) : 0;
-                                return (
-                                  <div key={n.key} style={{ marginBottom: 8 }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                                      <span style={{ fontSize: 10, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{n.label}</span>
-                                      <span style={{ fontSize: 10, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
-                                        {val != null ? `${Math.round(val * 10) / 10}%` : '\u2014'}
-                                      </span>
-                                    </div>
-                                    <div style={{ height: 5, borderRadius: 3, background: '#ede8df' }}>
-                                      <div style={{ height: '100%', borderRadius: 3, background: n.color, width: `${pct}%`, transition: 'width 0.4s ease' }} />
-                                    </div>
+                                {f.quality_score != null && (
+                                  <div style={{ marginBottom: 10 }}>
+                                    <ScoreCircle score={f.quality_score} size={38} />
                                   </div>
-                                );
-                              })}
-                            </div>
-                          );
-                        })}
-                      </div>
+                                )}
 
-                      {/* Action buttons */}
-                      <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginTop: 16 }}>
-                        <button onClick={() => router.push('/compare')} style={{
-                          padding: '9px 22px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
-                          fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                        }}>View Full Comparison &rarr;</button>
-                        <button onClick={() => deleteComparison(comp.id)} style={{
-                          padding: '9px 22px', borderRadius: 100, background: 'transparent', color: '#8a7e72',
-                          fontSize: 12, fontWeight: 600, border: '1.5px solid #ede8df',
-                          cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                        }}>Delete</button>
+                                <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 2, fontFamily: "'DM Sans', sans-serif" }}>{f.brand}</div>
+                                <div style={{
+                                  fontSize: 12, fontWeight: 700, color: '#1a1612', lineHeight: 1.3,
+                                  marginBottom: 12, display: '-webkit-box', WebkitLineClamp: 2,
+                                  WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                                  fontFamily: "'DM Sans', sans-serif",
+                                }}>{f.name}</div>
+
+                                {nutrients.map(n => {
+                                  const val = f[n.key];
+                                  const pct = val != null ? Math.min((val / n.max) * 100, 100) : 0;
+                                  return (
+                                    <div key={n.key} style={{ marginBottom: 6 }}>
+                                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+                                        <span style={{ fontSize: 9, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{n.label}</span>
+                                        <span style={{ fontSize: 9, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                                          {val != null ? `${Math.round(val * 10) / 10}%` : '\u2014'}
+                                        </span>
+                                      </div>
+                                      <div style={{ height: 4, borderRadius: 2, background: '#ede8df' }}>
+                                        <div style={{ height: '100%', borderRadius: 2, background: n.color, width: `${pct}%` }} />
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             ) : (
               <div style={cardStyle}>
@@ -981,12 +972,12 @@ export default function ProfilePage() {
                   <div style={{ fontSize: 32, opacity: 0.4, marginBottom: 12 }}>{'\u{1F4CC}'}</div>
                   <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>No saved comparisons yet</div>
                   <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
-                    Browse foods and tap &ldquo;Add to Compare&rdquo; to save them here.
+                    Compare foods and tap &ldquo;Save Comparison&rdquo; to keep them here.
                   </p>
-                  <button onClick={() => router.push('/discover')} style={{
+                  <button onClick={() => router.push('/compare')} style={{
                     padding: '10px 28px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
                     fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                  }}>Discover Foods &rarr;</button>
+                  }}>Compare Foods &rarr;</button>
                 </div>
               </div>
             )}
