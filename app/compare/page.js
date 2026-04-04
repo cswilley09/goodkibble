@@ -3,6 +3,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCompare } from '../components/CompareContext';
 import CompareBubble from '../components/CompareBubble';
+import { useAuth } from '../components/AuthContext';
+import { ProGateModal } from '../components/ProGate';
 import SignUpButton from '../components/SignUpButton';
 import SearchBox from '../components/SearchBox';
 
@@ -264,7 +266,14 @@ function getFirst5(ingredientsStr) {
 export default function ComparePage() {
   const router = useRouter();
   const { items, addItem, removeItem, clearAll } = useCompare();
+  const { isPro } = useAuth();
   const [saved, setSaved] = useState(false);
+  const [showGate, setShowGate] = useState(null); // 'compare' | 'save' | null
+
+  function gatedAddItem(food) {
+    if (!isPro && items.length >= 2) { setShowGate('compare'); return; }
+    addItem(food);
+  }
   const [ingredientInfo, setIngredientInfo] = useState({});
 
   useEffect(() => {
@@ -389,6 +398,7 @@ export default function ComparePage() {
           {items.length >= 2 && (
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={() => {
+                if (!isPro) { setShowGate('save'); return; }
                 const comparisons = JSON.parse(localStorage.getItem('gk_saved_comparisons') || '[]');
                 const entry = {
                   id: Date.now(),
@@ -434,7 +444,7 @@ export default function ComparePage() {
               Search for a dog food and click &ldquo;+ Add to Compare&rdquo; on any product page, or search below.
             </p>
             <div style={{ maxWidth: 340, margin: '0 auto', borderRadius: 20, border: '2px dashed #e8e0d4', overflow: 'hidden' }}>
-              <AddCardSearch onSelect={addItem} compact={isMobile} />
+              <AddCardSearch onSelect={gatedAddItem} compact={isMobile} />
             </div>
           </div>
         ) : (
@@ -538,7 +548,7 @@ export default function ComparePage() {
               {/* add slot */}
               {hasAddSlot && (
                 <div style={{ borderBottom: '2px solid #ede8df' }}>
-                  <AddCardSearch onSelect={addItem} compact={isMobile} />
+                  <AddCardSearch onSelect={gatedAddItem} compact={isMobile} />
                 </div>
               )}
 
@@ -685,6 +695,28 @@ export default function ComparePage() {
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>
+
+      {/* Pro gate modals */}
+      {showGate === 'compare' && (
+        <ProGateModal
+          icon={'\u{1F4CA}'}
+          title="Compare up to 2 foods for free"
+          description="Want to compare 3 or more foods side-by-side? Upgrade to Pro for unlimited comparisons."
+          buttonText="Get Pro \u2014 Unlimited Compares \u2192"
+          subtext="Starting at $2.42/month"
+          onClose={() => setShowGate(null)}
+        />
+      )}
+      {showGate === 'save' && (
+        <ProGateModal
+          icon={'\u{1F4BE}'}
+          title="Save comparisons with Pro"
+          description="Come back to your comparisons anytime. Plus get recall alerts and score change notifications for your saved foods."
+          buttonText="Unlock with Pro \u2192"
+          subtext="Less than a bag of treats per year"
+          onClose={() => setShowGate(null)}
+        />
+      )}
     </div>
   );
 }

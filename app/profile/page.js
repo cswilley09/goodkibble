@@ -237,7 +237,7 @@ function ProductCard({ food, onClick }) {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { session, signOut, loading: authLoading } = useAuth();
+  const { session, signOut, isPro, loading: authLoading } = useAuth();
   const [user, setUser] = useState(null);
   const [dogs, setDogs] = useState([]);
   const [activeDogIdx, setActiveDogIdx] = useState(0);
@@ -994,6 +994,80 @@ export default function ProfilePage() {
         {/* ═══ SETTINGS TAB ═══ */}
         {tab === 'settings' && (
           <>
+            {/* Subscription */}
+            <div style={cardStyle}>
+              <div style={eyebrow()}>Subscription</div>
+              {isPro ? (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#639922' }} />
+                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>GoodKibble Pro &mdash; Active</span>
+                  </div>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>Renews annually. Manage your subscription through Stripe.</p>
+                  <button style={{ padding: '8px 20px', borderRadius: 100, background: 'transparent', color: '#1a1612', fontSize: 13, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Manage Subscription</button>
+                </>
+              ) : (
+                <>
+                  <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>You&rsquo;re on the Free plan</p>
+                  <a href="/pro" style={{ display: 'inline-block', padding: '10px 24px', borderRadius: 100, background: '#C9A84C', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" }}>Upgrade to Pro &rarr;</a>
+                </>
+              )}
+            </div>
+
+            {/* Notifications */}
+            <div style={cardStyle}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...eyebrow() }}>
+                Email Notifications
+                {isPro && <span style={{ background: 'linear-gradient(135deg, #C9A84C, #d4b65e)', color: '#fff', padding: '2px 8px', borderRadius: 100, fontSize: 9, fontWeight: 700 }}>{'\u2605'} PRO</span>}
+              </div>
+              {isPro ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {[
+                    { key: 'notification_recalls', emoji: '\u{1F6A8}', title: 'Recall Alerts', desc: "Get notified immediately when the FDA issues a recall on any food your dogs eat or that you've saved." },
+                    { key: 'notification_score_changes', emoji: '\u{1F4CA}', title: 'Score Changes', desc: "Know when a food's score changes \u2014 whether due to a formula update or a methodology refinement." },
+                    { key: 'notification_methodology', emoji: '\u{1F9EA}', title: 'Methodology Updates', desc: 'Be the first to know when we update our scoring algorithm based on new peer-reviewed research.' },
+                    { key: 'notification_new_foods', emoji: '\u{1F195}', title: 'New Foods Added', desc: "Get notified when new products matching your dog's protein type are added to our database." },
+                    { key: 'notification_tips', emoji: '\u{1F4A1}', title: 'GoodKibble Tips', desc: 'Occasional insights on dog nutrition, reading labels, and making informed choices. Max 2x/month.' },
+                  ].map(n => (
+                    <div key={n.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                      <span style={{ fontSize: 18, flexShrink: 0, marginTop: 2 }}>{n.emoji}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{n.title}</div>
+                        <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>{n.desc}</div>
+                      </div>
+                      <div onClick={async () => {
+                        const newVal = !user[n.key];
+                        setUser(prev => ({ ...prev, [n.key]: newVal }));
+                        try {
+                          await fetch('/api/profile', {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ dog_id: null, user_id: user.id, updates: { [n.key]: newVal } }),
+                          });
+                        } catch {}
+                      }} style={{
+                        width: 44, height: 24, borderRadius: 12, cursor: 'pointer', flexShrink: 0,
+                        background: user[n.key] ? '#639922' : '#ede8df',
+                        position: 'relative', transition: 'background 0.2s',
+                      }}>
+                        <div style={{
+                          width: 20, height: 20, borderRadius: '50%', background: '#fff',
+                          position: 'absolute', top: 2,
+                          left: user[n.key] ? 22 : 2,
+                          transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                        }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>Upgrade to Pro to enable email notifications</p>
+                  <a href="/pro" style={{ fontSize: 13, fontWeight: 600, color: '#C9A84C', textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" }}>Learn about Pro &rarr;</a>
+                </div>
+              )}
+            </div>
+
             {/* Account */}
             <div style={cardStyle}>
               <div style={eyebrow()}>Account</div>
