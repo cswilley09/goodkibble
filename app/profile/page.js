@@ -915,7 +915,7 @@ export default function ProfilePage() {
                             const isHighest = f.quality_score != null && f.quality_score === highestScore && comp.items.filter(x => x.quality_score === highestScore).length === 1;
                             return (
                               <div key={f.id} onClick={() => goToFood(f)} style={{
-                                flex: '0 0 calc((100% - 20px) / 3)', scrollSnapAlign: 'start', minWidth: 170,
+                                flex: '0 0 calc((100% - 20px) / 3.5)', scrollSnapAlign: 'start', minWidth: 160,
                                 background: '#faf8f4', borderRadius: 12,
                                 border: isHighest ? '2px solid #C9A84C' : '1px solid #ede8df',
                                 padding: '12px 14px', position: 'relative', cursor: 'pointer',
