@@ -243,6 +243,8 @@ export default function ProfilePage() {
   const [activeDogIdx, setActiveDogIdx] = useState(0);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('dashboard');
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [editFood, setEditFood] = useState(null); // { name, slug, brand_slug } or null
@@ -1003,19 +1005,8 @@ export default function ProfilePage() {
                     <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#639922' }} />
                     <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>GoodKibble Pro &mdash; Active</span>
                   </div>
-                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>Renews annually. Manage your subscription through Stripe.</p>
-                  <button onClick={async () => {
-                    try {
-                      const res = await fetch('/api/billing-portal', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: user.email }),
-                      });
-                      const data = await res.json();
-                      if (data.url) window.location.href = data.url;
-                      else alert(data.error || 'Could not open billing portal');
-                    } catch { alert('Something went wrong'); }
-                  }} style={{ padding: '8px 20px', borderRadius: 100, background: 'transparent', color: '#1a1612', fontSize: 13, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Manage Subscription</button>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>Renews annually. You can cancel anytime.</p>
+                  <span onClick={() => setShowCancelModal(true)} style={{ fontSize: 12, color: '#b5aa99', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'underline' }}>Cancel subscription</span>
                 </>
               ) : (
                 <>
@@ -1117,6 +1108,72 @@ export default function ProfilePage() {
           </>
         )}
       </div>
+
+      {/* Cancel subscription retention modal */}
+      {showCancelModal && (
+        <>
+          <div onClick={() => setShowCancelModal(false)} style={{
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+            background: 'rgba(0,0,0,0.4)', zIndex: 9998,
+          }} />
+          <div style={{
+            position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+            background: '#fff', borderRadius: 24, padding: '36px 32px',
+            maxWidth: 420, width: 'calc(100vw - 48px)',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.15)', zIndex: 9999,
+            textAlign: 'center', fontFamily: "'DM Sans', sans-serif",
+          }}>
+            <div onClick={() => setShowCancelModal(false)} style={{
+              position: 'absolute', top: 16, right: 16, fontSize: 18, color: '#b5aa99',
+              cursor: 'pointer', lineHeight: 1, padding: 4,
+            }}>&times;</div>
+            <div style={{ fontSize: 36, marginBottom: 16 }}>{'\u{1F436}'}</div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>
+              Are you sure?
+            </h3>
+            <p style={{ fontSize: 14, color: '#5a5248', marginBottom: 20, lineHeight: 1.6 }}>
+              {displayName} will lose access to these Pro protections:
+            </p>
+            <div style={{ textAlign: 'left', marginBottom: 24, padding: '16px 20px', background: '#faf8f5', borderRadius: 14 }}>
+              {[
+                { icon: '\u{1F6A8}', text: 'Recall alerts — no email warnings if a food is recalled' },
+                { icon: '\u{1F4CA}', text: 'Score change notifications — won\u2019t know if a formula changes' },
+                { icon: '\u{1F50D}', text: 'Ingredient intelligence — no more quality signals or sourcing info' },
+                { icon: '\u{2696}\u{FE0F}', text: 'Unlimited comparisons — back to 2-food limit' },
+                { icon: '\u{1F4BE}', text: 'Saved comparisons — can\u2019t save or revisit' },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '8px 0', borderBottom: i < 4 ? '1px solid #ede8df' : 'none' }}>
+                  <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
+                  <span style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.4 }}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => setShowCancelModal(false)} style={{
+              width: '100%', padding: 14, borderRadius: 100, border: 'none',
+              background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 700,
+              cursor: 'pointer', marginBottom: 12,
+            }}>Keep Pro &mdash; Stay Protected</button>
+            <button disabled={cancelling} onClick={async () => {
+              setCancelling(true);
+              try {
+                const res = await fetch('/api/billing-portal', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email: user.email }),
+                });
+                const data = await res.json();
+                if (data.url) window.location.href = data.url;
+                else alert(data.error || 'Could not open cancellation page');
+              } catch { alert('Something went wrong'); }
+              setCancelling(false);
+            }} style={{
+              background: 'none', border: 'none', fontSize: 12, color: '#b5aa99',
+              cursor: 'pointer', textDecoration: 'underline',
+              opacity: cancelling ? 0.5 : 1,
+            }}>{cancelling ? 'Loading...' : 'I still want to cancel'}</button>
+          </div>
+        </>
+      )}
 
       <style>{`
         .saved-scroll-row::-webkit-scrollbar { display: none; }
