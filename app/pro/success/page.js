@@ -1,9 +1,27 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import SignUpButton from '../../components/SignUpButton';
+import { useAuth } from '../../components/AuthContext';
 
 export default function ProSuccessPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { session, fetchProfile } = useAuth();
+
+  // Activate Pro on page load as a fallback in case webhook is delayed
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    if (!sessionId || !session?.user) return;
+    fetch('/api/activate-pro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId, user_id: session.user.id, email: session.user.email }),
+    }).then(() => {
+      // Refresh the auth profile to pick up is_pro = true
+      if (fetchProfile && session.user) fetchProfile(session.user.id, session.user.email);
+    }).catch(() => {});
+  }, [session?.user?.id]);
 
   const unlocked = [
     'Ingredient deep-dive with quality signals',
