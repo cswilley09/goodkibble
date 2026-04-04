@@ -292,26 +292,76 @@ export async function GET(request) {
       insertedCount = inserted?.length || 0;
       console.log(`[poll-recalls] Inserted ${insertedCount} recalls`);
 
-      // Cross-reference against user saved foods for alerts
+      /*
+        MATCHING LOGIC: Cross-reference recalls against dog_profiles.
+        SQL migration note: for better performance at scale, create an RPC:
+          CREATE FUNCTION match_recall_brand(brand text) RETURNS TABLE(user_id uuid, email text) AS $$
+            SELECT dp.user_id, up.email FROM dog_profiles dp
+            JOIN user_profiles up ON up.id = dp.user_id
+            WHERE LOWER(SPLIT_PART(dp.current_food_slug, '/', 1)) = LOWER(brand)
+               OR LOWER(dp.current_food) LIKE '%' || LOWER(brand) || '%'
+          $$ LANGUAGE sql;
+        For now, we fetch all dog_profiles and filter in JS.
+      */
       if (inserted && inserted.length > 0) {
+        // Load all dog profiles with their user emails
+        const { data: allDogs } = await supabase
+          .from('dog_profiles')
+          .select('user_id, current_food, current_food_slug');
+        const { data: allUsers } = await supabase
+          .from('user_profiles')
+          .select('id, email');
+        const userEmailMap = {};
+        (allUsers || []).forEach(u => { userEmailMap[u.id] = u.email; });
+
         for (const recall of inserted) {
           if (!recall.brand_name) continue;
-          const { data: affectedUsers } = await supabase
-            .from('user_saved_foods')
-            .select('user_id, user_email')
-            .ilike('brand_name', `%${recall.brand_name}%`);
 
-          if (affectedUsers && affectedUsers.length > 0) {
-            const alertRows = affectedUsers.map(u => ({
-              user_id: u.user_id,
-              user_email: u.user_email,
+          // Build list of brand names to search for (raw + mapped)
+          const searchBrands = [recall.brand_name.toLowerCase()];
+          if (brandMap) {
+            for (const m of brandMap) {
+              if (m.external_name.toLowerCase() === recall.brand_name.toLowerCase()) {
+                searchBrands.push(m.internal_brand_name.toLowerCase());
+              }
+              if (m.internal_brand_name.toLowerCase() === recall.brand_name.toLowerCase()) {
+                searchBrands.push(m.external_name.toLowerCase());
+              }
+            }
+          }
+
+          // Match against dog_profiles
+          const matchedUserIds = new Set();
+          (allDogs || []).forEach(dog => {
+            if (!dog.current_food_slug && !dog.current_food) return;
+            const slugBrand = dog.current_food_slug ? dog.current_food_slug.split('/')[0].toLowerCase() : '';
+            const foodName = (dog.current_food || '').toLowerCase();
+
+            for (const brand of searchBrands) {
+              if ((slugBrand && slugBrand === brand) || foodName.includes(brand)) {
+                matchedUserIds.add(dog.user_id);
+                break;
+              }
+            }
+          });
+
+          if (matchedUserIds.size > 0) {
+            const alertRows = [...matchedUserIds].map(uid => ({
+              user_id: uid,
+              user_email: userEmailMap[uid] || null,
               alert_type: 'recall',
               recall_id: recall.id,
               status: 'pending',
-            }));
-            const { error: alertError } = await supabase.from('alert_queue').insert(alertRows);
-            if (alertError) console.error('Alert queue error:', alertError);
-            else console.log(`[poll-recalls] Queued ${alertRows.length} alerts for ${recall.recall_number}`);
+            })).filter(r => r.user_email);
+
+            if (alertRows.length > 0) {
+              const { error: alertError } = await supabase.from('alert_queue').insert(alertRows);
+              if (alertError) console.error('Alert queue error:', alertError);
+              else console.log(`[poll-recalls] Queued ${alertRows.length} alerts for ${recall.recall_number}`);
+            }
+
+            // Mark recall as matched
+            await supabase.from('recalls').update({ matched_to_products: true }).eq('id', recall.id);
           }
         }
       }
