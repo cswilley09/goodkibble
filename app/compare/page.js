@@ -270,9 +270,11 @@ export default function ComparePage() {
   const [saved, setSaved] = useState(false);
   const [showGate, setShowGate] = useState(null); // 'compare' | 'save' | null
 
+  const maxCompare = isPro ? 6 : 2;
+
   function gatedAddItem(food) {
     if (!isPro && items.length >= 2) { setShowGate('compare'); return; }
-    addItem(food);
+    addItem(food, maxCompare);
   }
   const [ingredientInfo, setIngredientInfo] = useState({});
 
@@ -319,7 +321,7 @@ export default function ComparePage() {
   };
   const isMobile = useIsMobile();
 
-  const hasAddSlot = items.length < 3;
+  const hasAddSlot = items.length < maxCompare;
   const totalDataCols = items.length + (hasAddSlot ? 1 : 0);
 
   /* desktop: fixed label col + flex product cols */
@@ -369,7 +371,7 @@ export default function ComparePage() {
       </nav>
 
       {/* content */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '24px 12px 60px' : '40px 40px 80px' }}>
+      <div style={{ maxWidth: items.length > 3 ? 1400 : 1200, margin: '0 auto', padding: isMobile ? '24px 12px 60px' : '40px 40px 80px', transition: 'max-width 0.3s' }}>
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,

@@ -385,8 +385,10 @@ function NutrientExplainer() {
 /* ── Toggle compare button using global context ── */
 function CompareToggle({ food }) {
   const { items, addItem, removeItem } = useCompare();
+  const { isPro } = useAuth();
+  const maxCompare = isPro ? 6 : 2;
   const isAdded = items.some(f => f.id === food.id);
-  const isFull = items.length >= 3;
+  const isFull = items.length >= maxCompare;
 
   function handleClick() {
     if (isAdded) {
@@ -425,7 +427,7 @@ function CompareToggle({ food }) {
         }
       }}
     >
-      {isAdded ? '✓ Added to Compare' : isFull ? 'Compare Full (3/3)' : '+ Add to Compare'}
+      {isAdded ? '\u2713 Added to Compare' : isFull ? `Compare Full (${maxCompare}/${maxCompare})` : '+ Add to Compare'}
     </button>
   );
 }

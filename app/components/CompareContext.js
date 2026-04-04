@@ -36,9 +36,9 @@ export function CompareProvider({ children }) {
 
   const [nudge, setNudge] = useState(0);
 
-  function addItem(food) {
+  function addItem(food, maxItems = 6) {
     setNudge(n => n + 1); // always nudge to trigger wiggle
-    if (items.length >= 3) return;
+    if (items.length >= maxItems) return;
     if (items.find(f => f.id === food.id)) return;
     setItems([...items, food]);
   }
