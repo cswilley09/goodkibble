@@ -899,19 +899,26 @@ export default function ProfilePage() {
                           >Delete</button>
                         </div>
 
+                        {/* Scroll indicator */}
+                        {comp.items.length > 3 && (
+                          <div style={{ fontSize: 11, color: '#b5aa99', textAlign: 'right', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
+                            {'\u2190'} Scroll to see all {comp.items.length} foods {'\u2192'}
+                          </div>
+                        )}
+
                         {/* Scrollable product cards */}
                         <div className="saved-scroll-row" style={{
-                          display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 4,
+                          display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4,
                           scrollSnapType: 'x mandatory', scrollbarWidth: 'none',
                         }}>
                           {comp.items.map(f => {
                             const isHighest = f.quality_score != null && f.quality_score === highestScore && comp.items.filter(x => x.quality_score === highestScore).length === 1;
                             return (
                               <div key={f.id} onClick={() => goToFood(f)} style={{
-                                flex: '0 0 calc((100% - 24px) / 3)', scrollSnapAlign: 'start', minWidth: 180,
-                                background: '#faf8f4', borderRadius: 14,
+                                flex: '0 0 calc((100% - 20px) / 3)', scrollSnapAlign: 'start', minWidth: 170,
+                                background: '#faf8f4', borderRadius: 12,
                                 border: isHighest ? '2px solid #C9A84C' : '1px solid #ede8df',
-                                padding: 16, position: 'relative', cursor: 'pointer',
+                                padding: '12px 14px', position: 'relative', cursor: 'pointer',
                                 transition: 'box-shadow 0.2s',
                               }}
                                 onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(26,22,18,0.06)')}
@@ -919,39 +926,44 @@ export default function ProfilePage() {
                               >
                                 {isHighest && (
                                   <span style={{
-                                    position: 'absolute', top: 8, right: 8,
-                                    background: '#C9A84C', color: '#fff', padding: '2px 8px',
-                                    borderRadius: 100, fontSize: 9, fontWeight: 700,
+                                    position: 'absolute', top: 6, right: 6,
+                                    background: '#C9A84C', color: '#fff', padding: '2px 7px',
+                                    borderRadius: 100, fontSize: 8, fontWeight: 700,
                                     fontFamily: "'DM Sans', sans-serif",
                                   }}>BEST</span>
                                 )}
 
-                                {f.quality_score != null && (
-                                  <div style={{ marginBottom: 10 }}>
-                                    <ScoreCircle score={f.quality_score} size={38} />
+                                {/* Score left + info right */}
+                                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10 }}>
+                                  {f.quality_score != null && (
+                                    <div style={{ flexShrink: 0 }}>
+                                      <ScoreCircle score={f.quality_score} size={36} />
+                                    </div>
+                                  )}
+                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 1, fontFamily: "'DM Sans', sans-serif" }}>{f.brand}</div>
+                                    <div style={{
+                                      fontSize: 12, fontWeight: 700, color: '#1a1612', lineHeight: 1.3,
+                                      display: '-webkit-box', WebkitLineClamp: 2,
+                                      WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                                      fontFamily: "'DM Sans', sans-serif",
+                                    }}>{f.name}</div>
                                   </div>
-                                )}
+                                </div>
 
-                                <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 2, fontFamily: "'DM Sans', sans-serif" }}>{f.brand}</div>
-                                <div style={{
-                                  fontSize: 12, fontWeight: 700, color: '#1a1612', lineHeight: 1.3,
-                                  marginBottom: 12, display: '-webkit-box', WebkitLineClamp: 2,
-                                  WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                                  fontFamily: "'DM Sans', sans-serif",
-                                }}>{f.name}</div>
-
+                                {/* Nutrient bars */}
                                 {nutrients.map(n => {
                                   const val = f[n.key];
                                   const pct = val != null ? Math.min((val / n.max) * 100, 100) : 0;
                                   return (
-                                    <div key={n.key} style={{ marginBottom: 6 }}>
+                                    <div key={n.key} style={{ marginBottom: 5 }}>
                                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
                                         <span style={{ fontSize: 9, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{n.label}</span>
                                         <span style={{ fontSize: 9, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
                                           {val != null ? `${Math.round(val * 10) / 10}%` : '\u2014'}
                                         </span>
                                       </div>
-                                      <div style={{ height: 4, borderRadius: 2, background: '#ede8df' }}>
+                                      <div style={{ height: 3, borderRadius: 2, background: '#ede8df' }}>
                                         <div style={{ height: '100%', borderRadius: 2, background: n.color, width: `${pct}%` }} />
                                       </div>
                                     </div>
