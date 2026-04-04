@@ -178,7 +178,7 @@ function IngredientInfoCard({ info, onClose }) {
 }
 
 /* Mobile bottom sheet for ingredient info */
-function IngredientBottomSheet({ info, onClose }) {
+function IngredientBottomSheet({ info, onClose, bottomOffset = 0 }) {
   if (!info) return null;
   return (
     <>
@@ -187,7 +187,7 @@ function IngredientBottomSheet({ info, onClose }) {
         background: 'rgba(0,0,0,0.3)', zIndex: 9998,
       }} />
       <div style={{
-        position: 'fixed', bottom: 0, left: 0, right: 0,
+        position: 'fixed', bottom: bottomOffset, left: 0, right: 0,
         background: '#1a1612', color: '#faf8f5',
         borderRadius: '20px 20px 0 0', padding: '24px 24px 32px',
         fontFamily: "'DM Sans', sans-serif",
@@ -195,8 +195,18 @@ function IngredientBottomSheet({ info, onClose }) {
         zIndex: 9999,
         animation: 'bottomSheetUp 0.25s ease both',
       }}>
+        {/* Drag handle */}
         <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.2)', margin: '0 auto 16px' }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingRight: 24 }}>
+        {/* Close X */}
+        <div onClick={onClose} style={{
+          position: 'absolute', top: 16, right: 16,
+          width: 28, height: 28, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', fontSize: 16, color: 'rgba(255,255,255,0.5)',
+        }}>&times;</div>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingRight: 36 }}>
           <span style={{
             width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
             background: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
@@ -209,6 +219,7 @@ function IngredientBottomSheet({ info, onClose }) {
             color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
           }}>{info.quality_signal}</span>
         </div>
+        {/* Description */}
         <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, marginBottom: info.source ? 10 : 0 }}>
           {info.short_description}
         </div>
@@ -366,8 +377,8 @@ function CompareToggle({ food }) {
   function handleClick() {
     if (isAdded) {
       removeItem(food.id);
-    } else if (!isFull) {
-      addItem(food);
+    } else {
+      addItem(food); // nudges even when full
     }
   }
 
@@ -699,7 +710,9 @@ export default function FoodPageContent({ productId }) {
   const [loading, setLoading] = useState(true);
   const [ingredientInfo, setIngredientInfo] = useState({});
   const [showStickyBuy, setShowStickyBuy] = useState(false);
-  const [activeIngredient, setActiveIngredient] = useState(null); // { type: 'ingredient'|'salt'|'info', info }
+  const [activeIngredient, setActiveIngredient] = useState(null); // { idx, info }
+  const [tooltipTop, setTooltipTop] = useState(0);
+  const pillsContainerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -803,14 +816,14 @@ export default function FoodPageContent({ productId }) {
         </div>
       ) : (
         <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 80px' }}>
-          <button onClick={goHome} style={{
+          <button onClick={() => router.push('/discover')} style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
             cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
             marginBottom: 32, padding: 0,
           }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Back to search
+            Back to Discover Foods
           </button>
 
           {/* Hero */}
@@ -865,11 +878,11 @@ export default function FoodPageContent({ productId }) {
                 </div>
               )}
 
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+              <div className="product-actions" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
                 <CompareToggle food={food} />
                 {food.affiliate_url && (
-                  <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                  <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" className="buy-amazon-btn" style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                     padding: '10px 22px', borderRadius: 100, border: 'none',
                     background: '#C9A84C', color: '#fff', fontSize: 13, fontWeight: 600,
                     cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none',
@@ -908,9 +921,6 @@ export default function FoodPageContent({ productId }) {
             {activeIngredient?.idx === 'dmb' && !isMobile && (
               <IngredientInfoCard info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
             )}
-            {activeIngredient?.idx === 'dmb' && isMobile && (
-              <IngredientBottomSheet info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
-            )}
 
             <div style={{ maxWidth: 560 }}>
               <NutrientRow label="Protein" value={Math.round((food.protein_dmb || 0) * 10) / 10} color="#2d7a4f" />
@@ -924,7 +934,7 @@ export default function FoodPageContent({ productId }) {
           <NutrientExplainer />
 
           {/* Ingredients */}
-          <div className="ingredients-section" style={{
+          <div className="ingredients-section" onClick={() => { if (activeIngredient && !isMobile) setActiveIngredient(null); }} style={{
             marginTop: 28, padding: '40px 32px', background: '#faf8f5', borderRadius: 24,
             border: '1px solid #ede8df', animation: 'fadeIn 0.5s ease 0.2s both',
           }}>
@@ -968,7 +978,7 @@ export default function FoodPageContent({ productId }) {
 
 
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            <div ref={pillsContainerRef} style={{ display: 'flex', flexWrap: 'wrap', gap: 6, position: 'relative' }}>
               {ingredients.map((ing, i) => {
                 const isSalt = isSaltIngredient(ing);
                 const isFirst = i === 0;
@@ -1076,10 +1086,17 @@ export default function FoodPageContent({ productId }) {
                   </span>
                 );
 
-                const pillEl = (
-                  <span key={i} style={wrapStyle} onClick={() => {
+                return (
+                  <span key={i} style={wrapStyle} onClick={(e) => {
+                    e.stopPropagation();
                     if (!clickable) return;
                     if (isActive) { setActiveIngredient(null); return; }
+                    // Calculate position relative to pills container
+                    if (!isMobile && pillsContainerRef.current) {
+                      const pillRect = e.currentTarget.getBoundingClientRect();
+                      const containerRect = pillsContainerRef.current.getBoundingClientRect();
+                      setTooltipTop(pillRect.bottom - containerRect.top + 8);
+                    }
                     if (isSalt) {
                       setActiveIngredient({ idx: i, info: { display_name: 'Salt Divider', quality_signal: 'caution', short_description: 'Any ingredient listed after salt typically makes up less than 1% of the total formula, as salt itself usually represents <1% of the recipe.', source: null } });
                     } else if (info) {
@@ -1087,26 +1104,48 @@ export default function FoodPageContent({ productId }) {
                     }
                   }}>{pill}</span>
                 );
-
-                // On desktop, insert the info card inline right after the active pill
-                // width:100% forces a flex line break so it sits below the current row
-                if (isActive && !isMobile) {
-                  return [
-                    pillEl,
-                    <div key={`info-${i}`} style={{ flexBasis: '100%', width: '100%' }}>
-                      <IngredientInfoCard info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
-                    </div>,
-                  ];
-                }
-
-                return pillEl;
               })}
+
+              {/* Desktop overlay tooltip — full width of pills container, absolutely positioned */}
+              {activeIngredient && !isMobile && (
+                <div onClick={(e) => e.stopPropagation()} style={{
+                  position: 'absolute', left: 0, right: 0, top: tooltipTop,
+                  zIndex: 50, padding: '18px 24px',
+                  background: '#1a1612', color: '#faf8f5', borderRadius: 12,
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                  fontFamily: "'DM Sans', sans-serif",
+                  animation: 'fadeIn 0.15s ease',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <span style={{
+                      width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
+                      background: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral,
+                    }} />
+                    <span style={{ fontWeight: 700, fontSize: 16 }}>{activeIngredient.info.display_name}</span>
+                    <span style={{
+                      marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+                      textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
+                      background: SIGNAL_BG[activeIngredient.info.quality_signal] || SIGNAL_BG.neutral,
+                      color: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral,
+                    }}>{activeIngredient.info.quality_signal}</span>
+                    <span onClick={() => setActiveIngredient(null)} style={{
+                      marginLeft: 8, fontSize: 16, color: 'rgba(255,255,255,0.4)',
+                      cursor: 'pointer', lineHeight: 1, padding: '0 4px',
+                    }}>&times;</span>
+                  </div>
+                  <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, lineHeight: 1.6, marginBottom: activeIngredient.info.source ? 10 : 0 }}>
+                    {activeIngredient.info.short_description}
+                  </div>
+                  {activeIngredient.info.source && (
+                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>
+                      Source: {activeIngredient.info.source}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
-            {/* Mobile bottom sheet only */}
-            {activeIngredient && isMobile && (
-              <IngredientBottomSheet info={activeIngredient.info} onClose={() => setActiveIngredient(null)} />
-            )}
+            {/* Mobile bottom sheet rendered at component root level below */}
             {saltIdx >= 0 && (
               <div style={{ marginTop: 16, fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>
                 * Ingredients after salt are dimmed — they typically represent &lt;1% of the formula.
@@ -1186,10 +1225,21 @@ export default function FoodPageContent({ productId }) {
         </div>
       )}
 
+      {/* Single mobile bottom sheet — rendered at root level to avoid duplicates */}
+      {activeIngredient && isMobile && (
+        <IngredientBottomSheet
+          info={activeIngredient.info}
+          onClose={() => setActiveIngredient(null)}
+          bottomOffset={showStickyBuy && food?.affiliate_url ? 56 : 0}
+        />
+      )}
+
       <style>{`
         .sticky-buy-bar { display: none !important; }
         @media (max-width: 768px) {
           .sticky-buy-bar { display: flex !important; }
+          .product-actions { flex-direction: column !important; align-items: stretch !important; }
+          .buy-amazon-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; }
         }
       `}</style>
     </div>

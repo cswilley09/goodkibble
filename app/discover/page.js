@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import CompareBubble from '../components/CompareBubble';
+import SignUpButton from '../components/SignUpButton';
 import SearchBox from '../components/SearchBox';
 
 /* ── filter range definitions ── */
@@ -458,7 +459,10 @@ function DiscoverContent() {
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
-        <CompareBubble />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <CompareBubble />
+          <SignUpButton />
+        </div>
       </nav>
 
       {/* content */}

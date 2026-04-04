@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import SearchBox from '@/app/components/SearchBox';
 import CompareBubble from '@/app/components/CompareBubble';
+import SignUpButton from '@/app/components/SignUpButton';
 
 function getScoreColor(score) {
   if (score >= 70) return '#2d7a4f';
@@ -108,7 +109,10 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
-        <CompareBubble />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <CompareBubble />
+          <SignUpButton />
+        </div>
       </nav>
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>

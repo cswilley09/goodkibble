@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCompare } from '../components/CompareContext';
 import CompareBubble from '../components/CompareBubble';
+import SignUpButton from '../components/SignUpButton';
 import SearchBox from '../components/SearchBox';
 
 /* ── fixed nutrient colors (same as product page) ── */
@@ -54,23 +55,38 @@ function getScoreTier(score) {
 function ScoreRing({ score, compact }) {
   if (score == null) return null;
   const color = getScoreColor(score);
-  const circumference = 106.8;
+  const size = compact ? 32 : 64;
+  const r = compact ? 12 : 27;
+  const sw = compact ? 3 : 3.5;
+  const circumference = 2 * Math.PI * r;
   const offset = circumference * (1 - score / 100);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <svg width={compact ? 32 : 42} height={compact ? 32 : 42} viewBox="0 0 42 42">
-        <circle cx={21} cy={21} r={17} fill="none" stroke="#ede8df" strokeWidth={3} />
-        <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#ede8df" strokeWidth={sw} />
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={sw}
           strokeDasharray={circumference} strokeDashoffset={offset}
-          strokeLinecap="round" transform="rotate(-90 21 21)" />
-        <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
+          strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`} />
+        <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="central"
+          style={{ fontSize: compact ? 12 : 26, fontWeight: 800, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
           {score}
         </text>
       </svg>
-      <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>
-        {getScoreTier(score)}
-      </span>
+      {!compact && (
+        <>
+          <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", color, marginTop: 4 }}>
+            {getScoreTier(score)}
+          </span>
+          <span style={{ fontSize: 10, fontFamily: "'DM Sans', sans-serif", color: '#b5aa99', marginTop: 1 }}>
+            GoodKibble Score
+          </span>
+        </>
+      )}
+      {compact && (
+        <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+          {getScoreTier(score)}
+        </span>
+      )}
     </div>
   );
 }
@@ -153,7 +169,7 @@ function AddCardSearch({ onSelect, compact }) {
   useEffect(() => {
     if (query.length < 2) { setResults([]); return; }
     const t = setTimeout(() => {
-      fetch(`/api/foods/search?q=${encodeURIComponent(query)}&limit=6&compact=true`)
+      fetch(`/api/foods/search?q=${encodeURIComponent(query)}&limit=6`)
         .then(r => r.json())
         .then(data => setResults(Array.isArray(data) ? data : []))
         .catch(() => setResults([]));
@@ -210,12 +226,19 @@ function AddCardSearch({ onSelect, compact }) {
       <div style={{ marginTop: 6, maxHeight: 200, overflowY: 'auto' }}>
         {results.map((r) => (
           <div key={r.id} onClick={() => { onSelect(r); setActive(false); setQuery(''); setResults([]); }}
-            style={{ padding: '9px 10px', borderRadius: 8, cursor: 'pointer', fontSize: 13, color: '#1a1612', transition: 'background 0.15s', lineHeight: 1.4 }}
+            style={{ padding: '9px 10px', borderRadius: 8, cursor: 'pointer', fontSize: 13, color: '#1a1612', transition: 'background 0.15s', lineHeight: 1.4, display: 'flex', alignItems: 'center', gap: 10 }}
             onMouseEnter={(e) => e.currentTarget.style.background = '#f5f0e8'}
             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
           >
-            <div style={{ fontWeight: 600 }}>{r.brand}</div>
-            <div style={{ color: '#8a7e72', fontSize: 11 }}>{r.name?.length > 50 ? r.name.substring(0, 50) + '...' : r.name}</div>
+            {r.image_url ? (
+              <img src={r.image_url} alt="" style={{ width: 36, height: 36, borderRadius: 6, objectFit: 'contain', background: '#f2efe9', flexShrink: 0 }} />
+            ) : (
+              <div style={{ width: 36, height: 36, borderRadius: 6, background: '#f2efe9', flexShrink: 0 }} />
+            )}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontWeight: 600 }}>{r.brand}</div>
+              <div style={{ color: '#8a7e72', fontSize: 11, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{r.name}</div>
+            </div>
           </div>
         ))}
         {query.length >= 2 && results.length === 0 && (
@@ -241,6 +264,45 @@ function getFirst5(ingredientsStr) {
 export default function ComparePage() {
   const router = useRouter();
   const { items, addItem, removeItem, clearAll } = useCompare();
+  const [saved, setSaved] = useState(false);
+  const [ingredientInfo, setIngredientInfo] = useState({});
+
+  useEffect(() => {
+    fetch('/api/ingredients').then(r => r.json()).then(data => {
+      if (!data || data.error) return;
+      const map = {};
+      data.forEach(row => { map[row.ingredient_name] = row; });
+      setIngredientInfo(map);
+    }).catch(() => {});
+  }, []);
+
+  function lookupSignal(ingName) {
+    if (!ingName) return null;
+    const norm = ingName.toLowerCase().trim().replace(/\s*\([^)]*\)$/g, '').replace(/[.]+$/, '').trim();
+    if (ingredientInfo[norm]) return ingredientInfo[norm].quality_signal;
+    // Multi-prefix stripping: "ground yellow corn" → "yellow corn" → "corn"
+    const prefixes = ['whole grain ', 'ground whole grain ', 'ground whole ', 'whole ', 'ground ', 'dried ', 'dehydrated ', 'deboned ', 'freeze-dried ', 'organic ', 'raw ', 'roasted ', 'yellow ', 'white '];
+    let stripped = norm;
+    for (let i = 0; i < 3; i++) {
+      let found = false;
+      for (const p of prefixes) {
+        if (stripped.startsWith(p)) {
+          stripped = stripped.slice(p.length);
+          found = true;
+          break;
+        }
+      }
+      if (!found) break;
+      if (ingredientInfo[stripped]) return ingredientInfo[stripped].quality_signal;
+      if (ingredientInfo[stripped + 's']) return ingredientInfo[stripped + 's'].quality_signal;
+      if (stripped.endsWith('s') && ingredientInfo[stripped.slice(0, -1)]) return ingredientInfo[stripped.slice(0, -1)].quality_signal;
+    }
+    // Plural/singular on original norm
+    if (ingredientInfo[norm + 's']) return ingredientInfo[norm + 's'].quality_signal;
+    if (norm.endsWith('s') && ingredientInfo[norm.slice(0, -1)]) return ingredientInfo[norm.slice(0, -1)].quality_signal;
+    return null;
+  }
+
   const goHome = () => router.push('/');
   const goFood = (food) => {
     if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
@@ -252,7 +314,7 @@ export default function ComparePage() {
   const totalDataCols = items.length + (hasAddSlot ? 1 : 0);
 
   /* desktop: fixed label col + flex product cols */
-  const gridCols = `100px repeat(${totalDataCols}, 1fr)`;
+  const gridCols = `160px repeat(${totalDataCols}, 1fr)`;
 
   /* mobile: sticky narrow label col + fixed-width scrollable product cols */
   const mLabelW = 80;
@@ -263,8 +325,8 @@ export default function ComparePage() {
 
   /* shared label cell style (sticky on mobile) */
   const labelCell = (extra = {}) => ({
-    padding: isMobile ? '10px 6px 10px 10px' : '14px 8px 14px 20px',
-    fontSize: isMobile ? 12 : 13,
+    padding: isMobile ? '10px 6px 10px 10px' : '18px 12px 18px 24px',
+    fontSize: isMobile ? 12 : 15,
     fontWeight: 600,
     letterSpacing: 0.3,
     lineHeight: 1.2,
@@ -291,11 +353,14 @@ export default function ComparePage() {
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
-        <CompareBubble />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <CompareBubble />
+          <SignUpButton />
+        </div>
       </nav>
 
       {/* content */}
-      <div style={{ maxWidth: 960, margin: '0 auto', padding: isMobile ? '24px 12px 60px' : '40px 24px 80px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '24px 12px 60px' : '40px 40px 80px' }}>
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
@@ -321,7 +386,34 @@ export default function ComparePage() {
                   : `Comparing ${items.length} products side-by-side`}
             </p>
           </div>
-          {items.length > 0 && (
+          {items.length >= 2 && (
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={() => {
+                const comparisons = JSON.parse(localStorage.getItem('gk_saved_comparisons') || '[]');
+                const entry = {
+                  id: Date.now(),
+                  saved_at: new Date().toISOString(),
+                  items: items.map(f => ({ id: f.id, name: f.name, brand: f.brand, slug: f.slug, brand_slug: f.brand_slug, image_url: f.image_url, quality_score: f.quality_score, protein_dmb: f.protein_dmb, fat_dmb: f.fat_dmb, carbs_dmb: f.carbs_dmb, primary_protein: f.primary_protein })),
+                };
+                comparisons.unshift(entry);
+                localStorage.setItem('gk_saved_comparisons', JSON.stringify(comparisons.slice(0, 20)));
+                setSaved(true);
+                setTimeout(() => setSaved(false), 2500);
+              }} style={{
+                padding: '8px 16px', borderRadius: 100,
+                background: saved ? '#2d7a4f' : '#C9A84C', color: '#fff',
+                fontSize: 13, fontWeight: 600, border: 'none',
+                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                transition: 'background 0.2s',
+              }}>{saved ? '\u2713 Saved!' : 'Save Comparison'}</button>
+              <button onClick={clearAll} style={{
+                padding: '8px 16px', borderRadius: 100, border: '1px solid #e8e0d4',
+                background: '#fff', color: '#8a7e72', fontSize: 13, fontWeight: 500,
+                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              }}>Clear All</button>
+            </div>
+          )}
+          {items.length === 1 && (
             <button onClick={clearAll} style={{
               padding: '8px 16px', borderRadius: 100, border: '1px solid #e8e0d4',
               background: '#fff', color: '#8a7e72', fontSize: 13, fontWeight: 500,
@@ -380,24 +472,45 @@ export default function ComparePage() {
 
               {items.map((f, idx) => (
                 <div key={f.id} style={{
-                  padding: isMobile ? '10px 8px 10px' : '24px 12px 18px',
+                  padding: isMobile ? '10px 8px 10px' : '28px 20px 22px',
                   textAlign: 'center',
                   borderLeft: '1px solid #ede8df',
                   borderBottom: '2px solid #ede8df',
                   background: colBg(idx),
                   cursor: 'pointer', transition: 'background 0.2s',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center',
+                  position: 'relative',
                 }}
                   onClick={() => goFood(f.id)}
                   onMouseEnter={(e) => { if (!isMobile) e.currentTarget.style.background = '#f0ebe3'; }}
                   onMouseLeave={(e) => { if (!isMobile) e.currentTarget.style.background = colBg(idx); }}
                 >
+                  {/* X close button */}
+                  {!isMobile ? (
+                    <div onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
+                      position: 'absolute', top: 8, right: 8, width: 30, height: 30, borderRadius: '50%',
+                      background: '#f0ebe3', color: '#8a7e72', fontSize: 16,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      cursor: 'pointer', zIndex: 2, transition: 'background 0.15s',
+                    }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = '#ede8df'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = '#f0ebe3'; }}
+                    >&times;</div>
+                  ) : (
+                    <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
+                      position: 'absolute', top: 4, right: 4, padding: '2px 6px', borderRadius: 100,
+                      border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
+                      fontSize: 10, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", zIndex: 2,
+                    }}>&times;</button>
+                  )}
+
                   {f.image_url && (
                     <div style={{
                       width: isMobile ? 44 : 80, height: isMobile ? 56 : 104,
                       margin: isMobile ? '0 auto 6px' : '0 auto 12px', borderRadius: isMobile ? 8 : 10,
                       overflow: 'hidden', background: '#fff', display: 'flex',
                       alignItems: 'center', justifyContent: 'center',
-                      border: '1px solid #ede8df',
+                      border: '1px solid #ede8df', flexShrink: 0,
                     }}>
                       <img src={f.image_url} alt={f.name}
                         style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }}
@@ -405,32 +518,20 @@ export default function ComparePage() {
                     </div>
                   )}
                   <div style={{
-                    fontSize: isMobile ? 9 : 11, color: '#8a7e72', fontWeight: 600,
+                    fontSize: isMobile ? 9 : 12, color: '#8a7e72', fontWeight: 600,
                     letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 1,
                   }}>{f.brand}</div>
-                  {/* title: fixed height for alignment */}
                   <div style={{
-                    fontSize: isMobile ? 11 : 13, fontWeight: 600, color: '#1a1612',
-                    lineHeight: 1.4, marginBottom: isMobile ? 6 : 10, padding: 0,
-                    display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden', textOverflow: 'ellipsis',
-                    height: isMobile ? 46 : 55,
+                    fontSize: isMobile ? 11 : 15, fontWeight: 600, color: '#1a1612',
+                    lineHeight: 1.4, marginBottom: isMobile ? 6 : 14, padding: 0,
+                    flex: 1, minHeight: isMobile ? 40 : 0,
                   }}>
                     {f.name}
                   </div>
-                  <div style={{ marginBottom: isMobile ? 4 : 8 }}>
+                  <div style={{ flexShrink: 0 }}>
                     <ScoreRing score={f.quality_score} compact={isMobile} />
                   </div>
-                  <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
-                    padding: isMobile ? '3px 8px' : '5px 12px', borderRadius: 100,
-                    border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
-                    fontSize: isMobile ? 10 : 11, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                    transition: 'all 0.2s', position: 'relative', zIndex: 2,
-                  }}
-                    onMouseEnter={(e) => { e.target.style.background = '#fce4e4'; e.target.style.color = '#c44'; e.target.style.borderColor = '#f0c4c4'; }}
-                    onMouseLeave={(e) => { e.target.style.background = '#fff'; e.target.style.color = '#8a7e72'; e.target.style.borderColor = '#e8e0d4'; }}
-                  >Remove</button>
-                  {!isMobile && <div style={{ fontSize: 10, color: '#c4b9a8', marginTop: 8 }}>View details →</div>}
+                  {!isMobile && <div style={{ fontSize: 10, color: '#c4b9a8', marginTop: 10, flexShrink: 0 }}>View details &rarr;</div>}
                 </div>
               ))}
 
@@ -457,7 +558,7 @@ export default function ComparePage() {
                     const val = Math.round((f[n.key] || 0) * 10) / 10;
                     return (
                       <div key={`${n.key}-${f.id}`} style={{
-                        padding: isMobile ? '10px 10px' : '14px 16px',
+                        padding: isMobile ? '10px 10px' : '18px 20px',
                         borderLeft: '1px solid #f0ebe3',
                         borderBottom: isLast ? 'none' : '1px solid #f0ebe3',
                         background: colBg(idx),
@@ -465,7 +566,7 @@ export default function ComparePage() {
                         justifyContent: isMobile ? 'center' : 'flex-start',
                       }}>
                         <div style={{
-                          fontSize: isMobile ? 16 : 18, fontWeight: 700, color: '#1a1612',
+                          fontSize: isMobile ? 16 : 22, fontWeight: 700, color: '#1a1612',
                           fontFamily: "'DM Sans', sans-serif", lineHeight: 1,
                           minWidth: isMobile ? undefined : 44, flexShrink: 0,
                         }}>
@@ -487,51 +588,80 @@ export default function ComparePage() {
                 ];
               })}
 
-              {/* ══ TOP 5 INGREDIENTS ROW ══ */}
-              {/* label cell */}
+              {/* ══ PRIMARY PROTEIN ROW ══ */}
               <div style={{
-                ...labelCell({ color: '#8a7e72', fontSize: 11 }),
+                ...labelCell(),
+                borderBottom: '1px solid #f0ebe3',
                 borderTop: '2px solid #ede8df',
-                display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
-                borderRight: '1px solid #ede8df',
+              }}>Primary Protein</div>
+              {items.map((f, idx) => (
+                <div key={`pp-${f.id}`} style={{
+                  padding: isMobile ? '10px 10px' : '18px 20px',
+                  borderLeft: '1px solid #f0ebe3',
+                  borderBottom: '1px solid #f0ebe3',
+                  borderTop: '2px solid #ede8df',
+                  background: colBg(idx),
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+                }}>
+                  <span style={{ fontSize: isMobile ? 12 : 15, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                    {f.primary_protein || '\u2014'}
+                  </span>
+                </div>
+              ))}
+              {hasAddSlot && <div style={{ borderLeft: '1px dashed #e8e0d4', borderTop: '2px solid #ede8df', borderBottom: '1px solid #f0ebe3' }} />}
+
+              {/* ══ TOP 5 INGREDIENTS ══ */}
+              {/* section header */}
+              <div style={{
+                gridColumn: `1 / -1`,
+                background: '#faf8f4', borderTop: '2px solid #ede8df', borderBottom: '1px solid #ede8df',
+                padding: isMobile ? '10px 10px' : '12px 24px',
               }}>
-                <span>Top 5<br />Ingredients</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#C9A84C', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif" }}>
+                  Top 5 Ingredients
+                </span>
               </div>
 
-              {/* product ingredient cells */}
-              {items.map((f, idx) => {
-                const first5 = getFirst5(f.ingredients);
-                return (
-                  <div key={`ing-${f.id}`} style={{
-                    padding: isMobile ? '12px 10px' : '18px 16px',
-                    borderTop: '2px solid #ede8df',
-                    background: colBg(idx),
-                    display: 'flex', alignItems: 'center',
-                  }}>
-                    {first5.length > 0 ? (
-                      <ol style={{ margin: 0, paddingLeft: isMobile ? 16 : 20, width: '100%' }}>
-                        {first5.map((ing, i) => (
-                          <li key={i} style={{
-                            fontSize: isMobile ? 10 : 12,
-                            color: i === 0 ? '#1a1612' : '#5a5047',
-                            fontWeight: i === 0 ? 600 : 400,
-                            lineHeight: isMobile ? 1.4 : 1.8,
-                            fontFamily: "'DM Sans', sans-serif",
-                            listStyleType: 'decimal',
-                          }}>{ing}</li>
-                        ))}
-                      </ol>
-                    ) : (
-                      <div style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>N/A</div>
-                    )}
-                  </div>
-                );
+              {/* ingredient rows: 5 rows, no labels in left column */}
+              {[0, 1, 2, 3, 4].map((rowIdx) => {
+                const isLast = rowIdx === 4;
+                const dotColors = { good: '#639922', neutral: '#8a7e72', caution: '#d4760a' };
+                return [
+                  /* empty left label cell to maintain grid alignment */
+                  <div key={`ing-label-${rowIdx}`} style={{
+                    borderBottom: isLast ? 'none' : '1px solid #f5f2ec',
+                    background: !isMobile && rowIdx % 2 === 1 ? 'rgba(0,0,0,0.015)' : 'transparent',
+                  }} />,
+                  ...items.map((f, idx) => {
+                    const first5 = getFirst5(f.ingredients);
+                    const ing = first5[rowIdx] || null;
+                    const signal = ing && !isMobile ? lookupSignal(ing) : null;
+                    const stripe = !isMobile && rowIdx % 2 === 1 ? 'rgba(0,0,0,0.015)' : undefined;
+                    return (
+                      <div key={`ing-${f.id}-${rowIdx}`} style={{
+                        padding: isMobile ? '8px 10px' : '10px 20px',
+                        borderLeft: '1px solid #f0ebe3',
+                        borderBottom: isLast ? 'none' : '1px solid #f5f2ec',
+                        background: stripe || colBg(idx),
+                        display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', gap: 6,
+                      }}>
+                        {ing ? (<>
+                          {signal && !isMobile && (
+                            <span style={{ width: 8, height: 8, borderRadius: '50%', background: dotColors[signal] || dotColors.neutral, flexShrink: 0 }} />
+                          )}
+                          <span style={{
+                            fontSize: isMobile ? 10 : 13, fontWeight: rowIdx === 0 ? 700 : 500,
+                            color: '#1a1612', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.4, textAlign: isMobile ? 'center' : 'left',
+                          }}>{ing.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</span>
+                        </>) : (
+                          <span style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>&mdash;</span>
+                        )}
+                      </div>
+                    );
+                  }),
+                  hasAddSlot && <div key={`ing-add-${rowIdx}`} style={{ borderLeft: '1px dashed #e8e0d4', borderBottom: isLast ? 'none' : '1px solid #f5f2ec' }} />,
+                ];
               })}
-
-              {/* add-slot cell */}
-              {hasAddSlot && (
-                <div style={{ borderLeft: '1px dashed #e8e0d4', borderTop: '2px solid #ede8df' }} />
-              )}
             </div>
           </div>
 

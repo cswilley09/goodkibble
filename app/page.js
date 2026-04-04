@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import SearchBox from './components/SearchBox';
 import CompareBubble from './components/CompareBubble';
+import SignUpButton from './components/SignUpButton';
 import { useRouter } from 'next/navigation';
 
 /* ═══════════════════════════════════════
@@ -526,6 +527,7 @@ export default function Home() {
             onMouseLeave={(e) => e.target.style.color = '#5a5248'}
           >Discover Foods</span>
           <CompareBubble />
+          <SignUpButton />
         </div>
       </nav>
 
