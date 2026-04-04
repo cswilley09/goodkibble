@@ -218,7 +218,7 @@ export async function GET(request) {
     if (rows.length > 0) {
       const { data: inserted, error: insertError } = await supabase
         .from('recalls')
-        .insert(rows)
+        .upsert(rows, { onConflict: 'recall_number', ignoreDuplicates: true })
         .select('id, brand_name, recall_number');
 
       if (insertError) {
