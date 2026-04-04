@@ -57,7 +57,7 @@ export default function ProPage() {
       });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-      else alert(data.error || 'Failed to start checkout');
+      else alert(data.error + (data.debug ? '\n\nDebug: ' + JSON.stringify(data.debug) : ''));
     } catch { alert('Something went wrong. Please try again.'); }
     setCheckoutLoading(false);
   }

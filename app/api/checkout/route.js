@@ -49,7 +49,15 @@ export async function POST(request) {
 
     return NextResponse.json({ url: session.url });
   } catch (err) {
-    console.error('Checkout error:', err);
-    return NextResponse.json({ error: 'Failed to create checkout session.' }, { status: 500 });
+    console.error('Checkout error:', err?.message || err);
+    return NextResponse.json({
+      error: `Checkout failed: ${err?.message || 'Unknown error'}`,
+      debug: {
+        hasKey: !!process.env.STRIPE_SECRET_KEY,
+        keyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 7) || 'missing',
+        yearlyPrice: PRICE_IDS.yearly?.substring(0, 10) || 'missing',
+        monthlyPrice: PRICE_IDS.monthly?.substring(0, 10) || 'missing',
+      }
+    }, { status: 500 });
   }
 }
