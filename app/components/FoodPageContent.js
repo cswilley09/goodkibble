@@ -182,7 +182,6 @@ function IngredientInfoCard({ info, onClose }) {
 /* Mobile bottom sheet for ingredient info */
 function IngredientBottomSheet({ info, onClose, bottomOffset = 0, gated = false }) {
   if (!info) return null;
-  const sheetRouter = typeof window !== 'undefined' ? require('next/navigation') : null;
   return (
     <>
       <div onClick={onClose} style={{
@@ -1251,6 +1250,7 @@ export default function FoodPageContent({ productId }) {
             bottomOffset={showStickyBuy && food?.affiliate_url ? 56 : 0}
             gated={true}
           />
+        )
       )}
 
       <style>{`
