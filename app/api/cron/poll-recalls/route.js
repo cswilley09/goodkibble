@@ -16,6 +16,26 @@ function getSupabase() {
   );
 }
 
+// Fix mojibake and HTML entity encoding issues
+function cleanText(str) {
+  if (!str) return str;
+  return str
+    .replace(/\u00e2\u0080\u0099|â€™/g, "'")
+    .replace(/\u00e2\u0080\u0098|â€˜/g, "'")
+    .replace(/\u00e2\u0080\u009c|â€œ/g, '"')
+    .replace(/\u00e2\u0080\u009d|â€\u009d/g, '"')
+    .replace(/\u00e2\u0080\u0093|â€"/g, '–')
+    .replace(/\u00e2\u0080\u0094|â€"/g, '—')
+    .replace(/\u00c2\u00a0|Â /g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function parseDate(raw) {
   if (!raw) return null;
   let cleaned = raw.replace(/^Updated\s+/i, '').trim();
@@ -30,23 +50,47 @@ function slugify(str) {
   return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80);
 }
 
-function extractBrandFromTitle(title) {
+// Improved brand extraction from advisory titles
+function extractBrand(title, brandMap) {
   if (!title) return null;
-  // Try patterns like "Brand Name Dog Food" or "Brand Name Pet Food" or quoted names
+  const lower = title.toLowerCase();
+
+  // 1. Check brand_name_map first — if any internal_brand_name appears in the title
+  if (brandMap && brandMap.length > 0) {
+    for (const m of brandMap) {
+      if (lower.includes(m.internal_brand_name.toLowerCase())) {
+        return m.internal_brand_name;
+      }
+      if (lower.includes(m.external_name.toLowerCase())) {
+        return m.internal_brand_name;
+      }
+    }
+  }
+
+  // 2. Try common FDA title patterns
   const patterns = [
-    /(?:recalls?|alerts?|advisory)[:\s]+["']?([A-Z][A-Za-z'\-\s]{2,30})(?:\s+(?:dog|cat|pet|puppy|kitten))/i,
-    /["']([A-Z][A-Za-z'\-\s]{2,30})["']/,
-    /^([A-Z][A-Za-z'\-\s]{2,25})\s+(?:recalls?|issues?|voluntar)/i,
+    /Lots?\s+of\s+(.+?)\s+(?:Pet|Dog|Cat|Puppy|Kitten)\s+Food/i,
+    /(.+?)\s+(?:Pet|Dog|Cat|Puppy|Kitten)\s+Food/i,
+    /Feed\s+(.+?)\s+Raw/i,
+    /(?:Made\s+)?[Bb]y\s+(.+?)[;,]/,
+    /["'\u2018\u2019\u201C\u201D](.+?)["'\u2018\u2019\u201C\u201D]/,
   ];
+
   for (const p of patterns) {
     const m = title.match(p);
-    if (m) return m[1].trim();
+    if (m && m[1]) {
+      let brand = m[1].trim();
+      // 3. Strip leading filler words
+      brand = brand.replace(/^(?:Certain|All|Some|One\s+Lot\s+of|Two\s+Lots?\s+of|Three\s+Lots?\s+of|Four\s+Lots?\s+of|Five\s+Lots?\s+of|Six\s+Lots?\s+of|Seven\s+Lots?\s+of|Eight\s+Lots?\s+of|Nine\s+Lots?\s+of|Ten\s+Lots?\s+of|Multiple\s+Lots?\s+of|Select)\s+/i, '').trim();
+      if (brand.length >= 2 && brand.length <= 50) return brand;
+    }
   }
+
   return null;
 }
 
 // SOURCE 1: FDA Animal & Veterinary Outbreaks page
-async function scrapeFDAOutbreaks() {
+async function scrapeFDAOutbreaks(brandMap) {
   const url = 'https://www.fda.gov/animal-veterinary/news-events/outbreaks-and-advisories';
   try {
     const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
@@ -60,28 +104,28 @@ async function scrapeFDAOutbreaks() {
       const $a = $el.find('a[href*="/animal-veterinary/outbreaks-and-advisories/"]');
       if ($a.length === 0) return;
 
-      const text = $el.text().trim();
-      const title = $a.first().text().trim();
+      const rawText = $el.text().trim();
+      const rawTitle = $a.first().text().trim();
+      const text = cleanText(rawText);
+      const title = cleanText(rawTitle);
       let href = $a.first().attr('href') || '';
       if (href.startsWith('/')) href = 'https://www.fda.gov' + href;
 
-      // Extract date: everything before " - " or " – "
       const dashIdx = text.search(/\s[-–]\s/);
       const dateText = dashIdx > 0 ? text.slice(0, dashIdx).trim() : null;
 
-      // Generate recall_number from URL
       const pathSegments = href.replace(/\/$/, '').split('/');
       const lastSegment = pathSegments[pathSegments.length - 1] || slugify(title);
       const recallNumber = 'FDA-AV-' + lastSegment;
 
       results.push({
         recall_number: recallNumber,
-        brand_name: extractBrandFromTitle(title),
-        brand_name_raw: null,
+        brand_name: extractBrand(title, brandMap),
+        brand_name_raw: rawTitle,
         product_description: title,
         reason: title,
-        severity: null,
-        status: title.toLowerCase().includes('terminated') ? 'Terminated' : 'Ongoing',
+        severity: 'Class I',
+        status: text.toLowerCase().includes('terminated') ? 'Terminated' : 'Ongoing',
         recall_date: parseDate(dateText),
         report_date: parseDate(dateText),
         source: 'fda_outbreaks',
@@ -100,7 +144,7 @@ async function scrapeFDAOutbreaks() {
 }
 
 // SOURCE 2: FDA Safety Alerts RSS feed
-async function scrapeFDARSS() {
+async function scrapeFDARSS(brandMap) {
   const url = 'https://www.fda.gov/about-fda/contact-fda/stay-informed/rss-feeds/recalls/rss.xml';
   try {
     const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
@@ -111,13 +155,14 @@ async function scrapeFDARSS() {
     const results = [];
     $('item').each((_, el) => {
       const $el = $(el);
-      const title = $el.find('title').text().trim();
+      const rawTitle = $el.find('title').text().trim();
       const link = $el.find('link').text().trim();
-      const description = $el.find('description').text().trim();
+      const rawDesc = $el.find('description').text().trim();
       const pubDate = $el.find('pubDate').text().trim();
+      const title = cleanText(rawTitle);
+      const description = cleanText(rawDesc);
       const combined = (title + ' ' + description).toLowerCase();
 
-      // Filter for pet food keywords
       const isPetRelated = PET_KEYWORDS.some(kw => combined.includes(kw));
       if (!isPetRelated) return;
 
@@ -125,12 +170,12 @@ async function scrapeFDARSS() {
 
       results.push({
         recall_number: recallNumber,
-        brand_name: extractBrandFromTitle(title),
-        brand_name_raw: null,
+        brand_name: extractBrand(title, brandMap),
+        brand_name_raw: rawTitle,
         product_description: title,
         reason: description || title,
         severity: null,
-        status: title.toLowerCase().includes('terminated') ? 'Terminated' : 'Ongoing',
+        status: combined.includes('terminated') ? 'Terminated' : 'Ongoing',
         recall_date: pubDate ? new Date(pubDate).toISOString().slice(0, 10) : null,
         report_date: pubDate ? new Date(pubDate).toISOString().slice(0, 10) : null,
         source: 'fda_rss',
@@ -174,10 +219,10 @@ export async function GET(request) {
       .from('brand_name_map')
       .select('external_name, internal_brand_name');
 
-    // Scrape both sources in parallel
+    // Scrape both sources in parallel, passing brandMap for extraction
     const [source1Results, source2Results] = await Promise.all([
-      scrapeFDAOutbreaks(),
-      scrapeFDARSS(),
+      scrapeFDAOutbreaks(brandMap || []),
+      scrapeFDARSS(brandMap || []),
     ]);
 
     const allResults = [...source1Results, ...source2Results];
@@ -203,22 +248,11 @@ export async function GET(request) {
     const newRecalls = allResults.filter(r => r.recall_number && !existingSet.has(r.recall_number));
     console.log(`[poll-recalls] ${newRecalls.length} new recalls to insert`);
 
-    // Normalize brand names
-    const rows = newRecalls.map(r => ({
-      ...r,
-      brand_name: r.brand_name
-        ? (brandMap || []).reduce((name, m) => {
-            if (name.toLowerCase().includes(m.external_name.toLowerCase())) return m.internal_brand_name;
-            return name;
-          }, r.brand_name)
-        : null,
-    }));
-
     let insertedCount = 0;
-    if (rows.length > 0) {
+    if (newRecalls.length > 0) {
       const { data: inserted, error: insertError } = await supabase
         .from('recalls')
-        .upsert(rows, { onConflict: 'recall_number', ignoreDuplicates: true })
+        .upsert(newRecalls, { onConflict: 'recall_number', ignoreDuplicates: true })
         .select('id, brand_name, recall_number');
 
       if (insertError) {
