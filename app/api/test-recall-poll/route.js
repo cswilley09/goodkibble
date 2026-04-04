@@ -22,6 +22,16 @@ function getSupabase() {
   );
 }
 
+function parseDate(raw) {
+  if (!raw) return null;
+  let cleaned = raw.replace(/^Updated\s+/i, '').trim();
+  try {
+    const d = new Date(cleaned);
+    if (isNaN(d.getTime())) return null;
+    return d.toISOString().slice(0, 10);
+  } catch { return null; }
+}
+
 function slugify(str) {
   return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80);
 }
@@ -74,8 +84,8 @@ async function scrapeFDAOutbreaks() {
         reason: title,
         severity: 'Class I',
         status: 'Ongoing',
-        recall_date: dateText || null,
-        report_date: dateText || null,
+        recall_date: parseDate(dateText),
+        report_date: parseDate(dateText),
         source: 'fda_outbreaks',
         source_url: href,
         distribution_pattern: null,
