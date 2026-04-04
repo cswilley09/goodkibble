@@ -16,17 +16,26 @@ function getSupabase() {
   );
 }
 
+// Fetch URL as properly decoded UTF-8 text
+async function fetchUTF8(url) {
+  const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
+  if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
+  const buf = await res.arrayBuffer();
+  return new TextDecoder('utf-8').decode(buf);
+}
+
 // Fix mojibake and HTML entity encoding issues
 function cleanText(str) {
   if (!str) return str;
   return str
-    .replace(/\u00e2\u0080\u0099|â€™/g, "'")
-    .replace(/\u00e2\u0080\u0098|â€˜/g, "'")
-    .replace(/\u00e2\u0080\u009c|â€œ/g, '"')
-    .replace(/\u00e2\u0080\u009d|â€\u009d/g, '"')
-    .replace(/\u00e2\u0080\u0093|â€"/g, '–')
-    .replace(/\u00e2\u0080\u0094|â€"/g, '—')
-    .replace(/\u00c2\u00a0|Â /g, ' ')
+    .replace(/â€™/g, "'")
+    .replace(/â€˜/g, "'")
+    .replace(/â€œ/g, '"')
+    .replace(/â€\u009d/g, '"')
+    .replace(/â€"/g, '–')
+    .replace(/â€"/g, '—')
+    .replace(/Â /g, ' ')
+    .replace(/Â/g, '')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
@@ -34,6 +43,31 @@ function cleanText(str) {
     .replace(/&#39;/g, "'")
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+// Clean all text fields on a recall row before inserting
+function cleanRow(row) {
+  return {
+    ...row,
+    product_description: cleanText(row.product_description),
+    reason: cleanText(row.reason),
+    brand_name: cleanText(row.brand_name),
+    brand_name_raw: cleanText(row.brand_name_raw),
+  };
+}
+
+// Clean up extracted brand name — remove FDA boilerplate and filler
+function cleanBrand(brand) {
+  if (!brand) return null;
+  let b = brand
+    .replace(/^(?:FDA\s+(?:Advisory|Alert|Cautions|Investigates|and\s+CDC)[:\s]*)/i, '')
+    .replace(/^Do\s+Not\s+Feed\s+/i, '')
+    .replace(/^(?:Certain|All|Some|Select)\s+/i, '')
+    .replace(/^(?:One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|Multiple)\s+Lots?\s+of\s+/i, '')
+    .replace(/^Recalled\s+Lots?\s+of\s+/i, '')
+    .trim();
+  if (b.length < 2) return null;
+  return b;
 }
 
 function parseDate(raw) {
@@ -79,10 +113,8 @@ function extractBrand(title, brandMap) {
   for (const p of patterns) {
     const m = title.match(p);
     if (m && m[1]) {
-      let brand = m[1].trim();
-      // 3. Strip leading filler words
-      brand = brand.replace(/^(?:Certain|All|Some|One\s+Lot\s+of|Two\s+Lots?\s+of|Three\s+Lots?\s+of|Four\s+Lots?\s+of|Five\s+Lots?\s+of|Six\s+Lots?\s+of|Seven\s+Lots?\s+of|Eight\s+Lots?\s+of|Nine\s+Lots?\s+of|Ten\s+Lots?\s+of|Multiple\s+Lots?\s+of|Select)\s+/i, '').trim();
-      if (brand.length >= 2 && brand.length <= 50) return brand;
+      const brand = cleanBrand(m[1]);
+      if (brand && brand.length <= 50) return brand;
     }
   }
 
@@ -93,9 +125,7 @@ function extractBrand(title, brandMap) {
 async function scrapeFDAOutbreaks(brandMap) {
   const url = 'https://www.fda.gov/animal-veterinary/news-events/outbreaks-and-advisories';
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
-    if (!res.ok) throw new Error(`FDA outbreaks page: ${res.status}`);
-    const html = await res.text();
+    const html = await fetchUTF8(url);
     const $ = cheerio.load(html);
 
     const results = [];
@@ -147,9 +177,7 @@ async function scrapeFDAOutbreaks(brandMap) {
 async function scrapeFDARSS(brandMap) {
   const url = 'https://www.fda.gov/about-fda/contact-fda/stay-informed/rss-feeds/recalls/rss.xml';
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
-    if (!res.ok) throw new Error(`FDA RSS: ${res.status}`);
-    const xml = await res.text();
+    const xml = await fetchUTF8(url);
     const $ = cheerio.load(xml, { xmlMode: true });
 
     const results = [];
@@ -250,9 +278,10 @@ export async function GET(request) {
 
     let insertedCount = 0;
     if (newRecalls.length > 0) {
+      const cleanedRows = newRecalls.map(cleanRow);
       const { data: inserted, error: insertError } = await supabase
         .from('recalls')
-        .upsert(newRecalls, { onConflict: 'recall_number', ignoreDuplicates: true })
+        .upsert(cleanedRows, { onConflict: 'recall_number', ignoreDuplicates: true })
         .select('id, brand_name, recall_number');
 
       if (insertError) {
