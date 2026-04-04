@@ -29,8 +29,8 @@ export async function GET(request) {
     let query = supabase
       .from('recalls')
       .select('*')
-      .gte('report_date', sinceISO)
-      .order('report_date', { ascending: false });
+      .gte('created_at', sinceISO)
+      .order('created_at', { ascending: false });
 
     if (brand) query = query.ilike('brand_name', `%${brand}%`);
 
