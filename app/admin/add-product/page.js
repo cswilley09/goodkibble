@@ -336,14 +336,33 @@ export default function AddProductPage() {
 
             {/* Phase: Full-screen stepper review */}
             {bulkPhase === 'review' && (() => {
-              const validItems = bulkItems.filter(r => r.product);
-              const item = bulkItems[reviewIdx];
-              if (!item || item.error) {
-                // Skip errored items
-                const nextValid = bulkItems.findIndex((r, i) => i > reviewIdx && r.product);
-                if (nextValid >= 0 && reviewIdx !== nextValid) { setReviewIdx(nextValid); return null; }
+              // Guard: if reviewIdx is out of bounds or item is invalid, show transition
+              if (reviewIdx >= bulkItems.length || !bulkItems[reviewIdx]?.product) {
+                // Check if there are any pending items left
+                const hasPending = bulkItems.some(r => r.product && r.status === 'pending');
+                return (
+                  <div style={{ textAlign: 'center', padding: 40, fontFamily: "'DM Sans', sans-serif" }}>
+                    <div style={{ fontSize: 14, color: '#8a7e72', marginBottom: 16 }}>
+                      {hasPending ? 'Finding next product...' : 'All products reviewed!'}
+                    </div>
+                    <button onClick={() => {
+                      if (hasPending) {
+                        const nextIdx = bulkItems.findIndex(r => r.product && r.status === 'pending');
+                        if (nextIdx >= 0) setReviewIdx(nextIdx);
+                        else setBulkPhase('summary');
+                      } else {
+                        setBulkPhase('summary');
+                      }
+                    }} style={{
+                      padding: '10px 24px', borderRadius: 100, border: 'none',
+                      background: '#1a1612', color: '#faf8f4', fontSize: 14, fontWeight: 700,
+                      cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    }}>{hasPending ? 'Continue Review' : 'View Summary'}</button>
+                  </div>
+                );
               }
-              if (!item?.product) return <div style={{ textAlign: 'center', padding: 40, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72' }}>No products to review. <button onClick={resetBulk} style={{ color: '#C9A84C', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600 }}>Start over</button></div>;
+
+              const item = bulkItems[reviewIdx];
 
               const p = item.product;
               const d = calcDMB(Number(p.protein) || 0, Number(p.fat) || 0, Number(p.fiber) || 0, Number(p.moisture) || 10, Number(p.ash) || 7);
