@@ -100,7 +100,7 @@ async function scrapeWithFirecrawl(url) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { url, admin_secret, image_base64, image_type, save = false } = body;
+    const { url, admin_secret, image_base64, image_type, save = false, skip_save = false } = body;
 
     // Auth
     const secret = process.env.ADMIN_SECRET || 'gk_admin_2026';
@@ -208,8 +208,8 @@ export async function POST(request) {
 
     const fullProduct = { ...product, protein_dmb, fat_dmb, fiber_dmb, carbs_dmb };
 
-    // If save=false, return extracted data for review without inserting
-    if (!save) {
+    // If skip_save or save=false, return extracted data without inserting
+    if (skip_save || !save) {
       return NextResponse.json({
         success: true,
         saved: false,
