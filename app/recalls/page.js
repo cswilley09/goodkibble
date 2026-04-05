@@ -18,13 +18,34 @@ export default function RecallsPage() {
   const [loading, setLoading] = useState(true);
   const [gateModal, setGateModal] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     fetch('/api/dashboard/recalls?days=365&type=recalls')
       .then(r => r.json())
-      .then(d => { setRecalls(d.recalls || []); setLoading(false); })
+      .then(d => {
+        // Sort: date desc, then urgency (Class I first)
+        const sorted = (d.recalls || []).sort((a, b) => {
+          const dateA = new Date(a.recall_date || a.report_date || a.created_at || 0);
+          const dateB = new Date(b.recall_date || b.report_date || b.created_at || 0);
+          if (dateB - dateA !== 0) return dateB - dateA;
+          const sevOrder = { 'Class I': 0, 'Class II': 1, 'Class III': 2 };
+          return (sevOrder[a.severity] ?? 3) - (sevOrder[b.severity] ?? 3);
+        });
+        setRecalls(sorted);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, []);
+
+  const filtered = search.trim()
+    ? recalls.filter(r => {
+        const q = search.toLowerCase();
+        return (r.brand_name || '').toLowerCase().includes(q)
+          || (r.product_description || '').toLowerCase().includes(q)
+          || (r.reason || '').toLowerCase().includes(q);
+      })
+    : recalls;
 
   function handleRowClick(recall) {
     if (isPro) {
@@ -71,21 +92,34 @@ export default function RecallsPage() {
         )}
 
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px' }}>FDA Dog Food Recalls</h1>
-        <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 28, fontFamily: "'DM Sans', sans-serif" }}>Updated every 6 hours from FDA and AVMA sources</p>
+        <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>Updated every 6 hours from FDA and AVMA sources</p>
+
+        {/* Search */}
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 12, border: '1.5px solid #ede8df', padding: '4px 4px 4px 16px' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b5aa99" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" /></svg>
+            <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+              placeholder="Search by brand, product, or reason..."
+              style={{ flex: 1, border: 'none', outline: 'none', fontSize: 14, padding: '10px 12px', background: 'transparent', color: '#1a1612', fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}
+            />
+            {search && <button onClick={() => setSearch('')} style={{ background: 'none', border: 'none', color: '#b5aa99', fontSize: 16, cursor: 'pointer', padding: '6px 12px' }}>&times;</button>}
+          </div>
+          {search && <div style={{ fontSize: 12, color: '#b5aa99', marginTop: 6, fontFamily: "'DM Sans', sans-serif" }}>Showing {filtered.length} of {recalls.length} recalls</div>}
+        </div>
 
         {loading ? (
           <div style={{ textAlign: 'center', padding: 60, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
             <div style={{ width: 24, height: 24, border: '3px solid #ede8df', borderTopColor: '#A32D2D', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
             Loading recalls...
           </div>
-        ) : recalls.length === 0 ? (
+        ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 60, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
             <div style={{ fontSize: 32, opacity: 0.3, marginBottom: 12 }}>{'\u{1F6E1}\u{FE0F}'}</div>
-            No recalls found in the last year
+            {search ? `No recalls match "${search}"` : 'No recalls found in the last year'}
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {recalls.map(r => {
+            {filtered.map(r => {
               const isUrgent = r.severity === 'Class I' || (r.reason || '').toLowerCase().includes('health');
               const expanded = expandedId === r.id && isPro;
               return (
