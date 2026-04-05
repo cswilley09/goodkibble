@@ -37,7 +37,7 @@ const FULL_EXTRACT_PROMPT = `You are a dog food product data extractor. Extract 
   "image_url": "absolute URL of the main product image, or null",
   "primary_protein": "the main animal protein source e.g. Salmon"
 }
-Important: protein, fat, fiber, moisture MUST be numbers without % signs.`;
+Important: protein, fat, fiber, moisture MUST be numbers without % signs. For image_url: First look for an og:image meta tag or a schema.org Product image — these almost always contain the main product photo. If not found, look for the largest product bag/package image on the page. Ignore thumbnails, icons, logos, and banner images. The URL must be absolute (starting with http).`;
 
 const PAGE_ONLY_PROMPT = `You are a dog food product data extractor. Extract from this product page: brand, name, flavor, ingredients (the COMPLETE list exactly as shown), image_url (absolute URL), and primary_protein. Do NOT extract Guaranteed Analysis numbers — ignore any protein/fat/fiber/moisture values. Return ONLY valid JSON with no other text:
 {
@@ -45,7 +45,7 @@ const PAGE_ONLY_PROMPT = `You are a dog food product data extractor. Extract fro
   "name": "string (product name without brand prefix)",
   "flavor": "string or null",
   "ingredients": "the COMPLETE ingredient list exactly as shown, as a single string",
-  "image_url": "absolute URL of the main product image, or null",
+  "image_url": "absolute URL of the main product image — first check og:image meta tag or schema.org Product image, then look for the largest product bag/package image. Ignore thumbnails, icons, logos. Must start with http. Or null if not found.",
   "primary_protein": "the main animal protein source e.g. Salmon"
 }`;
 
