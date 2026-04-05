@@ -147,15 +147,38 @@ export default function AddProductPage() {
     setBulkItems(prev => prev.map((item, i) => i === idx ? { ...item, product: { ...item.product, [key]: val } } : item));
   }
 
-  function approveCurrent() {
-    setBulkItems(prev => prev.map((item, i) => i === reviewIdx ? { ...item, status: 'approved' } : item));
-    if (reviewIdx < bulkItems.length - 1) setReviewIdx(reviewIdx + 1);
+  const [approvingIdx, setApprovingIdx] = useState(-1);
+
+  async function approveCurrent() {
+    const item = bulkItems[reviewIdx];
+    if (!item?.product) return;
+    setApprovingIdx(reviewIdx);
+
+    // Save immediately to database
+    try {
+      const res = await fetch('/api/admin/save-product', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admin_secret: ADMIN_SECRET, product: item.product }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setBulkItems(prev => prev.map((it, i) => i === reviewIdx ? { ...it, status: 'approved', savedProduct: data.product } : it));
+      } else {
+        setBulkItems(prev => prev.map((it, i) => i === reviewIdx ? { ...it, status: 'approved', saveError: data.error } : it));
+      }
+    } catch (err) {
+      setBulkItems(prev => prev.map((it, i) => i === reviewIdx ? { ...it, status: 'approved', saveError: err.message } : it));
+    }
+
+    setApprovingIdx(-1);
+    // Advance
+    if (reviewIdx < bulkItems.length - 1) setReviewIdx(prev => prev + 1);
     else setBulkPhase('summary');
   }
 
   function skipCurrent() {
     setBulkItems(prev => prev.map((item, i) => i === reviewIdx ? { ...item, status: 'skipped' } : item));
-    if (reviewIdx < bulkItems.length - 1) setReviewIdx(reviewIdx + 1);
+    if (reviewIdx < bulkItems.length - 1) setReviewIdx(prev => prev + 1);
     else setBulkPhase('summary');
   }
 
@@ -344,7 +367,7 @@ export default function AddProductPage() {
                     serverScore={item.score}
                     onSave={approveCurrent}
                     onDiscard={skipCurrent}
-                    saving={false}
+                    saving={approvingIdx === reviewIdx}
                     approveLabel={'\u2713 Approve'}
                     discardLabel="Skip"
                   />
@@ -372,16 +395,19 @@ export default function AddProductPage() {
 
             {/* Phase: Summary */}
             {bulkPhase === 'summary' && (() => {
-              const approved = bulkItems.filter(r => r.status === 'approved' && r.product);
+              const saved = bulkItems.filter(r => r.status === 'approved' && r.savedProduct);
+              const saveErrors = bulkItems.filter(r => r.status === 'approved' && r.saveError);
               const skipped = bulkItems.filter(r => r.status === 'skipped' || r.error);
               const pending = bulkItems.filter(r => r.status === 'pending' && r.product);
               return (
                 <div>
                   <div style={{ textAlign: 'center', marginBottom: 24 }}>
+                    <div style={{ fontSize: 36, marginBottom: 12 }}>{'\u{1F389}'}</div>
                     <div style={{ fontSize: 24, fontWeight: 800, color: '#1a1612', fontFamily: "'Playfair Display', serif", marginBottom: 6 }}>Review Complete</div>
-                    <div style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
-                      <strong style={{ color: '#2d7a4f' }}>{approved.length}</strong> approved &middot;
+                    <div style={{ fontSize: 15, color: '#3d352b', fontFamily: "'DM Sans', sans-serif" }}>
+                      <strong style={{ color: '#2d7a4f' }}>{saved.length}</strong> saved to database &middot;
                       <strong style={{ color: '#b5483a' }}> {skipped.length}</strong> skipped
+                      {saveErrors.length > 0 && <> &middot; <strong style={{ color: '#c47a20' }}>{saveErrors.length}</strong> save errors</>}
                       {pending.length > 0 && <> &middot; <strong style={{ color: '#C9A84C' }}>{pending.length}</strong> not reviewed</>}
                     </div>
                   </div>
@@ -389,41 +415,48 @@ export default function AddProductPage() {
                   <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #ede8df', overflow: 'hidden', marginBottom: 20 }}>
                     {bulkItems.map((r, i) => {
                       const p = r.product;
-                      const isApproved = r.status === 'approved';
+                      const isSaved = r.status === 'approved' && r.savedProduct;
+                      const hasSaveError = r.status === 'approved' && r.saveError;
                       const isSkipped = r.status === 'skipped' || r.error;
                       return (
-                        <div key={i} onClick={() => { setReviewIdx(i); setBulkPhase('review'); }} style={{
+                        <div key={i} style={{
                           display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px',
-                          borderBottom: '1px solid #f5f2ec', cursor: 'pointer',
-                          background: isSkipped ? '#fce4e410' : 'transparent',
-                          opacity: isSkipped ? 0.5 : 1,
+                          borderBottom: '1px solid #f5f2ec',
+                          background: hasSaveError ? '#fff0dc' : 'transparent',
+                          opacity: isSkipped ? 0.4 : 1,
                         }}>
-                          <span style={{ fontSize: 14, flexShrink: 0 }}>{isApproved ? '\u2713' : isSkipped ? '\u2717' : '\u25CB'}</span>
+                          <span style={{ fontSize: 14, flexShrink: 0, color: isSaved ? '#2d7a4f' : isSkipped ? '#b5483a' : hasSaveError ? '#c47a20' : '#b5aa99' }}>
+                            {isSaved ? '\u2713' : isSkipped ? '\u2717' : hasSaveError ? '\u26A0' : '\u25CB'}
+                          </span>
                           {p && (
                             <div style={{ width: 28, height: 28, borderRadius: 6, background: scoreBg(p.quality_score), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: scoreColor(p.quality_score), fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{p.quality_score}</div>
                           )}
                           <div style={{ flex: 1, minWidth: 0, fontFamily: "'DM Sans', sans-serif" }}>
                             <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1612' }}>{p?.brand || r.name || 'Error'}</span>
                             <span style={{ fontSize: 13, color: '#5a5248' }}> — {p?.name || r.error || ''}</span>
+                            {hasSaveError && <div style={{ fontSize: 11, color: '#c47a20', marginTop: 2 }}>{r.saveError}</div>}
                           </div>
+                          <span style={{ fontSize: 10, color: '#8a7e72', flexShrink: 0, fontFamily: "'DM Sans', sans-serif" }}>
+                            {isSaved ? 'Saved' : isSkipped ? 'Skipped' : hasSaveError ? 'Error' : 'Pending'}
+                          </span>
                         </div>
                       );
                     })}
                   </div>
 
                   <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-                    <button onClick={bulkSave} disabled={bulkSaving || approved.length === 0} style={{
-                      padding: '14px 36px', borderRadius: 100, border: 'none',
-                      background: approved.length > 0 ? '#2d7a4f' : '#ede8df',
-                      color: approved.length > 0 ? '#fff' : '#b5aa99',
+                    <button onClick={resetBulk} style={{
+                      padding: '14px 32px', borderRadius: 100, border: 'none',
+                      background: '#1a1612', color: '#faf8f4',
                       fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                      opacity: bulkSaving ? 0.6 : 1,
-                    }}>{bulkSaving ? 'Saving...' : `Save ${approved.length} Approved Products`}</button>
-                    <button onClick={() => { setReviewIdx(0); setBulkPhase('review'); }} style={{
-                      padding: '14px 24px', borderRadius: 100, border: '1.5px solid #ede8df',
-                      background: 'transparent', color: '#8a7e72', fontSize: 14, fontWeight: 600,
-                      cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                    }}>Back to Review</button>
+                    }}>Scrape Another Brand</button>
+                    {pending.length > 0 && (
+                      <button onClick={() => { setReviewIdx(bulkItems.findIndex(r => r.status === 'pending')); setBulkPhase('review'); }} style={{
+                        padding: '14px 24px', borderRadius: 100, border: '1.5px solid #ede8df',
+                        background: 'transparent', color: '#8a7e72', fontSize: 14, fontWeight: 600,
+                        cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      }}>Review Remaining ({pending.length})</button>
+                    )}
                   </div>
                 </div>
               );
