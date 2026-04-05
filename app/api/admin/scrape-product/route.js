@@ -173,6 +173,7 @@ export async function POST(request) {
     const slug = slugify(extracted.name);
     const brand_slug = slugify(extracted.brand);
 
+    // DB row — exclude protein_dmb, fat_dmb, fiber_dmb, carbs_dmb (generated columns)
     const product = {
       name: extracted.name,
       brand: extracted.brand,
@@ -182,7 +183,9 @@ export async function POST(request) {
       url: mode === 'url' ? url : null,
       image_url: extracted.image_url || null,
       primary_protein: extracted.primary_protein || null,
-      protein_dmb, fat_dmb, carbs_dmb, fiber_dmb,
+      protein: Number(extracted.protein),
+      fat: Number(extracted.fat),
+      fiber: Number(extracted.fiber || 0),
       moisture, ash,
       ingredients: extracted.ingredients,
       quality_score: scoreResult.total,
