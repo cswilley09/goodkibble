@@ -4,7 +4,6 @@ import SearchBox from './components/SearchBox';
 import CompareBubble from './components/CompareBubble';
 import SignUpButton from './components/SignUpButton';
 import RecallsNav from './components/RecallsNav';
-import HomepageRecalls from './components/HomepageRecalls';
 import { useRouter } from 'next/navigation';
 
 /* ═══════════════════════════════════════
@@ -559,11 +558,6 @@ export default function Home() {
 
       {/* ═══ 3. STATS ═══ */}
       <StatsStrip />
-
-      {/* ═══ 3.5 RECENT RECALLS ═══ */}
-      <div style={{ padding: '0 24px', marginTop: 48, marginBottom: -20 }}>
-        <HomepageRecalls />
-      </div>
 
       {/* ═══ 4. SCORING DEMO ═══ */}
       <ScoringDemo onNavigate={goTo} />
