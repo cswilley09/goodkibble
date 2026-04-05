@@ -463,7 +463,25 @@ function ReviewCard({ editData, updateField, dmb, serverScore, onSave, onDiscard
       </div>
       <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #ede8df', overflow: 'hidden' }}>
         <div style={{ padding: 20, borderBottom: '1px solid #f5f2ec' }}>
-          {editData.image_url && <img src={editData.image_url} alt="" style={{ maxHeight: 80, borderRadius: 8, marginBottom: 10, objectFit: 'contain' }} onError={e => { e.target.style.display = 'none'; }} />}
+          {/* Product image */}
+          <div style={{ display: 'flex', gap: 16, marginBottom: 14 }}>
+            <div style={{ width: 100, height: 130, borderRadius: 10, overflow: 'hidden', background: '#f5f2ec', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #ede8df' }}>
+              {editData.image_url ? (
+                <img src={editData.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} onError={e => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<span style="font-size:32px;opacity:0.3">\u{1F4E6}</span>'; }} />
+              ) : (
+                <span style={{ fontSize: 32, opacity: 0.3 }}>{'\u{1F4E6}'}</span>
+              )}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 2, fontFamily: "'DM Sans', sans-serif" }}>{editData.brand || 'Brand'}</div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: '#1a1612', lineHeight: 1.3, fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>{editData.name || 'Product Name'}</div>
+              {editData.quality_score != null && (
+                <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 100, fontSize: 12, fontWeight: 700, background: scoreBg(editData.quality_score), color: scoreColor(editData.quality_score), fontFamily: "'DM Sans', sans-serif" }}>
+                  {editData.quality_score} — {scoreLabel(editData.quality_score)}
+                </div>
+              )}
+            </div>
+          </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
             <div><label style={labelStyle}>Brand</label><input value={editData.brand || ''} onChange={e => updateField('brand', e.target.value)} style={inputStyle} /></div>
             <div><label style={labelStyle}>Name</label><input value={editData.name || ''} onChange={e => updateField('name', e.target.value)} style={inputStyle} /></div>
