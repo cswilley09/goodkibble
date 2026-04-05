@@ -221,6 +221,73 @@ async function scrapeFDARSS(brandMap) {
   }
 }
 
+// SOURCE 3: FDA Veterinary Recalls & Withdrawals table
+async function scrapeFDAVetRecalls(brandMap) {
+  const url = 'https://www.fda.gov/animal-veterinary/safety-health/recalls-withdrawals';
+  try {
+    const html = await fetchUTF8(url);
+    const $ = cheerio.load(html);
+
+    const results = [];
+    $('table tbody tr').each((_, row) => {
+      const cells = $(row).find('td');
+      if (cells.length < 5) return;
+
+      const $dateCell = $(cells[0]);
+      const $brandCell = $(cells[1]);
+      const $productCell = $(cells[2]);
+      const $reasonCell = $(cells[3]);
+      const $companyCell = $(cells[4]);
+      const $terminatedCell = cells.length > 5 ? $(cells[5]) : null;
+
+      // Date from <time> tag
+      const timeTag = $dateCell.find('time');
+      const dateStr = timeTag.attr('datetime') || $dateCell.text().trim();
+      const recallDate = parseDate(dateStr);
+
+      // Brand name and link
+      const rawBrand = cleanText($brandCell.text().trim());
+      let detailHref = $brandCell.find('a').attr('href') || '';
+      if (detailHref && detailHref.startsWith('/')) detailHref = 'https://www.fda.gov' + detailHref;
+
+      // Product and reason
+      const productDesc = cleanText($productCell.text().trim());
+      const reason = cleanText($reasonCell.text().trim());
+      const company = cleanText($companyCell.text().trim());
+
+      // Terminated check
+      const isTerminated = $terminatedCell ? $terminatedCell.text().trim().toLowerCase().includes('yes') : false;
+
+      // Generate unique recall_number
+      const dateSlug = recallDate || 'undated';
+      const brandSlug = slugify(rawBrand || company || 'unknown');
+      const recallNumber = `FDA-VET-${dateSlug}-${brandSlug}`;
+
+      results.push({
+        recall_number: recallNumber,
+        brand_name: extractBrand(rawBrand || productDesc, brandMap) || rawBrand || null,
+        brand_name_raw: company || rawBrand,
+        product_description: productDesc || rawBrand,
+        reason: reason || productDesc,
+        severity: null,
+        status: isTerminated ? 'Terminated' : 'Ongoing',
+        recall_date: recallDate,
+        report_date: recallDate,
+        source: 'fda_vet_recalls',
+        source_url: detailHref || url,
+        distribution_pattern: null,
+        lot_numbers: null,
+      });
+    });
+
+    console.log(`[poll-recalls] FDA Vet Recalls table: found ${results.length} entries`);
+    return results;
+  } catch (err) {
+    console.error('[poll-recalls] FDA Vet Recalls scrape error:', err.message);
+    return [];
+  }
+}
+
 export async function GET(request) {
   // Auth check
   const authHeader = request.headers.get('authorization');
@@ -247,21 +314,22 @@ export async function GET(request) {
       .from('brand_name_map')
       .select('external_name, internal_brand_name');
 
-    // Scrape both sources in parallel, passing brandMap for extraction
-    const [source1Results, source2Results] = await Promise.all([
+    // Scrape all three sources in parallel
+    const [source1Results, source2Results, source3Results] = await Promise.all([
       scrapeFDAOutbreaks(brandMap || []),
       scrapeFDARSS(brandMap || []),
+      scrapeFDAVetRecalls(brandMap || []),
     ]);
 
-    const allResults = [...source1Results, ...source2Results];
-    console.log(`[poll-recalls] Total from both sources: ${allResults.length}`);
+    const allResults = [...source1Results, ...source2Results, ...source3Results];
+    console.log(`[poll-recalls] Total from all sources: ${allResults.length}`);
 
     if (allResults.length === 0) {
       if (logId) await supabase.from('cron_log').update({
         status: 'completed', records_found: 0, records_processed: 0,
         completed_at: new Date().toISOString(),
       }).eq('id', logId);
-      return NextResponse.json({ success: true, source1Count: 0, source2Count: 0, newRecalls: 0 });
+      return NextResponse.json({ success: true, source1Count: 0, source2Count: 0, source3Count: 0, newRecalls: 0 });
     }
 
     // Check for existing recall_numbers
@@ -379,6 +447,7 @@ export async function GET(request) {
       success: true,
       source1Count: source1Results.length,
       source2Count: source2Results.length,
+      source3Count: source3Results.length,
       newRecalls: insertedCount,
     });
 
