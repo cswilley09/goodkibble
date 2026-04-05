@@ -53,8 +53,23 @@ export async function POST(request) {
     const { url } = await request.json();
     if (!url) return NextResponse.json({ error: 'URL is required' }, { status: 400 });
 
-    // 1. Fetch the product page
-    const pageRes = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
+    // 1. Fetch the product page with full browser-like headers
+    const pageRes = await fetch(url, {
+      headers: {
+        'User-Agent': USER_AGENT,
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Upgrade-Insecure-Requests': '1',
+      },
+      redirect: 'follow',
+    });
     if (!pageRes.ok) throw new Error(`Failed to fetch page: HTTP ${pageRes.status}`);
     const buf = await pageRes.arrayBuffer();
     const pageText = new TextDecoder('utf-8').decode(buf);
