@@ -55,6 +55,7 @@ export default function AddProductPage() {
   const [bulkPhase, setBulkPhase] = useState('discover'); // 'discover' | 'scraping' | 'review' | 'summary' | 'done'
   const [bulkSaving, setBulkSaving] = useState(false);
   const [bulkSaveResult, setBulkSaveResult] = useState(null);
+  const [approvingIdx, setApprovingIdx] = useState(-1);
 
   const fileRef = useRef(null);
   const intervalRef = useRef(null);
@@ -146,8 +147,6 @@ export default function AddProductPage() {
   function updateBulkItem(idx, key, val) {
     setBulkItems(prev => prev.map((item, i) => i === idx ? { ...item, product: { ...item.product, [key]: val } } : item));
   }
-
-  const [approvingIdx, setApprovingIdx] = useState(-1);
 
   async function approveCurrent() {
     const item = bulkItems[reviewIdx];
