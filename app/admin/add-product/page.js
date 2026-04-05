@@ -482,14 +482,19 @@ function ReviewCard({ editData, updateField, dmb, serverScore, onSave, onDiscard
               )}
             </div>
           </div>
+          {/* Image URL — full width, editable */}
+          <div style={{ marginBottom: 10 }}>
+            <label style={labelStyle}>Product Image URL</label>
+            <input value={editData.image_url || ''} onChange={e => updateField('image_url', e.target.value)} placeholder="https://..." style={{ ...inputStyle, fontSize: 12 }} />
+            {!editData.image_url && <div style={{ fontSize: 11, color: '#c47a20', marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>{'\u26A0'} No image found — paste a URL above</div>}
+          </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
             <div><label style={labelStyle}>Brand</label><input value={editData.brand || ''} onChange={e => updateField('brand', e.target.value)} style={inputStyle} /></div>
             <div><label style={labelStyle}>Name</label><input value={editData.name || ''} onChange={e => updateField('name', e.target.value)} style={inputStyle} /></div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
             <div><label style={labelStyle}>Flavor</label><input value={editData.flavor || ''} onChange={e => updateField('flavor', e.target.value)} style={inputStyle} /></div>
             <div><label style={labelStyle}>Primary Protein</label><input value={editData.primary_protein || ''} onChange={e => updateField('primary_protein', e.target.value)} style={inputStyle} /></div>
-            <div><label style={labelStyle}>Image URL</label><input value={editData.image_url || ''} onChange={e => updateField('image_url', e.target.value)} style={inputStyle} /></div>
           </div>
         </div>
         <div style={{ padding: 20, borderBottom: '1px solid #f5f2ec' }}>
