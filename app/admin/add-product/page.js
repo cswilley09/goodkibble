@@ -178,7 +178,7 @@ export default function AddProductPage() {
   const dmb = editData ? calcDMB(Number(editData.protein) || 0, Number(editData.fat) || 0, Number(editData.fiber) || 0, Number(editData.moisture) || 10, Number(editData.ash) || 7) : null;
   const isReview = !!editData && !savedResult;
   const canSubmit = (url.trim() || imageFile) && !loading;
-  const checkedBulkCount = bulkResults.filter(r => r.checked && r.product).length;
+  const checkedBulkCount = bulkItems.filter(r => r.status === 'approved' && r.product).length;
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
