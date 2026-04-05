@@ -100,7 +100,7 @@ async function scrapeWithFirecrawl(url) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { url, admin_secret, image_base64, image_type } = body;
+    const { url, admin_secret, image_base64, image_type, save = false } = body;
 
     // Auth
     const secret = process.env.ADMIN_SECRET || 'gk_admin_2026';
@@ -206,6 +206,18 @@ export async function POST(request) {
       scored_at: new Date().toISOString(),
     };
 
+    const fullProduct = { ...product, protein_dmb, fat_dmb, fiber_dmb, carbs_dmb };
+
+    // If save=false, return extracted data for review without inserting
+    if (!save) {
+      return NextResponse.json({
+        success: true,
+        saved: false,
+        product: fullProduct,
+        score: scoreResult,
+      });
+    }
+
     // Check for existing
     const supabase = getSupabase();
     const { data: existing } = await supabase
@@ -218,12 +230,12 @@ export async function POST(request) {
       return NextResponse.json({
         success: false,
         error: 'This product already exists in the database',
-        product: { ...product, protein_dmb, fat_dmb, fiber_dmb, carbs_dmb },
+        product: fullProduct,
         score: scoreResult,
       }, { status: 409 });
     }
 
-    // Insert
+    // Insert (exclude DMB columns — they're generated)
     const { data: inserted, error: dbError } = await supabase
       .from('dog_foods_v2')
       .insert(product)
@@ -233,14 +245,14 @@ export async function POST(request) {
     if (dbError) {
       return NextResponse.json({
         success: false, error: `Database: ${dbError.message}`,
-        product: { ...product, protein_dmb, fat_dmb, fiber_dmb, carbs_dmb },
-        score: scoreResult,
+        product: fullProduct, score: scoreResult,
       }, { status: 500 });
     }
 
     return NextResponse.json({
       success: true,
-      product: inserted || product,
+      saved: true,
+      product: inserted || fullProduct,
       score: scoreResult,
     });
 
