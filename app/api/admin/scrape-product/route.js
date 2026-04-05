@@ -84,17 +84,32 @@ async function callClaude(messages) {
   return JSON.parse(jsonMatch[0]);
 }
 
+function extractImageHints(html) {
+  if (!html) return '';
+  const hints = [];
+  // og:image
+  const ogMatch = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i)
+    || html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["']/i);
+  if (ogMatch) hints.push(`og:image: ${ogMatch[1]}`);
+  // schema.org Product image
+  const schemaMatch = html.match(/"@type"\s*:\s*"Product"[\s\S]*?"image"\s*:\s*"([^"]+)"/);
+  if (schemaMatch) hints.push(`schema.org Product image: ${schemaMatch[1]}`);
+  return hints.length > 0 ? `\n\nImage hints from page metadata:\n${hints.join('\n')}\nUse one of these as image_url unless you find a more specific product image.` : '';
+}
+
 async function scrapeWithFirecrawl(url) {
   if (!process.env.FIRECRAWL_API_KEY) {
     throw new Error('FIRECRAWL_API_KEY not configured');
   }
   const FirecrawlApp = (await import('@mendable/firecrawl-js')).default;
   const firecrawl = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY });
-  const result = await firecrawl.scrapeUrl(url, { formats: ['markdown'] });
+  const result = await firecrawl.scrapeUrl(url, { formats: ['markdown', 'html'] });
   if (!result.success) throw new Error(`Firecrawl failed: ${result.error || 'Unknown error'}`);
   const markdown = result.markdown || result.data?.markdown || '';
+  const html = result.html || result.data?.html || '';
   if (!markdown || markdown.length < 50) throw new Error('Firecrawl returned empty or very short content');
-  return markdown.slice(0, 50000);
+  const imageHints = extractImageHints(html);
+  return { markdown: markdown.slice(0, 50000), imageHints };
 }
 
 export async function POST(request) {
@@ -121,10 +136,10 @@ export async function POST(request) {
     // ═══ COMBO MODE: URL + Image ═══
     if (url && image_base64) {
       // Step 1: Scrape URL for page data (brand, name, ingredients, image_url)
-      const markdown = await scrapeWithFirecrawl(url);
+      const { markdown, imageHints } = await scrapeWithFirecrawl(url);
       const pageData = await callClaude([{
         role: 'user',
-        content: `${PAGE_ONLY_PROMPT}\n\nProduct page content:\n${markdown}`,
+        content: `${PAGE_ONLY_PROMPT}${imageHints}\n\nProduct page content:\n${markdown}`,
       }]);
 
       // Step 2: Read GA from the image
@@ -142,10 +157,10 @@ export async function POST(request) {
 
     // ═══ URL ONLY ═══
     else if (url) {
-      const markdown = await scrapeWithFirecrawl(url);
+      const { markdown, imageHints } = await scrapeWithFirecrawl(url);
       extracted = await callClaude([{
         role: 'user',
-        content: `${FULL_EXTRACT_PROMPT}\n\nProduct page content:\n${markdown}`,
+        content: `${FULL_EXTRACT_PROMPT}${imageHints}\n\nProduct page content:\n${markdown}`,
       }]);
     }
 
