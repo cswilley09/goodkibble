@@ -14,8 +14,9 @@ const STATUS_MESSAGES = [
 export default function AddProductPage() {
   const [authed, setAuthed] = useState(false);
   const [password, setPassword] = useState('');
-  const [tab, setTab] = useState('url');
   const [url, setUrl] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [statusIdx, setStatusIdx] = useState(0);
   const [result, setResult] = useState(null);
@@ -45,6 +46,20 @@ export default function AddProductPage() {
     );
   }
 
+  function handleImageSelect(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onload = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
+  }
+
+  function removeImage() {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileRef.current) fileRef.current.value = '';
+  }
+
   function startLoading() {
     setLoading(true);
     setError('');
@@ -60,40 +75,27 @@ export default function AddProductPage() {
     clearInterval(intervalRef.current);
   }
 
-  async function submitURL(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (!url.trim()) return;
+    if (!url.trim() && !imageFile) return;
     startLoading();
-    try {
-      const res = await fetch('/api/admin/scrape-product', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url.trim(), admin_secret: ADMIN_SECRET, mode: 'url' }),
-      });
-      const data = await res.json();
-      if (data.success) { setResult(data); setUrl(''); }
-      else setError(data.error || 'Failed to process');
-    } catch (err) { setError(err.message); }
-    stopLoading();
-  }
 
-  async function submitFile(file) {
-    if (!file) return;
-    startLoading();
     try {
-      const base64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+      // Build request body
+      const body = { admin_secret: ADMIN_SECRET };
+      if (url.trim()) body.url = url.trim();
 
-      const isPdf = file.type === 'application/pdf';
-      const body = {
-        admin_secret: ADMIN_SECRET,
-        mode: isPdf ? 'pdf' : 'image',
-        ...(isPdf ? { pdf_base64: base64 } : { image_base64: base64, image_type: file.type }),
-      };
+      // Convert image to base64 if provided
+      if (imageFile) {
+        const base64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(imageFile);
+        });
+        body.image_base64 = base64;
+        body.image_type = imageFile.type;
+      }
 
       const res = await fetch('/api/admin/scrape-product', {
         method: 'POST',
@@ -101,122 +103,100 @@ export default function AddProductPage() {
         body: JSON.stringify(body),
       });
       const data = await res.json();
-      if (data.success) setResult(data);
+      if (data.success) { setResult(data); }
       else setError(data.error || 'Failed to process');
     } catch (err) { setError(err.message); }
     stopLoading();
-  }
-
-  function handleDrop(e) {
-    e.preventDefault();
-    setDragOver(false);
-    const file = e.dataTransfer?.files?.[0];
-    if (file) submitFile(file);
   }
 
   function reset() {
     setResult(null);
     setError('');
     setUrl('');
+    removeImage();
   }
 
   const p = result?.product;
   const s = result?.score;
-  const tabs = [
-    { key: 'url', label: 'Paste URL' },
-    { key: 'image', label: 'Upload Screenshot' },
-    { key: 'pdf', label: 'Upload PDF' },
-  ];
+  const canSubmit = (url.trim() || imageFile) && !loading;
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '40px 24px 80px' }}>
         <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 4 }}>Add Product</div>
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 28 }}>
-          Scrape a product page, upload a screenshot, or upload a PDF. AI extracts the data and we calculate the GoodKibble score.
+          Paste a product page URL, upload a screenshot of the label, or both. AI extracts the data and we calculate the GoodKibble score.
         </p>
 
-        {/* Tabs */}
-        <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid #ede8df', marginBottom: 24 }}>
-          {tabs.map(t => {
-            const active = tab === t.key;
-            return (
-              <button key={t.key} onClick={() => { setTab(t.key); reset(); }} style={{
-                flex: 1, padding: '12px 0', background: 'none', border: 'none',
-                borderBottom: active ? '2px solid #C9A84C' : '2px solid transparent',
-                color: active ? '#1a1612' : '#b5aa99', fontSize: 14, fontWeight: active ? 600 : 500,
-                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
-              }}>{t.label}</button>
-            );
-          })}
-        </div>
-
-        {/* Tab: URL */}
-        {tab === 'url' && !result && (
-          <form onSubmit={submitURL}>
-            <div style={{ display: 'flex', gap: 10 }}>
+        {!result && (
+          <form onSubmit={handleSubmit}>
+            {/* URL Input */}
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 6, display: 'block', letterSpacing: 0.5, textTransform: 'uppercase' }}>Product URL</label>
               <input type="url" value={url} onChange={e => setUrl(e.target.value)} disabled={loading}
                 placeholder="https://www.chewy.com/product/..."
-                style={{ flex: 1, padding: '12px 16px', borderRadius: 12, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.5 : 1 }}
+                style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.5 : 1, boxSizing: 'border-box' }}
               />
-              <button type="submit" disabled={loading || !url.trim()} style={{
-                padding: '12px 28px', borderRadius: 100, border: 'none',
-                background: loading ? '#ede8df' : '#1a1612', color: loading ? '#b5aa99' : '#faf8f4',
-                fontSize: 14, fontWeight: 700, cursor: loading ? 'default' : 'pointer',
-                fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap',
-              }}>Scrape &amp; Score</button>
+            </div>
+
+            {/* Image Upload */}
+            <div style={{ marginBottom: 20 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 6, display: 'block', letterSpacing: 0.5, textTransform: 'uppercase' }}>
+                Screenshot of Guaranteed Analysis <span style={{ fontWeight: 400, textTransform: 'none' }}>(optional)</span>
+              </label>
+
+              {imagePreview ? (
+                <div style={{ position: 'relative', display: 'inline-block' }}>
+                  <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 12, border: '1px solid #ede8df' }} />
+                  <button type="button" onClick={removeImage} style={{
+                    position: 'absolute', top: 6, right: 6, width: 24, height: 24, borderRadius: '50%',
+                    background: 'rgba(0,0,0,0.5)', color: '#fff', border: 'none', cursor: 'pointer',
+                    fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>&times;</button>
+                </div>
+              ) : (
+                <div
+                  onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+                  onDragLeave={() => setDragOver(false)}
+                  onDrop={e => { e.preventDefault(); setDragOver(false); handleImageSelect(e.dataTransfer?.files?.[0]); }}
+                  onClick={() => !loading && fileRef.current?.click()}
+                  style={{
+                    border: `2px dashed ${dragOver ? '#C9A84C' : '#ede8df'}`,
+                    borderRadius: 14, padding: '28px 20px', textAlign: 'center',
+                    background: dragOver ? '#faf5e8' : '#fff', cursor: loading ? 'default' : 'pointer',
+                    transition: 'all 0.2s', opacity: loading ? 0.5 : 1,
+                  }}
+                >
+                  <div style={{ fontSize: 28, marginBottom: 8, opacity: 0.3 }}>{'\u{1F4F7}'}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1612', marginBottom: 4, fontFamily: "'DM Sans', sans-serif" }}>
+                    Drop an image here or click to browse
+                  </div>
+                  <div style={{ fontSize: 12, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
+                    Upload a screenshot showing the GA if it&rsquo;s not in the page text
+                  </div>
+                </div>
+              )}
+              <input ref={fileRef} type="file" accept="image/*" hidden onChange={e => handleImageSelect(e.target.files?.[0])} />
+            </div>
+
+            {/* Submit */}
+            <button type="submit" disabled={!canSubmit} style={{
+              width: '100%', padding: 14, borderRadius: 100, border: 'none',
+              background: canSubmit ? '#1a1612' : '#ede8df', color: canSubmit ? '#faf8f4' : '#b5aa99',
+              fontSize: 15, fontWeight: 700, cursor: canSubmit ? 'pointer' : 'default',
+              fontFamily: "'DM Sans', sans-serif",
+            }}>
+              {loading ? 'Processing...' : imageFile && url.trim() ? 'Scrape Page + Read Screenshot' : imageFile ? 'Read Screenshot & Score' : 'Scrape & Score'}
+            </button>
+
+            {/* Mode hint */}
+            <div style={{ textAlign: 'center', marginTop: 10, fontSize: 12, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
+              {url.trim() && imageFile ? 'Combo mode: page data from URL + GA values from screenshot' :
+               url.trim() ? 'URL mode: extracting everything from the product page' :
+               imageFile ? 'Image mode: extracting everything from the screenshot' :
+               'Enter a URL, upload a screenshot, or both'}
             </div>
           </form>
-        )}
-
-        {/* Tab: Image */}
-        {tab === 'image' && !result && (
-          <div
-            onDragOver={e => { e.preventDefault(); setDragOver(true); }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={handleDrop}
-            onClick={() => !loading && fileRef.current?.click()}
-            style={{
-              border: `2px dashed ${dragOver ? '#C9A84C' : '#ede8df'}`,
-              borderRadius: 16, padding: '48px 24px', textAlign: 'center',
-              background: dragOver ? '#faf5e8' : '#fff', cursor: loading ? 'default' : 'pointer',
-              transition: 'all 0.2s', opacity: loading ? 0.5 : 1,
-            }}
-          >
-            <div style={{ fontSize: 36, marginBottom: 12, opacity: 0.4 }}>{'\u{1F4F7}'}</div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
-              Drop an image here or click to browse
-            </div>
-            <div style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", maxWidth: 400, margin: '0 auto' }}>
-              Take a screenshot of the product page showing the Guaranteed Analysis and ingredient list, or photograph the bag
-            </div>
-            <input ref={fileRef} type="file" accept="image/*" hidden onChange={e => submitFile(e.target.files?.[0])} />
-          </div>
-        )}
-
-        {/* Tab: PDF */}
-        {tab === 'pdf' && !result && (
-          <div
-            onDragOver={e => { e.preventDefault(); setDragOver(true); }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={handleDrop}
-            onClick={() => !loading && fileRef.current?.click()}
-            style={{
-              border: `2px dashed ${dragOver ? '#C9A84C' : '#ede8df'}`,
-              borderRadius: 16, padding: '48px 24px', textAlign: 'center',
-              background: dragOver ? '#faf5e8' : '#fff', cursor: loading ? 'default' : 'pointer',
-              transition: 'all 0.2s', opacity: loading ? 0.5 : 1,
-            }}
-          >
-            <div style={{ fontSize: 36, marginBottom: 12, opacity: 0.4 }}>{'\u{1F4C4}'}</div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
-              Drop a PDF here or click to browse
-            </div>
-            <div style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
-              Upload the product spec sheet or nutritional PDF
-            </div>
-            <input ref={fileRef} type="file" accept=".pdf" hidden onChange={e => submitFile(e.target.files?.[0])} />
-          </div>
         )}
 
         {/* Loading */}
@@ -238,15 +218,15 @@ export default function AddProductPage() {
             marginTop: 20, fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#b5483a',
           }}>
             {error}
-            {(error.includes('403') || error.includes('blocked') || error.includes('Firecrawl')) && (
+            {(error.includes('403') || error.includes('blocked') || error.includes('Firecrawl')) && !imageFile && (
               <div style={{ marginTop: 8, fontSize: 12, color: '#8a7e72' }}>
-                Tip: This site may block scrapers. Try the <strong>Screenshot</strong> or <strong>PDF</strong> tab instead.
+                Tip: This site may block scrapers. Try uploading a <strong>screenshot</strong> of the product page too.
               </div>
             )}
           </div>
         )}
 
-        {/* Success banner */}
+        {/* Success */}
         {result?.success && (
           <div style={{
             padding: '14px 20px', borderRadius: 12, background: '#e6f4e0', border: '1px solid #c4e0ba',
@@ -264,7 +244,6 @@ export default function AddProductPage() {
         {/* Result Card */}
         {p && (
           <div style={{ background: '#fff', borderRadius: 20, border: '1px solid #ede8df', overflow: 'hidden', marginTop: 20 }}>
-            {/* Header */}
             <div style={{ display: 'flex', gap: 20, padding: 24, borderBottom: '1px solid #f5f2ec' }}>
               {p.image_url && (
                 <div style={{ width: 80, height: 100, borderRadius: 10, overflow: 'hidden', background: '#f5f2ec', flexShrink: 0 }}>
@@ -279,7 +258,6 @@ export default function AddProductPage() {
               </div>
             </div>
 
-            {/* Score */}
             <div style={{ padding: 24, borderBottom: '1px solid #f5f2ec', textAlign: 'center' }}>
               <div style={{
                 fontSize: 52, fontWeight: 900, fontFamily: "'Playfair Display', serif",
@@ -293,7 +271,6 @@ export default function AddProductPage() {
               }}>{s?.label || 'Scored'}</div>
             </div>
 
-            {/* GA + DMB */}
             <div style={{ padding: 24, borderBottom: '1px solid #f5f2ec' }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>Guaranteed Analysis (DMB)</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
@@ -312,7 +289,6 @@ export default function AddProductPage() {
               </div>
             </div>
 
-            {/* Category Breakdown */}
             {s?.categories && (
               <div style={{ padding: 24, borderBottom: '1px solid #f5f2ec' }}>
                 <div style={{ fontSize: 11, fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>Score Breakdown</div>
@@ -334,7 +310,6 @@ export default function AddProductPage() {
               </div>
             )}
 
-            {/* Ingredients */}
             {p.ingredients && (
               <div style={{ padding: 24, borderBottom: '1px solid #f5f2ec' }}>
                 <div style={{ fontSize: 11, fontWeight: 700, color: '#C9A84C', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>Ingredients</div>
@@ -342,7 +317,6 @@ export default function AddProductPage() {
               </div>
             )}
 
-            {/* Links */}
             <div style={{ padding: '14px 24px', background: '#faf8f5', display: 'flex', gap: 16 }}>
               {p.slug && p.brand_slug && (
                 <a href={`/dog-food/${p.brand_slug}/${p.slug}`} style={{ fontSize: 13, fontWeight: 600, color: '#C9A84C', textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" }}>View on Site &rarr;</a>

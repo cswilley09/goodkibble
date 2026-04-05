@@ -5,14 +5,6 @@ import { computeScore } from '@/lib/scoring';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 120;
 
-/*
-  ENV VARS:
-  - ADMIN_SECRET
-  - ANTHROPIC_API_KEY (console.anthropic.com)
-  - FIRECRAWL_API_KEY (firecrawl.dev)
-  - SUPABASE_SERVICE_ROLE_KEY
-*/
-
 function getSupabase() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -31,12 +23,12 @@ function estimateAsh(proteinDmb) {
   return 7;
 }
 
-const EXTRACT_PROMPT = `You are a dog food product data extractor. Extract the following and return ONLY valid JSON with no other text:
+const FULL_EXTRACT_PROMPT = `You are a dog food product data extractor. Extract the following and return ONLY valid JSON with no other text:
 {
   "brand": "string",
   "name": "string (product name without brand prefix)",
   "flavor": "string or null",
-  "protein": number (crude protein % from guaranteed analysis, number only, no % sign),
+  "protein": number (crude protein % from guaranteed analysis, number only),
   "fat": number (crude fat %, number only),
   "fiber": number (crude fiber %, number only),
   "moisture": number (moisture %, number only),
@@ -45,7 +37,27 @@ const EXTRACT_PROMPT = `You are a dog food product data extractor. Extract the f
   "image_url": "absolute URL of the main product image, or null",
   "primary_protein": "the main animal protein source e.g. Salmon"
 }
-Important: protein, fat, fiber, moisture MUST be numbers without % signs. If you cannot find guaranteed analysis data, return null for those fields.`;
+Important: protein, fat, fiber, moisture MUST be numbers without % signs.`;
+
+const PAGE_ONLY_PROMPT = `You are a dog food product data extractor. Extract from this product page: brand, name, flavor, ingredients (the COMPLETE list exactly as shown), image_url (absolute URL), and primary_protein. Do NOT extract Guaranteed Analysis numbers — ignore any protein/fat/fiber/moisture values. Return ONLY valid JSON with no other text:
+{
+  "brand": "string",
+  "name": "string (product name without brand prefix)",
+  "flavor": "string or null",
+  "ingredients": "the COMPLETE ingredient list exactly as shown, as a single string",
+  "image_url": "absolute URL of the main product image, or null",
+  "primary_protein": "the main animal protein source e.g. Salmon"
+}`;
+
+const GA_IMAGE_PROMPT = `Read the Guaranteed Analysis from this image of a dog food label or product page. Return ONLY valid JSON with no other text:
+{
+  "protein": number (crude protein %, number only, no % sign),
+  "fat": number (crude fat %, number only),
+  "fiber": number (crude fiber %, number only),
+  "moisture": number (moisture %, number only),
+  "ash": number or null (ash % if listed, otherwise null)
+}
+Return just the numbers without % signs.`;
 
 async function callClaude(messages) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -72,10 +84,23 @@ async function callClaude(messages) {
   return JSON.parse(jsonMatch[0]);
 }
 
+async function scrapeWithFirecrawl(url) {
+  if (!process.env.FIRECRAWL_API_KEY) {
+    throw new Error('FIRECRAWL_API_KEY not configured');
+  }
+  const FirecrawlApp = (await import('@mendable/firecrawl-js')).default;
+  const firecrawl = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY });
+  const result = await firecrawl.scrapeUrl(url, { formats: ['markdown'] });
+  if (!result.success) throw new Error(`Firecrawl failed: ${result.error || 'Unknown error'}`);
+  const markdown = result.markdown || result.data?.markdown || '';
+  if (!markdown || markdown.length < 50) throw new Error('Firecrawl returned empty or very short content');
+  return markdown.slice(0, 50000);
+}
+
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { url, admin_secret, mode = 'url', image_base64, image_type, pdf_base64 } = body;
+    const { url, admin_secret, image_base64, image_type } = body;
 
     // Auth
     const secret = process.env.ADMIN_SECRET || 'gk_admin_2026';
@@ -87,70 +112,58 @@ export async function POST(request) {
       return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 500 });
     }
 
+    if (!url && !image_base64) {
+      return NextResponse.json({ error: 'Provide a URL, an image, or both.' }, { status: 400 });
+    }
+
     let extracted;
 
-    // ═══ MODE: URL (Firecrawl + Claude) ═══
-    if (mode === 'url') {
-      if (!url) return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+    // ═══ COMBO MODE: URL + Image ═══
+    if (url && image_base64) {
+      // Step 1: Scrape URL for page data (brand, name, ingredients, image_url)
+      const markdown = await scrapeWithFirecrawl(url);
+      const pageData = await callClaude([{
+        role: 'user',
+        content: `${PAGE_ONLY_PROMPT}\n\nProduct page content:\n${markdown}`,
+      }]);
 
-      if (!process.env.FIRECRAWL_API_KEY) {
-        return NextResponse.json({ error: 'FIRECRAWL_API_KEY not configured' }, { status: 500 });
-      }
+      // Step 2: Read GA from the image
+      const gaData = await callClaude([{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: image_type || 'image/png', data: image_base64 } },
+          { type: 'text', text: GA_IMAGE_PROMPT },
+        ],
+      }]);
 
-      const FirecrawlApp = (await import('@mendable/firecrawl-js')).default;
-      const firecrawl = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY });
+      // Merge
+      extracted = { ...pageData, ...gaData };
+    }
 
-      const scrapeResult = await firecrawl.scrapeUrl(url, { formats: ['markdown'] });
-      if (!scrapeResult.success) {
-        throw new Error(`Firecrawl failed: ${scrapeResult.error || 'Unknown error'}`);
-      }
-
-      const markdown = scrapeResult.markdown || scrapeResult.data?.markdown || '';
-      if (!markdown || markdown.length < 50) {
-        throw new Error('Firecrawl returned empty or very short content');
-      }
-
-      const trimmed = markdown.slice(0, 50000);
+    // ═══ URL ONLY ═══
+    else if (url) {
+      const markdown = await scrapeWithFirecrawl(url);
       extracted = await callClaude([{
         role: 'user',
-        content: `${EXTRACT_PROMPT}\n\nProduct page content:\n${trimmed}`,
+        content: `${FULL_EXTRACT_PROMPT}\n\nProduct page content:\n${markdown}`,
       }]);
     }
 
-    // ═══ MODE: IMAGE (Claude Vision) ═══
-    else if (mode === 'image') {
-      if (!image_base64) return NextResponse.json({ error: 'image_base64 is required' }, { status: 400 });
-
+    // ═══ IMAGE ONLY ═══
+    else {
       extracted = await callClaude([{
         role: 'user',
         content: [
           { type: 'image', source: { type: 'base64', media_type: image_type || 'image/png', data: image_base64 } },
-          { type: 'text', text: `Extract dog food product data from this image of a product page or label.\n\n${EXTRACT_PROMPT}` },
+          { type: 'text', text: `Extract dog food product data from this image of a product page or label.\n\n${FULL_EXTRACT_PROMPT}` },
         ],
       }]);
-    }
-
-    // ═══ MODE: PDF (Claude Document) ═══
-    else if (mode === 'pdf') {
-      if (!pdf_base64) return NextResponse.json({ error: 'pdf_base64 is required' }, { status: 400 });
-
-      extracted = await callClaude([{
-        role: 'user',
-        content: [
-          { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: pdf_base64 } },
-          { type: 'text', text: `Extract dog food product data from this PDF spec sheet.\n\n${EXTRACT_PROMPT}` },
-        ],
-      }]);
-    }
-
-    else {
-      return NextResponse.json({ error: 'Invalid mode. Use "url", "image", or "pdf".' }, { status: 400 });
     }
 
     // ═══ VALIDATE & CALCULATE ═══
     if (extracted.protein == null || extracted.fat == null || extracted.fiber == null || extracted.moisture == null) {
       return NextResponse.json({
-        error: 'Could not extract all guaranteed analysis values. Try a clearer image or a different source.',
+        error: 'Could not extract all guaranteed analysis values. Try uploading a clearer screenshot of the GA section.',
         extracted,
       }, { status: 422 });
     }
@@ -173,14 +186,13 @@ export async function POST(request) {
     const slug = slugify(extracted.name);
     const brand_slug = slugify(extracted.brand);
 
-    // DB row — exclude protein_dmb, fat_dmb, fiber_dmb, carbs_dmb (generated columns)
     const product = {
       name: extracted.name,
       brand: extracted.brand,
       brand_slug,
       slug,
       flavor: extracted.flavor || null,
-      url: mode === 'url' ? url : null,
+      url: url || null,
       image_url: extracted.image_url || null,
       primary_protein: extracted.primary_protein || null,
       protein: Number(extracted.protein),
@@ -194,7 +206,7 @@ export async function POST(request) {
       scored_at: new Date().toISOString(),
     };
 
-    // Check for existing product
+    // Check for existing
     const supabase = getSupabase();
     const { data: existing } = await supabase
       .from('dog_foods_v2')
@@ -221,7 +233,8 @@ export async function POST(request) {
     if (dbError) {
       return NextResponse.json({
         success: false, error: `Database: ${dbError.message}`,
-        product, score: scoreResult,
+        product: { ...product, protein_dmb, fat_dmb, fiber_dmb, carbs_dmb },
+        score: scoreResult,
       }, { status: 500 });
     }
 
