@@ -56,7 +56,7 @@ export default function AddProductPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_ADMIN_SECRET || 'goodkibble_admin_2026'}`,
+          'Authorization': 'Bearer gk_admin_2026',
         },
         body: JSON.stringify({ url: url.trim() }),
       });
