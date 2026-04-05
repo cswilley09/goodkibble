@@ -149,11 +149,17 @@ export default function AddProductPage() {
   }
 
   async function approveCurrent() {
-    const item = bulkItems[reviewIdx];
+    const idx = reviewIdx;
+    const total = bulkItems.length;
+    const item = bulkItems[idx];
     if (!item?.product) return;
-    setApprovingIdx(reviewIdx);
+    setApprovingIdx(idx);
 
-    // Save immediately to database
+    // Advance FIRST so UI moves to next product while saving happens
+    if (idx < total - 1) setReviewIdx(idx + 1);
+    else setBulkPhase('summary');
+
+    // Save to database in background
     try {
       const res = await fetch('/api/admin/save-product', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -161,23 +167,21 @@ export default function AddProductPage() {
       });
       const data = await res.json();
       if (data.success) {
-        setBulkItems(prev => prev.map((it, i) => i === reviewIdx ? { ...it, status: 'approved', savedProduct: data.product } : it));
+        setBulkItems(prev => prev.map((it, i) => i === idx ? { ...it, status: 'approved', savedProduct: data.product } : it));
       } else {
-        setBulkItems(prev => prev.map((it, i) => i === reviewIdx ? { ...it, status: 'approved', saveError: data.error } : it));
+        setBulkItems(prev => prev.map((it, i) => i === idx ? { ...it, status: 'approved', saveError: data.error } : it));
       }
     } catch (err) {
-      setBulkItems(prev => prev.map((it, i) => i === reviewIdx ? { ...it, status: 'approved', saveError: err.message } : it));
+      setBulkItems(prev => prev.map((it, i) => i === idx ? { ...it, status: 'approved', saveError: err.message } : it));
     }
-
     setApprovingIdx(-1);
-    // Advance
-    if (reviewIdx < bulkItems.length - 1) setReviewIdx(prev => prev + 1);
-    else setBulkPhase('summary');
   }
 
   function skipCurrent() {
-    setBulkItems(prev => prev.map((item, i) => i === reviewIdx ? { ...item, status: 'skipped' } : item));
-    if (reviewIdx < bulkItems.length - 1) setReviewIdx(prev => prev + 1);
+    const idx = reviewIdx;
+    const total = bulkItems.length;
+    setBulkItems(prev => prev.map((item, i) => i === idx ? { ...item, status: 'skipped' } : item));
+    if (idx < total - 1) setReviewIdx(idx + 1);
     else setBulkPhase('summary');
   }
 
