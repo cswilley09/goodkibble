@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 
-const ADMIN_PASSWORD = 'goodkibble2026';
+const ADMIN_PASSWORD = 'gk_admin_2026';
 
 export default function AddProductPage() {
   const [authed, setAuthed] = useState(false);
