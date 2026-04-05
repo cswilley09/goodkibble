@@ -288,6 +288,77 @@ async function scrapeFDAVetRecalls(brandMap) {
   }
 }
 
+// SOURCE 4: openFDA Enforcement Reports (animal food)
+const PET_CONFIRM_TERMS = ['dog', 'cat', 'pet', 'puppy', 'kitten', 'treat', 'kibble', 'canine', 'feline', 'animal food', 'chews'];
+
+function fdaDateToISO(d) {
+  if (!d || d.length !== 8) return null;
+  return `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
+}
+
+function isActualPetFood(desc) {
+  if (!desc) return false;
+  const lower = desc.toLowerCase();
+  if (lower.includes('hot dog')) return false;
+  return PET_CONFIRM_TERMS.some(t => lower.includes(t));
+}
+
+async function fetchOpenFDAEnforcement(brandMap) {
+  const search = encodeURIComponent(
+    'product_type:"Food" AND (product_description:"dog" OR product_description:"cat" OR product_description:"pet" OR product_description:"puppy" OR product_description:"kitten" OR product_description:"treat" OR product_description:"kibble" OR product_description:"canine" OR product_description:"feline" OR recalling_firm:"pet food" OR recalling_firm:"pet" OR product_description:"animal food")'
+  );
+  const url = `https://api.fda.gov/food/enforcement.json?search=${search}&sort=report_date:desc&limit=100`;
+
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
+    if (!res.ok) {
+      if (res.status === 404) return []; // no results
+      throw new Error(`openFDA API: ${res.status}`);
+    }
+    const data = await res.json();
+    const items = data.results || [];
+
+    const results = [];
+    for (const r of items) {
+      // Filter out false positives
+      if (!isActualPetFood(r.product_description)) continue;
+
+      const brandRaw = r.recalling_firm || '';
+      const brand = extractBrand(brandRaw + ' ' + (r.product_description || ''), brandMap) || cleanBrand(brandRaw) || brandRaw;
+
+      // Map FDA status
+      let status = 'Ongoing';
+      if (r.status) {
+        const s = r.status.toLowerCase();
+        if (s.includes('terminated')) status = 'Terminated';
+        else if (s.includes('completed')) status = 'Completed';
+      }
+
+      results.push({
+        recall_number: r.recall_number,
+        brand_name: brand || null,
+        brand_name_raw: brandRaw,
+        product_description: cleanText(r.product_description),
+        reason: cleanText(r.reason_for_recall),
+        severity: r.classification || null,
+        status,
+        recall_date: fdaDateToISO(r.recall_initiation_date),
+        report_date: fdaDateToISO(r.report_date),
+        source: 'openfda_enforcement',
+        source_url: `https://api.fda.gov/food/enforcement.json?search=recall_number:"${r.recall_number}"`,
+        distribution_pattern: cleanText(r.distribution_pattern),
+        lot_numbers: cleanText(r.code_info),
+      });
+    }
+
+    console.log(`[poll-recalls] openFDA Enforcement: ${items.length} raw → ${results.length} pet food`);
+    return results;
+  } catch (err) {
+    console.error('[poll-recalls] openFDA Enforcement error:', err.message);
+    return [];
+  }
+}
+
 export async function GET(request) {
   // Auth check
   const authHeader = request.headers.get('authorization');
@@ -314,14 +385,15 @@ export async function GET(request) {
       .from('brand_name_map')
       .select('external_name, internal_brand_name');
 
-    // Scrape all three sources in parallel
-    const [source1Results, source2Results, source3Results] = await Promise.all([
+    // Scrape all four sources in parallel
+    const [source1Results, source2Results, source3Results, source4Results] = await Promise.all([
       scrapeFDAOutbreaks(brandMap || []),
       scrapeFDARSS(brandMap || []),
       scrapeFDAVetRecalls(brandMap || []),
+      fetchOpenFDAEnforcement(brandMap || []),
     ]);
 
-    const allResults = [...source1Results, ...source2Results, ...source3Results];
+    const allResults = [...source1Results, ...source2Results, ...source3Results, ...source4Results];
     console.log(`[poll-recalls] Total from all sources: ${allResults.length}`);
 
     if (allResults.length === 0) {
@@ -329,7 +401,7 @@ export async function GET(request) {
         status: 'completed', records_found: 0, records_processed: 0,
         completed_at: new Date().toISOString(),
       }).eq('id', logId);
-      return NextResponse.json({ success: true, source1Count: 0, source2Count: 0, source3Count: 0, newRecalls: 0 });
+      return NextResponse.json({ success: true, source1Count: 0, source2Count: 0, source3Count: 0, source4Count: 0, newRecalls: 0 });
     }
 
     // Check for existing recall_numbers
@@ -448,6 +520,7 @@ export async function GET(request) {
       source1Count: source1Results.length,
       source2Count: source2Results.length,
       source3Count: source3Results.length,
+      source4Count: source4Results.length,
       newRecalls: insertedCount,
     });
 
