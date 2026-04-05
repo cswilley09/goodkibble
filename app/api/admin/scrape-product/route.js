@@ -194,11 +194,27 @@ export async function POST(request) {
       scored_at: new Date().toISOString(),
     };
 
-    // Insert
+    // Check for existing product
     const supabase = getSupabase();
+    const { data: existing } = await supabase
+      .from('dog_foods_v2')
+      .select('id, slug')
+      .eq('slug', slug)
+      .maybeSingle();
+
+    if (existing) {
+      return NextResponse.json({
+        success: false,
+        error: 'This product already exists in the database',
+        product: { ...product, protein_dmb, fat_dmb, fiber_dmb, carbs_dmb },
+        score: scoreResult,
+      }, { status: 409 });
+    }
+
+    // Insert
     const { data: inserted, error: dbError } = await supabase
       .from('dog_foods_v2')
-      .upsert(product, { onConflict: 'slug', ignoreDuplicates: true })
+      .insert(product)
       .select('*')
       .single();
 
