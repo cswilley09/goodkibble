@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import SignUpButton from '../components/SignUpButton';
 import { useAuth } from '../components/AuthContext';
+import DashboardRecallAlert from '../components/DashboardRecallAlert';
 
 const BREEDS = [
   'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akita', 'Alaskan Malamute',
@@ -469,6 +470,8 @@ export default function ProfilePage() {
           <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20, alignItems: 'start' }}>
             {/* ── LEFT COLUMN ── */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {/* Recall Alert (if matched) */}
+              {dog && <DashboardRecallAlert dogName={dog.dog_name} currentFood={dog.current_food} currentFoodSlug={dog.current_food_slug} />}
               {/* Current Food Card */}
               <div style={cardStyle}>
                 <div style={eyebrow()}>{displayName}&rsquo;s Current Food</div>
