@@ -296,10 +296,14 @@ function fdaDateToISO(d) {
   return `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
 }
 
-function isActualPetFood(desc) {
+const EXCLUDE_TERMS = ['hot dog', 'human', 'infant', 'baby food', 'chicken feed', 'poultry feed', 'cattle', 'hog', 'swine', 'livestock', 'horse', 'equine'];
+
+function isActualPetFood(desc, firm) {
   if (!desc) return false;
-  const lower = desc.toLowerCase();
-  if (lower.includes('hot dog')) return false;
+  const lower = (desc + ' ' + (firm || '')).toLowerCase();
+  // Exclude clearly human/livestock food
+  if (EXCLUDE_TERMS.some(t => lower.includes(t))) return false;
+  // Must contain a pet food keyword
   return PET_CONFIRM_TERMS.some(t => lower.includes(t));
 }
 
@@ -321,7 +325,7 @@ async function fetchOpenFDAEnforcement(brandMap) {
     const results = [];
     for (const r of items) {
       // Filter out false positives
-      if (!isActualPetFood(r.product_description)) continue;
+      if (!isActualPetFood(r.product_description, r.recalling_firm)) continue;
 
       const brandRaw = r.recalling_firm || '';
       const brand = extractBrand(brandRaw + ' ' + (r.product_description || ''), brandMap) || cleanBrand(brandRaw) || brandRaw;
