@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import SignUpButton from '../components/SignUpButton';
+import RecallsNav from '../components/RecallsNav';
 import { useAuth } from '../components/AuthContext';
 import DashboardRecallAlert from '../components/DashboardRecallAlert';
 
@@ -386,7 +387,11 @@ export default function ProfilePage() {
       <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
         <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid #ede8df', background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40 }}>
           <a href="/" style={{ textDecoration: 'none' }}><span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span></a>
-          <SignUpButton />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
+            <RecallsNav />
+            <SignUpButton />
+          </div>
         </nav>
         <div style={{ maxWidth: 500, margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 20 }}>{'\u{1F436}'}</div>
@@ -418,7 +423,11 @@ export default function ProfilePage() {
         <a href="/" style={{ textDecoration: 'none' }}>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
-        <SignUpButton />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
+          <RecallsNav />
+          <SignUpButton />
+        </div>
       </nav>
 
       <div className="profile-container" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
@@ -1184,6 +1193,7 @@ export default function ProfilePage() {
       <style>{`
         .saved-scroll-row::-webkit-scrollbar { display: none; }
         @media (max-width: 768px) {
+          .nav-discover-link { display: none !important; }
           .profile-container { padding: 20px 16px 60px !important; }
           .dashboard-grid { grid-template-columns: 1fr !important; }
           .current-food-layout { flex-direction: column !important; align-items: center !important; text-align: center !important; }
