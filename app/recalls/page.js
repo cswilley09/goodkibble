@@ -191,7 +191,7 @@ export default function RecallsPage() {
                       }}>{urgent ? 'URGENT' : 'CAUTION'}</span>
 
                       {/* Content area */}
-                      <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                           <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
                             {r.brand_name || 'Unknown Brand'}
@@ -215,7 +215,7 @@ export default function RecallsPage() {
                       </div>
 
                       {/* Date area */}
-                      <div className="recall-date" style={{ textAlign: 'right', flexShrink: 0 }}>
+                      <div className="recall-date" style={{ textAlign: 'right', flexShrink: 0, minWidth: 100 }}>
                         <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
                           {formatDate(r.recall_date || r.report_date)}
                         </div>
