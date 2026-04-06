@@ -59,10 +59,10 @@ function resolveSourceUrl(recall) {
   const url = recall.source_url;
   const recallNum = recall.recall_number;
 
-  // openFDA enforcement — use recall_number to search the FDA enforcement reports database
+  // openFDA enforcement — search the FDA recalls page by recall number
   if (recall.source === 'openfda_enforcement' || (url && url.includes('api.fda.gov/'))) {
     if (recallNum) {
-      return `https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfres/res.cfm?start_search=1&search_term=${encodeURIComponent(recallNum)}`;
+      return `https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts?search_api_fulltext=${encodeURIComponent(recallNum)}`;
     }
     return 'https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts';
   }
