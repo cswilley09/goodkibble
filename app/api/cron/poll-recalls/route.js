@@ -289,22 +289,44 @@ async function scrapeFDAVetRecalls(brandMap) {
 }
 
 // SOURCE 4: openFDA Enforcement Reports (animal food)
-const PET_CONFIRM_TERMS = ['dog', 'cat', 'pet', 'puppy', 'kitten', 'treat', 'kibble', 'canine', 'feline', 'animal food', 'chews'];
+// Word-boundary match to avoid "corn dog", "hush puppy", "treated" false positives
+function wordMatch(text, term) {
+  const re = new RegExp(`(^|[\\s,;:(/"-])${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([\\s,;:)/".!?-]|$)`, 'i');
+  return re.test(text);
+}
+
+const PET_CONFIRM_TERMS = ['dog food', 'dog treat', 'dog treats', 'dog chew', 'dog chews', 'dog bone',
+  'dog snack', 'dog biscuit', 'puppy food', 'puppy treat', 'cat food', 'cat treat',
+  'pet food', 'pet treat', 'pet snack', 'kitten food', 'canine', 'feline', 'kibble',
+  'animal food', 'freeze-dried dog', 'raw dog', 'dehydrated dog'];
+const PET_BROAD_TERMS = ['dog', 'cat', 'pet', 'puppy', 'kitten', 'chews', 'treat'];
+const PET_FOOD_CONTEXT = ['food', 'treat', 'chew', 'snack', 'biscuit', 'kibble', 'meal', 'bone', 'diet', 'raw', 'freeze', 'grain', 'recipe', 'formula', 'supplement'];
 
 function fdaDateToISO(d) {
   if (!d || d.length !== 8) return null;
   return `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
 }
 
-const EXCLUDE_TERMS = ['hot dog', 'human', 'infant', 'baby food', 'chicken feed', 'poultry feed', 'cattle', 'hog', 'swine', 'livestock', 'horse', 'equine'];
+const EXCLUDE_TERMS = ['corn dog', 'hot dog', 'hot-dog', 'chili dog', 'slaw dog', 'dog bun',
+  'hush puppy', 'hush puppies', 'puppy chow snack mix',
+  'human', 'infant formula', 'baby food',
+  'chicken feed', 'poultry feed', 'cattle', 'cattle feed', 'hog', 'hog feed',
+  'swine', 'livestock', 'horse', 'horse feed', 'equine'];
 
 function isActualPetFood(desc, firm) {
   if (!desc) return false;
   const lower = (desc + ' ' + (firm || '')).toLowerCase();
-  // Exclude clearly human/livestock food
+  // Exclude false positives first
   if (EXCLUDE_TERMS.some(t => lower.includes(t))) return false;
-  // Must contain a pet food keyword
-  return PET_CONFIRM_TERMS.some(t => lower.includes(t));
+  // Check specific pet food phrases (high confidence)
+  if (PET_CONFIRM_TERMS.some(t => wordMatch(lower, t))) return true;
+  // Check broader terms — must also have food context
+  if (PET_BROAD_TERMS.some(t => wordMatch(lower, t))) {
+    if (PET_FOOD_CONTEXT.some(f => lower.includes(f))) return true;
+    const firmLower = (firm || '').toLowerCase();
+    if (['pet', 'animal', 'paw', 'bark', 'woof', 'tail'].some(p => firmLower.includes(p))) return true;
+  }
+  return false;
 }
 
 async function fetchOpenFDAEnforcement(brandMap) {
@@ -349,7 +371,7 @@ async function fetchOpenFDAEnforcement(brandMap) {
         recall_date: fdaDateToISO(r.recall_initiation_date),
         report_date: fdaDateToISO(r.report_date),
         source: 'openfda_enforcement',
-        source_url: `https://api.fda.gov/food/enforcement.json?search=recall_number:"${r.recall_number}"`,
+        source_url: `https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts`,
         distribution_pattern: cleanText(r.distribution_pattern),
         lot_numbers: cleanText(r.code_info),
       });

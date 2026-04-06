@@ -3,19 +3,54 @@ import { createClient } from '@supabase/supabase-js';
 
 export const dynamic = 'force-dynamic';
 
-const DOG_KEYWORDS = ['dog', 'canine', 'puppy', 'kibble', 'pet food', 'pet treat', 'dog food', 'dog treat'];
-const EXCLUDE_KEYWORDS = ['cat food', 'cat treat', 'feline', 'kitten food', 'bird', 'fish food', 'reptile', 'horse', 'cattle', 'poultry feed', 'chicken feed', 'hog', 'swine', 'livestock'];
+// Word-boundary match — prevents "corn dog", "hush puppy", "treated" false positives
+function wordMatch(text, term) {
+  const re = new RegExp(`(^|[\\s,;:(/"-])${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([\\s,;:)/".!?-]|$)`, 'i');
+  return re.test(text);
+}
+
+// These must appear as whole words/phrases in the product text
+const DOG_TERMS = [
+  'dog food', 'dog treat', 'dog treats', 'dog chew', 'dog chews', 'dog bone', 'dog bones',
+  'dog snack', 'dog snacks', 'dog biscuit', 'dog biscuits', 'dog meal',
+  'puppy food', 'puppy treat', 'puppy treats', 'puppy chew',
+  'pet food', 'pet treat', 'pet treats', 'pet snack',
+  'raw dog', 'freeze-dried dog', 'freeze dried dog', 'dehydrated dog',
+  'canine', 'kibble',
+];
+// Broader terms that confirm dog-relatedness (still word-boundary checked)
+const DOG_BROAD = ['dog', 'puppy'];
+// If any of these appear, it's NOT dog food even if "dog" appears
+const FALSE_POSITIVE_PHRASES = [
+  'corn dog', 'hot dog', 'chili dog', 'hush puppy', 'hush puppies',
+  'puppy chow snack mix', 'slaw dog', 'dog bun', 'hot-dog',
+  'human', 'infant formula', 'baby food',
+  'chicken feed', 'poultry feed', 'cattle feed', 'hog feed', 'swine feed',
+  'livestock', 'horse feed', 'equine',
+];
 
 function isDogRelated(recall) {
   const text = ((recall.product_description || '') + ' ' + (recall.brand_name || '') + ' ' + (recall.reason || '')).toLowerCase();
-  // Exclude clearly non-dog items
-  if (EXCLUDE_KEYWORDS.some(k => text.includes(k)) && !DOG_KEYWORDS.some(k => text.includes(k))) return false;
-  // Include if it mentions dog/pet keywords OR is from a known pet food source
-  if (DOG_KEYWORDS.some(k => text.includes(k))) return true;
-  // Include if it mentions "pet" broadly
-  if (text.includes('pet')) return true;
-  // Include if source is fda_outbreaks (these are always pet-related from that page)
-  if (recall.source === 'fda_outbreaks') return true;
+
+  // Always trust manual and google_news (admin-approved) and fda_outbreaks (pet-specific page)
+  if (['manual', 'google_news', 'fda_outbreaks'].includes(recall.source)) return true;
+
+  // Check false-positive phrases first
+  if (FALSE_POSITIVE_PHRASES.some(fp => text.includes(fp))) return false;
+
+  // Check specific dog food terms (high confidence)
+  if (DOG_TERMS.some(t => wordMatch(text, t))) return true;
+
+  // Check broader terms with word boundary
+  if (DOG_BROAD.some(t => wordMatch(text, t))) {
+    // "dog" or "puppy" as a standalone word — confirm it's in a food context
+    const foodContext = ['food', 'treat', 'chew', 'snack', 'biscuit', 'kibble', 'meal', 'bone', 'diet', 'nutrition', 'raw', 'freeze', 'grain', 'recipe', 'formula', 'supplement'];
+    if (foodContext.some(f => text.includes(f))) return true;
+    // Also accept if the recalling firm is a known pet company pattern
+    const firm = (recall.brand_name_raw || '').toLowerCase();
+    if (['pet', 'animal', 'paw', 'bark', 'woof', 'tail'].some(p => firm.includes(p))) return true;
+  }
+
   return false;
 }
 
