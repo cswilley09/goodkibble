@@ -178,7 +178,7 @@ export default function RecallsPage() {
 
                     {/* Card content */}
                     <div className="recall-card-inner" style={{
-                      flex: 1, padding: '18px 22px',
+                      flex: 1, minWidth: 0, padding: '18px 22px',
                       display: 'flex', alignItems: 'center', gap: 16,
                     }}>
                       {/* Severity badge */}
@@ -192,8 +192,8 @@ export default function RecallsPage() {
 
                       {/* Content area */}
                       <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                          <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
+                          <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {r.brand_name || 'Unknown Brand'}
                           </span>
                           {multiBrand && (
