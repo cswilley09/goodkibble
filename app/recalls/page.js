@@ -16,6 +16,16 @@ function isUrgent(r) {
   return r.severity === 'Class I' || (r.reason || '').toLowerCase().includes('health');
 }
 
+// Blur levels for free users (index = card position starting at 0)
+function getBlurStyle(index, isPro) {
+  if (isPro) return {};
+  if (index < 2) return {};
+  if (index === 2) return { filter: 'blur(2px)', opacity: 0.85, pointerEvents: 'none' };
+  if (index === 3) return { filter: 'blur(4px)', opacity: 0.7, pointerEvents: 'none' };
+  if (index === 4) return { filter: 'blur(6px)', opacity: 0.55, pointerEvents: 'none' };
+  return { filter: 'blur(8px)', opacity: 0.4, pointerEvents: 'none' };
+}
+
 export default function RecallsPage() {
   const router = useRouter();
   const { isPro } = useAuth();
@@ -24,6 +34,7 @@ export default function RecallsPage() {
   const [gateModal, setGateModal] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
   const [search, setSearch] = useState('');
+  const [proPopup, setProPopup] = useState(false);
 
   useEffect(() => {
     fetch('/api/dashboard/recalls?days=365&type=recalls')
@@ -42,6 +53,21 @@ export default function RecallsPage() {
       .catch(() => setLoading(false));
   }, []);
 
+  // Auto-popup for free users (once per session)
+  useEffect(() => {
+    if (isPro) return;
+    if (sessionStorage.getItem('gk_recalls_popup_shown')) return;
+    const timer = setTimeout(() => {
+      setProPopup(true);
+      sessionStorage.setItem('gk_recalls_popup_shown', '1');
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [isPro]);
+
+  function closeProPopup() {
+    setProPopup(false);
+  }
+
   const filtered = search.trim()
     ? recalls.filter(r => {
         const q = search.toLowerCase();
@@ -51,13 +77,26 @@ export default function RecallsPage() {
       })
     : recalls;
 
-  function handleCardClick(recall) {
+  // For free users, show max 6 cards (blurred after 2) then upgrade card
+  const FREE_MAX_VISIBLE = 6;
+  const displayCards = (!isPro && filtered.length > FREE_MAX_VISIBLE)
+    ? filtered.slice(0, FREE_MAX_VISIBLE)
+    : filtered;
+
+  function handleCardClick(recall, index) {
+    if (!isPro && index >= 2) return; // blurred cards not clickable
     if (isPro) {
       setExpandedId(expandedId === recall.id ? null : recall.id);
     } else {
       setGateModal(recall);
     }
   }
+
+  const benefits = [
+    { title: 'Recall alerts sent to your email', desc: 'Instant notification when the FDA issues a recall on any food your dogs eat' },
+    { title: 'Score change notifications', desc: 'Know when a manufacturer changes their formula or our algorithm updates' },
+    { title: 'Ingredient intelligence', desc: 'Deep-dive into every ingredient with quality signals and sourcing info' },
+  ];
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
@@ -151,26 +190,27 @@ export default function RecallsPage() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {filtered.map(r => {
+            {displayCards.map((r, idx) => {
               const urgent = isUrgent(r);
               const expanded = expandedId === r.id && isPro;
               const multiBrand = (r.brand_name || '').includes('/') || (r.brand_name || '').includes(' and ') || (r.brand_name || '').includes(', ');
+              const blurStyle = getBlurStyle(idx, isPro);
 
               return (
-                <div key={r.id}>
+                <div key={r.id} style={{ ...blurStyle, transition: 'filter 0.3s, opacity 0.3s' }}>
                   {/* Card */}
                   <div
                     className="recall-card"
-                    onClick={() => handleCardClick(r)}
+                    onClick={() => handleCardClick(r, idx)}
                     style={{
                       display: 'flex', alignItems: 'stretch',
                       borderRadius: expanded ? '16px 16px 0 0' : 16, overflow: 'hidden',
-                      cursor: 'pointer',
+                      cursor: (!isPro && idx >= 2) ? 'default' : 'pointer',
                       background: urgent ? '#fef8f8' : '#fff',
                       border: urgent ? '1px solid #e8c4c4' : '1px solid #ede8df',
                       transition: 'box-shadow 0.2s',
                     }}
-                    onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.05)')}
+                    onMouseEnter={e => { if (isPro || idx < 2) e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.05)'; }}
                     onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
                   >
                     {/* Left border strip */}
@@ -272,11 +312,34 @@ export default function RecallsPage() {
                 </div>
               );
             })}
+
+            {/* Upgrade card for free users */}
+            {!isPro && filtered.length > 2 && (
+              <div style={{
+                background: '#fff', borderRadius: 20, border: '1.5px solid #C9A84C',
+                padding: 32, textAlign: 'center', marginTop: 4,
+              }}>
+                <div style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 20, fontWeight: 800, color: '#1a1612', marginBottom: 8 }}>
+                  See all {filtered.length} recalls
+                </div>
+                <p style={{ fontSize: 13, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", marginBottom: 20, lineHeight: 1.5 }}>
+                  Pro members get full access to all recall details plus instant email alerts.
+                </p>
+                <a href="/pro" style={{
+                  display: 'inline-block', padding: '12px 28px', borderRadius: 100,
+                  background: '#C9A84C', color: '#fff', fontSize: 14, fontWeight: 700,
+                  textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+                }}>Unlock with Pro &rarr;</a>
+                <div style={{ fontSize: 12, color: '#b5aa99', marginTop: 10, fontFamily: "'DM Sans', sans-serif" }}>
+                  $29/year &middot; Less than a dog treat
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
 
-      {/* Pro Gate Modal */}
+      {/* Pro Gate Modal (click on card) */}
       {gateModal && (
         <>
           <div onClick={() => setGateModal(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000 }} />
@@ -302,6 +365,54 @@ export default function RecallsPage() {
         </>
       )}
 
+      {/* Auto Pro Popup (1.5s delay, once per session) */}
+      {proPopup && (
+        <>
+          <div onClick={closeProPopup} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000 }} />
+          <div className="pro-popup-modal" style={{
+            position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+            background: '#fff', borderRadius: 24, padding: 36, maxWidth: 460,
+            width: 'calc(100% - 48px)', zIndex: 1001, textAlign: 'center',
+            fontFamily: "'DM Sans', sans-serif",
+          }}>
+            <div onClick={closeProPopup} style={{ position: 'absolute', top: 16, right: 16, fontSize: 18, color: '#b5aa99', cursor: 'pointer' }}>&times;</div>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>{'\u{1F514}'}</div>
+            <h2 style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 24, fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>Stay ahead of recalls</h2>
+            <p style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.6, marginBottom: 24 }}>
+              Don&rsquo;t wait until it&rsquo;s too late to find out your dog&rsquo;s food has been recalled.
+            </p>
+
+            {/* Benefits box */}
+            <div style={{ border: '1px solid #ede8df', borderRadius: 14, padding: '16px 20px', marginBottom: 24, textAlign: 'left' }}>
+              {benefits.map((b, i) => (
+                <div key={i} style={{
+                  display: 'flex', gap: 12, alignItems: 'flex-start', padding: '10px 0',
+                  borderBottom: i < benefits.length - 1 ? '1px solid #f5f2ec' : 'none',
+                }}>
+                  <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>
+                    {i === 0 ? '\u{1F4E8}' : i === 1 ? '\u{1F4CA}' : '\u{1F50D}'}
+                  </span>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{b.title}</div>
+                    <div style={{ fontSize: 11, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginTop: 2, lineHeight: 1.4 }}>{b.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button onClick={() => router.push('/pro')} style={{
+              width: '100%', padding: 14, borderRadius: 100, background: '#C9A84C', color: '#fff',
+              fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer',
+              fontFamily: "'DM Sans', sans-serif",
+            }}>Get GoodKibble Pro &rarr;</button>
+            <p style={{ fontSize: 12, color: '#b5aa99', marginTop: 8, marginBottom: 12 }}>$29/year &middot; Cancel anytime</p>
+            <div onClick={closeProPopup} style={{
+              fontSize: 13, color: '#8a7e72', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            }}>No thanks, I&rsquo;ll check manually</div>
+          </div>
+        </>
+      )}
+
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) {
@@ -313,6 +424,7 @@ export default function RecallsPage() {
           .recall-badge { order: -1; }
           .recall-date { text-align: left !important; width: 100%; margin-top: 4px; }
           .recall-reason { white-space: normal !important; }
+          .pro-popup-modal { padding: 24px !important; }
         }
       `}</style>
     </div>
