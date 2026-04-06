@@ -371,7 +371,9 @@ async function fetchOpenFDAEnforcement(brandMap) {
         recall_date: fdaDateToISO(r.recall_initiation_date),
         report_date: fdaDateToISO(r.report_date),
         source: 'openfda_enforcement',
-        source_url: `https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts`,
+        source_url: r.event_id
+          ? `https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfres/res.cfm?start_search=1&event_id=${r.event_id}`
+          : 'https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts',
         distribution_pattern: cleanText(r.distribution_pattern),
         lot_numbers: cleanText(r.code_info),
       });

@@ -54,6 +54,19 @@ function isDogRelated(recall) {
   return false;
 }
 
+const FDA_RECALLS_PAGE = 'https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts';
+
+// Sanitize source_url — replace API endpoints and broken links with readable FDA page
+function cleanSourceUrl(url) {
+  if (!url) return null;
+  // openFDA API JSON endpoint → FDA recalls page
+  if (url.includes('api.fda.gov/')) return FDA_RECALLS_PAGE;
+  // Must be http/https
+  if (!url.startsWith('http://') && !url.startsWith('https://')) return null;
+  // Known good domains: fda.gov, accessdata.fda.gov, avma.org, any news/article site
+  return url;
+}
+
 function getSupabase() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -88,8 +101,11 @@ export async function GET(request) {
 
     const { data, error } = await query;
     if (error) console.error('Recalls query error:', error.message);
-    // Filter to dog-related only
-    recalls = (data || []).filter(isDogRelated);
+    // Filter to dog-related only, and clean up source URLs
+    recalls = (data || []).filter(isDogRelated).map(r => ({
+      ...r,
+      source_url: cleanSourceUrl(r.source_url),
+    }));
   }
 
   // Fetch meaningful ingredient changes (table may not exist yet)

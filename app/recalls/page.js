@@ -256,7 +256,7 @@ export default function RecallsPage() {
                           <a href={r.source_url} target="_blank" rel="noopener noreferrer" style={{
                             padding: '8px 18px', borderRadius: 100, background: '#A32D2D', color: '#fff',
                             fontSize: 12, fontWeight: 700, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
-                          }}>View FDA Source &rarr;</a>
+                          }}>View Source &rarr;</a>
                         )}
                         <button onClick={(e) => { e.stopPropagation(); router.push('/discover'); }} style={{
                           padding: '8px 18px', borderRadius: 100, border: '1.5px solid #ede8df',
