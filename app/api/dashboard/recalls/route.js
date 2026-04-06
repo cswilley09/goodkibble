@@ -54,16 +54,30 @@ function isDogRelated(recall) {
   return false;
 }
 
-const FDA_RECALLS_PAGE = 'https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts';
+// Build a real source URL for each recall based on source type and available data
+function resolveSourceUrl(recall) {
+  const url = recall.source_url;
+  const recallNum = recall.recall_number;
 
-// Sanitize source_url — replace API endpoints and broken links with readable FDA page
-function cleanSourceUrl(url) {
-  if (!url) return null;
-  // openFDA API JSON endpoint → FDA recalls page
-  if (url.includes('api.fda.gov/')) return FDA_RECALLS_PAGE;
+  // openFDA enforcement — use recall_number to search the FDA enforcement reports database
+  if (recall.source === 'openfda_enforcement' || (url && url.includes('api.fda.gov/'))) {
+    if (recallNum) {
+      return `https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfres/res.cfm?start_search=1&search_term=${encodeURIComponent(recallNum)}`;
+    }
+    return 'https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts';
+  }
+
+  // No URL at all — try to build one from the source type
+  if (!url) {
+    if (recall.source === 'fda_outbreaks') return 'https://www.fda.gov/animal-veterinary/outbreaks-and-advisories/fda-alert-pet-owners-and-veterinarians';
+    if (recall.source === 'fda_rss') return 'https://www.fda.gov/about-fda/contact-fda/stay-informed#702504';
+    if (recall.source === 'fda_vet_recalls') return 'https://www.fda.gov/animal-veterinary/safety-health/recalls-withdrawals';
+    return null;
+  }
+
   // Must be http/https
   if (!url.startsWith('http://') && !url.startsWith('https://')) return null;
-  // Known good domains: fda.gov, accessdata.fda.gov, avma.org, any news/article site
+
   return url;
 }
 
@@ -101,10 +115,10 @@ export async function GET(request) {
 
     const { data, error } = await query;
     if (error) console.error('Recalls query error:', error.message);
-    // Filter to dog-related only, and clean up source URLs
+    // Filter to dog-related only, and resolve source URLs to real pages
     recalls = (data || []).filter(isDogRelated).map(r => ({
       ...r,
-      source_url: cleanSourceUrl(r.source_url),
+      source_url: resolveSourceUrl(r),
     }));
   }
 
