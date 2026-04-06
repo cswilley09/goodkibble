@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SignUpButton from '../components/SignUpButton';
 import RecallsNav from '../components/RecallsNav';
+import CompareBubble from '../components/CompareBubble';
 import { useAuth } from '../components/AuthContext';
 
 function formatDate(d) {
@@ -69,7 +70,9 @@ export default function RecallsPage() {
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
           <RecallsNav />
+          <CompareBubble />
           <SignUpButton />
         </div>
       </nav>
@@ -302,6 +305,7 @@ export default function RecallsPage() {
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) {
+          .nav-discover-link { display: none !important; }
           .recalls-container { padding: 24px 16px 60px !important; }
           .pro-banner { flex-direction: column !important; text-align: center !important; }
           .pro-banner-btn { width: 100% !important; text-align: center !important; }

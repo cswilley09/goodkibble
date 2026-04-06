@@ -1,6 +1,8 @@
 'use client';
 import RecallTracker from '../../components/RecallTracker';
 import SignUpButton from '../../components/SignUpButton';
+import RecallsNav from '../../components/RecallsNav';
+import CompareBubble from '../../components/CompareBubble';
 
 export default function RecallDashboardPage() {
   return (
@@ -13,7 +15,12 @@ export default function RecallDashboardPage() {
         <a href="/" style={{ textDecoration: 'none' }}>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
-        <SignUpButton />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
+          <RecallsNav />
+          <CompareBubble />
+          <SignUpButton />
+        </div>
       </nav>
 
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '40px 24px 80px' }}>
@@ -38,6 +45,11 @@ export default function RecallDashboardPage() {
 
         <RecallTracker />
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .nav-discover-link { display: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

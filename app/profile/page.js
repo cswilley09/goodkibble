@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import SignUpButton from '../components/SignUpButton';
 import RecallsNav from '../components/RecallsNav';
+import CompareBubble from '../components/CompareBubble';
 import { useAuth } from '../components/AuthContext';
 import DashboardRecallAlert from '../components/DashboardRecallAlert';
 
@@ -390,6 +391,7 @@ export default function ProfilePage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
             <RecallsNav />
+            <CompareBubble />
             <SignUpButton />
           </div>
         </nav>
@@ -426,6 +428,7 @@ export default function ProfilePage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
           <RecallsNav />
+          <CompareBubble />
           <SignUpButton />
         </div>
       </nav>

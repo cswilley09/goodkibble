@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCompare } from '../components/CompareContext';
 import CompareBubble from '../components/CompareBubble';
+import RecallsNav from '../components/RecallsNav';
 import { useAuth } from '../components/AuthContext';
 import { ProGateModal } from '../components/ProGate';
 import SignUpButton from '../components/SignUpButton';
@@ -365,6 +366,7 @@ export default function ComparePage() {
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <RecallsNav />
           <CompareBubble />
           <SignUpButton />
         </div>

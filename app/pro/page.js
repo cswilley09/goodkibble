@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../components/AuthContext';
 import SignUpButton from '../components/SignUpButton';
+import RecallsNav from '../components/RecallsNav';
+import CompareBubble from '../components/CompareBubble';
 
 const FREE_FEATURES = [
   'Search any food & see the score',
@@ -76,7 +78,12 @@ export default function ProPage() {
         <a href="/" style={{ textDecoration: 'none' }}>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
-        <SignUpButton />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
+          <RecallsNav />
+          <CompareBubble />
+          <SignUpButton />
+        </div>
       </nav>
 
       <div style={{ maxWidth: 800, margin: '0 auto', padding: '48px 24px 80px', textAlign: 'center' }}>
@@ -219,6 +226,7 @@ export default function ProPage() {
 
       <style>{`
         @media (max-width: 768px) {
+          .nav-discover-link { display: none !important; }
           .pro-cards { grid-template-columns: 1fr !important; }
           .pro-cards > div:nth-child(2) { order: -1; }
         }
