@@ -50,9 +50,10 @@ export function AuthProvider({ children }) {
     if (!sb) { setLoading(false); return; }
     try {
       // Try by auth user ID first
+      const cols = 'id, first_name, email, is_pro, pro_since, notification_recalls, notification_score_changes, notification_methodology, notification_new_foods, notification_tips';
       const { data } = await sb
         .from('user_profiles')
-        .select('id, first_name, email')
+        .select(cols)
         .eq('id', userId)
         .maybeSingle();
       if (data) { setUserProfile(data); setLoading(false); return; }
@@ -61,7 +62,7 @@ export function AuthProvider({ children }) {
       if (userEmail) {
         const { data: byEmail } = await sb
           .from('user_profiles')
-          .select('id, first_name, email')
+          .select(cols)
           .eq('email', userEmail)
           .maybeSingle();
         if (byEmail) { setUserProfile(byEmail); setLoading(false); return; }
@@ -84,8 +85,10 @@ export function AuthProvider({ children }) {
     } catch {}
   }
 
+  const isPro = !!userProfile?.is_pro;
+
   return (
-    <AuthContext.Provider value={{ session, userProfile, loading, signOut, fetchProfile }}>
+    <AuthContext.Provider value={{ session, userProfile, loading, signOut, fetchProfile, isPro }}>
       {children}
     </AuthContext.Provider>
   );
@@ -93,6 +96,6 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) return { session: null, userProfile: null, loading: true, signOut: async () => {}, fetchProfile: async () => {} };
+  if (!ctx) return { session: null, userProfile: null, loading: true, signOut: async () => {}, fetchProfile: async () => {}, isPro: false };
   return ctx;
 }

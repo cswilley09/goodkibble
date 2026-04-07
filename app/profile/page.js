@@ -2,7 +2,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import SignUpButton from '../components/SignUpButton';
+import RecallsNav from '../components/RecallsNav';
+import CompareBubble from '../components/CompareBubble';
 import { useAuth } from '../components/AuthContext';
+import DashboardRecallAlert from '../components/DashboardRecallAlert';
 
 const BREEDS = [
   'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akita', 'Alaskan Malamute',
@@ -237,12 +240,14 @@ function ProductCard({ food, onClick }) {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { session, signOut, loading: authLoading } = useAuth();
+  const { session, signOut, isPro, loading: authLoading } = useAuth();
   const [user, setUser] = useState(null);
   const [dogs, setDogs] = useState([]);
   const [activeDogIdx, setActiveDogIdx] = useState(0);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('dashboard');
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editData, setEditData] = useState({});
   const [editFood, setEditFood] = useState(null); // { name, slug, brand_slug } or null
@@ -383,7 +388,12 @@ export default function ProfilePage() {
       <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
         <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid #ede8df', background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40 }}>
           <a href="/" style={{ textDecoration: 'none' }}><span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span></a>
-          <SignUpButton />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
+            <RecallsNav />
+            <CompareBubble />
+            <SignUpButton />
+          </div>
         </nav>
         <div style={{ maxWidth: 500, margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 20 }}>{'\u{1F436}'}</div>
@@ -415,7 +425,12 @@ export default function ProfilePage() {
         <a href="/" style={{ textDecoration: 'none' }}>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
-        <SignUpButton />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
+          <RecallsNav />
+          <CompareBubble />
+          <SignUpButton />
+        </div>
       </nav>
 
       <div className="profile-container" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
@@ -467,6 +482,8 @@ export default function ProfilePage() {
           <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20, alignItems: 'start' }}>
             {/* ── LEFT COLUMN ── */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              {/* Recall Alert (if matched) */}
+              {dog && <DashboardRecallAlert dogName={dog.dog_name} currentFood={dog.current_food} currentFoodSlug={dog.current_food_slug} />}
               {/* Current Food Card */}
               <div style={cardStyle}>
                 <div style={eyebrow()}>{displayName}&rsquo;s Current Food</div>
@@ -870,108 +887,111 @@ export default function ProfilePage() {
         {tab === 'saved' && (
           <>
             {savedComparisons.length > 0 ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                {savedComparisons.map(comp => {
-                  const highestScore = Math.max(...comp.items.map(f => f.quality_score ?? 0));
-                  return (
-                    <div key={comp.id} style={cardStyle}>
-                      {/* Header */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-                        <div style={eyebrow()}>Saved Comparison</div>
-                        <span style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
-                          {new Date(comp.saved_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                          {' \u00B7 '}{comp.items.length} products
-                        </span>
-                      </div>
+              <div style={cardStyle}>
+                <div style={eyebrow()}>Saved Comparisons</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                  {savedComparisons.map((comp, compIdx) => {
+                    const highestScore = Math.max(...comp.items.map(f => f.quality_score ?? 0));
+                    const nutrients = [
+                      { label: 'Protein', key: 'protein_dmb', color: '#639922', max: 50 },
+                      { label: 'Fat', key: 'fat_dmb', color: '#EF9F27', max: 25 },
+                      { label: 'Carbs', key: 'carbs_dmb', color: '#378ADD', max: 60 },
+                    ];
+                    return (
+                      <div key={comp.id} style={{ borderTop: compIdx > 0 ? '1px solid #ede8df' : 'none', paddingTop: compIdx > 0 ? 20 : 0, paddingBottom: 20 }}>
+                        {/* Date + actions */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                          <span style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
+                            {new Date(comp.saved_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                            {' \u00B7 '}{comp.items.length} products
+                          </span>
+                          <button onClick={() => deleteComparison(comp.id)} style={{
+                            background: 'none', border: 'none', cursor: 'pointer', color: '#b5aa99',
+                            fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, padding: '2px 6px',
+                          }}
+                            onMouseEnter={e => (e.currentTarget.style.color = '#b5483a')}
+                            onMouseLeave={e => (e.currentTarget.style.color = '#b5aa99')}
+                          >Delete</button>
+                        </div>
 
-                      {/* Horizontal scroll cards (mobile) / responsive grid (desktop) */}
-                      <div className="saved-scroll-row" style={{
-                        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14,
-                      }}>
-                        {comp.items.map(f => {
-                          const isHighest = f.quality_score != null && f.quality_score === highestScore && comp.items.filter(x => x.quality_score === highestScore).length === 1;
-                          const scoreColor = f.quality_score >= 70 ? '#2d7a4f' : f.quality_score >= 50 ? '#c47a20' : '#b5483a';
-                          const tier = f.quality_score >= 90 ? 'Excellent' : f.quality_score >= 80 ? 'Great' : f.quality_score >= 70 ? 'Good' : f.quality_score >= 60 ? 'Fair' : f.quality_score >= 50 ? 'Below Avg' : 'Poor';
-                          const nutrients = [
-                            { label: 'Protein', key: 'protein_dmb', color: '#639922', max: 50 },
-                            { label: 'Fat', key: 'fat_dmb', color: '#EF9F27', max: 25 },
-                            { label: 'Carbs', key: 'carbs_dmb', color: '#378ADD', max: 60 },
-                          ];
-                          return (
-                            <div key={f.id} className="saved-card" onClick={() => goToFood(f)} style={{
-                              background: '#faf8f4', borderRadius: 16,
-                              border: isHighest ? '2px solid #C9A84C' : '1px solid #ede8df',
-                              padding: 18, position: 'relative', cursor: 'pointer',
-                              transition: 'box-shadow 0.2s',
-                            }}
-                              onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(26,22,18,0.06)')}
-                              onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
-                            >
-                              {isHighest && (
-                                <span style={{
-                                  position: 'absolute', top: 8, right: 8,
-                                  background: '#C9A84C', color: '#fff', padding: '3px 10px',
-                                  borderRadius: 100, fontSize: 10, fontWeight: 700,
-                                  fontFamily: "'DM Sans', sans-serif", letterSpacing: 0.5,
-                                }}>HIGHEST</span>
-                              )}
+                        {/* Scroll indicator */}
+                        {comp.items.length > 3 && (
+                          <div style={{ fontSize: 11, color: '#b5aa99', textAlign: 'right', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
+                            {'\u2190'} Scroll to see all {comp.items.length} foods {'\u2192'}
+                          </div>
+                        )}
 
-                              {/* Score + tier */}
-                              {f.quality_score != null && (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                                  <ScoreCircle score={f.quality_score} size={42} />
-                                </div>
-                              )}
+                        {/* Scrollable product cards */}
+                        <div className="saved-scroll-row" style={{
+                          display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4,
+                          scrollSnapType: 'x mandatory', scrollbarWidth: 'none',
+                        }}>
+                          {comp.items.map(f => {
+                            const isHighest = f.quality_score != null && f.quality_score === highestScore && comp.items.filter(x => x.quality_score === highestScore).length === 1;
+                            return (
+                              <div key={f.id} onClick={() => goToFood(f)} style={{
+                                flex: '0 0 calc((100% - 20px) / 3.5)', scrollSnapAlign: 'start', minWidth: 160,
+                                background: '#faf8f4', borderRadius: 12,
+                                border: isHighest ? '2px solid #C9A84C' : '1px solid #ede8df',
+                                padding: '12px 14px', position: 'relative', cursor: 'pointer',
+                                transition: 'box-shadow 0.2s',
+                              }}
+                                onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(26,22,18,0.06)')}
+                                onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
+                              >
+                                {isHighest && (
+                                  <span style={{
+                                    position: 'absolute', top: 6, right: 6,
+                                    background: '#C9A84C', color: '#fff', padding: '2px 7px',
+                                    borderRadius: 100, fontSize: 8, fontWeight: 700,
+                                    fontFamily: "'DM Sans', sans-serif",
+                                  }}>BEST</span>
+                                )}
 
-                              {/* Brand */}
-                              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 2, fontFamily: "'DM Sans', sans-serif" }}>{f.brand}</div>
-
-                              {/* Product name */}
-                              <div style={{
-                                fontSize: 13, fontWeight: 700, color: '#1a1612', lineHeight: 1.3,
-                                marginBottom: 14, display: '-webkit-box', WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                                fontFamily: "'DM Sans', sans-serif",
-                              }}>{f.name}</div>
-
-                              {/* Nutrient bars */}
-                              {nutrients.map(n => {
-                                const val = f[n.key];
-                                const pct = val != null ? Math.min((val / n.max) * 100, 100) : 0;
-                                return (
-                                  <div key={n.key} style={{ marginBottom: 8 }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                                      <span style={{ fontSize: 10, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{n.label}</span>
-                                      <span style={{ fontSize: 10, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
-                                        {val != null ? `${Math.round(val * 10) / 10}%` : '\u2014'}
-                                      </span>
+                                {/* Score left + info right */}
+                                <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10 }}>
+                                  {f.quality_score != null && (
+                                    <div style={{ flexShrink: 0 }}>
+                                      <ScoreCircle score={f.quality_score} size={36} />
                                     </div>
-                                    <div style={{ height: 5, borderRadius: 3, background: '#ede8df' }}>
-                                      <div style={{ height: '100%', borderRadius: 3, background: n.color, width: `${pct}%`, transition: 'width 0.4s ease' }} />
-                                    </div>
+                                  )}
+                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 1, fontFamily: "'DM Sans', sans-serif" }}>{f.brand}</div>
+                                    <div style={{
+                                      fontSize: 12, fontWeight: 700, color: '#1a1612', lineHeight: 1.3,
+                                      display: '-webkit-box', WebkitLineClamp: 2,
+                                      WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                                      fontFamily: "'DM Sans', sans-serif",
+                                    }}>{f.name}</div>
                                   </div>
-                                );
-                              })}
-                            </div>
-                          );
-                        })}
-                      </div>
+                                </div>
 
-                      {/* Action buttons */}
-                      <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginTop: 16 }}>
-                        <button onClick={() => router.push('/compare')} style={{
-                          padding: '9px 22px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
-                          fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                        }}>View Full Comparison &rarr;</button>
-                        <button onClick={() => deleteComparison(comp.id)} style={{
-                          padding: '9px 22px', borderRadius: 100, background: 'transparent', color: '#8a7e72',
-                          fontSize: 12, fontWeight: 600, border: '1.5px solid #ede8df',
-                          cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                        }}>Delete</button>
+                                {/* Nutrient bars */}
+                                {nutrients.map(n => {
+                                  const val = f[n.key];
+                                  const pct = val != null ? Math.min((val / n.max) * 100, 100) : 0;
+                                  return (
+                                    <div key={n.key} style={{ marginBottom: 5 }}>
+                                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+                                        <span style={{ fontSize: 9, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{n.label}</span>
+                                        <span style={{ fontSize: 9, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                                          {val != null ? `${Math.round(val * 10) / 10}%` : '\u2014'}
+                                        </span>
+                                      </div>
+                                      <div style={{ height: 3, borderRadius: 2, background: '#ede8df' }}>
+                                        <div style={{ height: '100%', borderRadius: 2, background: n.color, width: `${pct}%` }} />
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             ) : (
               <div style={cardStyle}>
@@ -979,12 +999,12 @@ export default function ProfilePage() {
                   <div style={{ fontSize: 32, opacity: 0.4, marginBottom: 12 }}>{'\u{1F4CC}'}</div>
                   <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>No saved comparisons yet</div>
                   <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
-                    Browse foods and tap &ldquo;Add to Compare&rdquo; to save them here.
+                    Compare foods and tap &ldquo;Save Comparison&rdquo; to keep them here.
                   </p>
-                  <button onClick={() => router.push('/discover')} style={{
+                  <button onClick={() => router.push('/compare')} style={{
                     padding: '10px 28px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
                     fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-                  }}>Discover Foods &rarr;</button>
+                  }}>Compare Foods &rarr;</button>
                 </div>
               </div>
             )}
@@ -994,6 +1014,80 @@ export default function ProfilePage() {
         {/* ═══ SETTINGS TAB ═══ */}
         {tab === 'settings' && (
           <>
+            {/* Subscription */}
+            <div style={cardStyle}>
+              <div style={eyebrow()}>Subscription</div>
+              {isPro ? (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#639922' }} />
+                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>GoodKibble Pro &mdash; Active</span>
+                  </div>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>Renews annually. You can cancel anytime.</p>
+                  <span onClick={() => setShowCancelModal(true)} style={{ fontSize: 12, color: '#b5aa99', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'underline' }}>Cancel subscription</span>
+                </>
+              ) : (
+                <>
+                  <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>You&rsquo;re on the Free plan</p>
+                  <a href="/pro" style={{ display: 'inline-block', padding: '10px 24px', borderRadius: 100, background: '#C9A84C', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" }}>Upgrade to Pro &rarr;</a>
+                </>
+              )}
+            </div>
+
+            {/* Notifications */}
+            <div style={cardStyle}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...eyebrow() }}>
+                Email Notifications
+                {isPro && <span style={{ background: 'linear-gradient(135deg, #C9A84C, #d4b65e)', color: '#fff', padding: '2px 8px', borderRadius: 100, fontSize: 9, fontWeight: 700 }}>{'\u2605'} PRO</span>}
+              </div>
+              {isPro ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {[
+                    { key: 'notification_recalls', emoji: '\u{1F6A8}', title: 'Recall Alerts', desc: "Get notified immediately when the FDA issues a recall on any food your dogs eat or that you've saved." },
+                    { key: 'notification_score_changes', emoji: '\u{1F4CA}', title: 'Score Changes', desc: "Know when a food's score changes \u2014 whether due to a formula update or a methodology refinement." },
+                    { key: 'notification_methodology', emoji: '\u{1F9EA}', title: 'Methodology Updates', desc: 'Be the first to know when we update our scoring algorithm based on new peer-reviewed research.' },
+                    { key: 'notification_new_foods', emoji: '\u{1F195}', title: 'New Foods Added', desc: "Get notified when new products matching your dog's protein type are added to our database." },
+                    { key: 'notification_tips', emoji: '\u{1F4A1}', title: 'GoodKibble Tips', desc: 'Occasional insights on dog nutrition, reading labels, and making informed choices. Max 2x/month.' },
+                  ].map(n => (
+                    <div key={n.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                      <span style={{ fontSize: 18, flexShrink: 0, marginTop: 2 }}>{n.emoji}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{n.title}</div>
+                        <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>{n.desc}</div>
+                      </div>
+                      <div onClick={async () => {
+                        const newVal = !user[n.key];
+                        setUser(prev => ({ ...prev, [n.key]: newVal }));
+                        try {
+                          await fetch('/api/profile', {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ dog_id: null, user_id: user.id, updates: { [n.key]: newVal } }),
+                          });
+                        } catch {}
+                      }} style={{
+                        width: 44, height: 24, borderRadius: 12, cursor: 'pointer', flexShrink: 0,
+                        background: user[n.key] ? '#639922' : '#ede8df',
+                        position: 'relative', transition: 'background 0.2s',
+                      }}>
+                        <div style={{
+                          width: 20, height: 20, borderRadius: '50%', background: '#fff',
+                          position: 'absolute', top: 2,
+                          left: user[n.key] ? 22 : 2,
+                          transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                        }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>Upgrade to Pro to enable email notifications</p>
+                  <a href="/pro" style={{ fontSize: 13, fontWeight: 600, color: '#C9A84C', textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" }}>Learn about Pro &rarr;</a>
+                </div>
+              )}
+            </div>
+
             {/* Account */}
             <div style={cardStyle}>
               <div style={eyebrow()}>Account</div>
@@ -1033,9 +1127,76 @@ export default function ProfilePage() {
         )}
       </div>
 
+      {/* Cancel subscription retention modal */}
+      {showCancelModal && (
+        <>
+          <div onClick={() => setShowCancelModal(false)} style={{
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+            background: 'rgba(0,0,0,0.4)', zIndex: 9998,
+          }} />
+          <div style={{
+            position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+            background: '#fff', borderRadius: 24, padding: '36px 32px',
+            maxWidth: 420, width: 'calc(100vw - 48px)',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.15)', zIndex: 9999,
+            textAlign: 'center', fontFamily: "'DM Sans', sans-serif",
+          }}>
+            <div onClick={() => setShowCancelModal(false)} style={{
+              position: 'absolute', top: 16, right: 16, fontSize: 18, color: '#b5aa99',
+              cursor: 'pointer', lineHeight: 1, padding: 4,
+            }}>&times;</div>
+            <div style={{ fontSize: 36, marginBottom: 16 }}>{'\u{1F436}'}</div>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>
+              Are you sure?
+            </h3>
+            <p style={{ fontSize: 14, color: '#5a5248', marginBottom: 20, lineHeight: 1.6 }}>
+              {displayName} will lose access to these Pro protections:
+            </p>
+            <div style={{ textAlign: 'left', marginBottom: 24, padding: '16px 20px', background: '#faf8f5', borderRadius: 14 }}>
+              {[
+                { icon: '\u{1F6A8}', text: 'Recall alerts — no email warnings if a food is recalled' },
+                { icon: '\u{1F4CA}', text: 'Score change notifications — won\u2019t know if a formula changes' },
+                { icon: '\u{1F50D}', text: 'Ingredient intelligence — no more quality signals or sourcing info' },
+                { icon: '\u{2696}\u{FE0F}', text: 'Unlimited comparisons — back to 2-food limit' },
+                { icon: '\u{1F4BE}', text: 'Saved comparisons — can\u2019t save or revisit' },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '8px 0', borderBottom: i < 4 ? '1px solid #ede8df' : 'none' }}>
+                  <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
+                  <span style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.4 }}>{item.text}</span>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => setShowCancelModal(false)} style={{
+              width: '100%', padding: 14, borderRadius: 100, border: 'none',
+              background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 700,
+              cursor: 'pointer', marginBottom: 12,
+            }}>Keep Pro &mdash; Stay Protected</button>
+            <button disabled={cancelling} onClick={async () => {
+              setCancelling(true);
+              try {
+                const res = await fetch('/api/billing-portal', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email: user.email }),
+                });
+                const data = await res.json();
+                if (data.url) window.location.href = data.url;
+                else alert(data.error || 'Could not open cancellation page');
+              } catch { alert('Something went wrong'); }
+              setCancelling(false);
+            }} style={{
+              background: 'none', border: 'none', fontSize: 12, color: '#b5aa99',
+              cursor: 'pointer', textDecoration: 'underline',
+              opacity: cancelling ? 0.5 : 1,
+            }}>{cancelling ? 'Loading...' : 'I still want to cancel'}</button>
+          </div>
+        </>
+      )}
+
       <style>{`
         .saved-scroll-row::-webkit-scrollbar { display: none; }
         @media (max-width: 768px) {
+          .nav-discover-link { display: none !important; }
           .profile-container { padding: 20px 16px 60px !important; }
           .dashboard-grid { grid-template-columns: 1fr !important; }
           .current-food-layout { flex-direction: column !important; align-items: center !important; text-align: center !important; }

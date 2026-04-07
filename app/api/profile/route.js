@@ -46,14 +46,35 @@ export async function GET(request) {
 export async function PATCH(request) {
   try {
     const body = await request.json();
-    const { dog_id, updates } = body;
+    const { dog_id, user_id, updates } = body;
 
-    if (!dog_id || !updates) {
-      return NextResponse.json({ error: 'dog_id and updates are required' }, { status: 400 });
+    if ((!dog_id && !user_id) || !updates) {
+      return NextResponse.json({ error: 'dog_id or user_id and updates are required' }, { status: 400 });
     }
 
     const supabase = getSupabase();
 
+    // Update user_profiles if user_id is provided
+    if (user_id) {
+      const userAllowed = ['notification_recalls', 'notification_score_changes', 'notification_methodology', 'notification_new_foods', 'notification_tips'];
+      const userClean = {};
+      for (const key of userAllowed) {
+        if (updates[key] !== undefined) userClean[key] = updates[key];
+      }
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .update(userClean)
+        .eq('id', user_id)
+        .select('*')
+        .single();
+      if (error) {
+        console.error('User update error:', error);
+        return NextResponse.json({ error: 'Failed to update.' }, { status: 500 });
+      }
+      return NextResponse.json(data);
+    }
+
+    // Update dog_profiles if dog_id is provided
     const allowed = ['dog_name', 'breed', 'age_value', 'age_unit', 'weight_lbs', 'gender', 'is_neutered', 'current_food', 'current_food_slug'];
     const clean = {};
     for (const key of allowed) {

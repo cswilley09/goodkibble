@@ -5,6 +5,8 @@ import SearchBox from './SearchBox';
 import CompareBubble from './CompareBubble';
 import SignUpButton from './SignUpButton';
 import { useCompare } from './CompareContext';
+import { useAuth } from './AuthContext';
+import { ProGateOverlay } from './ProGate';
 
 function capitalize(str) {
   if (!str) return str;
@@ -178,7 +180,7 @@ function IngredientInfoCard({ info, onClose }) {
 }
 
 /* Mobile bottom sheet for ingredient info */
-function IngredientBottomSheet({ info, onClose, bottomOffset = 0 }) {
+function IngredientBottomSheet({ info, onClose, bottomOffset = 0, gated = false }) {
   if (!info) return null;
   return (
     <>
@@ -195,9 +197,7 @@ function IngredientBottomSheet({ info, onClose, bottomOffset = 0 }) {
         zIndex: 9999,
         animation: 'bottomSheetUp 0.25s ease both',
       }}>
-        {/* Drag handle */}
         <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.2)', margin: '0 auto 16px' }} />
-        {/* Close X */}
         <div onClick={onClose} style={{
           position: 'absolute', top: 16, right: 16,
           width: 28, height: 28, borderRadius: '50%',
@@ -205,7 +205,6 @@ function IngredientBottomSheet({ info, onClose, bottomOffset = 0 }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', fontSize: 16, color: 'rgba(255,255,255,0.5)',
         }}>&times;</div>
-        {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, paddingRight: 36 }}>
           <span style={{
             width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
@@ -219,14 +218,29 @@ function IngredientBottomSheet({ info, onClose, bottomOffset = 0 }) {
             color: SIGNAL_COLORS[info.quality_signal] || SIGNAL_COLORS.neutral,
           }}>{info.quality_signal}</span>
         </div>
-        {/* Description */}
-        <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, marginBottom: info.source ? 10 : 0 }}>
-          {info.short_description}
-        </div>
-        {info.source && (
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic' }}>
-            Source: {info.source}
+        {gated ? (
+          <div style={{ textAlign: 'center', padding: '12px 0' }}>
+            <span style={{ fontSize: 20, opacity: 0.5 }}>{'\u{1F512}'}</span>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginTop: 8, marginBottom: 12, lineHeight: 1.5 }}>
+              See what each ingredient means for your dog with GoodKibble Pro
+            </div>
+            <a href="/pro" style={{
+              display: 'inline-block', padding: '8px 20px', borderRadius: 100,
+              background: '#C9A84C', color: '#fff', fontSize: 12, fontWeight: 700,
+              textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+            }}>Unlock with Pro {'\u2192'}</a>
           </div>
+        ) : (
+          <>
+            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, marginBottom: info.source ? 10 : 0 }}>
+              {info.short_description}
+            </div>
+            {info.source && (
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontStyle: 'italic' }}>
+                Source: {info.source}
+              </div>
+            )}
+          </>
         )}
       </div>
     </>
@@ -371,8 +385,10 @@ function NutrientExplainer() {
 /* ── Toggle compare button using global context ── */
 function CompareToggle({ food }) {
   const { items, addItem, removeItem } = useCompare();
+  const { isPro } = useAuth();
+  const maxCompare = isPro ? 6 : 2;
   const isAdded = items.some(f => f.id === food.id);
-  const isFull = items.length >= 3;
+  const isFull = items.length >= maxCompare;
 
   function handleClick() {
     if (isAdded) {
@@ -411,7 +427,7 @@ function CompareToggle({ food }) {
         }
       }}
     >
-      {isAdded ? '✓ Added to Compare' : isFull ? 'Compare Full (3/3)' : '+ Add to Compare'}
+      {isAdded ? '\u2713 Added to Compare' : isFull ? `Compare Full (${maxCompare}/${maxCompare})` : '+ Add to Compare'}
     </button>
   );
 }
@@ -710,6 +726,7 @@ export default function FoodPageContent({ productId }) {
   const [loading, setLoading] = useState(true);
   const [ingredientInfo, setIngredientInfo] = useState({});
   const [showStickyBuy, setShowStickyBuy] = useState(false);
+  const { isPro } = useAuth();
   const [activeIngredient, setActiveIngredient] = useState(null); // { idx, info }
   const [tooltipTop, setTooltipTop] = useState(0);
   const pillsContainerRef = useRef(null);
@@ -1110,36 +1127,31 @@ export default function FoodPageContent({ productId }) {
               {activeIngredient && !isMobile && (
                 <div onClick={(e) => e.stopPropagation()} style={{
                   position: 'absolute', left: 0, right: 0, top: tooltipTop,
-                  zIndex: 50, padding: '18px 24px',
-                  background: '#1a1612', color: '#faf8f5', borderRadius: 12,
+                  zIndex: 50, borderRadius: 12, overflow: 'hidden',
                   boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-                  fontFamily: "'DM Sans', sans-serif",
                   animation: 'fadeIn 0.15s ease',
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <span style={{
-                      width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
-                      background: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral,
-                    }} />
-                    <span style={{ fontWeight: 700, fontSize: 16 }}>{activeIngredient.info.display_name}</span>
-                    <span style={{
-                      marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
-                      textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
-                      background: SIGNAL_BG[activeIngredient.info.quality_signal] || SIGNAL_BG.neutral,
-                      color: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral,
-                    }}>{activeIngredient.info.quality_signal}</span>
-                    <span onClick={() => setActiveIngredient(null)} style={{
-                      marginLeft: 8, fontSize: 16, color: 'rgba(255,255,255,0.4)',
-                      cursor: 'pointer', lineHeight: 1, padding: '0 4px',
-                    }}>&times;</span>
-                  </div>
-                  <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, lineHeight: 1.6, marginBottom: activeIngredient.info.source ? 10 : 0 }}>
-                    {activeIngredient.info.short_description}
-                  </div>
-                  {activeIngredient.info.source && (
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>
-                      Source: {activeIngredient.info.source}
+                  {isPro ? (
+                    <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'DM Sans', sans-serif" }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                        <span style={{ width: 10, height: 10, borderRadius: '50%', flexShrink: 0, background: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral }} />
+                        <span style={{ fontWeight: 700, fontSize: 16 }}>{activeIngredient.info.display_name}</span>
+                        <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0, background: SIGNAL_BG[activeIngredient.info.quality_signal] || SIGNAL_BG.neutral, color: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral }}>{activeIngredient.info.quality_signal}</span>
+                        <span onClick={() => setActiveIngredient(null)} style={{ marginLeft: 8, fontSize: 16, color: 'rgba(255,255,255,0.4)', cursor: 'pointer', lineHeight: 1, padding: '0 4px' }}>&times;</span>
+                      </div>
+                      <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, lineHeight: 1.6, marginBottom: activeIngredient.info.source ? 10 : 0 }}>{activeIngredient.info.short_description}</div>
+                      {activeIngredient.info.source && <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>Source: {activeIngredient.info.source}</div>}
                     </div>
+                  ) : (
+                    <ProGateOverlay title="Ingredient Intelligence" description="See what each ingredient means for your dog with GoodKibble Pro">
+                      <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'DM Sans', sans-serif" }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                          <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#8a7e72' }} />
+                          <span style={{ fontWeight: 700, fontSize: 16 }}>{activeIngredient.info.display_name}</span>
+                        </div>
+                        <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, lineHeight: 1.6 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ingredient details are available with Pro.</div>
+                      </div>
+                    </ProGateOverlay>
                   )}
                 </div>
               )}
@@ -1227,11 +1239,20 @@ export default function FoodPageContent({ productId }) {
 
       {/* Single mobile bottom sheet — rendered at root level to avoid duplicates */}
       {activeIngredient && isMobile && (
-        <IngredientBottomSheet
-          info={activeIngredient.info}
-          onClose={() => setActiveIngredient(null)}
-          bottomOffset={showStickyBuy && food?.affiliate_url ? 56 : 0}
-        />
+        isPro ? (
+          <IngredientBottomSheet
+            info={activeIngredient.info}
+            onClose={() => setActiveIngredient(null)}
+            bottomOffset={showStickyBuy && food?.affiliate_url ? 56 : 0}
+          />
+        ) : (
+          <IngredientBottomSheet
+            info={{ ...activeIngredient.info, short_description: null, source: null }}
+            onClose={() => setActiveIngredient(null)}
+            bottomOffset={showStickyBuy && food?.affiliate_url ? 56 : 0}
+            gated={true}
+          />
+        )
       )}
 
       <style>{`

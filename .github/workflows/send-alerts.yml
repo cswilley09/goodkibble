@@ -1,0 +1,15 @@
+name: Send Recall Alerts
+
+on:
+  schedule:
+    - cron: '0 1,7,13,19 * * *'
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger alert sender
+        run: |
+          curl -s -X GET "${{ secrets.STAGING_URL }}/api/cron/send-alerts" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

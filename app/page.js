@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import SearchBox from './components/SearchBox';
 import CompareBubble from './components/CompareBubble';
 import SignUpButton from './components/SignUpButton';
+import RecallsNav from './components/RecallsNav';
 import { useRouter } from 'next/navigation';
 
 /* ═══════════════════════════════════════
@@ -526,6 +527,7 @@ export default function Home() {
             onMouseEnter={(e) => e.target.style.color = '#1a1612'}
             onMouseLeave={(e) => e.target.style.color = '#5a5248'}
           >Discover Foods</span>
+          <RecallsNav />
           <CompareBubble />
           <SignUpButton />
         </div>
@@ -590,7 +592,7 @@ export default function Home() {
         .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #C9A84C !important; }
         @media (max-width: 768px) {
           .site-nav { padding: 12px 16px !important; }
-          .nav-discover-link { display: none !important; }
+          .nav-discover-link { font-size: 12px !important; }
           .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 28px 16px !important; }
           .demo-layout { grid-template-columns: 1fr !important; gap: 32px !important; }
           .protein-grid { grid-template-columns: repeat(2, 1fr) !important; }

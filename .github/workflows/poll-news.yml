@@ -1,0 +1,15 @@
+name: Poll Google News Recalls
+
+on:
+  schedule:
+    - cron: '0 2,8,14,20 * * *'
+  workflow_dispatch:
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger news poll
+        run: |
+          curl -s -X GET "${{ secrets.STAGING_URL }}/api/cron/poll-news" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

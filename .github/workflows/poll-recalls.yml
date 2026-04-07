@@ -1,0 +1,15 @@
+name: Poll FDA Recalls
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger recall poll
+        run: |
+          curl -s -X GET "${{ secrets.STAGING_URL }}/api/cron/poll-recalls" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
