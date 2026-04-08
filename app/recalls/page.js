@@ -22,7 +22,6 @@ export default function RecallsPage() {
   const { isPro } = useAuth();
   const [recalls, setRecalls] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [gateModal, setGateModal] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
   const [search, setSearch] = useState('');
   const [proPopup, setProPopup] = useState(false);
@@ -86,15 +85,13 @@ export default function RecallsPage() {
   const displayCards = filtered;
 
   function handleCardClick(recall) {
-    if (isPro) {
-      setExpandedId(expandedId === recall.id ? null : recall.id);
-    } else {
-      // Track detail clicks for engagement trigger
+    setExpandedId(expandedId === recall.id ? null : recall.id);
+    // Track detail clicks for engagement-based Pro popup (free users only)
+    if (!isPro) {
       detailClicksRef.current += 1;
       if (detailClicksRef.current >= 2) {
         triggerProPopup();
       }
-      setGateModal(recall);
     }
   }
 
@@ -198,7 +195,7 @@ export default function RecallsPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {displayCards.map((r, idx) => {
               const urgent = isUrgent(r);
-              const expanded = expandedId === r.id && isPro;
+              const expanded = expandedId === r.id;
               const multiBrand = (r.brand_name || '').includes('/') || (r.brand_name || '').includes(' and ') || (r.brand_name || '').includes(', ');
 
               return (
@@ -312,6 +309,27 @@ export default function RecallsPage() {
                           cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
                         }}>Find Alternatives</button>
                       </div>
+
+                      {/* Inline Pro CTA — free users only */}
+                      {!isPro && (
+                        <div className="recall-inline-cta" style={{
+                          background: 'linear-gradient(135deg, #1a1612, #2a2318)', borderRadius: 16,
+                          padding: '28px 24px', marginTop: 32, textAlign: 'center',
+                          fontFamily: "'DM Sans', sans-serif",
+                        }} onClick={(e) => e.stopPropagation()}>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: '#C9A84C', marginBottom: 8 }}>You found this one.</div>
+                          <div style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 20, fontWeight: 800, color: '#faf8f4', marginBottom: 12 }}>Pro makes sure you never miss the next one.</div>
+                          <p style={{ fontSize: 13, color: '#8a7e72', lineHeight: 1.6, maxWidth: 380, margin: '0 auto 20px' }}>
+                            Get instant email alerts when the FDA issues a recall on any food your dog eats. We check every 6 hours so you don&rsquo;t have to.
+                          </p>
+                          <button onClick={() => router.push('/pro')} style={{
+                            padding: '12px 28px', borderRadius: 100, background: '#C9A84C', color: '#fff',
+                            fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
+                            fontFamily: "'DM Sans', sans-serif",
+                          }}>Get GoodKibble Pro &rarr;</button>
+                          <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 10 }}>$29/year &middot; Cancel anytime</div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -321,32 +339,6 @@ export default function RecallsPage() {
           </div>
         )}
       </div>
-
-      {/* Pro Gate Modal (click on card) */}
-      {gateModal && (
-        <>
-          <div onClick={() => setGateModal(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000 }} />
-          <div style={{
-            position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-            background: '#fff', borderRadius: 24, padding: 36, maxWidth: 440,
-            width: 'calc(100vw - 48px)', zIndex: 1001, textAlign: 'center',
-            fontFamily: "'DM Sans', sans-serif",
-          }}>
-            <div onClick={() => setGateModal(null)} style={{ position: 'absolute', top: 16, right: 16, fontSize: 18, color: '#b5aa99', cursor: 'pointer' }}>&times;</div>
-            <div style={{ fontSize: 36, marginBottom: 16, opacity: 0.8 }}>{'\u{1F514}'}</div>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>Get recall details &amp; alerts</h2>
-            <p style={{ fontSize: 14, color: '#5a5248', marginBottom: 8 }}>See full recall details, affected lot numbers, and recommended actions.</p>
-            <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 24 }}>Pro members also get instant email alerts when a recall affects any food in their profile &mdash; so you never have to check manually.</p>
-            <button onClick={() => router.push('/pro')} style={{
-              width: '100%', padding: 14, borderRadius: 100, background: '#C9A84C', color: '#fff',
-              fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer',
-            }}>Get GoodKibble Pro &rarr;</button>
-            <p style={{ fontSize: 12, color: '#b5aa99', marginBottom: 16 }}>$29/year &middot; Cancel anytime</p>
-            <div style={{ height: 1, background: '#ede8df', marginBottom: 16 }} />
-            <p style={{ fontSize: 12, color: '#8a7e72' }}>Just want to check your food? <span onClick={() => { setGateModal(null); router.push('/discover'); }} style={{ color: '#C9A84C', fontWeight: 600, cursor: 'pointer' }}>Search free &rarr;</span></p>
-          </div>
-        </>
-      )}
 
       {/* Engagement-based Pro Popup (after 30s or 2 detail clicks, once per session) */}
       {proPopup && (
@@ -408,6 +400,11 @@ export default function RecallsPage() {
           .recall-date { text-align: left !important; width: 100%; margin-top: 4px; }
           .recall-reason { white-space: normal !important; }
           .pro-popup-modal { padding: 24px !important; }
+          .recall-inline-cta { padding: 24px 20px !important; }
+          .recall-inline-cta p { max-width: 100% !important; }
+        }
+        @media (max-width: 480px) {
+          .recall-inline-cta button { width: 100% !important; }
         }
       `}</style>
     </div>
