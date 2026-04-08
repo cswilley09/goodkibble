@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import SignUpButton from '../components/SignUpButton';
 import RecallsNav from '../components/RecallsNav';
@@ -36,6 +36,10 @@ export default function RecallsPage() {
   const [search, setSearch] = useState('');
   const [proPopup, setProPopup] = useState(false);
 
+  // Engagement-based modal trigger state
+  const detailClicksRef = useRef(0);
+  const timerRef = useRef(null);
+
   useEffect(() => {
     fetch('/api/dashboard/recalls?days=365&type=recalls')
       .then(r => r.json())
@@ -53,16 +57,26 @@ export default function RecallsPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  // Auto-popup for free users (once per session)
+  // Engagement-based Pro popup: 30s timer OR 2 detail clicks (whichever first)
   useEffect(() => {
     if (isPro) return;
     if (sessionStorage.getItem('gk_recalls_popup_shown')) return;
-    const timer = setTimeout(() => {
-      setProPopup(true);
-      sessionStorage.setItem('gk_recalls_popup_shown', '1');
-    }, 1500);
-    return () => clearTimeout(timer);
+    timerRef.current = setTimeout(() => {
+      if (!sessionStorage.getItem('gk_recalls_popup_shown')) {
+        setProPopup(true);
+        sessionStorage.setItem('gk_recalls_popup_shown', '1');
+      }
+    }, 30000);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [isPro]);
+
+  function triggerProPopup() {
+    if (isPro) return;
+    if (sessionStorage.getItem('gk_recalls_popup_shown')) return;
+    setProPopup(true);
+    sessionStorage.setItem('gk_recalls_popup_shown', '1');
+    if (timerRef.current) clearTimeout(timerRef.current);
+  }
 
   function closeProPopup() {
     setProPopup(false);
@@ -88,14 +102,19 @@ export default function RecallsPage() {
     if (isPro) {
       setExpandedId(expandedId === recall.id ? null : recall.id);
     } else {
+      // Track detail clicks for engagement trigger
+      detailClicksRef.current += 1;
+      if (detailClicksRef.current >= 2) {
+        triggerProPopup();
+      }
       setGateModal(recall);
     }
   }
 
   const benefits = [
-    { title: 'Recall alerts sent to your email', desc: 'Instant notification when the FDA issues a recall on any food your dogs eat' },
-    { title: 'Score change notifications', desc: 'Know when a manufacturer changes their formula or our algorithm updates' },
-    { title: 'Ingredient intelligence', desc: 'Deep-dive into every ingredient with quality signals and sourcing info' },
+    { icon: '\u{1F514}', title: 'Instant recall alerts', desc: "We'll email you within hours of an FDA recall on any food in your dog's profile." },
+    { icon: '\u{1F4CA}', title: 'Score change notifications', desc: 'Know when a manufacturer changes their formula or our scoring algorithm updates.' },
+    { icon: '\u{1F50D}', title: 'Ingredient deep-dives', desc: 'Full quality signals and sourcing info on every ingredient.' },
   ];
 
   return (
@@ -365,7 +384,7 @@ export default function RecallsPage() {
         </>
       )}
 
-      {/* Auto Pro Popup (1.5s delay, once per session) */}
+      {/* Engagement-based Pro Popup (after 30s or 2 detail clicks, once per session) */}
       {proPopup && (
         <>
           <div onClick={closeProPopup} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000 }} />
@@ -377,9 +396,9 @@ export default function RecallsPage() {
           }}>
             <div onClick={closeProPopup} style={{ position: 'absolute', top: 16, right: 16, fontSize: 18, color: '#b5aa99', cursor: 'pointer' }}>&times;</div>
             <div style={{ fontSize: 32, marginBottom: 12 }}>{'\u{1F514}'}</div>
-            <h2 style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 24, fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>Stay ahead of recalls</h2>
+            <h2 style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 24, fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>You&rsquo;re already checking &mdash; let us do it for you.</h2>
             <p style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.6, marginBottom: 24 }}>
-              Don&rsquo;t wait until it&rsquo;s too late to find out your dog&rsquo;s food has been recalled.
+              Get instant email alerts when the FDA issues a recall on any food your dog eats. Pro monitors every 6 hours so you don&rsquo;t have to.
             </p>
 
             {/* Benefits box */}
@@ -390,7 +409,7 @@ export default function RecallsPage() {
                   borderBottom: i < benefits.length - 1 ? '1px solid #f5f2ec' : 'none',
                 }}>
                   <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>
-                    {i === 0 ? '\u{1F4E8}' : i === 1 ? '\u{1F4CA}' : '\u{1F50D}'}
+                    {b.icon}
                   </span>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{b.title}</div>
@@ -408,7 +427,7 @@ export default function RecallsPage() {
             <p style={{ fontSize: 12, color: '#b5aa99', marginTop: 8, marginBottom: 12 }}>$29/year &middot; Cancel anytime</p>
             <div onClick={closeProPopup} style={{
               fontSize: 13, color: '#8a7e72', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-            }}>No thanks, I&rsquo;ll check manually</div>
+            }}>I&rsquo;ll keep checking on my own</div>
           </div>
         </>
       )}
@@ -416,7 +435,7 @@ export default function RecallsPage() {
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) {
-          .nav-discover-link { display: none !important; }
+          .nav-discover-link { font-size: 12px !important; }
           .recalls-container { padding: 24px 16px 60px !important; }
           .pro-banner { flex-direction: column !important; text-align: center !important; }
           .pro-banner-btn { width: 100% !important; text-align: center !important; }

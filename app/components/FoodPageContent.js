@@ -727,6 +727,8 @@ export default function FoodPageContent({ productId }) {
   const [ingredientInfo, setIngredientInfo] = useState({});
   const [showStickyBuy, setShowStickyBuy] = useState(false);
   const { isPro } = useAuth();
+  const [showProBar, setShowProBar] = useState(false);
+  const [proBarDismissed, setProBarDismissed] = useState(false);
   const [activeIngredient, setActiveIngredient] = useState(null); // { idx, info }
   const [tooltipTop, setTooltipTop] = useState(0);
   const pillsContainerRef = useRef(null);
@@ -738,6 +740,21 @@ export default function FoodPageContent({ productId }) {
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
+
+  // Track unique product page views in session for Pro prompt
+  useEffect(() => {
+    if (isPro || !productId) return;
+    if (sessionStorage.getItem('gk_pro_bar_dismissed')) { setProBarDismissed(true); return; }
+    try {
+      const viewed = JSON.parse(sessionStorage.getItem('gk_viewed_products') || '[]');
+      if (!viewed.includes(productId)) {
+        viewed.push(productId);
+        sessionStorage.setItem('gk_viewed_products', JSON.stringify(viewed));
+      }
+      if (viewed.length >= 3) setShowProBar(true);
+    } catch {}
+  }, [productId, isPro]);
+
   const heroRef = useRef(null);
 
   useEffect(() => {
@@ -1255,12 +1272,35 @@ export default function FoodPageContent({ productId }) {
         )
       )}
 
+      {/* Sticky Pro bottom bar — shows after 3+ product pages viewed */}
+      {showProBar && !proBarDismissed && !isPro && (
+        <div className="pro-sticky-bar" style={{
+          position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100,
+          background: '#1a1612', padding: '14px 20px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          gap: 12, maxHeight: 52, fontFamily: "'DM Sans', sans-serif",
+        }}>
+          <span style={{ fontSize: 13, color: '#d4cfc6', lineHeight: 1.3 }}>
+            You&rsquo;re researching like a pro. Unlock ingredient deep-dives, unlimited comparisons, and recall alerts.
+          </span>
+          <a href="/pro" style={{
+            color: '#C9A84C', fontWeight: 700, fontSize: 13,
+            textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
+          }}>Try Pro &mdash; $2.42/mo &rarr;</a>
+          <button onClick={() => { setProBarDismissed(true); sessionStorage.setItem('gk_pro_bar_dismissed', '1'); }} style={{
+            background: 'none', border: 'none', color: '#5a5248', fontSize: 18,
+            cursor: 'pointer', padding: '0 4px', lineHeight: 1, flexShrink: 0,
+          }}>&times;</button>
+        </div>
+      )}
+
       <style>{`
         .sticky-buy-bar { display: none !important; }
         @media (max-width: 768px) {
           .sticky-buy-bar { display: flex !important; }
           .product-actions { flex-direction: column !important; align-items: stretch !important; }
           .buy-amazon-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; }
+          .pro-sticky-bar { flex-wrap: wrap !important; max-height: none !important; padding: 12px 16px !important; }
         }
       `}</style>
     </div>
