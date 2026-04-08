@@ -98,9 +98,9 @@ export default function RecallsPage() {
   }
 
   const benefits = [
-    { icon: '\u{1F514}', title: 'Instant recall alerts', desc: "We'll email you within hours of an FDA recall on any food in your dog's profile." },
-    { icon: '\u{1F4CA}', title: 'Score change notifications', desc: 'Know when a manufacturer changes their formula or our scoring algorithm updates.' },
-    { icon: '\u{1F50D}', title: 'Ingredient deep-dives', desc: 'Full quality signals and sourcing info on every ingredient.' },
+    { icon: '\u{1F514}', title: 'Instant recall alerts', desc: "Your dog\u2019s food gets recalled? You\u2019ll know within hours \u2014 not weeks." },
+    { icon: '\u{1F4CA}', title: 'Score change notifications', desc: "Formulas change quietly. We\u2019ll tell you when yours does." },
+    { icon: '\u{1F50D}', title: 'Ingredient deep-dives', desc: "See what\u2019s really behind every ingredient \u2014 quality signals, sourcing, red flags." },
   ];
 
   return (
@@ -390,7 +390,7 @@ export default function RecallsPage() {
             <p style={{ fontSize: 12, color: '#b5aa99', marginTop: 8, marginBottom: 12 }}>$29/year &middot; Cancel anytime</p>
             <div onClick={closeProPopup} style={{
               fontSize: 13, color: '#8a7e72', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-            }}>I&rsquo;ll keep checking on my own</div>
+            }}>Not right now</div>
           </div>
         </>
       )}
