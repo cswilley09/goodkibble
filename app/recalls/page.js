@@ -49,13 +49,14 @@ export default function RecallsPage() {
   }, []);
 
   // Engagement-based Pro popup: 30s timer OR 2 detail clicks (whichever first)
+  // Timer resets each time user navigates to the page, but modal only shows
+  // once per visit (dismissed flag resets on cleanup when leaving page)
   useEffect(() => {
     if (isPro) return;
-    if (sessionStorage.getItem('gk_recalls_popup_shown')) return;
+    if (sessionStorage.getItem('gk_recalls_popup_dismissed')) return;
     timerRef.current = setTimeout(() => {
-      if (!sessionStorage.getItem('gk_recalls_popup_shown')) {
+      if (!sessionStorage.getItem('gk_recalls_popup_dismissed')) {
         setProPopup(true);
-        sessionStorage.setItem('gk_recalls_popup_shown', '1');
       }
     }, 30000);
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
@@ -63,14 +64,14 @@ export default function RecallsPage() {
 
   function triggerProPopup() {
     if (isPro) return;
-    if (sessionStorage.getItem('gk_recalls_popup_shown')) return;
+    if (sessionStorage.getItem('gk_recalls_popup_dismissed')) return;
     setProPopup(true);
-    sessionStorage.setItem('gk_recalls_popup_shown', '1');
     if (timerRef.current) clearTimeout(timerRef.current);
   }
 
   function closeProPopup() {
     setProPopup(false);
+    sessionStorage.setItem('gk_recalls_popup_dismissed', '1');
   }
 
   const filtered = search.trim()
