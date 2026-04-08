@@ -338,9 +338,9 @@ export default function RecallsPage() {
                       borderTop: 'none', borderRadius: '0 0 16px 16px',
                     }}>
 
-                      {/* Section 1 — Recall summary */}
-                      {r.reason && (
-                        <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>{r.reason}</div>
+                      {/* Section 1 — Recall description (full text, skip if identical to product_description shown in header) */}
+                      {r.reason && r.reason !== r.product_description && (
+                        <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>{r.reason}</div>
                       )}
 
                       {/* Section 2 — Key details grid */}
@@ -411,24 +411,15 @@ export default function RecallsPage() {
                         }}>Find Alternatives</button>
                       </div>
 
-                      {/* Inline Pro CTA — free users only */}
+                      {/* Inline Pro CTA — subtle strip, free users only */}
                       {!isPro && (
-                        <div className="recall-inline-cta" style={{
-                          background: 'linear-gradient(135deg, #1a1612, #2a2318)', borderRadius: 16,
-                          padding: '28px 24px', marginTop: 32, textAlign: 'center',
-                          fontFamily: "'DM Sans', sans-serif",
-                        }} onClick={(e) => e.stopPropagation()}>
-                          <div style={{ fontSize: 13, fontWeight: 700, color: '#C9A84C', marginBottom: 8 }}>You found this one.</div>
-                          <div style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 20, fontWeight: 800, color: '#faf8f4', marginBottom: 12 }}>Pro makes sure you never miss the next one.</div>
-                          <p style={{ fontSize: 13, color: '#8a7e72', lineHeight: 1.6, maxWidth: 380, margin: '0 auto 20px' }}>
-                            Get instant email alerts when the FDA issues a recall on any food your dog eats. We check every 6 hours so you don&rsquo;t have to.
-                          </p>
-                          <button onClick={() => router.push('/pro')} style={{
-                            padding: '12px 28px', borderRadius: 100, background: '#C9A84C', color: '#fff',
-                            fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
-                            fontFamily: "'DM Sans', sans-serif",
-                          }}>Get GoodKibble Pro &rarr;</button>
-                          <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 10 }}>$29/year &middot; Cancel anytime</div>
+                        <div className="recall-pro-strip" onClick={(e) => e.stopPropagation()} style={{
+                          background: '#f5f2ec', borderRadius: 10, padding: '12px 18px', marginTop: 20,
+                          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                          gap: 12, fontFamily: "'DM Sans', sans-serif",
+                        }}>
+                          <span style={{ fontSize: 13, color: '#5a5248' }}>{'\u{1F514}'} Get instant recall alerts to your email</span>
+                          <a href="/pro" style={{ fontSize: 13, color: '#C9A84C', fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Learn about Pro &rarr;</a>
                         </div>
                       )}
                     </div>
@@ -501,12 +492,8 @@ export default function RecallsPage() {
           .recall-date { text-align: left !important; width: 100%; margin-top: 4px; }
           .recall-reason { white-space: normal !important; }
           .pro-popup-modal { padding: 24px !important; }
-          .recall-inline-cta { padding: 24px 20px !important; }
-          .recall-inline-cta p { max-width: 100% !important; }
           .key-details-grid { grid-template-columns: 1fr 1fr !important; }
-        }
-        @media (max-width: 480px) {
-          .recall-inline-cta button { width: 100% !important; }
+          .recall-pro-strip { flex-wrap: wrap !important; gap: 6px !important; }
         }
       `}</style>
     </div>
