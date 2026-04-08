@@ -16,15 +16,6 @@ function isUrgent(r) {
   return r.severity === 'Class I' || (r.reason || '').toLowerCase().includes('health');
 }
 
-// Blur levels for free users (index = card position starting at 0)
-function getBlurStyle(index, isPro) {
-  if (isPro) return {};
-  if (index < 2) return {};
-  if (index === 2) return { filter: 'blur(2px)', opacity: 0.85, pointerEvents: 'none' };
-  if (index === 3) return { filter: 'blur(4px)', opacity: 0.7, pointerEvents: 'none' };
-  if (index === 4) return { filter: 'blur(6px)', opacity: 0.55, pointerEvents: 'none' };
-  return { filter: 'blur(8px)', opacity: 0.4, pointerEvents: 'none' };
-}
 
 export default function RecallsPage() {
   const router = useRouter();
@@ -91,14 +82,9 @@ export default function RecallsPage() {
       })
     : recalls;
 
-  // For free users, show max 6 cards (blurred after 2) then upgrade card
-  const FREE_MAX_VISIBLE = 6;
-  const displayCards = (!isPro && filtered.length > FREE_MAX_VISIBLE)
-    ? filtered.slice(0, FREE_MAX_VISIBLE)
-    : filtered;
+  const displayCards = filtered;
 
-  function handleCardClick(recall, index) {
-    if (!isPro && index >= 2) return; // blurred cards not clickable
+  function handleCardClick(recall) {
     if (isPro) {
       setExpandedId(expandedId === recall.id ? null : recall.id);
     } else {
@@ -213,23 +199,22 @@ export default function RecallsPage() {
               const urgent = isUrgent(r);
               const expanded = expandedId === r.id && isPro;
               const multiBrand = (r.brand_name || '').includes('/') || (r.brand_name || '').includes(' and ') || (r.brand_name || '').includes(', ');
-              const blurStyle = getBlurStyle(idx, isPro);
 
               return (
-                <div key={r.id} style={{ ...blurStyle, transition: 'filter 0.3s, opacity 0.3s' }}>
+                <div key={r.id}>
                   {/* Card */}
                   <div
                     className="recall-card"
-                    onClick={() => handleCardClick(r, idx)}
+                    onClick={() => handleCardClick(r)}
                     style={{
                       display: 'flex', alignItems: 'stretch',
                       borderRadius: expanded ? '16px 16px 0 0' : 16, overflow: 'hidden',
-                      cursor: (!isPro && idx >= 2) ? 'default' : 'pointer',
+                      cursor: 'pointer',
                       background: urgent ? '#fef8f8' : '#fff',
                       border: urgent ? '1px solid #e8c4c4' : '1px solid #ede8df',
                       transition: 'box-shadow 0.2s',
                     }}
-                    onMouseEnter={e => { if (isPro || idx < 2) e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.05)'; }}
+                    onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.05)'; }}
                     onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
                   >
                     {/* Left border strip */}
@@ -332,28 +317,6 @@ export default function RecallsPage() {
               );
             })}
 
-            {/* Upgrade card for free users */}
-            {!isPro && filtered.length > 2 && (
-              <div style={{
-                background: '#fff', borderRadius: 20, border: '1.5px solid #C9A84C',
-                padding: 32, textAlign: 'center', marginTop: 4,
-              }}>
-                <div style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 20, fontWeight: 800, color: '#1a1612', marginBottom: 8 }}>
-                  See all {filtered.length} recalls
-                </div>
-                <p style={{ fontSize: 13, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", marginBottom: 20, lineHeight: 1.5 }}>
-                  Pro members get full access to all recall details plus instant email alerts.
-                </p>
-                <a href="/pro" style={{
-                  display: 'inline-block', padding: '12px 28px', borderRadius: 100,
-                  background: '#C9A84C', color: '#fff', fontSize: 14, fontWeight: 700,
-                  textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
-                }}>Unlock with Pro &rarr;</a>
-                <div style={{ fontSize: 12, color: '#b5aa99', marginTop: 10, fontFamily: "'DM Sans', sans-serif" }}>
-                  $29/year &middot; Less than a dog treat
-                </div>
-              </div>
-            )}
           </div>
         )}
       </div>
