@@ -16,15 +16,31 @@ function isUrgent(r) {
   return r.severity === 'Class I' || (r.reason || '').toLowerCase().includes('health');
 }
 
+/* Try to fuzzy-match a recall brand against a dog's current_food string */
+function checkProfileMatch(recall, dogs) {
+  if (!dogs || dogs.length === 0) return null;
+  const recallBrand = (recall.brand_name || '').toLowerCase().trim();
+  if (!recallBrand) return null;
+  for (const dog of dogs) {
+    const food = (dog.current_food || '').toLowerCase().trim();
+    if (!food) continue;
+    if (food.includes(recallBrand) || recallBrand.includes(food.split(' ')[0])) {
+      return { match: true, dog };
+    }
+  }
+  // No match — return first dog for display
+  return { match: false, dog: dogs[0] };
+}
 
 export default function RecallsPage() {
   const router = useRouter();
-  const { isPro } = useAuth();
+  const { isPro, session } = useAuth();
   const [recalls, setRecalls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
   const [search, setSearch] = useState('');
   const [proPopup, setProPopup] = useState(false);
+  const [dogs, setDogs] = useState(null); // null = not fetched, [] = no dogs
 
   // Engagement-based modal trigger state
   const detailClicksRef = useRef(0);
@@ -47,9 +63,18 @@ export default function RecallsPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  // Engagement-based Pro popup: 30s timer OR 2 detail clicks (whichever first)
-  // Timer resets each time user navigates to the page, but modal only shows
-  // once per visit (dismissed flag resets on cleanup when leaving page)
+  // Fetch dog profiles for profile match indicator
+  useEffect(() => {
+    if (!session?.user) { setDogs(null); return; }
+    const userId = session.user.id;
+    const email = session.user.email;
+    fetch(`/api/profile?user_id=${userId}&email=${encodeURIComponent(email)}`)
+      .then(r => r.json())
+      .then(d => setDogs(d.dogs || []))
+      .catch(() => setDogs(null));
+  }, [session]);
+
+  // Engagement-based Pro popup: 20s timer OR 2 detail clicks (whichever first)
   useEffect(() => {
     if (isPro) return;
     if (sessionStorage.getItem('gk_recalls_popup_dismissed')) return;
@@ -100,6 +125,17 @@ export default function RecallsPage() {
     { icon: '\u{1F4CA}', title: 'Score change notifications', desc: "Formulas change quietly. We\u2019ll tell you when yours does." },
     { icon: '\u{1F50D}', title: 'Ingredient deep-dives', desc: "See what\u2019s really behind every ingredient \u2014 quality signals, sourcing, red flags." },
   ];
+
+  /* ── label+value card for the key details grid ── */
+  const DetailCard = ({ label, value }) => (
+    <div style={{
+      padding: '10px 14px', background: '#faf8f4', borderRadius: 10,
+      border: '1px solid #f0ebe3',
+    }}>
+      <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.4, wordBreak: 'break-word' }}>{value}</div>
+    </div>
+  );
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
@@ -193,14 +229,30 @@ export default function RecallsPage() {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {displayCards.map((r, idx) => {
+            {displayCards.map((r) => {
               const urgent = isUrgent(r);
               const expanded = expandedId === r.id;
+              const dimmed = expandedId !== null && expandedId !== r.id;
               const multiBrand = (r.brand_name || '').includes('/') || (r.brand_name || '').includes(' and ') || (r.brand_name || '').includes(', ');
 
+              // Key detail fields — only render cards for fields that have data
+              const keyDetails = [];
+              if (r.lot_numbers) keyDetails.push({ label: 'Lot Number(s)', value: r.lot_numbers });
+              if (r.best_by_date || r.expiration_date) keyDetails.push({ label: 'Best By / Expiration', value: r.best_by_date || r.expiration_date });
+              if (r.upc_code || r.upc) keyDetails.push({ label: 'UPC Code', value: r.upc_code || r.upc });
+
+              // Distribution & packaging line
+              const distParts = [];
+              if (r.package_size) distParts.push(`Package: ${r.package_size}`);
+              if (r.distribution_pattern) distParts.push(`Distribution: ${r.distribution_pattern}`);
+              const distLine = distParts.length > 0 ? distParts.join(' \u00b7 ') : null;
+
+              // Profile match
+              const profileResult = session?.user ? checkProfileMatch(r, dogs || []) : null;
+
               return (
-                <div key={r.id}>
-                  {/* Card */}
+                <div key={r.id} style={{ opacity: dimmed ? 0.5 : 1, transition: 'opacity 0.3s ease' }}>
+                  {/* Card row */}
                   <div
                     className="recall-card"
                     onClick={() => handleCardClick(r)}
@@ -270,41 +322,90 @@ export default function RecallsPage() {
                       </div>
 
                       {/* Arrow */}
-                      <span style={{ fontSize: 16, color: '#d4c9b8', flexShrink: 0, fontWeight: 300 }}>{'\u203A'}</span>
+                      <span style={{ fontSize: 16, color: '#d4c9b8', flexShrink: 0, fontWeight: 300, transition: 'transform 0.2s', transform: expanded ? 'rotate(90deg)' : 'none' }}>{'\u203A'}</span>
                     </div>
                   </div>
 
-                  {/* Expanded detail (Pro only) */}
-                  {expanded && (
+                  {/* ══ Expanded detail ══ */}
+                  <div className="recall-detail" style={{
+                    maxHeight: expanded ? 800 : 0,
+                    overflow: 'hidden',
+                    transition: 'max-height 0.3s ease',
+                  }}>
                     <div style={{
-                      padding: '20px 24px', background: '#fff',
+                      padding: '24px 24px 20px', background: '#fff',
                       border: urgent ? '1px solid #e8c4c4' : '1px solid #ede8df',
                       borderTop: 'none', borderRadius: '0 0 16px 16px',
                     }}>
+
+                      {/* Section 1 — Recall summary */}
                       {r.reason && (
-                        <div style={{ fontSize: 14, color: '#3d352b', lineHeight: 1.6, marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>{r.reason}</div>
+                        <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>{r.reason}</div>
                       )}
-                      {r.lot_numbers && (
-                        <div style={{ marginBottom: 12 }}>
-                          <div style={{ fontSize: 11, fontWeight: 700, color: '#8a7e72', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4, fontFamily: "'DM Sans', sans-serif" }}>Lot Numbers</div>
-                          <div style={{ fontSize: 13, color: '#5a5248', fontFamily: "'DM Sans', sans-serif" }}>{r.lot_numbers}</div>
+
+                      {/* Section 2 — Key details grid */}
+                      {keyDetails.length > 0 && (
+                        <div className="key-details-grid" style={{
+                          display: 'grid', gridTemplateColumns: `repeat(${Math.min(keyDetails.length, 3)}, 1fr)`,
+                          gap: 10, marginBottom: 16,
+                        }}>
+                          {keyDetails.map((d) => <DetailCard key={d.label} label={d.label} value={d.value} />)}
                         </div>
                       )}
-                      {r.distribution_pattern && (
-                        <div style={{ marginBottom: 12 }}>
-                          <div style={{ fontSize: 11, fontWeight: 700, color: '#8a7e72', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4, fontFamily: "'DM Sans', sans-serif" }}>Distribution</div>
-                          <div style={{ fontSize: 13, color: '#5a5248', fontFamily: "'DM Sans', sans-serif" }}>{r.distribution_pattern}</div>
+
+                      {/* Section 3 — Distribution & packaging */}
+                      {distLine && (
+                        <div style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.6, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+                          {distLine}
                         </div>
                       )}
-                      <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
+
+                      {/* Section 4 — Profile match indicator */}
+                      {session?.user ? (
+                        profileResult && dogs && dogs.length > 0 ? (
+                          profileResult.match ? (
+                            <div style={{ background: '#fce8e8', borderRadius: 10, padding: '10px 14px', marginBottom: 16 }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: '#A32D2D', fontFamily: "'DM Sans', sans-serif" }}>
+                                {'\u26A0\uFE0F'} This may affect {profileResult.dog.dog_name}&rsquo;s food
+                              </div>
+                              <div style={{ fontSize: 12, color: '#5a3030', fontFamily: "'DM Sans', sans-serif", marginTop: 4 }}>
+                                Check the lot numbers above against your bag
+                              </div>
+                              <button onClick={(e) => { e.stopPropagation(); router.push('/discover'); }} style={{
+                                marginTop: 8, padding: '6px 14px', borderRadius: 100,
+                                border: '1.5px solid #e8c4c4', background: 'transparent',
+                                color: '#A32D2D', fontSize: 12, fontWeight: 600, cursor: 'pointer',
+                                fontFamily: "'DM Sans', sans-serif",
+                              }}>Find Alternatives &rarr;</button>
+                            </div>
+                          ) : (
+                            <div style={{ background: '#eef5e4', borderRadius: 10, padding: '10px 14px', marginBottom: 16 }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: '#639922', fontFamily: "'DM Sans', sans-serif" }}>
+                                {'\u2713'} Not in your profile
+                              </div>
+                              <div style={{ fontSize: 12, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", marginTop: 4 }}>
+                                {profileResult.dog.dog_name} eats {profileResult.dog.current_food || 'an unlisted food'}
+                              </div>
+                            </div>
+                          )
+                        ) : null
+                      ) : (
+                        <div style={{ background: '#f5f2ec', borderRadius: 10, padding: '10px 14px', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+                          <span style={{ fontSize: 12, color: '#8a7e72' }}>Sign in to check if this recall affects your dog </span>
+                          <span onClick={(e) => { e.stopPropagation(); router.push('/login'); }} style={{ fontSize: 12, color: '#C9A84C', fontWeight: 600, cursor: 'pointer' }}>Sign in &rarr;</span>
+                        </div>
+                      )}
+
+                      {/* Section 5 — Action buttons */}
+                      <div style={{ display: 'flex', gap: 10, marginTop: 4, flexWrap: 'wrap' }}>
                         {r.source_url && (
-                          <a href={r.source_url} target="_blank" rel="noopener noreferrer" style={{
-                            padding: '8px 18px', borderRadius: 100, background: '#A32D2D', color: '#fff',
+                          <a href={r.source_url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{
+                            padding: '8px 16px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
                             fontSize: 12, fontWeight: 700, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
-                          }}>View Source &rarr;</a>
+                          }}>View FDA Source &rarr;</a>
                         )}
                         <button onClick={(e) => { e.stopPropagation(); router.push('/discover'); }} style={{
-                          padding: '8px 18px', borderRadius: 100, border: '1.5px solid #ede8df',
+                          padding: '8px 16px', borderRadius: 100, border: '1.5px solid #ede8df',
                           background: 'transparent', color: '#1a1612', fontSize: 12, fontWeight: 600,
                           cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
                         }}>Find Alternatives</button>
@@ -331,7 +432,7 @@ export default function RecallsPage() {
                         </div>
                       )}
                     </div>
-                  )}
+                  </div>
                 </div>
               );
             })}
@@ -340,7 +441,7 @@ export default function RecallsPage() {
         )}
       </div>
 
-      {/* Engagement-based Pro Popup (after 30s or 2 detail clicks, once per session) */}
+      {/* Engagement-based Pro Popup (after 20s or 2 detail clicks, once per session) */}
       {proPopup && (
         <>
           <div onClick={closeProPopup} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000 }} />
@@ -402,6 +503,7 @@ export default function RecallsPage() {
           .pro-popup-modal { padding: 24px !important; }
           .recall-inline-cta { padding: 24px 20px !important; }
           .recall-inline-cta p { max-width: 100% !important; }
+          .key-details-grid { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 480px) {
           .recall-inline-cta button { width: 100% !important; }
