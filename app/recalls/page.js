@@ -58,7 +58,7 @@ export default function RecallsPage() {
       if (!sessionStorage.getItem('gk_recalls_popup_dismissed')) {
         setProPopup(true);
       }
-    }, 30000);
+    }, 20000);
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [isPro]);
 
