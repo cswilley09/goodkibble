@@ -19,6 +19,7 @@ const PRO_ALERT_FEATURES = [
   'Recall alerts sent to your email',
   'Score change notifications',
   'Algorithm update alerts',
+  'Manufacturer ingredient change notifications',
 ];
 
 const PRO_OTHER_FEATURES = [
