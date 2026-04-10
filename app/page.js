@@ -482,7 +482,10 @@ function FooterCTA({ onNavigate, onSelect }) {
 export default function Home() {
   const [proteinCounts, setProteinCounts] = useState({});
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     fetch('/api/foods?featured=marquee')
@@ -508,7 +511,7 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4', opacity: mounted ? 1 : 0, transition: 'opacity 0.15s ease' }}>
 
       {/* ═══ NAV ═══ */}
       <nav className="site-nav" style={{
