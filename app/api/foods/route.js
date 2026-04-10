@@ -64,35 +64,18 @@ export async function GET(request) {
     return NextResponse.json(stripCanary(data))
   }
 
-  // All products (for discover page) — raw fetch to avoid Next.js cache
+  // All products (for discover page)
   const all = searchParams.get('all')
   if (all === 'true') {
-    try {
-      const cols = 'id,name,brand,flavor,protein_dmb,fat_dmb,carbs_dmb,fiber_dmb,primary_protein,image_url,quality_score,slug,brand_slug,is_canary';
-      const baseUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/dog_foods_v2?select=${cols}`;
-      const hdrs = {
-        'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-        'X-Cache-Bust': `${Date.now()}`,
-      };
-
-      const r1 = await fetch(`${baseUrl}&limit=1000&offset=0`, { headers: hdrs, cache: 'no-store' });
-      const d1 = await r1.json();
-      if (!Array.isArray(d1)) return NextResponse.json([]);
-
-      // Only fetch batch 2 if batch 1 was full
-      let d2 = [];
-      if (d1.length === 1000) {
-        const r2 = await fetch(`${baseUrl}&limit=1000&offset=1000`, { headers: hdrs, cache: 'no-store' });
-        const raw2 = await r2.json();
-        if (Array.isArray(raw2)) d2 = raw2;
-      }
-
-      return NextResponse.json(stripCanary([...d1, ...d2]));
-    } catch (err) {
-      console.error('[foods all] Error:', err.message);
-      return NextResponse.json([]);
-    }
+    const { data: batch1 } = await supabase
+      .from('dog_foods_v2')
+      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary')
+      .range(0, 999)
+    const { data: batch2 } = await supabase
+      .from('dog_foods_v2')
+      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary')
+      .range(1000, 1999)
+    return NextResponse.json(stripCanary([...(batch1 || []), ...(batch2 || [])]))
   }
 
   return NextResponse.json({ error: 'Missing query parameter' }, { status: 400 })
