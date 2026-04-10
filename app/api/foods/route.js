@@ -20,24 +20,25 @@ export async function GET(request) {
 
   // Featured presets for homepage
   const featured = searchParams.get('featured')
+  // Helper: filter out canary rows in JS (avoids PostgREST query plan caching)
+  const stripCanary = (rows) => (rows || []).filter(r => !r.is_canary);
+
   if (featured === 'marquee') {
     const { data } = await supabase
       .from('dog_foods_v2')
-      .select('id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug')
+      .select('id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug, is_canary')
       .not('quality_score', 'is', null)
-      .not('is_canary', 'eq', true)
-      .limit(200)
-    return NextResponse.json(data || [])
+      .limit(250)
+    return NextResponse.json(stripCanary(data))
   }
   if (featured === 'scoring-demo') {
     const { data } = await supabase
       .from('dog_foods_v2')
-      .select('name, brand, quality_score, score_breakdown')
+      .select('name, brand, quality_score, score_breakdown, is_canary')
       .not('score_breakdown', 'is', null)
       .gte('quality_score', 80)
-      .not('is_canary', 'eq', true)
-      .limit(20)
-    return NextResponse.json(data || [])
+      .limit(30)
+    return NextResponse.json(stripCanary(data))
   }
 
   // Brand filter
@@ -45,11 +46,10 @@ export async function GET(request) {
   if (brand) {
     const { data } = await supabase
       .from('dog_foods_v2')
-      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug')
+      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary')
       .eq('brand', brand)
-      .not('is_canary', 'eq', true)
       .order('name')
-    return NextResponse.json(data || [])
+    return NextResponse.json(stripCanary(data))
   }
 
   // All products (for discover page) - paginated
@@ -59,10 +59,9 @@ export async function GET(request) {
     const batch = parseInt(searchParams.get('batch') || '1000')
     const { data } = await supabase
       .from('dog_foods_v2')
-      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug')
-      .not('is_canary', 'eq', true)
+      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary')
       .range(offset, offset + batch - 1)
-    return NextResponse.json(data || [])
+    return NextResponse.json(stripCanary(data))
   }
 
   return NextResponse.json({ error: 'Missing query parameter' }, { status: 400 })

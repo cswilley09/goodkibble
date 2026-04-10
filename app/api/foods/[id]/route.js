@@ -24,9 +24,9 @@ export async function GET(request, { params }) {
       .from('dog_foods_v2')
       .select('*')
       .eq('id', id)
-      .not('is_canary', 'eq', true)
       .single()
     if (error) return NextResponse.json({ error: error.message }, { status: 404 })
+    if (data?.is_canary) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json(data)
   }
 
@@ -39,9 +39,9 @@ export async function GET(request, { params }) {
       .select('*')
       .eq('brand_slug', id)
       .eq('slug', productSlug)
-      .not('is_canary', 'eq', true)
       .single()
     if (error) return NextResponse.json({ error: error.message }, { status: 404 })
+    if (data?.is_canary) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json(data)
   }
 
