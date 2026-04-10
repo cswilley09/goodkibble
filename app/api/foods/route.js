@@ -67,27 +67,11 @@ export async function GET(request) {
   // All products (for discover page)
   const all = searchParams.get('all')
   if (all === 'true') {
-    const cols = 'id,name,brand,flavor,protein_dmb,fat_dmb,carbs_dmb,fiber_dmb,primary_protein,image_url,quality_score,slug,brand_slug,is_canary';
-    let allData = [];
-    let rangeStart = 0;
-    while (true) {
-      const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/dog_foods_v2?select=${cols}`;
-      const res = await fetch(url, {
-        headers: {
-          'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-          'Range': `${rangeStart}-${rangeStart + 999}`,
-          'X-Cache-Bust': `${Date.now()}`,
-        },
-        cache: 'no-store',
-      });
-      const data = await res.json();
-      if (!Array.isArray(data) || data.length === 0) break;
-      allData = allData.concat(data);
-      if (data.length < 1000) break;
-      rangeStart += 1000;
-    }
-    return NextResponse.json(stripCanary(allData))
+    const { data } = await supabase
+      .from('dog_foods_v2')
+      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary')
+      .range(0, 1999)
+    return NextResponse.json(stripCanary(data))
   }
 
   return NextResponse.json({ error: 'Missing query parameter' }, { status: 400 })
