@@ -156,7 +156,7 @@ export default function HowWeScorePage() {
             display: 'inline-block', padding: '5px 14px', borderRadius: 100,
             background: '#f0ebe3', fontSize: 12, color: '#8a7e72', fontWeight: 500,
             fontFamily: "'DM Sans', sans-serif",
-          }}>Methodology v1.3 · Last updated March 2026</span>
+          }}>Methodology v1.5 · Last updated April 2026</span>
         </div>
 
         {/* ─── Section 2: Principles ─── */}
@@ -271,11 +271,12 @@ export default function HowWeScorePage() {
             <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Nutrition</div>
             <GlanceBar label="Protein" pts={25} max={25} color={CAT_COLORS.protein} />
             <GlanceBar label="Fat" pts={15} max={15} color={CAT_COLORS.fat} />
-            <GlanceBar label="Carbohydrates" pts={15} max={15} color={CAT_COLORS.carbs} />
+            <GlanceBar label="Carb level" pts={5} max={5} color={CAT_COLORS.carbs} />
+            <GlanceBar label="Carb source quality" pts={5} max={5} color={CAT_COLORS.carbs} />
             <GlanceBar label="Fiber" pts={5} max={5} color={CAT_COLORS.fiber} />
             <div style={{ height: 1, background: '#ede8df', margin: '16px 0' }} />
             <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Ingredients</div>
-            <GlanceBar label="Protein sources" pts={15} max={15} color={CAT_COLORS.teal} />
+            <GlanceBar label="Protein sources" pts={20} max={20} color={CAT_COLORS.teal} />
             <GlanceBar label="Preservatives" pts={10} max={10} color={CAT_COLORS.teal} />
             <GlanceBar label="Additives" pts={5} max={5} color={CAT_COLORS.teal} />
             <GlanceBar label="Functional" pts={10} max={10} color={CAT_COLORS.teal} />
@@ -369,28 +370,51 @@ export default function HowWeScorePage() {
               <Citations text="AAFCO, 2016; NRC, 2006; Xenoulis & Steiner, 2010, The Veterinary Journal, 183(1):12-21" />
             </CategoryDetail>
 
-            {/* C — Carbohydrates */}
-            <CategoryDetail color={CAT_COLORS.carbs} name="Carbohydrates" maxPts={15} type="Nutrition">
+            {/* C1 — Carbohydrate Level */}
+            <CategoryDetail color={CAT_COLORS.carbs} name="Carb level" maxPts={5} type="Nutrition">
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D9E75', marginBottom: 8 }}>What the science establishes</div>
-              <P>Dogs have no established nutritional requirement for dietary carbohydrates (NRC, 2006). Dogs can synthesize glucose via gluconeogenesis from amino acids and glycerol. Starch is needed for kibble extrusion — it&apos;s a manufacturing necessity, not a nutritional one.</P>
-              <P>Research shows dietary protein-to-carbohydrate ratio impacts gut microbial composition in dogs, with more pronounced effects in obese dogs (Li et al., 2017). However, the study demonstrates microbial shifts, not clinical health outcomes.</P>
-              <P>What the science does NOT establish: a specific carbohydrate percentage above which health is impaired in healthy dogs.</P>
+              <P>Dogs have no established nutritional requirement for dietary carbohydrates (NRC, 2006). Dogs can synthesize glucose via gluconeogenesis. Starch is not nutritionally required but widely used and can serve as digestible energy sources. It is necessary for kibble extrusion.</P>
+              <P>Research shows dietary protein-to-carbohydrate ratio impacts gut microbial composition in dogs (Li et al., 2017). However, the study demonstrates microbial shifts, not clinical health outcomes.</P>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8A415', margin: '16px 0 8px' }}>How we score (design choices)</div>
-              <P>Lower carbohydrate scores higher based on the macronutrient displacement principle: higher protein and fat necessarily displace carbohydrates. Since dogs have no carbohydrate requirement, this rewards formulations that prioritize nutrients dogs do require. All bracket cutoffs are design choices based on our database distribution.</P>
+              <P>Lower carbohydrate scores higher based on the macronutrient displacement principle. Since dogs have no carbohydrate requirement, this rewards formulations that prioritize nutrients dogs do require.</P>
               <ThresholdTable
-                headers={['Range (DMB)', 'Points', 'Rationale']}
+                headers={['Range (DMB)', 'Points']}
                 rows={[
-                  ['Below 20%', '15', 'Lowest carb tier — design choice'],
-                  ['20–29.9%', '12', 'Low carb — design choice'],
-                  ['30–39.9%', '10', 'Moderate — where most mid-range kibbles fall'],
-                  ['40–49.9%', '5', 'High carb — design choice'],
-                  ['50%+', '1', 'Very high — top of observed range'],
+                  ['Below 25%', '5'],
+                  ['25.0–34.9%', '4'],
+                  ['35.0–44.9%', '3'],
+                  ['45.0–54.9%', '2'],
+                  ['55%+', '1'],
                 ]}
               />
               <div style={{ padding: '10px 14px', borderRadius: 10, background: '#faf8f5', fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginTop: 8 }}>
-                <strong>Note:</strong> Carbohydrate on GoodKibble is calculated as: 100 − protein − fat − fiber − ash (all dry matter basis). When ash is not provided by the manufacturer, we use a sliding default: 7% for products under 30% protein DMB, 8% for 30–39.9%, 9% for 40%+.
+                <strong>Note:</strong> Carbohydrate is calculated as: 100 − protein − fat − fiber − ash (all dry matter basis). When ash is not provided, we use a sliding default: 7% for products under 30% protein DMB, 8% for 30–39.9%, 9% for 40%+.
               </div>
-              <Citations text="NRC, 2006 (Ch. 3); Li et al., 2017, mBio, 8(1):e01703-16; Carciofi et al., 2008, JAPN, 92(3):326-336" />
+              <Citations text="NRC, 2006 (Ch. 3); Li et al., 2017, mBio, 8(1):e01703-16" />
+            </CategoryDetail>
+
+            {/* C2 — Carbohydrate Source Quality */}
+            <CategoryDetail color={CAT_COLORS.carbs} name="Carb source quality" maxPts={5} type="Nutrition">
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D9E75', marginBottom: 8 }}>What the science establishes</div>
+              <P>Six peer-reviewed studies have measured glycemic responses in dogs fed different carbohydrate sources. Sweet potato, oats, barley, lentils, and peas consistently produce lower and more sustained glucose/insulin responses than white rice, corn, and tapioca (Carciofi 2008, Adolphe 2012/2015, Vastolo 2023, Rankovic 2020, Domingues 2023).</P>
+              <P>Low-GI carb sources may protect cardiovascular function — simple carbs elevated methylglyoxal (an oxidative stress marker) and impaired endothelial function in Beagles, while complex carbs did not (Adolphe 2012).</P>
+              <P><strong>Caveats:</strong> GI methodology has not been formally validated for companion animals. Extrusion processing changes glycemic behavior vs raw ingredients. Clinical significance in healthy, non-diabetic dogs is still being established.</P>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8A415', margin: '16px 0 8px' }}>How we score (design choices)</div>
+              <P>We identify the primary carbohydrate source in the ingredient list and score it based on which glycemic tier it falls into. If the primary carb source appears before any animal protein in the ingredient list, the score is capped at 2 points — indicating a carb-heavy formulation.</P>
+              <ThresholdTable
+                headers={['Tier', 'Examples', 'Points']}
+                rows={[
+                  ['Tier 1 — Low GI', 'Sweet potato, oats, barley, lentils, peas, chickpeas', '5'],
+                  ['Tier 2 — Moderate GI', 'Brown rice, sorghum, whole grain corn, millet, quinoa', '4'],
+                  ['Tier 3 + Tier 1 present', 'Primary is refined, but low-GI source also present', '3'],
+                  ['Tier 3 — Higher GI', 'White rice, ground corn, tapioca, potato starch, wheat flour', '2'],
+                  ['Tier 3 — All refined', 'Multiple refined carb sources, no low-GI present', '1'],
+                ]}
+              />
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: '#faf8f5', fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginTop: 8 }}>
+                <strong>Note on DCM:</strong> This scoring is source-quality-neutral on the grain vs grain-free debate. Oatmeal and barley (grains) score Tier 1 equally with peas and lentils (pulses). The algorithm rewards glycemic profile quality, not grain-free status.
+              </div>
+              <Citations text="Carciofi et al., 2008, JAPN, 92(3):326-336; Adolphe et al., 2012, Nutrition Research, 32:278-284; Adolphe et al., 2015, JAPN, 99:767-776; Vastolo et al., 2023, Frontiers in Vet Sci, 10:1201611; Rankovic et al., 2020, J Animal Science (PMC7455921); Domingues et al., 2023, Animal Feed Science & Technology" />
             </CategoryDetail>
 
             {/* D — Fiber */}
@@ -414,26 +438,38 @@ export default function HowWeScorePage() {
             </CategoryDetail>
 
             {/* E — Protein Sources */}
-            <CategoryDetail color={CAT_COLORS.teal} name="Protein sources" maxPts={15} type="Ingredients">
+            <CategoryDetail color={CAT_COLORS.teal} name="Protein sources" maxPts={20} type="Ingredients">
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#1D9E75', marginBottom: 8 }}>What the science establishes</div>
               <P>FDA requires ingredients listed in descending order by weight. AAFCO defines specific terms: &quot;chicken&quot; means clean flesh; &quot;chicken meal&quot; means rendered and dried; generic terms like &quot;meat meal&quot; indicate unspecified sources that may vary between batches.</P>
-              <P>Animal-sourced ingredients have significantly higher protein quality scores than plant-sourced ingredients (Templeman &amp; Shoveller, 2022). Fresh chicken provided the highest protein quality without amino acid supplementation, while chicken by-product meal had the lowest digestibility (Sieja, Oba et al., 2023). Plant protein concentrates are typically limiting in methionine, taurine, and lysine relative to animal proteins (Case et al., 2011).</P>
-              <P>What the science does NOT establish: a point-value system for ranking ingredients by position, or a specific threshold for how many plant protein concentrates constitute a concern.</P>
+              <P>Animal-sourced ingredients have significantly higher protein quality scores (DIAAS) than plant-sourced ingredients (Templeman &amp; Shoveller, 2022). Fresh chicken provided the highest protein quality without amino acid supplementation, while chicken by-product meal had the lowest digestibility (Sieja, Oba et al., 2023).</P>
+              <P>Organ meats (liver, heart, gizzard, lung) are legitimate animal protein sources with high amino acid bioavailability — they are counted as named animal proteins, not skipped as filler.</P>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8A415', margin: '16px 0 8px' }}>How we score (design choices)</div>
-              <P>Named animal protein sources are rewarded over generic terms based on the ingredient transparency principle. The plant protein concentrate penalty targets ingredients whose amino acid limitations are documented — and where consumers cannot determine from the label whether amino acids have been supplemented.</P>
+              <P>This category was expanded from 15 to 20 points in v1.5 to reflect the strength of DIAAS research establishing real protein quality differences between animal and plant sources. Named animal protein sources are rewarded over generic terms based on the ingredient transparency principle.</P>
               <ThresholdTable
                 headers={['Component', 'Points']}
                 rows={[
-                  ['First animal protein: named', '5'],
+                  ['First animal protein: named', '7'],
                   ['First animal protein: generic', '1'],
-                  ['Second animal protein: named', '3'],
+                  ['Second animal protein: named', '5'],
                   ['Second animal protein: generic', '1'],
-                  ['Third+ animal protein in top 5', '2'],
-                  ['No by-products', '5'],
-                  ['Named by-products only', '3'],
-                  ['Generic by-products', '0'],
-                  ['Splitting penalty (if detected)', '−3'],
-                  ['Plant concentrate penalty (if 2+ in top 10)', '−2'],
+                  ['Third+ animal protein in top 5: named', '3'],
+                  ['Third+ animal protein in top 5: generic', '1'],
+                ]}
+              />
+              <P style={{ marginTop: 12 }}>By-product scoring is position-dependent — a trace amount after salt is qualitatively different from a primary ingredient:</P>
+              <ThresholdTable
+                headers={['By-product type', 'In top 5', 'Before salt', 'After salt']}
+                rows={[
+                  ['None', '5 pts', '5 pts', '5 pts'],
+                  ['Named (e.g. chicken by-product)', '2 pts', '3 pts', '4 pts'],
+                  ['Generic (e.g. meat by-products)', '0 pts', '1 pt', '2 pts'],
+                ]}
+              />
+              <ThresholdTable
+                headers={['Penalty', 'Points', 'Trigger']}
+                rows={[
+                  ['Ingredient splitting', '−3', 'Same plant root appears 3+ times'],
+                  ['Plant concentrate', '−2', '2+ concentrated plant proteins in top 10'],
                 ]}
               />
               <Citations text="FDA 21 CFR 501.4; AAFCO ingredient definitions; Case et al., 2011; Templeman & Shoveller, 2022, JAS, 100(11):skac279; Sieja, Oba et al., 2023, JAS, 101:skad093" />
@@ -474,17 +510,16 @@ export default function HowWeScorePage() {
             {/* H — Functional Ingredients */}
             <CategoryDetail color={CAT_COLORS.teal} name="Functional ingredients" maxPts={10} type="Ingredients">
               <P>Some ingredients provide specific health benefits beyond basic nutrition — like probiotics for gut health, fish oil for anti-inflammatory omega-3 fatty acids, glucosamine for joint support, and chelated minerals for better nutrient absorption.</P>
-              <P>We only award points for functional ingredients that appear before salt in the ingredient list. Salt typically sits at roughly the 1% mark in dog food formulations — anything listed after it is present in very small amounts that may not provide a meaningful dose.</P>
-              <P>One important nuance: kibble is manufactured at very high temperatures that kill most probiotic cultures. Unless the manufacturer guarantees live cultures (CFU count) in the guaranteed analysis, we award reduced points for listed probiotics.</P>
+              <P>Functional ingredients are checked across the full ingredient list. Ingredients appearing before salt receive full credit. Those appearing after salt — typically present at &lt;1% of the formula — receive reduced credit (~60%), reflecting that they are included at lower but potentially meaningful doses.</P>
+              <P>The previous version (v1.4 and earlier) used a binary rule: before salt = full credit, after salt = zero. This was overly punitive — many manufacturers add probiotics, glucosamine, and chelated minerals at inclusion levels below 1% that may still be biologically relevant.</P>
               <ThresholdTable
-                headers={['Ingredient', 'Points', 'Condition']}
+                headers={['Ingredient', 'Before salt', 'After salt']}
                 rows={[
-                  ['Probiotics (named strains)', '2', 'Listed before salt'],
-                  ['Probiotics with CFU guarantee', '3', 'GA includes live culture count'],
-                  ['Omega-3 source (fish oil, flaxseed, etc.)', '3', 'Listed before salt'],
-                  ['Glucosamine / chondroitin', '2', 'Listed before salt'],
-                  ['Chelated minerals (proteinates, chelates)', '2', 'Listed before salt'],
-                  ['Maximum', '10', ''],
+                  ['Probiotics (named strains)', '2 pts', '1 pt'],
+                  ['Omega-3 source (fish oil, flaxseed, etc.)', '3 pts', '2 pts'],
+                  ['Glucosamine / chondroitin', '2 pts', '1 pt'],
+                  ['Chelated minerals (proteinates, chelates)', '2 pts', '1 pt'],
+                  ['Maximum', '10 pts', ''],
                 ]}
               />
               <div style={{ padding: '10px 14px', borderRadius: 10, background: '#faf8f5', fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginTop: 8 }}>
@@ -535,12 +570,14 @@ export default function HowWeScorePage() {
           <div style={{ marginTop: 20, padding: '20px 24px', background: '#fff', borderRadius: 16, border: '1px solid #ede8df' }}>
             <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Version history</div>
             {[
-              { v: 'v1.3 (current)', desc: 'Separated verified facts (Layer 1) from scoring design (Layer 2). Removed Kealy (2002) — study is about caloric restriction, not protein. Corrected Carciofi and Xenoulis journal references. Added Templeman & Shoveller (2022) and Sieja/Oba (2023) to protein sources.' },
+              { v: 'v1.5 (current)', desc: 'Category C restructured: 15→10 pts, split into C1 (Level, 5 pts) + C2 (Source Quality, 5 pts). C2 tiers carb sources by published canine glycemic index data from 6 peer-reviewed studies. Category E expanded: 15→20 pts backed by DIAAS research. Organ meats reclassified as animal proteins. Position-dependent byproduct scoring. Category H: after-salt functional ingredients now receive partial credit (~60%) instead of zero.' },
+              { v: 'v1.4', desc: 'Separated verified facts (Layer 1) from scoring design (Layer 2). Removed Kealy (2002). Corrected Carciofi and Xenoulis journal references. Added Templeman & Shoveller (2022) and Sieja/Oba (2023) to protein sources.' },
+              { v: 'v1.3', desc: 'Fat level threshold moved from 18% to 20% to eliminate cliff effect. Upper threshold moved from 22% to 24%. Validated against full 1,061-product database.' },
               { v: 'v1.2', desc: 'Plant protein concentrate detection added. Fat threshold adjusted based on full-database validation.' },
               { v: 'v1.1', desc: 'Sliding ash defaults, ingredient splitting detection, probiotic viability adjustment, preservative threshold refinement.' },
               { v: 'v1.0', desc: 'Initial methodology.' },
             ].map((ver, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 3 ? '1px solid #f0ebe3' : 'none' }}>
+              <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 5 ? '1px solid #f0ebe3' : 'none' }}>
                 <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', minWidth: 100, fontFamily: "'DM Sans', sans-serif" }}>{ver.v}</div>
                 <div style={{ fontSize: 12, color: '#8a7e72' }}>{ver.desc}</div>
               </div>

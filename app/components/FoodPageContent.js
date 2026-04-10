@@ -928,7 +928,7 @@ export default function FoodPageContent({ productId }) {
                       <a href="/how-we-score" style={{ color: '#b5aa99', textDecoration: 'none' }}
                         onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
                         onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
-                      >How we score</a> · v{food.score_version || '1.4'}
+                      >How we score</a> · v{food.score_version || '1.5'}
                     </div>
                   </div>
                 </div>
