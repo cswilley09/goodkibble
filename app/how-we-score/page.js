@@ -446,15 +446,18 @@ export default function HowWeScorePage() {
               <ThresholdTable
                 headers={['Component', 'Points']}
                 rows={[
-                  ['First animal protein: named', '7'],
+                  ['First animal protein: named', '6'],
                   ['First animal protein: generic', '1'],
-                  ['Second animal protein: named', '5'],
+                  ['Second animal protein: named', '3'],
                   ['Second animal protein: generic', '1'],
-                  ['Third+ animal protein in top 5: named', '3'],
+                  ['Third+ animal protein in top 5: named', '2'],
                   ['Third+ animal protein in top 5: generic', '1'],
+                  ['Species diversity: 2 groups in top 5', '+2'],
+                  ['Species diversity: 3+ groups in top 5', '+3'],
                 ]}
               />
-              <P style={{ marginTop: 12 }}>By-product scoring is position-dependent — a trace amount after salt is qualitatively different from a primary ingredient:</P>
+              <P style={{ marginTop: 12 }}>Species diversity rewards formulations using multiple protein species groups (poultry, red meat, fish, shellfish). Organ meats map to their parent species — chicken liver counts as poultry, not a separate group.</P>
+              <P>By-product scoring is position-dependent — a trace amount after salt is qualitatively different from a primary ingredient:</P>
               <ThresholdTable
                 headers={['By-product type', 'In top 5', 'Before salt', 'After salt']}
                 rows={[
