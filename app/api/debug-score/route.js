@@ -7,28 +7,38 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id') || '1126';
 
-  // Fresh client — no singleton, no cache
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
 
-  const { data, error } = await supabase
+  // Test 1: specific columns (this works)
+  const { data: d1 } = await supabase
     .from('dog_foods_v2')
     .select('id, score_breakdown')
     .eq('id', id)
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  // Test 2: select * (like the food API)
+  const { data: d2 } = await supabase
+    .from('dog_foods_v2')
+    .select('*')
+    .eq('id', id)
+    .single();
 
-  const e = data?.score_breakdown?.categories?.E_protein_source;
+  // Test 3: select * with canary filter (exact food API pattern)
+  const { data: d3 } = await supabase
+    .from('dog_foods_v2')
+    .select('*')
+    .eq('id', id)
+    .or('is_canary.is.null,is_canary.eq.false')
+    .single();
+
+  const get = (d) => d?.score_breakdown?.categories?.E_protein_source?.first_animal_protein || 'MISSING';
 
   return NextResponse.json({
-    id: data?.id,
-    has_score_breakdown: !!data?.score_breakdown,
-    e_protein_source_keys: e ? Object.keys(e) : null,
-    first_animal_protein: e?.first_animal_protein || 'MISSING',
-    second_animal_protein: e?.second_animal_protein || 'MISSING',
-    raw_e: e,
+    test1_specific_cols: get(d1),
+    test2_select_star: get(d2),
+    test3_star_with_canary: get(d3),
   });
 }
