@@ -18,7 +18,7 @@ export async function GET(request) {
       .from('dog_foods_v2')
       .select('id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug')
       .not('quality_score', 'is', null)
-      .or('is_canary.is.null,is_canary.eq.false')
+      .not('is_canary', 'eq', true)
       .limit(200)
     return NextResponse.json(data || [])
   }
@@ -28,7 +28,7 @@ export async function GET(request) {
       .select('name, brand, quality_score, score_breakdown')
       .not('score_breakdown', 'is', null)
       .gte('quality_score', 80)
-      .or('is_canary.is.null,is_canary.eq.false')
+      .not('is_canary', 'eq', true)
       .limit(20)
     return NextResponse.json(data || [])
   }
@@ -40,7 +40,7 @@ export async function GET(request) {
       .from('dog_foods_v2')
       .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug')
       .eq('brand', brand)
-      .or('is_canary.is.null,is_canary.eq.false')
+      .not('is_canary', 'eq', true)
       .order('name')
     return NextResponse.json(data || [])
   }
@@ -53,7 +53,7 @@ export async function GET(request) {
     const { data } = await supabase
       .from('dog_foods_v2')
       .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug')
-      .or('is_canary.is.null,is_canary.eq.false')
+      .not('is_canary', 'eq', true)
       .range(offset, offset + batch - 1)
     return NextResponse.json(data || [])
   }
