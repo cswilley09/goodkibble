@@ -17,7 +17,7 @@ function calcDMB(protein, fat, fiber, moisture, ash) {
 }
 function scoreColor(s) { return s >= 80 ? '#2d7a4f' : s >= 60 ? '#c47a20' : '#b5483a'; }
 function scoreBg(s) { return s >= 80 ? '#e6f4e0' : s >= 60 ? '#fff0dc' : '#fce4e4'; }
-function scoreLabel(s) { return s >= 90 ? 'Excellent' : s >= 83 ? 'Great' : s >= 74 ? 'Good' : s >= 60 ? 'Fair' : 'Poor'; }
+function scoreLabel(s) { return s >= 90 ? 'Excellent' : s >= 80 ? 'Great' : s >= 70 ? 'Good' : s >= 60 ? 'Fair' : 'Poor'; }
 
 const inputStyle = { width: '100%', padding: '8px 12px', borderRadius: 8, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'DM Sans', sans-serif", color: '#1a1612', boxSizing: 'border-box' };
 const labelStyle = { fontSize: 11, fontWeight: 600, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block', letterSpacing: 0.5, textTransform: 'uppercase' };

@@ -13,8 +13,8 @@ function getScoreColor(score) {
 
 function getScoreTier(score) {
   if (score >= 90) return 'Excellent';
-  if (score >= 83) return 'Great';
-  if (score >= 74) return 'Good';
+  if (score >= 80) return 'Great';
+  if (score >= 70) return 'Good';
   if (score >= 60) return 'Fair';
   return 'Poor';
 }

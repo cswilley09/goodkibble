@@ -10,9 +10,9 @@ import SearchBox from '../components/SearchBox';
 /* ── filter range definitions ── */
 const SCORE_RANGES = [
   { label: 'Excellent (90-100)', min: 90, max: 100 },
-  { label: 'Great (83-89)', min: 83, max: 89 },
-  { label: 'Good (74-82)', min: 74, max: 82 },
-  { label: 'Fair (60-73)', min: 60, max: 73 },
+  { label: 'Great (80-89)', min: 80, max: 89 },
+  { label: 'Good (70-79)', min: 70, max: 79 },
+  { label: 'Fair (60-69)', min: 60, max: 69 },
   { label: 'Poor (under 60)', min: 0, max: 59 },
 ];
 
@@ -54,8 +54,8 @@ function getScoreColor(score) {
 
 function getScoreTier(score) {
   if (score >= 90) return 'Excellent';
-  if (score >= 83) return 'Great';
-  if (score >= 74) return 'Good';
+  if (score >= 80) return 'Great';
+  if (score >= 70) return 'Good';
   if (score >= 60) return 'Fair';
   return 'Poor';
 }

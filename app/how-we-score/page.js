@@ -289,9 +289,9 @@ export default function HowWeScorePage() {
           <div style={{ padding: '24px 28px', background: '#fff', borderRadius: 20, border: '1px solid #ede8df', marginTop: 16 }}>
             {[
               { range: '90–100', label: 'Excellent', color: TIER_COLORS.excellent, desc: 'Exceeds standards across all categories' },
-              { range: '83–89', label: 'Great', color: TIER_COLORS.great, desc: 'Strong profile with minor gaps' },
-              { range: '74–82', label: 'Good', color: TIER_COLORS.good, desc: 'Meets AAFCO standards with favorable ingredients' },
-              { range: '60–73', label: 'Fair', color: TIER_COLORS.fair, desc: 'Meets minimums, room for improvement' },
+              { range: '80–89', label: 'Great', color: TIER_COLORS.great, desc: 'Strong profile with minor gaps' },
+              { range: '70–79', label: 'Good', color: TIER_COLORS.good, desc: 'Meets AAFCO standards with favorable ingredients' },
+              { range: '60–69', label: 'Fair', color: TIER_COLORS.fair, desc: 'Meets minimums, room for improvement' },
               { range: 'Below 60', label: 'Poor', color: TIER_COLORS.poor, desc: 'Notable ingredient or nutritional concerns' },
             ].map((tier, i) => (
               <div key={i} style={{

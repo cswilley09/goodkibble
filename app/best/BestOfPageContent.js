@@ -7,8 +7,8 @@ import SignUpButton from '@/app/components/SignUpButton';
 
 function getScoreTier(score) {
   if (score >= 90) return { label: 'Excellent', color: '#639922' };
-  if (score >= 83) return { label: 'Great', color: '#639922' };
-  if (score >= 74) return { label: 'Good', color: '#1D9E75' };
+  if (score >= 80) return { label: 'Great', color: '#639922' };
+  if (score >= 70) return { label: 'Good', color: '#1D9E75' };
   if (score >= 60) return { label: 'Fair', color: '#EF9F27' };
   return { label: 'Poor', color: '#D85A30' };
 }

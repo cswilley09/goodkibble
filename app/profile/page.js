@@ -175,7 +175,7 @@ function ScoreCircle({ score, size = 48 }) {
   const c = 2 * Math.PI * r;
   const o = c * (1 - score / 100);
   const color = score >= 70 ? '#2d7a4f' : score >= 50 ? '#c47a20' : '#b5483a';
-  const tier = score >= 90 ? 'Excellent' : score >= 83 ? 'Great' : score >= 74 ? 'Good' : score >= 60 ? 'Fair' : 'Poor';
+  const tier = score >= 90 ? 'Excellent' : score >= 80 ? 'Great' : score >= 70 ? 'Good' : score >= 60 ? 'Fair' : 'Poor';
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
