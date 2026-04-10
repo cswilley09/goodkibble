@@ -389,12 +389,7 @@ export default function RecallsPage() {
                             </div>
                           )
                         ) : null
-                      ) : (
-                        <div style={{ background: '#f5f2ec', borderRadius: 10, padding: '10px 14px', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
-                          <span style={{ fontSize: 12, color: '#8a7e72' }}>Sign in to check if this recall affects your dog </span>
-                          <span onClick={(e) => { e.stopPropagation(); router.push('/login'); }} style={{ fontSize: 12, color: '#C9A84C', fontWeight: 600, cursor: 'pointer' }}>Sign in &rarr;</span>
-                        </div>
-                      )}
+                      ) : null}
 
                       {/* Section 5 — Action buttons */}
                       <div style={{ display: 'flex', gap: 10, marginTop: 4, flexWrap: 'wrap' }}>
