@@ -64,14 +64,25 @@ export async function GET(request) {
     return NextResponse.json(stripCanary(data))
   }
 
-  // All products (for discover page)
+  // All products (for discover page) — raw fetch to avoid Next.js cache, two batches for >1000 products
   const all = searchParams.get('all')
   if (all === 'true') {
-    const { data } = await supabase
-      .from('dog_foods_v2')
-      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary')
-      .range(0, 1999)
-    return NextResponse.json(stripCanary(data))
+    const cols = 'id,name,brand,flavor,protein_dmb,fat_dmb,carbs_dmb,fiber_dmb,primary_protein,image_url,quality_score,slug,brand_slug,is_canary';
+    const baseUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/dog_foods_v2?select=${cols}`;
+    const hdrs = {
+      'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+      'X-Cache-Bust': `${Date.now()}`,
+    };
+
+    // Fetch batch 1 (0-999) and batch 2 (1000-1999) in parallel
+    const [r1, r2] = await Promise.all([
+      fetch(`${baseUrl}&limit=1000&offset=0`, { headers: hdrs, cache: 'no-store' }),
+      fetch(`${baseUrl}&limit=1000&offset=1000`, { headers: hdrs, cache: 'no-store' }),
+    ]);
+    const [d1, d2] = await Promise.all([r1.json(), r2.json()]);
+    const allData = [...(Array.isArray(d1) ? d1 : []), ...(Array.isArray(d2) ? d2 : [])];
+    return NextResponse.json(stripCanary(allData))
   }
 
   return NextResponse.json({ error: 'Missing query parameter' }, { status: 400 })
