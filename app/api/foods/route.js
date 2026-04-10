@@ -11,6 +11,8 @@ function getSupabase() {
 }
 
 export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
+export const revalidate = 0
 
 export async function GET(request) {
   const limited = checkRateLimit(request)
@@ -38,7 +40,9 @@ export async function GET(request) {
     });
     const raw = await res.json();
     const cleaned = (raw || []).filter(r => !r.is_canary).map(({ is_canary, ...rest }) => rest);
-    return NextResponse.json(cleaned)
+    return NextResponse.json(cleaned, {
+      headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate', 'CDN-Cache-Control': 'no-store' }
+    })
   }
   if (featured === 'scoring-demo') {
     const { data } = await supabase
