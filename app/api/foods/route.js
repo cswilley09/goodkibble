@@ -25,13 +25,19 @@ export async function GET(request) {
   const stripCanary = (rows) => (rows || []).filter(r => !r.is_canary);
 
   if (featured === 'marquee') {
-    const { data } = await supabase
-      .from('dog_foods_v2')
-      .select('*')
-      .not('quality_score', 'is', null)
-      .limit(250)
-    const cleaned = stripCanary(data).map(({ id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug }) =>
-      ({ id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug }))
+    // Raw fetch to bypass all Supabase client / PostgREST caching
+    const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/dog_foods_v2?select=id,name,brand,primary_protein,protein_dmb,fat_dmb,carbs_dmb,quality_score,image_url,slug,brand_slug,is_canary&quality_score=not.is.null&limit=250`;
+    const res = await fetch(url, {
+      headers: {
+        'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        'Cache-Control': 'no-cache, no-store',
+        'Pragma': 'no-cache',
+      },
+      cache: 'no-store',
+    });
+    const raw = await res.json();
+    const cleaned = (raw || []).filter(r => !r.is_canary).map(({ is_canary, ...rest }) => rest);
     return NextResponse.json(cleaned)
   }
   if (featured === 'scoring-demo') {
