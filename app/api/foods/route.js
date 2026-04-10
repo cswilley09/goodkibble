@@ -67,13 +67,20 @@ export async function GET(request) {
   // All products (for discover page) - paginated
   const all = searchParams.get('all')
   if (all === 'true') {
-    const offset = parseInt(searchParams.get('offset') || '0')
-    const batch = parseInt(searchParams.get('batch') || '1000')
-    const { data } = await supabase
-      .from('dog_foods_v2')
-      .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary')
-      .range(offset, offset + batch - 1)
-    return NextResponse.json(stripCanary(data))
+    // Fetch all products — paginate internally to get everything, filter canaries, return full set
+    let allData = [];
+    let internalOffset = 0;
+    while (true) {
+      const { data } = await supabase
+        .from('dog_foods_v2')
+        .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary')
+        .range(internalOffset, internalOffset + 999)
+      if (!data || data.length === 0) break;
+      allData = allData.concat(data);
+      if (data.length < 1000) break;
+      internalOffset += 1000;
+    }
+    return NextResponse.json(stripCanary(allData))
   }
 
   return NextResponse.json({ error: 'Missing query parameter' }, { status: 400 })
