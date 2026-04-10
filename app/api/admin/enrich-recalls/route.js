@@ -41,10 +41,15 @@ function extractPageText(html) {
     - id: string — enrich a specific recall by ID
 */
 export async function POST(request) {
+  const body = await request.json().catch(() => ({}));
+  const secret = process.env.ADMIN_SECRET || 'gk_admin_2026';
+  if (body.admin_secret !== secret) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const supabase = getSupabase();
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-  const body = await request.json().catch(() => ({}));
   const limit = Math.min(body.limit || 10, 50);
   const force = body.force || false;
   const specificId = body.id || null;

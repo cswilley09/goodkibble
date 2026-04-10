@@ -24,6 +24,10 @@ function getSupabase() {
 */
 export async function POST(request) {
   const body = await request.json().catch(() => ({}));
+  const secret = process.env.ADMIN_SECRET || 'gk_admin_2026';
+  if (body.admin_secret !== secret) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const limit = Math.min(body.limit || 100, 1000);
   const offset = body.offset || 0;
   const specificId = body.id || null;
