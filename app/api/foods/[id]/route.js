@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server'
-import { getSupabase } from '@/lib/supabaseServer'
+import { createClient } from '@supabase/supabase-js'
 import { checkRateLimit } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
+
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
+}
 
 export async function GET(request, { params }) {
   const limited = checkRateLimit(request)
