@@ -33,10 +33,9 @@ export async function GET(request) {
       headers: {
         'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-        'Cache-Control': 'no-cache, no-store',
-        'Pragma': 'no-cache',
       },
       cache: 'no-store',
+      next: { revalidate: 0 },
     });
     const raw = await res.json();
     const cleaned = (raw || []).filter(r => !r.is_canary).map(({ is_canary, ...rest }) => rest);
