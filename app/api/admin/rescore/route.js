@@ -70,7 +70,7 @@ export async function POST(request) {
           .update({
             quality_score: result.total,
             score_breakdown: result,
-            score_version: '1.4',
+            score_version: '1.5',
             scored_at: new Date().toISOString(),
           })
           .eq('id', p.id);

@@ -519,14 +519,25 @@ function CategoryDetailPanel({ catKey, data, color }) {
     ];
     context = 'AAFCO minimum is 5.5% for adults, 8.5% for growth.';
     citation = 'AAFCO, 2016; NRC, 2006';
-  } else if (catKey === 'C_carbs') {
+  } else if (catKey === 'C1_carb_level' || catKey === 'C_carbs') {
     cells = [
       { l: 'Carbs (DMB)', v: `${(Math.round(c.carbs_dmb * 10) / 10)}%` },
-      { l: 'Bracket', v: `→ ${c.score} pts` },
+      { l: 'Bracket', v: `→ ${c.score}/${c.max} pts` },
       { l: 'NRC requirement', v: 'None established' },
     ];
     context = 'Dogs have no dietary requirement for carbohydrates (NRC, 2006). Carbs = 100 − protein − fat − fiber − ash.';
     citation = 'NRC, 2006';
+  } else if (catKey === 'C2_carb_source') {
+    cells = [
+      { l: 'Primary carb source', v: c.primary_carb ? capitalize(c.primary_carb) : 'Not detected' },
+      { l: 'Glycemic tier', v: c.tier_label || 'Unknown' },
+      { l: 'Score', v: `${c.score}/${c.max} pts` },
+    ];
+    if (c.carb_before_protein) {
+      cells.push({ l: 'Position penalty', v: 'Carb appears before animal protein — capped at 2 pts' });
+    }
+    context = 'Carb source quality based on published canine glycemic index data. Low-GI sources (sweet potato, oats, lentils) score higher.';
+    citation = 'Carciofi 2008; Adolphe 2012, 2015; Vastolo 2023; Rankovic 2020; Domingues 2023';
   } else if (catKey === 'D_fiber') {
     cells = [
       { l: 'Fiber (DMB)', v: `${(Math.round(c.fiber_dmb * 10) / 10)}%` },
@@ -659,8 +670,15 @@ function ScoreBreakdownCard({ breakdown }) {
     { key: 'A_protein', label: 'Protein', color: '#2d7a4f' },
     { key: 'B_fat', label: 'Fat', color: '#c47a20' },
   ];
-  const nutRow2 = [
+  // Support both old (C_carbs) and new (C1+C2) breakdown keys
+  const hasNewCarbs = !!cats?.C1_carb_level;
+  const nutRow2 = hasNewCarbs ? [
+    { key: 'C1_carb_level', label: 'Carb Level', color: '#5a7a9e' },
+    { key: 'C2_carb_source', label: 'Carb Source', color: '#4a8a9e' },
+  ] : [
     { key: 'C_carbs', label: 'Carbs', color: '#5a7a9e' },
+  ];
+  const nutRow2b = [
     { key: 'D_fiber', label: 'Fiber', color: '#8a6aaf' },
   ];
   const ingRow1 = [
@@ -696,6 +714,7 @@ function ScoreBreakdownCard({ breakdown }) {
       <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Nutrition</div>
       {renderPair(nutRow1)}
       {renderPair(nutRow2)}
+      {renderPair(nutRow2b)}
 
       <div style={{ height: 1, background: '#ede8df', margin: '14px 0 24px' }} />
 
