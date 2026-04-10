@@ -5,7 +5,8 @@ import { checkRateLimit } from '@/lib/rateLimit'
 function getSupabase() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    { db: { schema: 'public' }, global: { headers: { 'Cache-Control': 'no-cache' } } }
   )
 }
 
@@ -26,10 +27,12 @@ export async function GET(request) {
   if (featured === 'marquee') {
     const { data } = await supabase
       .from('dog_foods_v2')
-      .select('id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug, is_canary')
+      .select('*')
       .not('quality_score', 'is', null)
       .limit(250)
-    return NextResponse.json(stripCanary(data))
+    const cleaned = stripCanary(data).map(({ id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug }) =>
+      ({ id, name, brand, primary_protein, protein_dmb, fat_dmb, carbs_dmb, quality_score, image_url, slug, brand_slug }))
+    return NextResponse.json(cleaned)
   }
   if (featured === 'scoring-demo') {
     const { data } = await supabase
