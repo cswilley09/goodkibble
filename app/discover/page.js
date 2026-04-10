@@ -148,11 +148,11 @@ function ProductCard({ food, onClick }) {
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
     >
       {food.image_url && !imgErr ? (
-        <div style={{ width: 56, height: 72, borderRadius: 10, overflow: 'hidden', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <img src={food.image_url} alt="" onError={() => setImgErr(true)} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+        <div style={{ width: 56, height: 72, borderRadius: 10, overflow: 'hidden', background: '#f5f2ec', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <img src={food.image_url} alt="" loading="lazy" decoding="async" onError={() => setImgErr(true)} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
         </div>
       ) : (
-        <div style={{ width: 56, height: 72, borderRadius: 10, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🐕</div>
+        <div style={{ width: 56, height: 72, borderRadius: 10, background: '#f5f2ec', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🐕</div>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 12, color: '#8a7e72', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
@@ -194,6 +194,7 @@ function DiscoverContent() {
   const [allFoods, setAllFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(48);
 
   /* filter state */
   const [selectedScoreRange, setSelectedScoreRange] = useState([]);
@@ -332,6 +333,9 @@ function DiscoverContent() {
 
   const activeFilterCount = [selectedScoreRange, selectedBrands, selectedProteins, selectedProteinRange, selectedCarbRange, selectedFatRange, selectedFiberRange]
     .filter(a => a.length > 0).length;
+
+  // Reset visible count when filters change
+  useEffect(() => { setVisibleCount(48); }, [filtered]);
 
   function clearAll() {
     setSelectedScoreRange([]);
@@ -561,10 +565,22 @@ function DiscoverContent() {
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
-                {sorted.map((f) => (
+                {sorted.slice(0, visibleCount).map((f) => (
                   <ProductCard key={f.id} food={f} onClick={() => goFood(f)} />
                 ))}
               </div>
+              {visibleCount < sorted.length && (
+                <div style={{ textAlign: 'center', marginTop: 24 }}>
+                  <button onClick={() => setVisibleCount(v => v + 48)} style={{
+                    padding: '12px 32px', borderRadius: 100, border: '1.5px solid #ede8df',
+                    background: '#fff', color: '#1a1612', fontSize: 14, fontWeight: 600,
+                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+                  }}
+                    onMouseEnter={(e) => { e.target.style.background = '#f5f0e8'; }}
+                    onMouseLeave={(e) => { e.target.style.background = '#fff'; }}
+                  >Show more ({sorted.length - visibleCount} remaining)</button>
+                </div>
+              )}
             )}
           </div>
         </div>
