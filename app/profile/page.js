@@ -253,6 +253,8 @@ export default function ProfilePage() {
   const [editFood, setEditFood] = useState(null); // { name, slug, brand_slug } or null
   const [saving, setSaving] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [changingFood, setChangingFood] = useState(false);
+  const [changeFoodSaving, setChangeFoodSaving] = useState(false);
 
   // Current food data from dog_foods_v2
   const [currentFoodData, setCurrentFoodData] = useState(null);
@@ -535,7 +537,7 @@ export default function ProfilePage() {
                     )}
 
                     {/* Buttons */}
-                    <div style={{ display: 'flex', gap: 10, marginTop: 20, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: 10, marginTop: 20, flexWrap: 'wrap', alignItems: 'center' }}>
                       <button onClick={() => goToFood(currentFoodData)} style={{
                         padding: '10px 24px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
                         fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
@@ -547,15 +549,118 @@ export default function ProfilePage() {
                           textDecoration: 'none', display: 'inline-block',
                         }}>Buy on Amazon &rarr;</a>
                       )}
+                      <button onClick={() => setChangingFood(true)} style={{
+                        padding: '10px 24px', borderRadius: 100, border: '1.5px solid #ede8df',
+                        background: 'transparent', color: '#8a7e72', fontSize: 13, fontWeight: 600,
+                        cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      }}>Change Food</button>
                     </div>
+
+                    {/* Inline food change picker */}
+                    {changingFood && (
+                      <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #f5f2ec' }}>
+                        <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 8 }}>Search for {displayName}&rsquo;s new food:</div>
+                        <FoodPicker value={changeFoodSaving ? null : undefined} onChange={async (food) => {
+                          if (!food || !food.slug) return;
+                          setChangeFoodSaving(true);
+                          try {
+                            const updates = {
+                              current_food: food.name,
+                              current_food_slug: `${food.brand_slug}/${food.slug}`,
+                            };
+                            const res = await fetch('/api/profile', {
+                              method: 'PATCH',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ dog_id: dog.id, updates }),
+                            });
+                            const result = await res.json();
+                            if (res.ok && result && !result.error) {
+                              setDogs(prev => prev.map((d, i) => i === activeDogIdx ? result : d));
+                              setCurrentFoodData(null);
+                              setPercentile(null);
+                              setAlternatives([]);
+                              setRefreshKey(k => k + 1);
+                              setChangingFood(false);
+                            } else {
+                              alert('Failed to update food. Please try again.');
+                            }
+                          } catch {
+                            alert('Failed to update food. Please try again.');
+                          }
+                          setChangeFoodSaving(false);
+                        }} />
+                        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                          <button onClick={() => setChangingFood(false)} style={{
+                            padding: '6px 16px', borderRadius: 100, border: '1px solid #ede8df',
+                            background: 'transparent', color: '#8a7e72', fontSize: 12, fontWeight: 600,
+                            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                          }}>Cancel</button>
+                          {changeFoodSaving && (
+                            <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", alignSelf: 'center' }}>Saving...</span>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <div style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
                     {dog?.current_food ? (
                       <span>Current food: <strong>{dog.current_food}</strong> — we couldn&rsquo;t match it to our database for scoring.</span>
                     ) : (
-                      <span>No current food set. <a href="/signup" style={{ color: '#C9A84C' }}>Update your profile</a> to add one.</span>
+                      <span>No current food set yet.</span>
                     )}
+                    <div style={{ marginTop: 12 }}>
+                      {!changingFood ? (
+                        <button onClick={() => setChangingFood(true)} style={{
+                          padding: '8px 20px', borderRadius: 100, border: '1.5px solid #ede8df',
+                          background: '#fff', color: '#1a1612', fontSize: 13, fontWeight: 600,
+                          cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                        }}>{dog?.current_food ? 'Change Food' : 'Add Food'}</button>
+                      ) : (
+                        <div>
+                          <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 8 }}>Search for {displayName}&rsquo;s food:</div>
+                          <FoodPicker value={changeFoodSaving ? null : undefined} onChange={async (food) => {
+                            if (!food || !food.slug) return;
+                            setChangeFoodSaving(true);
+                            try {
+                              const updates = {
+                                current_food: food.name,
+                                current_food_slug: `${food.brand_slug}/${food.slug}`,
+                              };
+                              const res = await fetch('/api/profile', {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ dog_id: dog.id, updates }),
+                              });
+                              const result = await res.json();
+                              if (res.ok && result && !result.error) {
+                                setDogs(prev => prev.map((d, i) => i === activeDogIdx ? result : d));
+                                setCurrentFoodData(null);
+                                setPercentile(null);
+                                setAlternatives([]);
+                                setRefreshKey(k => k + 1);
+                                setChangingFood(false);
+                              } else {
+                                alert('Failed to update food. Please try again.');
+                              }
+                            } catch {
+                              alert('Failed to update food. Please try again.');
+                            }
+                            setChangeFoodSaving(false);
+                          }} />
+                          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                            <button onClick={() => setChangingFood(false)} style={{
+                              padding: '6px 16px', borderRadius: 100, border: '1px solid #ede8df',
+                              background: 'transparent', color: '#8a7e72', fontSize: 12, fontWeight: 600,
+                              cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                            }}>Cancel</button>
+                            {changeFoodSaving && (
+                              <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", alignSelf: 'center' }}>Saving...</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
