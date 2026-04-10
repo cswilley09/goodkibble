@@ -328,7 +328,7 @@ export default function RecallsPage() {
 
                   {/* ══ Expanded detail ══ */}
                   <div className="recall-detail" style={{
-                    maxHeight: expanded ? 800 : 0,
+                    maxHeight: expanded ? 1200 : 0,
                     overflow: 'hidden',
                     transition: 'max-height 0.3s ease',
                   }}>
@@ -338,9 +338,19 @@ export default function RecallsPage() {
                       borderTop: 'none', borderRadius: '0 0 16px 16px',
                     }}>
 
-                      {/* Section 1 — Recall description (full text, skip if identical to product_description shown in header) */}
-                      {r.reason && r.reason !== r.product_description && (
+                      {/* Section 1 — AI summary (preferred) or fallback to reason */}
+                      {r.detail_summary ? (
+                        <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>{r.detail_summary}</div>
+                      ) : r.reason && r.reason !== r.product_description ? (
                         <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>{r.reason}</div>
+                      ) : null}
+
+                      {/* Affected products (from AI enrichment) */}
+                      {r.affected_products && (
+                        <div style={{ marginBottom: 16 }}>
+                          <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 6 }}>Affected Products</div>
+                          <div style={{ fontSize: 13, color: '#1a1612', lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif" }}>{r.affected_products}</div>
+                        </div>
                       )}
 
                       {/* Section 2 — Key details grid */}
@@ -353,10 +363,28 @@ export default function RecallsPage() {
                         </div>
                       )}
 
-                      {/* Section 3 — Distribution & packaging */}
-                      {distLine && (
+                      {/* Section 3 — Distribution */}
+                      {(r.distribution_pattern || distLine) && (
                         <div style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.6, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
-                          {distLine}
+                          {r.distribution_pattern || distLine}
+                        </div>
+                      )}
+
+                      {/* Consumer action (from AI enrichment) */}
+                      {r.consumer_action && (
+                        <div style={{
+                          background: '#fef9ee', border: '1px solid #f0e6c8', borderRadius: 10,
+                          padding: '12px 16px', marginBottom: 16,
+                        }}>
+                          <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#c47a20', fontFamily: "'DM Sans', sans-serif", marginBottom: 6 }}>What to do</div>
+                          <div style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif" }}>{r.consumer_action}</div>
+                        </div>
+                      )}
+
+                      {/* Company contact (from AI enrichment) */}
+                      {r.company_contact && (
+                        <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+                          <strong>Company contact:</strong> {r.company_contact}
                         </div>
                       )}
 
