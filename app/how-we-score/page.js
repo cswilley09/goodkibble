@@ -8,11 +8,10 @@ import SignUpButton from '../components/SignUpButton';
 /* ── Score tier colors ── */
 const TIER_COLORS = {
   excellent: '#639922',
-  veryGood: '#639922',
+  great: '#639922',
   good: '#1D9E75',
-  adequate: '#EF9F27',
-  belowAvg: '#D85A30',
-  concerning: '#A32D2D',
+  fair: '#EF9F27',
+  poor: '#D85A30',
 };
 
 const CAT_COLORS = {
@@ -290,15 +289,14 @@ export default function HowWeScorePage() {
           <div style={{ padding: '24px 28px', background: '#fff', borderRadius: 20, border: '1px solid #ede8df', marginTop: 16 }}>
             {[
               { range: '90–100', label: 'Excellent', color: TIER_COLORS.excellent, desc: 'Exceeds standards across all categories' },
-              { range: '80–89', label: 'Very good', color: TIER_COLORS.veryGood, desc: 'Strong profile with minor gaps' },
-              { range: '70–79', label: 'Good', color: TIER_COLORS.good, desc: 'Meets AAFCO standards with favorable ingredients' },
-              { range: '60–69', label: 'Adequate', color: TIER_COLORS.adequate, desc: 'Meets minimums, room for improvement' },
-              { range: '50–59', label: 'Below average', color: TIER_COLORS.belowAvg, desc: 'Notable ingredient or nutritional concerns' },
-              { range: 'Below 50', label: 'Concerning', color: TIER_COLORS.concerning, desc: 'Below AAFCO minimums or significant concerns' },
+              { range: '83–89', label: 'Great', color: TIER_COLORS.great, desc: 'Strong profile with minor gaps' },
+              { range: '74–82', label: 'Good', color: TIER_COLORS.good, desc: 'Meets AAFCO standards with favorable ingredients' },
+              { range: '60–73', label: 'Fair', color: TIER_COLORS.fair, desc: 'Meets minimums, room for improvement' },
+              { range: 'Below 60', label: 'Poor', color: TIER_COLORS.poor, desc: 'Notable ingredient or nutritional concerns' },
             ].map((tier, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', gap: 14, padding: '10px 0',
-                borderBottom: i < 5 ? '1px solid #f0ebe3' : 'none',
+                borderBottom: i < 4 ? '1px solid #f0ebe3' : 'none',
               }}>
                 <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: tier.color, minWidth: 60 }}>{tier.range}</div>
                 <div style={{ fontWeight: 600, fontSize: 14, color: tier.color, minWidth: 110 }}>{tier.label}</div>
@@ -448,15 +446,18 @@ export default function HowWeScorePage() {
               <ThresholdTable
                 headers={['Component', 'Points']}
                 rows={[
-                  ['First animal protein: named', '7'],
+                  ['First animal protein: named', '6'],
                   ['First animal protein: generic', '1'],
-                  ['Second animal protein: named', '5'],
+                  ['Second animal protein: named', '3'],
                   ['Second animal protein: generic', '1'],
-                  ['Third+ animal protein in top 5: named', '3'],
+                  ['Third+ animal protein in top 5: named', '2'],
                   ['Third+ animal protein in top 5: generic', '1'],
+                  ['Species diversity: 2 groups in top 5', '+2'],
+                  ['Species diversity: 3+ groups in top 5', '+3'],
                 ]}
               />
-              <P style={{ marginTop: 12 }}>By-product scoring is position-dependent — a trace amount after salt is qualitatively different from a primary ingredient:</P>
+              <P style={{ marginTop: 12 }}>Species diversity rewards formulations using multiple protein species groups (poultry, red meat, fish, shellfish). Organ meats map to their parent species — chicken liver counts as poultry, not a separate group.</P>
+              <P>By-product scoring is position-dependent — a trace amount after salt is qualitatively different from a primary ingredient:</P>
               <ThresholdTable
                 headers={['By-product type', 'In top 5', 'Before salt', 'After salt']}
                 rows={[

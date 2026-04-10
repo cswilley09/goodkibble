@@ -435,11 +435,10 @@ function CompareToggle({ food }) {
 /* ── Score tier helper ── */
 function getScoreTier(score) {
   if (score >= 90) return { label: 'Excellent', color: '#639922' };
-  if (score >= 80) return { label: 'Very Good', color: '#639922' };
-  if (score >= 70) return { label: 'Good', color: '#1D9E75' };
-  if (score >= 60) return { label: 'Adequate', color: '#EF9F27' };
-  if (score >= 50) return { label: 'Below Average', color: '#D85A30' };
-  return { label: 'Concerning', color: '#C0392B' };
+  if (score >= 83) return { label: 'Great', color: '#639922' };
+  if (score >= 74) return { label: 'Good', color: '#1D9E75' };
+  if (score >= 60) return { label: 'Fair', color: '#EF9F27' };
+  return { label: 'Poor', color: '#D85A30' };
 }
 
 /* ── Score Ring ── */
@@ -549,6 +548,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
     cells = [
       { l: 'First animal protein', v: capitalize(c.first_animal_protein) || 'None' },
       { l: 'Second animal protein', v: capitalize(c.second_animal_protein) || 'None in top 5' },
+      { l: 'Species diversity', v: c.diversity_label || `${(c.species_diversity || []).length} group(s)` },
       { l: 'By-product status', v: capitalize(c.byproduct_status) || 'None' },
       { l: 'Splitting penalty', v: c.splitting_penalty ? capitalize(`${c.splitting_penalty}`) : 'None' },
     ];
@@ -913,6 +913,18 @@ export default function FoodPageContent({ productId }) {
                       <span style={{ fontWeight: 600, color: '#6b6157' }}>Primary Protein:</span> {food.primary_protein}
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* Prescription diet disclaimer */}
+              {food.brand && (/prescription|veterinary|vet diet/i.test(food.brand) || /prescription|veterinary|vet diet/i.test(food.name)) && (
+                <div style={{
+                  padding: '10px 14px', borderRadius: 10, background: '#f5f2ec',
+                  border: '1px solid #ede8df', marginBottom: 16,
+                  fontSize: 12, color: '#8a7e72', lineHeight: 1.5,
+                  fontFamily: "'DM Sans', sans-serif",
+                }}>
+                  This score evaluates general formulation quality for healthy adult dogs. Veterinary/prescription diets are formulated for specific clinical conditions and are not intended to score highly on a general-purpose scale.
                 </div>
               )}
 
