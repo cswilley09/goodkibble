@@ -564,6 +564,7 @@ function DiscoverContent() {
                 <div style={{ fontSize: 14, marginTop: 8 }}>Try removing some filters</div>
               </div>
             ) : (
+              <>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
                 {sorted.slice(0, visibleCount).map((f) => (
                   <ProductCard key={f.id} food={f} onClick={() => goFood(f)} />
@@ -581,6 +582,7 @@ function DiscoverContent() {
                   >Show more ({sorted.length - visibleCount} remaining)</button>
                 </div>
               )}
+              </>
             )}
           </div>
         </div>
