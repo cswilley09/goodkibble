@@ -338,10 +338,9 @@ export default function ProfilePage() {
         const scored = all.filter(f => f.quality_score != null).length;
         setPercentile(scored > 0 ? Math.round((below / scored) * 100) : null);
 
-        // Alternatives: higher score, same protein (or all), has image
+        // Top-scored kibbles: same protein (or all), has image, exclude current food
         let alts = all.filter(f =>
           f.quality_score != null &&
-          f.quality_score > currentFoodData.quality_score &&
           f.image_url &&
           f.id !== currentFoodData.id
         );
@@ -665,12 +664,12 @@ export default function ProfilePage() {
                 )}
               </div>
 
-              {/* Higher-Scored Alternatives */}
+              {/* Top-Scored Kibbles */}
               {currentFoodData && (
                 <div style={cardStyle}>
-                  <div style={eyebrow()}>Higher-Scored {altProteinOnly && currentFoodData.primary_protein ? currentFoodData.primary_protein : ''} Kibbles</div>
+                  <div style={eyebrow()}>Top-Scored {altProteinOnly && currentFoodData.primary_protein ? currentFoodData.primary_protein : ''} Kibbles</div>
                   <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
-                    These foods {altProteinOnly && currentFoodData.primary_protein ? (<>share the same primary protein as {displayName}&rsquo;s current food and </>) : null}scored higher on our 0&ndash;100 scale.
+                    {altProteinOnly && currentFoodData.primary_protein ? (<>Top-scoring {currentFoodData.primary_protein.toLowerCase()} kibbles on our 0&ndash;100 scale.</>) : <>Top-scoring kibbles on our 0&ndash;100 scale.</>}
                   </p>
                   <p style={{ fontSize: 11, color: '#b5aa99', fontStyle: 'italic', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
                     Switching foods should always be done gradually. Consult your vet before making changes.
