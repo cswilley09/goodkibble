@@ -677,10 +677,11 @@ function ScoreBreakdownCard({ breakdown }) {
     { key: 'C2_carb_source', label: 'Carb Source', color: '#4a8a9e' },
   ] : [
     { key: 'C_carbs', label: 'Carbs', color: '#5a7a9e' },
-  ];
-  const nutRow2b = [
     { key: 'D_fiber', label: 'Fiber', color: '#8a6aaf' },
   ];
+  const nutRow3 = hasNewCarbs ? [
+    { key: 'D_fiber', label: 'Fiber', color: '#8a6aaf' },
+  ] : [];
   const ingRow1 = [
     { key: 'E_protein_source', label: 'Protein sources', color: '#C8A415', textColor: '#A08310' },
     { key: 'F_preservatives', label: 'Preservatives', color: '#C8A415', textColor: '#A08310' },
@@ -693,10 +694,12 @@ function ScoreBreakdownCard({ breakdown }) {
   const renderPair = (tiles) => (
     <div className="score-tile-pair" style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
       {tiles.map((t) => (
-        <ScoreTile key={t.key} catKey={t.key} label={t.label}
-          color={t.color} textColor={t.textColor}
-          data={cats[t.key]} isExpanded={expandedCat === t.key}
-          onToggle={toggleExpand} />
+        <div key={t.key} style={{ flex: 1, maxWidth: tiles.length === 1 ? 'calc(50% - 5px)' : undefined }}>
+          <ScoreTile catKey={t.key} label={t.label}
+            color={t.color} textColor={t.textColor}
+            data={cats[t.key]} isExpanded={expandedCat === t.key}
+            onToggle={toggleExpand} />
+        </div>
       ))}
     </div>
   );
@@ -714,7 +717,7 @@ function ScoreBreakdownCard({ breakdown }) {
       <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Nutrition</div>
       {renderPair(nutRow1)}
       {renderPair(nutRow2)}
-      {renderPair(nutRow2b)}
+      {nutRow3.length > 0 && renderPair(nutRow3)}
 
       <div style={{ height: 1, background: '#ede8df', margin: '14px 0 24px' }} />
 
