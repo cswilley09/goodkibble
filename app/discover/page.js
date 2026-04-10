@@ -226,18 +226,9 @@ function DiscoverContent() {
   /* fetch all products once */
   useEffect(() => {
     async function load() {
-      let all = [];
-      let offset = 0;
-      const batch = 1000;
-      while (true) {
-        const res = await fetch(`/api/foods?all=true&offset=${offset}&batch=${batch}`);
-        const data = await res.json();
-        if (!data || data.length === 0) break;
-        all = all.concat(data);
-        if (data.length < batch) break;
-        offset += batch;
-      }
-      setAllFoods(all);
+      const res = await fetch('/api/foods?all=true');
+      const data = await res.json();
+      setAllFoods(Array.isArray(data) ? data : []);
       setLoading(false);
     }
     load();
