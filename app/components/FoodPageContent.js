@@ -1238,6 +1238,7 @@ export default function FoodPageContent({ productId }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
           <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
+          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>

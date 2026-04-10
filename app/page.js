@@ -587,6 +587,7 @@ export default function Home() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#5a5248', textDecoration: 'none' }}>Terms</a>
           <a href="/privacy" style={{ color: '#5a5248', textDecoration: 'none' }}>Privacy</a>
+          <a href="/faq" style={{ color: '#5a5248', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>
