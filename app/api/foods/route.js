@@ -64,21 +64,28 @@ export async function GET(request) {
     return NextResponse.json(stripCanary(data))
   }
 
-  // All products (for discover page) - paginated
+  // All products (for discover page)
   const all = searchParams.get('all')
   if (all === 'true') {
-    // Fetch all products — paginate internally to get everything, filter canaries, return full set
+    const cols = 'id,name,brand,flavor,protein_dmb,fat_dmb,carbs_dmb,fiber_dmb,primary_protein,image_url,quality_score,slug,brand_slug,is_canary';
     let allData = [];
-    let internalOffset = 0;
+    let rangeStart = 0;
     while (true) {
-      const { data } = await supabase
-        .from('dog_foods_v2')
-        .select('id, name, brand, flavor, protein_dmb, fat_dmb, carbs_dmb, fiber_dmb, primary_protein, image_url, quality_score, slug, brand_slug, is_canary')
-        .range(internalOffset, internalOffset + 999)
-      if (!data || data.length === 0) break;
+      const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/dog_foods_v2?select=${cols}`;
+      const res = await fetch(url, {
+        headers: {
+          'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          'Range': `${rangeStart}-${rangeStart + 999}`,
+          'X-Cache-Bust': `${Date.now()}`,
+        },
+        cache: 'no-store',
+      });
+      const data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) break;
       allData = allData.concat(data);
       if (data.length < 1000) break;
-      internalOffset += 1000;
+      rangeStart += 1000;
     }
     return NextResponse.json(stripCanary(allData))
   }
