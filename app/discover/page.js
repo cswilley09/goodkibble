@@ -543,8 +543,17 @@ function DiscoverContent() {
           {/* product grid */}
           <div style={{ flex: 1, minWidth: 0 }}>
             {loading ? (
-              <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
-                <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <div key={i} style={{ background: '#fff', borderRadius: 16, padding: 16, border: '1px solid #ede8df', display: 'flex', gap: 14, alignItems: 'center' }}>
+                    <div style={{ width: 56, height: 72, borderRadius: 10, background: '#f0ebe3', flexShrink: 0, animation: 'pulse 1.5s ease infinite' }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ width: '40%', height: 10, borderRadius: 4, background: '#f0ebe3', marginBottom: 8, animation: 'pulse 1.5s ease infinite' }} />
+                      <div style={{ width: '75%', height: 12, borderRadius: 4, background: '#f0ebe3', marginBottom: 8, animation: 'pulse 1.5s ease 0.1s infinite' }} />
+                      <div style={{ width: '55%', height: 10, borderRadius: 4, background: '#f0ebe3', animation: 'pulse 1.5s ease 0.2s infinite' }} />
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : sorted.length === 0 ? (
               <div style={{ padding: '60px 32px', borderRadius: 24, border: '2px dashed #e8e0d4', textAlign: 'center', color: '#b5aa99' }}>

@@ -538,12 +538,12 @@ export default function Home() {
 
       {/* ═══ 1. HERO ═══ */}
       <div className="hero-section" style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 30, boxSizing: 'border-box' }}>
-        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 16, animation: 'fadeUp 0.6s ease both' }}>Know what&apos;s in the bowl</div>
+        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 16, animation: 'fadeUp 0.6s ease both' }}>1,000+ dog foods scored &amp; analyzed</div>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(38px, 5vw, 58px)', fontWeight: 900, color: '#1a1612', lineHeight: 1.08, letterSpacing: -2, marginBottom: 20, animation: 'fadeUp 0.6s ease 0.1s both' }}>
-          What&apos;s really in<br />your dog&apos;s food?
+          See what&apos;s really in<br />your dog&apos;s food
         </h1>
         <p style={{ fontSize: 18, color: '#8a7e72', lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px', fontFamily: "'DM Sans', sans-serif", animation: 'fadeUp 0.6s ease 0.2s both' }}>
-          Search any dog food. See exactly what's inside — ingredients, nutrition, and an honest score.
+          Search any dog food. Get a full breakdown of ingredients, nutrition, and an honest 0&ndash;100 score.
         </p>
         <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
           <SearchBox onSelect={handleSelect} variant="hero" />

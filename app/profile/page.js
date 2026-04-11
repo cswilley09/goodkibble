@@ -790,6 +790,26 @@ export default function ProfilePage() {
                   </div>
                 ))}
               </div>
+
+              {/* One-click Pro upgrade — free users only */}
+              {!isPro && (
+                <div style={{
+                  background: 'linear-gradient(135deg, #1a1612, #2a2318)', borderRadius: 20,
+                  padding: 20, textAlign: 'center',
+                }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>Upgrade</div>
+                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 800, color: '#faf8f4', marginBottom: 6 }}>Get more from GoodKibble</div>
+                  <p style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+                    Recall alerts, ingredient deep-dives, unlimited comparisons, and up to 5 dog profiles.
+                  </p>
+                  <button onClick={() => router.push('/pro')} style={{
+                    width: '100%', padding: '10px 0', borderRadius: 100, background: '#C9A84C', color: '#fff',
+                    fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer',
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}>Upgrade to Pro &rarr;</button>
+                  <div style={{ fontSize: 11, color: '#5a5248', marginTop: 8, fontFamily: "'DM Sans', sans-serif" }}>$29/year &middot; Cancel anytime</div>
+                </div>
+              )}
             </div>
           </div>
         )}

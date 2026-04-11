@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SignUpButton from '../components/SignUpButton';
 import RecallsNav from '../components/RecallsNav';
@@ -39,12 +39,8 @@ export default function RecallsPage() {
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState(null);
   const [search, setSearch] = useState('');
-  const [proPopup, setProPopup] = useState(false);
-  const [dogs, setDogs] = useState(null); // null = not fetched, [] = no dogs
-
-  // Engagement-based modal trigger state
-  const detailClicksRef = useRef(0);
-  const timerRef = useRef(null);
+  const [dogs, setDogs] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   useEffect(() => {
     fetch('/api/dashboard/recalls?days=365&type=recalls')
@@ -58,6 +54,10 @@ export default function RecallsPage() {
           return (sevOrder[a.severity] ?? 3) - (sevOrder[b.severity] ?? 3);
         });
         setRecalls(sorted);
+        if (sorted.length > 0) {
+          const latest = sorted[0].created_at || sorted[0].recall_date || sorted[0].report_date;
+          if (latest) setLastUpdated(new Date(latest));
+        }
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -74,29 +74,6 @@ export default function RecallsPage() {
       .catch(() => setDogs(null));
   }, [session]);
 
-  // Engagement-based Pro popup: 20s timer OR 2 detail clicks (whichever first)
-  useEffect(() => {
-    if (isPro) return;
-    if (sessionStorage.getItem('gk_recalls_popup_dismissed')) return;
-    timerRef.current = setTimeout(() => {
-      if (!sessionStorage.getItem('gk_recalls_popup_dismissed')) {
-        setProPopup(true);
-      }
-    }, 20000);
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, [isPro]);
-
-  function triggerProPopup() {
-    if (isPro) return;
-    if (sessionStorage.getItem('gk_recalls_popup_dismissed')) return;
-    setProPopup(true);
-    if (timerRef.current) clearTimeout(timerRef.current);
-  }
-
-  function closeProPopup() {
-    setProPopup(false);
-    sessionStorage.setItem('gk_recalls_popup_dismissed', '1');
-  }
 
   const filtered = search.trim()
     ? recalls.filter(r => {
@@ -111,20 +88,8 @@ export default function RecallsPage() {
 
   function handleCardClick(recall) {
     setExpandedId(expandedId === recall.id ? null : recall.id);
-    // Track detail clicks for engagement-based Pro popup (free users only)
-    if (!isPro) {
-      detailClicksRef.current += 1;
-      if (detailClicksRef.current >= 2) {
-        triggerProPopup();
-      }
-    }
   }
 
-  const benefits = [
-    { icon: '\u{1F514}', title: 'Instant recall alerts', desc: "Your dog\u2019s food gets recalled? You\u2019ll know within hours \u2014 not weeks." },
-    { icon: '\u{1F4CA}', title: 'Score change notifications', desc: "Formulas change quietly. We\u2019ll tell you when yours does." },
-    { icon: '\u{1F50D}', title: 'Ingredient deep-dives', desc: "See what\u2019s really behind every ingredient \u2014 quality signals, sourcing, red flags." },
-  ];
 
   /* ── label+value card for the key details grid ── */
   const DetailCard = ({ label, value }) => (
@@ -182,7 +147,10 @@ export default function RecallsPage() {
 
         {/* Header */}
         <h1 style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px' }}>FDA Dog Food Recalls</h1>
-        <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>Updated every 6 hours from FDA and AVMA sources</p>
+        <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
+          Updated every 6 hours from FDA and AVMA sources
+          {lastUpdated && <span style={{ marginLeft: 8, fontSize: 12, color: '#b5aa99' }}>&middot; Last checked {lastUpdated.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} at {lastUpdated.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>}
+        </p>
 
         {/* Search bar */}
         <div style={{ marginBottom: 12 }}>
@@ -455,53 +423,6 @@ export default function RecallsPage() {
         )}
       </div>
 
-      {/* Engagement-based Pro Popup (after 20s or 2 detail clicks, once per session) */}
-      {proPopup && (
-        <>
-          <div onClick={closeProPopup} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000 }} />
-          <div className="pro-popup-modal" style={{
-            position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-            background: '#fff', borderRadius: 24, padding: 36, maxWidth: 460,
-            width: 'calc(100% - 48px)', zIndex: 1001, textAlign: 'center',
-            fontFamily: "'DM Sans', sans-serif",
-          }}>
-            <div onClick={closeProPopup} style={{ position: 'absolute', top: 16, right: 16, fontSize: 18, color: '#b5aa99', cursor: 'pointer' }}>&times;</div>
-            <div style={{ fontSize: 32, marginBottom: 12 }}>{'\u{1F514}'}</div>
-            <h2 style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 24, fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>You&rsquo;re already checking &mdash; let us do it for you.</h2>
-            <p style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.6, marginBottom: 24 }}>
-              Get instant email alerts when the FDA issues a recall on any food your dog eats. Pro monitors every 6 hours so you don&rsquo;t have to.
-            </p>
-
-            {/* Benefits box */}
-            <div style={{ border: '1px solid #ede8df', borderRadius: 14, padding: '16px 20px', marginBottom: 24, textAlign: 'left' }}>
-              {benefits.map((b, i) => (
-                <div key={i} style={{
-                  display: 'flex', gap: 12, alignItems: 'flex-start', padding: '10px 0',
-                  borderBottom: i < benefits.length - 1 ? '1px solid #f5f2ec' : 'none',
-                }}>
-                  <span style={{ fontSize: 16, flexShrink: 0, marginTop: 1 }}>
-                    {b.icon}
-                  </span>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{b.title}</div>
-                    <div style={{ fontSize: 11, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginTop: 2, lineHeight: 1.4 }}>{b.desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button onClick={() => router.push('/pro')} style={{
-              width: '100%', padding: 14, borderRadius: 100, background: '#C9A84C', color: '#fff',
-              fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer',
-              fontFamily: "'DM Sans', sans-serif",
-            }}>Get GoodKibble Pro &rarr;</button>
-            <p style={{ fontSize: 12, color: '#b5aa99', marginTop: 8, marginBottom: 12 }}>$29/year &middot; Cancel anytime</p>
-            <div onClick={closeProPopup} style={{
-              fontSize: 13, color: '#8a7e72', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-            }}>Not right now</div>
-          </div>
-        </>
-      )}
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }

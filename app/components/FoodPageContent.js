@@ -749,8 +749,6 @@ export default function FoodPageContent({ productId }) {
   const [ingredientInfo, setIngredientInfo] = useState({});
   const [showStickyBuy, setShowStickyBuy] = useState(false);
   const { isPro } = useAuth();
-  const [showProBar, setShowProBar] = useState(false);
-  const [proBarDismissed, setProBarDismissed] = useState(false);
   const [activeIngredient, setActiveIngredient] = useState(null); // { idx, info }
   const [tooltipTop, setTooltipTop] = useState(0);
   const pillsContainerRef = useRef(null);
@@ -762,20 +760,6 @@ export default function FoodPageContent({ productId }) {
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
-
-  // Track unique product page views in session for Pro prompt
-  useEffect(() => {
-    if (isPro || !productId) return;
-    if (sessionStorage.getItem('gk_pro_bar_dismissed')) { setProBarDismissed(true); return; }
-    try {
-      const viewed = JSON.parse(sessionStorage.getItem('gk_viewed_products') || '[]');
-      if (!viewed.includes(productId)) {
-        viewed.push(productId);
-        sessionStorage.setItem('gk_viewed_products', JSON.stringify(viewed));
-      }
-      if (viewed.length >= 3) setShowProBar(true);
-    } catch {}
-  }, [productId, isPro]);
 
   const heroRef = useRef(null);
 
@@ -863,8 +847,37 @@ export default function FoodPageContent({ productId }) {
       </nav>
 
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '120px 0' }}>
-          <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 80px' }}>
+          {/* Skeleton: back button */}
+          <div style={{ width: 160, height: 14, borderRadius: 4, background: '#f0ebe3', marginBottom: 32, animation: 'pulse 1.5s ease infinite' }} />
+          {/* Skeleton: product hero */}
+          <div className="product-hero" style={{ display: 'flex', gap: 32, marginBottom: 32 }}>
+            <div style={{ width: 260, height: 320, borderRadius: 20, background: '#f0ebe3', flexShrink: 0, animation: 'pulse 1.5s ease infinite' }} />
+            <div style={{ flex: 1 }}>
+              <div style={{ width: '30%', height: 10, borderRadius: 4, background: '#f0ebe3', marginBottom: 10, animation: 'pulse 1.5s ease infinite' }} />
+              <div style={{ width: '80%', height: 24, borderRadius: 4, background: '#f0ebe3', marginBottom: 12, animation: 'pulse 1.5s ease 0.1s infinite' }} />
+              <div style={{ width: '50%', height: 12, borderRadius: 4, background: '#f0ebe3', marginBottom: 24, animation: 'pulse 1.5s ease 0.2s infinite' }} />
+              <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#f0ebe3', animation: 'pulse 1.5s ease infinite' }} />
+                <div>
+                  <div style={{ width: 80, height: 14, borderRadius: 4, background: '#f0ebe3', marginBottom: 6, animation: 'pulse 1.5s ease 0.1s infinite' }} />
+                  <div style={{ width: 120, height: 10, borderRadius: 4, background: '#f0ebe3', animation: 'pulse 1.5s ease 0.2s infinite' }} />
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Skeleton: score breakdown */}
+          <div style={{ background: '#faf8f5', borderRadius: 24, border: '1px solid #ede8df', padding: '40px 32px' }}>
+            <div style={{ width: 140, height: 10, borderRadius: 4, background: '#f0ebe3', marginBottom: 24, animation: 'pulse 1.5s ease infinite' }} />
+            <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+              <div style={{ flex: 1, height: 60, borderRadius: 12, background: '#f0ebe3', animation: 'pulse 1.5s ease infinite' }} />
+              <div style={{ flex: 1, height: 60, borderRadius: 12, background: '#f0ebe3', animation: 'pulse 1.5s ease 0.1s infinite' }} />
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ flex: 1, height: 60, borderRadius: 12, background: '#f0ebe3', animation: 'pulse 1.5s ease 0.2s infinite' }} />
+              <div style={{ flex: 1, height: 60, borderRadius: 12, background: '#f0ebe3', animation: 'pulse 1.5s ease 0.3s infinite' }} />
+            </div>
+          </div>
         </div>
       ) : !food ? (
         <div style={{ textAlign: 'center', padding: '120px 24px', color: '#8a7e72', fontSize: 17 }}>
@@ -1326,30 +1339,6 @@ export default function FoodPageContent({ productId }) {
         )
       )}
 
-      {/* Sticky Pro bottom bar — shows after 3+ product pages viewed */}
-      {showProBar && !proBarDismissed && !isPro && (
-        <div className="pro-sticky-bar" style={{
-          position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100,
-          background: '#1a1612', padding: '14px 20px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          gap: 12, maxHeight: 52, fontFamily: "'DM Sans', sans-serif",
-        }}>
-          <span className="pro-bar-text" style={{ fontSize: 13, color: '#d4cfc6', lineHeight: 1.3 }}>
-            You&rsquo;re researching like a pro. Unlock ingredient deep-dives, unlimited comparisons, and recall alerts.
-          </span>
-          <span className="pro-bar-mobile" style={{ display: 'none', fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>
-            Unlock ingredient deep-dives &amp; more
-          </span>
-          <a href="/pro" style={{
-            color: '#C9A84C', fontWeight: 700, fontSize: 12,
-            textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
-          }}>Try Pro &rarr;</a>
-          <button onClick={() => { setProBarDismissed(true); sessionStorage.setItem('gk_pro_bar_dismissed', '1'); }} style={{
-            background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', fontSize: 14,
-            cursor: 'pointer', padding: '0 4px', lineHeight: 1, flexShrink: 0,
-          }}>&times;</button>
-        </div>
-      )}
 
       <style>{`
         .sticky-buy-bar { display: none !important; }
@@ -1360,9 +1349,6 @@ export default function FoodPageContent({ productId }) {
           .score-tile-single { max-width: 100% !important; }
           .score-tile-pair { flex-direction: column !important; }
           .buy-amazon-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; text-align: center !important; }
-          .pro-sticky-bar { max-height: 44px !important; padding: 10px 16px !important; gap: 8px !important; }
-          .pro-sticky-bar .pro-bar-text { display: none !important; }
-          .pro-sticky-bar .pro-bar-mobile { display: inline !important; }
         }
       `}</style>
     </div>
