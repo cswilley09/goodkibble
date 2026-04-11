@@ -524,24 +524,7 @@ export default function SignupPage() {
     setSubmitting(true);
     setError('');
     try {
-      // 1. Create Supabase auth account
-      const { data: authData, error: authError } = await getSupabase().auth.signUp({
-        email: email.trim(),
-        options: { emailRedirectTo: window.location.origin + '/profile' },
-      });
-      if (authError) {
-        if (authError.message?.includes('already registered')) {
-          setError('already_registered');
-          setSubmitting(false);
-          return;
-        }
-        throw new Error(authError.message);
-      }
-
-      const userId = authData.user?.id;
-      if (!userId) throw new Error('Failed to create account.');
-
-      // 2. Save profile data via API, using auth user ID
+      // 1. Save profile data first (no auth user ID — will be linked when they click magic link)
       const dogsPayload = dogs.slice(0, numDogs).map((d, i) => ({
         dog_name: dogNames[i].trim(),
         breed: d.breed,
@@ -555,7 +538,6 @@ export default function SignupPage() {
         priorities,
       }));
       const payload = {
-        auth_user_id: userId,
         first_name: firstName.trim(),
         email: email.trim(),
         zip_code: zipCode.trim(),
@@ -569,8 +551,19 @@ export default function SignupPage() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
+        if (data.error?.includes('already exists')) {
+          setError('already_registered');
+          setSubmitting(false);
+          return;
+        }
         throw new Error(data.error || 'Something went wrong. Please try again.');
       }
+
+      // 2. Send magic link after profile is saved
+      await getSupabase().auth.signInWithOtp({
+        email: email.trim(),
+        options: { emailRedirectTo: window.location.origin + '/profile' },
+      });
 
       goTo(STEP_PLAN);
     } catch (err) {
