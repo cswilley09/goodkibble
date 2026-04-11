@@ -734,7 +734,7 @@ export default function ComparePage() {
       )}
       {showGate === 'save' && (
         <ProGateModal
-          icon={'\u{1F4BE}'}
+          icon={'\u{1F516}'}
           title="Save comparisons with Pro"
           description="Come back to your comparisons anytime. Plus get recall alerts and score change notifications for your saved foods."
           buttonText="Unlock with Pro →"
