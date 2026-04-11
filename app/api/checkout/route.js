@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
   1. Create Stripe account at stripe.com
   2. Create two Products in Stripe Dashboard:
      - "GoodKibble Pro Yearly" — $29/year recurring → get price_xxxxx
-     - "GoodKibble Pro Monthly" — $2.99/month recurring → get price_xxxxx
+     - "GoodKibble Pro Monthly" — $3.99/month recurring → get price_xxxxx
   3. Add to Vercel environment variables:
      - STRIPE_SECRET_KEY=sk_test_xxxxx (or sk_live_xxxxx for production)
      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx

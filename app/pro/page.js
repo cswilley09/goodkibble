@@ -64,7 +64,7 @@ export default function ProPage() {
     setCheckoutLoading(false);
   }
 
-  const price = billing === 'yearly' ? '$29' : '$2.99';
+  const price = billing === 'yearly' ? '$29' : '$3.99';
   const period = billing === 'yearly' ? '/year' : '/month';
   const subtitle = billing === 'yearly' ? "That\u2019s just $2.42/month \u2014 less than a dog treat" : 'Cancel anytime';
 

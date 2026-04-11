@@ -939,7 +939,7 @@ export default function SignupPage() {
                   <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 900, color: '#faf8f4' }}>$29</span>
                   <span style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>/year</span>
                 </div>
-                <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>That&rsquo;s $2.42/month</div>
+                <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>That&rsquo;s just $2.42/month</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, flex: 1 }}>
                   {['Everything in Free, plus:', 'Recall alerts to your email', 'Score change notifications', 'Ingredient deep-dives', 'Unlimited comparisons', 'Up to 5 dog profiles'].map((f, i) => (
                     <div key={f} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: i === 0 ? '#C9A84C' : 'rgba(255,255,255,0.8)', fontWeight: i === 0 ? 700 : 400 }}>

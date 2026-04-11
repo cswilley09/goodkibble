@@ -728,7 +728,7 @@ export default function ComparePage() {
           title="Compare up to 2 foods for free"
           description="Want to compare 3 or more foods side-by-side? Upgrade to Pro for unlimited comparisons."
           buttonText="Get Pro — Unlimited Compares →"
-          subtext="Starting at $2.42/month"
+          subtext="Starting at $3.99/month"
           onClose={() => setShowGate(null)}
         />
       )}
