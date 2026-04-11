@@ -1195,7 +1195,7 @@ export default function FoodPageContent({ productId }) {
                   boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
                   animation: 'fadeIn 0.15s ease',
                 }}>
-                  {isPro ? (
+                  {(isPro || activeIngredient.idx < 5) ? (
                     <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'DM Sans', sans-serif" }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                         <span style={{ width: 10, height: 10, borderRadius: '50%', flexShrink: 0, background: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral }} />
@@ -1323,7 +1323,7 @@ export default function FoodPageContent({ productId }) {
 
       {/* Single mobile bottom sheet — rendered at root level to avoid duplicates */}
       {activeIngredient && isMobile && (
-        isPro ? (
+        (isPro || activeIngredient.idx < 5) ? (
           <IngredientBottomSheet
             info={activeIngredient.info}
             onClose={() => setActiveIngredient(null)}
