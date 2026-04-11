@@ -220,8 +220,8 @@ function IngredientBottomSheet({ info, onClose, bottomOffset = 0, gated = false 
         </div>
         {gated ? (
           <div style={{ textAlign: 'center', padding: '12px 0' }}>
-            <span style={{ fontSize: 20, opacity: 0.5 }}>{'\u{1F512}'}</span>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginTop: 8, marginBottom: 12, lineHeight: 1.5 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 10 }}>Ingredient Intelligence</div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 12, lineHeight: 1.5 }}>
               See what each ingredient means for your dog with GoodKibble Pro
             </div>
             <a href="/pro" style={{
@@ -1194,15 +1194,33 @@ export default function FoodPageContent({ productId }) {
                       {activeIngredient.info.source && <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>Source: {activeIngredient.info.source}</div>}
                     </div>
                   ) : (
-                    <ProGateOverlay title="Ingredient Intelligence" description="See what each ingredient means for your dog with GoodKibble Pro">
-                      <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'DM Sans', sans-serif" }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                          <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#8a7e72' }} />
-                          <span style={{ fontWeight: 700, fontSize: 16 }}>{activeIngredient.info.display_name}</span>
-                        </div>
-                        <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, lineHeight: 1.6 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ingredient details are available with Pro.</div>
+                    <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'DM Sans', sans-serif", borderRadius: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, paddingRight: 36 }}>
+                        <span style={{
+                          width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
+                          background: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral,
+                        }} />
+                        <span style={{ fontWeight: 700, fontSize: 16 }}>{activeIngredient.info.display_name}</span>
+                        <span style={{
+                          marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+                          textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
+                          background: SIGNAL_BG[activeIngredient.info.quality_signal] || SIGNAL_BG.neutral,
+                          color: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral,
+                        }}>{activeIngredient.info.quality_signal}</span>
+                        <span onClick={() => setActiveIngredient(null)} style={{ marginLeft: 8, fontSize: 16, color: 'rgba(255,255,255,0.4)', cursor: 'pointer', lineHeight: 1, padding: '0 4px' }}>&times;</span>
                       </div>
-                    </ProGateOverlay>
+                      <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 10 }}>Ingredient Intelligence</div>
+                        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 14, lineHeight: 1.5, maxWidth: 300, margin: '0 auto 14px' }}>
+                          See what each ingredient means for your dog with GoodKibble Pro
+                        </div>
+                        <a href="/pro" style={{
+                          display: 'inline-block', padding: '10px 24px', borderRadius: 100,
+                          background: '#C9A84C', color: '#fff', fontSize: 13, fontWeight: 700,
+                          textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+                        }}>Unlock with Pro →</a>
+                      </div>
+                    </div>
                   )}
                 </div>
               )}
