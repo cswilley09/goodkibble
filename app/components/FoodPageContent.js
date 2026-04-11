@@ -1178,7 +1178,7 @@ export default function FoodPageContent({ productId }) {
               {activeIngredient && !isMobile && (
                 <div onClick={(e) => e.stopPropagation()} style={{
                   position: 'absolute', left: 0, right: 0, top: tooltipTop,
-                  zIndex: 50, borderRadius: 12, overflow: 'hidden',
+                  zIndex: 50, borderRadius: 12, overflow: 'visible',
                   boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
                   animation: 'fadeIn 0.15s ease',
                 }}>
