@@ -549,9 +549,9 @@ export default function Home() {
         </div>
         {/* Social proof bar */}
         <div className="social-proof-bar" style={{ marginTop: 20, animation: 'fadeUp 0.6s ease 0.35s both', textAlign: 'center', fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8a7e72', lineHeight: 1.8 }}>
-          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>1,000+ dog foods scored</span></span>
+          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>Trusted by industry professionals</span></span>
           <span style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
-          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>8 nutrition categories</span></span>
+          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>9 nutrition categories</span></span>
           <span style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
           <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>FDA recalls tracked every 6 hours</span></span>
         </div>
