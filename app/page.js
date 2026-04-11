@@ -4,7 +4,6 @@ import SearchBox from './components/SearchBox';
 import CompareBubble from './components/CompareBubble';
 import SignUpButton from './components/SignUpButton';
 import RecallsNav from './components/RecallsNav';
-import HomepageRecalls from './components/HomepageRecalls';
 import { useRouter } from 'next/navigation';
 
 /* ═══════════════════════════════════════
@@ -562,11 +561,6 @@ export default function Home() {
             onMouseLeave={(e) => { e.target.style.color = '#C9A84C'; e.target.style.textDecoration = 'none'; }}
           >or discover 1,000+ dog foods by filter →</span>
         </div>
-      </div>
-
-      {/* ═══ 1.5. RECENT RECALLS ═══ */}
-      <div style={{ padding: '40px 24px 0', animation: 'fadeUp 0.6s ease 0.5s both' }}>
-        <HomepageRecalls />
       </div>
 
       {/* ═══ 2. MARQUEE ═══ */}
