@@ -54,10 +54,7 @@ export default function RecallsPage() {
           return (sevOrder[a.severity] ?? 3) - (sevOrder[b.severity] ?? 3);
         });
         setRecalls(sorted);
-        if (sorted.length > 0) {
-          const latest = sorted[0].created_at || sorted[0].recall_date || sorted[0].report_date;
-          if (latest) setLastUpdated(new Date(latest));
-        }
+        if (d.lastChecked) setLastUpdated(new Date(d.lastChecked));
         setLoading(false);
       })
       .catch(() => setLoading(false));

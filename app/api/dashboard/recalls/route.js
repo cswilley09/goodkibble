@@ -142,9 +142,23 @@ export async function GET(request) {
   const classICt = recalls.filter(r => r.severity === 'Class I').length;
   const classIICt = recalls.filter(r => r.severity === 'Class II').length;
 
+  // Get last cron run time for "last checked" display
+  let lastChecked = null;
+  try {
+    const { data: cronData } = await supabase
+      .from('cron_log')
+      .select('completed_at')
+      .eq('job_name', 'poll-recalls')
+      .eq('status', 'completed')
+      .order('completed_at', { ascending: false })
+      .limit(1);
+    if (cronData && cronData.length > 0) lastChecked = cronData[0].completed_at;
+  } catch {}
+
   const response = NextResponse.json({
     recalls,
     ingredientChanges,
+    lastChecked,
     summary: {
       totalRecalls: recalls.length,
       totalIngredientChanges: ingredientChanges.length,
