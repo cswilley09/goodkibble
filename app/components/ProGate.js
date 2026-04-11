@@ -10,14 +10,17 @@ export function ProGateOverlay({ title, description, buttonText, children }) {
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center', textAlign: 'center',
-        padding: 20, zIndex: 10,
+        padding: '28px 20px', zIndex: 10, minHeight: 160, overflow: 'visible',
+        background: 'rgba(26, 22, 18, 0.88)',
+        backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
+        borderRadius: 12,
       }}>
         <span style={{ fontSize: 20, marginBottom: 8, opacity: 0.6 }}>{'\u{1F512}'}</span>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 4, fontFamily: "'DM Sans', sans-serif" }}>{title}</div>
-        <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', marginBottom: 12, maxWidth: 260, lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>{description}</div>
+        <div style={{ fontSize: 16, fontWeight: 800, color: '#fff', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>{title}</div>
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 16, maxWidth: 260, lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>{description}</div>
         <button onClick={() => router.push('/pro')} style={{
-          padding: '8px 20px', borderRadius: 100, background: '#C9A84C', color: '#fff',
-          fontSize: 12, fontWeight: 700, border: 'none', cursor: 'pointer',
+          padding: '10px 24px', borderRadius: 100, background: '#C9A84C', color: '#fff',
+          fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer',
           fontFamily: "'DM Sans', sans-serif",
         }}>{buttonText || 'Unlock with Pro →'}</button>
       </div>
