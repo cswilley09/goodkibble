@@ -19,7 +19,7 @@ export function ProGateOverlay({ title, description, buttonText, children }) {
           padding: '8px 20px', borderRadius: 100, background: '#C9A84C', color: '#fff',
           fontSize: 12, fontWeight: 700, border: 'none', cursor: 'pointer',
           fontFamily: "'DM Sans', sans-serif",
-        }}>{buttonText || 'Unlock with Pro \u2192'}</button>
+        }}>{buttonText || 'Unlock with Pro →'}</button>
       </div>
     </div>
   );
@@ -52,7 +52,7 @@ export function ProGateModal({ icon, title, description, buttonText, subtext, on
           padding: '12px 28px', borderRadius: 100, background: '#C9A84C', color: '#fff',
           fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
           fontFamily: "'DM Sans', sans-serif",
-        }}>{buttonText || 'Unlock with Pro \u2192'}</button>
+        }}>{buttonText || 'Unlock with Pro →'}</button>
         {subtext && <p style={{ fontSize: 11, color: '#b5aa99', marginTop: 10 }}>{subtext}</p>}
       </div>
     </>

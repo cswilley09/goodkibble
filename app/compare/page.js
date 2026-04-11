@@ -726,7 +726,7 @@ export default function ComparePage() {
           icon={'\u{1F4CA}'}
           title="Compare up to 2 foods for free"
           description="Want to compare 3 or more foods side-by-side? Upgrade to Pro for unlimited comparisons."
-          buttonText="Get Pro \u2014 Unlimited Compares \u2192"
+          buttonText="Get Pro — Unlimited Compares →"
           subtext="Starting at $2.42/month"
           onClose={() => setShowGate(null)}
         />
@@ -736,7 +736,7 @@ export default function ComparePage() {
           icon={'\u{1F4BE}'}
           title="Save comparisons with Pro"
           description="Come back to your comparisons anytime. Plus get recall alerts and score change notifications for your saved foods."
-          buttonText="Unlock with Pro \u2192"
+          buttonText="Unlock with Pro →"
           subtext="Less than a bag of treats per year"
           onClose={() => setShowGate(null)}
         />
