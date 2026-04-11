@@ -234,7 +234,7 @@ export default function ProPage() {
 
       <style>{`
         @media (max-width: 768px) {
-          .nav-discover-link { display: none !important; }
+          .nav-discover-link { font-size: 12px !important; }
           .pro-cards { grid-template-columns: 1fr !important; }
           .pro-cards > div:nth-child(2) { order: -1; }
         }

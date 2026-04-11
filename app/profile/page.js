@@ -1300,7 +1300,7 @@ export default function ProfilePage() {
       <style>{`
         .saved-scroll-row::-webkit-scrollbar { display: none; }
         @media (max-width: 768px) {
-          .nav-discover-link { display: none !important; }
+          .nav-discover-link { font-size: 12px !important; }
           .profile-container { padding: 20px 16px 60px !important; }
           .dashboard-grid { grid-template-columns: 1fr !important; }
           .current-food-layout { flex-direction: column !important; align-items: center !important; text-align: center !important; }

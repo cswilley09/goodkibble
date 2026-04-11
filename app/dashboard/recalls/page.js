@@ -47,7 +47,7 @@ export default function RecallDashboardPage() {
       </div>
       <style>{`
         @media (max-width: 768px) {
-          .nav-discover-link { display: none !important; }
+          .nav-discover-link { font-size: 12px !important; }
         }
       `}</style>
     </div>

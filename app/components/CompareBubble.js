@@ -28,7 +28,7 @@ export default function CompareBubble() {
     <>
       <button
         onClick={() => { if (active) router.push('/compare'); }}
-        className={`compare-bubble${wiggle ? ' compare-wiggle' : ''}`}
+        className={`compare-bubble${wiggle ? ' compare-wiggle' : ''}${active ? ' compare-active' : ''}`}
         style={{
           padding: '8px 18px', borderRadius: 100,
           border: active ? '1.5px solid #1a1612' : '1.5px solid #d4c9b8',
@@ -59,6 +59,7 @@ export default function CompareBubble() {
         @media (max-width: 768px) {
           .compare-bubble { padding: 6px 12px !important; font-size: 11px !important; gap: 4px !important; }
           .compare-text { display: none !important; }
+          .compare-bubble:not(.compare-active) { display: none !important; }
         }
       `}</style>
     </>

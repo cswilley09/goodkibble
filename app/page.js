@@ -604,8 +604,8 @@ export default function Home() {
         @media (max-width: 768px) {
           .site-nav { padding: 12px 16px !important; }
           .site-nav > div:first-child { font-size: 22px !important; }
-          .site-nav > div:last-child { gap: 8px !important; }
-          .nav-discover-link { display: none !important; }
+          .site-nav > div:last-child { gap: 10px !important; }
+          .nav-discover-link { font-size: 12px !important; }
           .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 28px 16px !important; }
           .demo-layout { grid-template-columns: 1fr !important; gap: 32px !important; }
           .protein-grid { grid-template-columns: repeat(2, 1fr) !important; }
