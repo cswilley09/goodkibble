@@ -40,7 +40,6 @@ export default function RecallsPage() {
   const [expandedId, setExpandedId] = useState(null);
   const [search, setSearch] = useState('');
   const [dogs, setDogs] = useState(null);
-  const [lastUpdated, setLastUpdated] = useState(null);
 
   useEffect(() => {
     fetch('/api/dashboard/recalls?days=365&type=recalls')
@@ -54,7 +53,6 @@ export default function RecallsPage() {
           return (sevOrder[a.severity] ?? 3) - (sevOrder[b.severity] ?? 3);
         });
         setRecalls(sorted);
-        if (d.lastChecked) setLastUpdated(new Date(d.lastChecked));
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -144,10 +142,7 @@ export default function RecallsPage() {
 
         {/* Header */}
         <h1 style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px' }}>FDA Dog Food Recalls</h1>
-        <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
-          Updated every 6 hours from FDA and AVMA sources
-          {lastUpdated && <span style={{ marginLeft: 8, fontSize: 12, color: '#b5aa99' }}>&middot; Last checked {lastUpdated.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} at {lastUpdated.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>}
-        </p>
+        <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>Updated every 6 hours from FDA and AVMA sources</p>
 
         {/* Search bar */}
         <div style={{ marginBottom: 12 }}>
