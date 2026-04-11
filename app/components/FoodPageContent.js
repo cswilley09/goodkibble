@@ -694,7 +694,7 @@ function ScoreBreakdownCard({ breakdown }) {
   const renderPair = (tiles) => (
     <div className="score-tile-pair" style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
       {tiles.map((t) => (
-        <div key={t.key} style={{ flex: 1, maxWidth: tiles.length === 1 ? 'calc(50% - 5px)' : undefined }}>
+        <div key={t.key} className={tiles.length === 1 ? 'score-tile-single' : ''} style={{ flex: 1, maxWidth: tiles.length === 1 ? 'calc(50% - 5px)' : undefined }}>
           <ScoreTile catKey={t.key} label={t.label}
             color={t.color} textColor={t.textColor}
             data={cats[t.key]} isExpanded={expandedCat === t.key}
@@ -1335,6 +1335,8 @@ export default function FoodPageContent({ productId }) {
           .sticky-buy-bar { display: flex !important; }
           .product-actions { flex-direction: column !important; align-items: stretch !important; }
           .product-actions .compare-toggle-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; }
+          .score-tile-single { max-width: 100% !important; }
+          .score-tile-pair { flex-direction: column !important; }
           .buy-amazon-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; text-align: center !important; }
           .pro-sticky-bar { flex-wrap: wrap !important; max-height: none !important; padding: 12px 16px !important; }
         }
