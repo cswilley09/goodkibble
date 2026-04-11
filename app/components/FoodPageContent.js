@@ -399,7 +399,7 @@ function CompareToggle({ food }) {
   }
 
   return (
-    <button onClick={handleClick} style={{
+    <button onClick={handleClick} className="compare-toggle-btn" style={{
       padding: '10px 20px', borderRadius: 100,
       border: isAdded ? '1.5px solid #1a1612' : '1.5px solid #ede8df',
       background: isAdded ? '#1a1612' : '#fff',
@@ -407,7 +407,7 @@ function CompareToggle({ food }) {
       fontSize: 13, fontWeight: 600,
       cursor: isFull && !isAdded ? 'default' : 'pointer',
       fontFamily: "'DM Sans', sans-serif",
-      display: 'inline-flex', alignItems: 'center', gap: 6, transition: 'all 0.25s',
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all 0.25s',
       opacity: isFull && !isAdded ? 0.5 : 1,
     }}
       onMouseEnter={(e) => {
@@ -1334,7 +1334,8 @@ export default function FoodPageContent({ productId }) {
         @media (max-width: 768px) {
           .sticky-buy-bar { display: flex !important; }
           .product-actions { flex-direction: column !important; align-items: stretch !important; }
-          .buy-amazon-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; }
+          .product-actions .compare-toggle-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; }
+          .buy-amazon-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; text-align: center !important; }
           .pro-sticky-bar { flex-wrap: wrap !important; max-height: none !important; padding: 12px 16px !important; }
         }
       `}</style>
