@@ -684,14 +684,15 @@ export default function ComparePage() {
 
           {/* Inline Pro upgrade banner for free users after comparison */}
           {!isPro && items.length >= 2 && !proBannerDismissed && (
-            <div style={{
+            <div className="compare-pro-nudge" style={{
               marginTop: 20, background: '#f5f0e8', borderRadius: 12,
               padding: '14px 20px', display: 'flex', alignItems: 'center',
               justifyContent: 'space-between', gap: 12, fontFamily: "'DM Sans', sans-serif",
               position: 'relative',
             }}>
               <div style={{ fontSize: 13, color: '#3d352b', lineHeight: 1.5, flex: 1 }}>
-                You just compared <strong>{items[0]?.brand} {items[0]?.name}</strong> vs <strong>{items[1]?.brand} {items[1]?.name}</strong> — want to save this and get notified if either score changes?{' '}
+                <span className="compare-nudge-desktop">You just compared <strong>{items[0]?.brand} {items[0]?.name}</strong> vs <strong>{items[1]?.brand} {items[1]?.name}</strong> — want to save this and get notified if either score changes?{' '}</span>
+                <span className="compare-nudge-mobile" style={{ display: 'none' }}>Want to save this comparison and get notified if scores change?{' '}</span>
                 <span onClick={() => router.push('/pro')} style={{ color: '#C9A84C', fontWeight: 700, cursor: 'pointer' }}>Upgrade to Pro &rarr;</span>
               </div>
               <button onClick={() => setProBannerDismissed(true)} style={{
@@ -741,6 +742,13 @@ export default function ComparePage() {
           onClose={() => setShowGate(null)}
         />
       )}
+      <style>{`
+        @media (max-width: 768px) {
+          .compare-pro-nudge { padding: 12px 16px !important; }
+          .compare-nudge-desktop { display: none !important; }
+          .compare-nudge-mobile { display: inline !important; }
+        }
+      `}</style>
     </div>
   );
 }

@@ -550,10 +550,10 @@ export default function Home() {
         {/* Social proof bar */}
         <div className="social-proof-bar" style={{ marginTop: 20, animation: 'fadeUp 0.6s ease 0.35s both', textAlign: 'center', fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8a7e72', lineHeight: 1.8 }}>
           <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>Trusted by industry professionals</span></span>
-          <span style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
+          <span className="proof-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
           <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>9 nutrition categories</span></span>
-          <span style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
-          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>FDA recalls tracked every 6 hours</span></span>
+          <span className="proof-dot proof-fda-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
+          <span className="proof-fda"><span style={{ fontWeight: 600, color: '#8a7e72' }}>FDA recalls tracked every 6 hours</span></span>
         </div>
         <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both', textAlign: 'center' }}>
           <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#C9A84C', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
@@ -613,6 +613,8 @@ export default function Home() {
           .marquee-card { width: 210px !important; }
           .hero-section { padding-left: 16px !important; padding-right: 16px !important; }
           .hero-search-wrap { max-width: 100% !important; }
+          .social-proof-bar { font-size: 11px !important; }
+          .proof-fda, .proof-fda-dot { display: none !important; }
         }
       `}</style>
     </div>

@@ -1315,15 +1315,18 @@ export default function FoodPageContent({ productId }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           gap: 12, maxHeight: 52, fontFamily: "'DM Sans', sans-serif",
         }}>
-          <span style={{ fontSize: 13, color: '#d4cfc6', lineHeight: 1.3 }}>
+          <span className="pro-bar-text" style={{ fontSize: 13, color: '#d4cfc6', lineHeight: 1.3 }}>
             You&rsquo;re researching like a pro. Unlock ingredient deep-dives, unlimited comparisons, and recall alerts.
           </span>
+          <span className="pro-bar-mobile" style={{ display: 'none', fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>
+            Unlock ingredient deep-dives &amp; more
+          </span>
           <a href="/pro" style={{
-            color: '#C9A84C', fontWeight: 700, fontSize: 13,
+            color: '#C9A84C', fontWeight: 700, fontSize: 12,
             textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
-          }}>Try Pro &mdash; $2.42/mo &rarr;</a>
+          }}>Try Pro &rarr;</a>
           <button onClick={() => { setProBarDismissed(true); sessionStorage.setItem('gk_pro_bar_dismissed', '1'); }} style={{
-            background: 'none', border: 'none', color: '#5a5248', fontSize: 18,
+            background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', fontSize: 14,
             cursor: 'pointer', padding: '0 4px', lineHeight: 1, flexShrink: 0,
           }}>&times;</button>
         </div>
@@ -1338,7 +1341,9 @@ export default function FoodPageContent({ productId }) {
           .score-tile-single { max-width: 100% !important; }
           .score-tile-pair { flex-direction: column !important; }
           .buy-amazon-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; text-align: center !important; }
-          .pro-sticky-bar { flex-wrap: wrap !important; max-height: none !important; padding: 12px 16px !important; }
+          .pro-sticky-bar { max-height: 44px !important; padding: 10px 16px !important; gap: 8px !important; }
+          .pro-sticky-bar .pro-bar-text { display: none !important; }
+          .pro-sticky-bar .pro-bar-mobile { display: inline !important; }
         }
       `}</style>
     </div>
