@@ -36,7 +36,6 @@ const FAQS = [
   { q: 'What are recall alerts?', a: "When the FDA issues a recall on any food you or your dogs are connected to, we'll email you immediately. No more checking recall databases manually." },
   { q: 'What are score change notifications?', a: "When we update our scoring methodology based on new research, or when a manufacturer changes their formula and the score changes, we'll let you know which of your saved foods were affected." },
   { q: 'Can I cancel anytime?', a: "Yes. Cancel from your account settings and you'll keep Pro access until the end of your billing period. No questions asked." },
-  { q: 'Is my data shared?', a: "Never. We don't sell data to pet food companies or anyone else. Your dog profiles and food preferences stay private." },
 ];
 
 export default function ProPage() {
