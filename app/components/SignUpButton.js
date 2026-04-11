@@ -142,6 +142,7 @@ export default function SignUpButton() {
           .signup-btn-desktop { display: none !important; }
           .signup-btn-mobile { display: flex !important; }
           .signup-btn-circle { width: 32px !important; height: 32px !important; font-size: 13px !important; }
+          .nav-pro-link { font-size: 12px !important; }
         }
       `}</style>
     </>

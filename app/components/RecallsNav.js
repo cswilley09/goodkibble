@@ -18,7 +18,7 @@ export default function RecallsNav() {
       </span>
       <style>{`
         @media (max-width: 768px) {
-          .recalls-nav-link { font-size: 12px !important; }
+          .recalls-nav-link { display: none !important; }
         }
       `}</style>
     </>
