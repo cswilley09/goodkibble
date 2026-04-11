@@ -4,6 +4,7 @@ import SearchBox from './components/SearchBox';
 import CompareBubble from './components/CompareBubble';
 import SignUpButton from './components/SignUpButton';
 import RecallsNav from './components/RecallsNav';
+import HomepageRecalls from './components/HomepageRecalls';
 import { useRouter } from 'next/navigation';
 
 /* ═══════════════════════════════════════
@@ -563,6 +564,11 @@ export default function Home() {
         </div>
       </div>
 
+      {/* ═══ 1.5. RECENT RECALLS ═══ */}
+      <div style={{ padding: '40px 24px 0', animation: 'fadeUp 0.6s ease 0.5s both' }}>
+        <HomepageRecalls />
+      </div>
+
       {/* ═══ 2. MARQUEE ═══ */}
       <ProductMarquee onCardClick={handleSelect} />
 
@@ -587,6 +593,7 @@ export default function Home() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#5a5248', textDecoration: 'none' }}>Terms</a>
           <a href="/privacy" style={{ color: '#5a5248', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: '#5a5248', textDecoration: 'none' }}>Recalls</a>
           <a href="/faq" style={{ color: '#5a5248', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
