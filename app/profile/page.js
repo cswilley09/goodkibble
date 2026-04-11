@@ -175,7 +175,7 @@ function ScoreCircle({ score, size = 48 }) {
   const c = 2 * Math.PI * r;
   const o = c * (1 - score / 100);
   const color = score >= 70 ? '#2d7a4f' : score >= 50 ? '#c47a20' : '#b5483a';
-  const tier = score >= 90 ? 'Excellent' : score >= 80 ? 'Great' : score >= 70 ? 'Good' : score >= 60 ? 'Fair' : score >= 50 ? 'Below Avg' : 'Poor';
+  const tier = score >= 90 ? 'Excellent' : score >= 80 ? 'Great' : score >= 70 ? 'Good' : score >= 60 ? 'Fair' : 'Poor';
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
@@ -253,6 +253,8 @@ export default function ProfilePage() {
   const [editFood, setEditFood] = useState(null); // { name, slug, brand_slug } or null
   const [saving, setSaving] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [changingFood, setChangingFood] = useState(false);
+  const [changeFoodSaving, setChangeFoodSaving] = useState(false);
 
   // Current food data from dog_foods_v2
   const [currentFoodData, setCurrentFoodData] = useState(null);
@@ -336,10 +338,9 @@ export default function ProfilePage() {
         const scored = all.filter(f => f.quality_score != null).length;
         setPercentile(scored > 0 ? Math.round((below / scored) * 100) : null);
 
-        // Alternatives: higher score, same protein (or all), has image
+        // Top-scored kibbles: same protein (or all), has image, exclude current food
         let alts = all.filter(f =>
           f.quality_score != null &&
-          f.quality_score > currentFoodData.quality_score &&
           f.image_url &&
           f.id !== currentFoodData.id
         );
@@ -535,7 +536,7 @@ export default function ProfilePage() {
                     )}
 
                     {/* Buttons */}
-                    <div style={{ display: 'flex', gap: 10, marginTop: 20, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: 10, marginTop: 20, flexWrap: 'wrap', alignItems: 'center' }}>
                       <button onClick={() => goToFood(currentFoodData)} style={{
                         padding: '10px 24px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
                         fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
@@ -547,25 +548,128 @@ export default function ProfilePage() {
                           textDecoration: 'none', display: 'inline-block',
                         }}>Buy on Amazon &rarr;</a>
                       )}
+                      <button onClick={() => setChangingFood(true)} style={{
+                        padding: '10px 24px', borderRadius: 100, border: '1.5px solid #ede8df',
+                        background: 'transparent', color: '#8a7e72', fontSize: 13, fontWeight: 600,
+                        cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      }}>Change Food</button>
                     </div>
+
+                    {/* Inline food change picker */}
+                    {changingFood && (
+                      <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #f5f2ec' }}>
+                        <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 8 }}>Search for {displayName}&rsquo;s new food:</div>
+                        <FoodPicker value={changeFoodSaving ? null : undefined} onChange={async (food) => {
+                          if (!food || !food.slug) return;
+                          setChangeFoodSaving(true);
+                          try {
+                            const updates = {
+                              current_food: food.name,
+                              current_food_slug: `${food.brand_slug}/${food.slug}`,
+                            };
+                            const res = await fetch('/api/profile', {
+                              method: 'PATCH',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ dog_id: dog.id, updates }),
+                            });
+                            const result = await res.json();
+                            if (res.ok && result && !result.error) {
+                              setDogs(prev => prev.map((d, i) => i === activeDogIdx ? result : d));
+                              setCurrentFoodData(null);
+                              setPercentile(null);
+                              setAlternatives([]);
+                              setRefreshKey(k => k + 1);
+                              setChangingFood(false);
+                            } else {
+                              alert('Failed to update food. Please try again.');
+                            }
+                          } catch {
+                            alert('Failed to update food. Please try again.');
+                          }
+                          setChangeFoodSaving(false);
+                        }} />
+                        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                          <button onClick={() => setChangingFood(false)} style={{
+                            padding: '6px 16px', borderRadius: 100, border: '1px solid #ede8df',
+                            background: 'transparent', color: '#8a7e72', fontSize: 12, fontWeight: 600,
+                            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                          }}>Cancel</button>
+                          {changeFoodSaving && (
+                            <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", alignSelf: 'center' }}>Saving...</span>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </>
                 ) : (
                   <div style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
                     {dog?.current_food ? (
                       <span>Current food: <strong>{dog.current_food}</strong> — we couldn&rsquo;t match it to our database for scoring.</span>
                     ) : (
-                      <span>No current food set. <a href="/signup" style={{ color: '#C9A84C' }}>Update your profile</a> to add one.</span>
+                      <span>No current food set yet.</span>
                     )}
+                    <div style={{ marginTop: 12 }}>
+                      {!changingFood ? (
+                        <button onClick={() => setChangingFood(true)} style={{
+                          padding: '8px 20px', borderRadius: 100, border: '1.5px solid #ede8df',
+                          background: '#fff', color: '#1a1612', fontSize: 13, fontWeight: 600,
+                          cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                        }}>{dog?.current_food ? 'Change Food' : 'Add Food'}</button>
+                      ) : (
+                        <div>
+                          <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 8 }}>Search for {displayName}&rsquo;s food:</div>
+                          <FoodPicker value={changeFoodSaving ? null : undefined} onChange={async (food) => {
+                            if (!food || !food.slug) return;
+                            setChangeFoodSaving(true);
+                            try {
+                              const updates = {
+                                current_food: food.name,
+                                current_food_slug: `${food.brand_slug}/${food.slug}`,
+                              };
+                              const res = await fetch('/api/profile', {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ dog_id: dog.id, updates }),
+                              });
+                              const result = await res.json();
+                              if (res.ok && result && !result.error) {
+                                setDogs(prev => prev.map((d, i) => i === activeDogIdx ? result : d));
+                                setCurrentFoodData(null);
+                                setPercentile(null);
+                                setAlternatives([]);
+                                setRefreshKey(k => k + 1);
+                                setChangingFood(false);
+                              } else {
+                                alert('Failed to update food. Please try again.');
+                              }
+                            } catch {
+                              alert('Failed to update food. Please try again.');
+                            }
+                            setChangeFoodSaving(false);
+                          }} />
+                          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                            <button onClick={() => setChangingFood(false)} style={{
+                              padding: '6px 16px', borderRadius: 100, border: '1px solid #ede8df',
+                              background: 'transparent', color: '#8a7e72', fontSize: 12, fontWeight: 600,
+                              cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                            }}>Cancel</button>
+                            {changeFoodSaving && (
+                              <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", alignSelf: 'center' }}>Saving...</span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
 
-              {/* Higher-Scored Alternatives */}
+              {/* Top-Scored Kibbles */}
               {currentFoodData && (
                 <div style={cardStyle}>
-                  <div style={eyebrow()}>Higher-Scored {altProteinOnly && currentFoodData.primary_protein ? currentFoodData.primary_protein : ''} Kibbles</div>
+                  <div style={eyebrow()}>Top-Scored {altProteinOnly && currentFoodData.primary_protein ? currentFoodData.primary_protein : ''} Kibbles</div>
                   <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
-                    These foods {altProteinOnly && currentFoodData.primary_protein ? (<>share the same primary protein as {displayName}&rsquo;s current food and </>) : null}scored higher on our 0&ndash;100 scale.
+                    {altProteinOnly && currentFoodData.primary_protein ? (<>Top-scoring {currentFoodData.primary_protein.toLowerCase()} kibbles on our 0&ndash;100 scale.</>) : <>Top-scoring kibbles on our 0&ndash;100 scale.</>}
                   </p>
                   <p style={{ fontSize: 11, color: '#b5aa99', fontStyle: 'italic', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
                     Switching foods should always be done gradually. Consult your vet before making changes.
@@ -686,6 +790,26 @@ export default function ProfilePage() {
                   </div>
                 ))}
               </div>
+
+              {/* One-click Pro upgrade — free users only */}
+              {!isPro && (
+                <div style={{
+                  background: 'linear-gradient(135deg, #1a1612, #2a2318)', borderRadius: 20,
+                  padding: 20, textAlign: 'center',
+                }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>Upgrade</div>
+                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 800, color: '#faf8f4', marginBottom: 6 }}>Get more from GoodKibble</div>
+                  <p style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+                    Recall alerts, ingredient deep-dives, unlimited comparisons, and up to 5 dog profiles.
+                  </p>
+                  <button onClick={() => router.push('/pro')} style={{
+                    width: '100%', padding: '10px 0', borderRadius: 100, background: '#C9A84C', color: '#fff',
+                    fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer',
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}>Upgrade to Pro &rarr;</button>
+                  <div style={{ fontSize: 11, color: '#5a5248', marginTop: 8, fontFamily: "'DM Sans', sans-serif" }}>$29/year &middot; Cancel anytime</div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -1196,7 +1320,7 @@ export default function ProfilePage() {
       <style>{`
         .saved-scroll-row::-webkit-scrollbar { display: none; }
         @media (max-width: 768px) {
-          .nav-discover-link { display: none !important; }
+          .nav-discover-link { font-size: 12px !important; }
           .profile-container { padding: 20px 16px 60px !important; }
           .dashboard-grid { grid-template-columns: 1fr !important; }
           .current-food-layout { flex-direction: column !important; align-items: center !important; text-align: center !important; }

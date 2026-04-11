@@ -50,7 +50,6 @@ function getScoreTier(score) {
   if (score >= 80) return 'Great';
   if (score >= 70) return 'Good';
   if (score >= 60) return 'Fair';
-  if (score >= 50) return 'Below Avg';
   return 'Poor';
 }
 
@@ -270,6 +269,7 @@ export default function ComparePage() {
   const { isPro } = useAuth();
   const [saved, setSaved] = useState(false);
   const [showGate, setShowGate] = useState(null); // 'compare' | 'save' | null
+  const [proBannerDismissed, setProBannerDismissed] = useState(false);
 
   const maxCompare = isPro ? 6 : 2;
 
@@ -681,6 +681,25 @@ export default function ComparePage() {
 
           {/* nutrient explainer */}
           <NutrientExplainer />
+
+          {/* Inline Pro upgrade banner for free users after comparison */}
+          {!isPro && items.length >= 2 && !proBannerDismissed && (
+            <div className="compare-pro-nudge" style={{
+              marginTop: 20, background: '#f5f0e8', borderRadius: 12,
+              padding: '14px 20px', display: 'flex', alignItems: 'center',
+              justifyContent: 'space-between', gap: 12, fontFamily: "'DM Sans', sans-serif",
+              position: 'relative',
+            }}>
+              <div style={{ fontSize: 13, color: '#3d352b', lineHeight: 1.5, flex: 1 }}>
+                Want to save this comparison and get notified if scores change?{' '}
+                <span onClick={() => router.push('/pro')} style={{ color: '#C9A84C', fontWeight: 700, cursor: 'pointer' }}>Upgrade to Pro &rarr;</span>
+              </div>
+              <button onClick={() => setProBannerDismissed(true)} style={{
+                background: 'none', border: 'none', color: '#8a7e72', fontSize: 18,
+                cursor: 'pointer', padding: '0 4px', lineHeight: 1, flexShrink: 0,
+              }}>&times;</button>
+            </div>
+          )}
           </>
         )}
       </div>
@@ -696,6 +715,8 @@ export default function ComparePage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
           <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>
@@ -706,21 +727,26 @@ export default function ComparePage() {
           icon={'\u{1F4CA}'}
           title="Compare up to 2 foods for free"
           description="Want to compare 3 or more foods side-by-side? Upgrade to Pro for unlimited comparisons."
-          buttonText="Get Pro \u2014 Unlimited Compares \u2192"
+          buttonText="Get Pro — Unlimited Compares →"
           subtext="Starting at $2.42/month"
           onClose={() => setShowGate(null)}
         />
       )}
       {showGate === 'save' && (
         <ProGateModal
-          icon={'\u{1F4BE}'}
+          icon={'\u{1F516}'}
           title="Save comparisons with Pro"
           description="Come back to your comparisons anytime. Plus get recall alerts and score change notifications for your saved foods."
-          buttonText="Unlock with Pro \u2192"
+          buttonText="Unlock with Pro →"
           subtext="Less than a bag of treats per year"
           onClose={() => setShowGate(null)}
         />
       )}
+      <style>{`
+        @media (max-width: 768px) {
+          .compare-pro-nudge { padding: 12px 16px !important; }
+        }
+      `}</style>
     </div>
   );
 }

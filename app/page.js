@@ -22,7 +22,6 @@ function getScoreTier(score) {
   if (score >= 80) return 'Great';
   if (score >= 70) return 'Good';
   if (score >= 60) return 'Fair';
-  if (score >= 50) return 'Below Avg';
   return 'Poor';
 }
 
@@ -482,7 +481,10 @@ function FooterCTA({ onNavigate, onSelect }) {
 export default function Home() {
   const [proteinCounts, setProteinCounts] = useState({});
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     fetch('/api/foods?featured=marquee')
@@ -508,7 +510,7 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4', opacity: mounted ? 1 : 0, transition: 'opacity 0.15s ease' }}>
 
       {/* ═══ NAV ═══ */}
       <nav className="site-nav" style={{
@@ -535,15 +537,23 @@ export default function Home() {
 
       {/* ═══ 1. HERO ═══ */}
       <div className="hero-section" style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 30, boxSizing: 'border-box' }}>
-        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 16, animation: 'fadeUp 0.6s ease both' }}>Know what&apos;s in the bowl</div>
+        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 16, animation: 'fadeUp 0.6s ease both' }}>1,000+ dog foods scored &amp; analyzed</div>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(38px, 5vw, 58px)', fontWeight: 900, color: '#1a1612', lineHeight: 1.08, letterSpacing: -2, marginBottom: 20, animation: 'fadeUp 0.6s ease 0.1s both' }}>
-          What&apos;s really in<br />your dog&apos;s food?
+          See what&apos;s really in<br />your dog&apos;s food
         </h1>
         <p style={{ fontSize: 18, color: '#8a7e72', lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px', fontFamily: "'DM Sans', sans-serif", animation: 'fadeUp 0.6s ease 0.2s both' }}>
-          Search any dog food. See exactly what's inside — ingredients, nutrition, and an honest score.
+          Search any dog food. Get a full breakdown of ingredients, nutrition, and an honest 0&ndash;100 score.
         </p>
         <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
           <SearchBox onSelect={handleSelect} variant="hero" />
+        </div>
+        {/* Social proof bar */}
+        <div className="social-proof-bar" style={{ marginTop: 20, animation: 'fadeUp 0.6s ease 0.35s both', textAlign: 'center', fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8a7e72', lineHeight: 1.8 }}>
+          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>Trusted by industry professionals</span></span>
+          <span className="proof-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
+          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>9 nutrition categories</span></span>
+          <span className="proof-dot proof-fda-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
+          <span className="proof-fda"><span style={{ fontWeight: 600, color: '#8a7e72' }}>FDA recalls tracked every 6 hours</span></span>
         </div>
         <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both', textAlign: 'center' }}>
           <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#C9A84C', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
@@ -577,6 +587,8 @@ export default function Home() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#5a5248', textDecoration: 'none' }}>Terms</a>
           <a href="/privacy" style={{ color: '#5a5248', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: '#5a5248', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: '#5a5248', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>
@@ -592,6 +604,8 @@ export default function Home() {
         .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #C9A84C !important; }
         @media (max-width: 768px) {
           .site-nav { padding: 12px 16px !important; }
+          .site-nav > div:first-child { font-size: 22px !important; }
+          .site-nav > div:last-child { gap: 10px !important; }
           .nav-discover-link { font-size: 12px !important; }
           .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 28px 16px !important; }
           .demo-layout { grid-template-columns: 1fr !important; gap: 32px !important; }
@@ -600,6 +614,8 @@ export default function Home() {
           .marquee-card { width: 210px !important; }
           .hero-section { padding-left: 16px !important; padding-right: 16px !important; }
           .hero-search-wrap { max-width: 100% !important; }
+          .social-proof-bar { font-size: 11px !important; }
+          .proof-fda, .proof-fda-dot { display: none !important; }
         }
       `}</style>
     </div>

@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server'
-import { getSupabase } from '@/lib/supabaseServer'
+import { createClient } from '@supabase/supabase-js'
 import { checkRateLimit } from '@/lib/rateLimit'
 
 export const dynamic = 'force-dynamic'
+
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
+}
 
 export async function GET(request, { params }) {
   const limited = checkRateLimit(request)
@@ -20,6 +27,7 @@ export async function GET(request, { params }) {
       .or('is_canary.is.null,is_canary.eq.false')
       .single()
     if (error) return NextResponse.json({ error: error.message }, { status: 404 })
+    if (data?.is_canary) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json(data)
   }
 
@@ -35,6 +43,7 @@ export async function GET(request, { params }) {
       .or('is_canary.is.null,is_canary.eq.false')
       .single()
     if (error) return NextResponse.json({ error: error.message }, { status: 404 })
+    if (data?.is_canary) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     return NextResponse.json(data)
   }
 

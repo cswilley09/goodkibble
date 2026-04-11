@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import Anthropic from '@anthropic-ai/sdk';
 import * as cheerio from 'cheerio';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
@@ -14,6 +15,10 @@ function getSupabase() {
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
   );
+}
+
+function getAnthropic() {
+  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 }
 
 // Fetch URL as properly decoded UTF-8 text
@@ -120,6 +125,91 @@ function extractBrand(title, brandMap) {
 
   return null;
 }
+
+/* ════════════════════════════════════════════════════════
+   AI ENRICHMENT — Fetch source page, extract structured data via Claude
+   ════════════════════════════════════════════════════════ */
+
+// Extract readable text from an HTML page (strip nav, scripts, etc.)
+function extractPageText(html) {
+  const $ = cheerio.load(html);
+  // Remove noise
+  $('script, style, nav, header, footer, .breadcrumb, .sidebar, #sidebar, .menu, .navigation').remove();
+  // Target main content area if possible
+  const main = $('main, article, .main-content, #content, .content-area, [role="main"]').first();
+  const text = (main.length ? main : $('body')).text();
+  // Clean up whitespace
+  return text.replace(/\s+/g, ' ').trim().slice(0, 8000); // Cap at 8k chars for Haiku
+}
+
+async function enrichRecallWithAI(recall, anthropic) {
+  if (!recall.source_url) return null;
+
+  try {
+    // 1. Fetch the source page
+    const html = await fetchUTF8(recall.source_url);
+    const pageText = extractPageText(html);
+
+    if (pageText.length < 50) {
+      console.log(`[enrich] Page too short for ${recall.recall_number}, skipping`);
+      return null;
+    }
+
+    // 2. Send to Claude Haiku for structured extraction
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 1024,
+      messages: [{
+        role: 'user',
+        content: `You are extracting structured recall information from an FDA page about a pet food recall. Read the text below and extract the following fields. Return ONLY valid JSON, no markdown.
+
+PAGE TEXT:
+${pageText}
+
+EXISTING DATA (may be incomplete or wrong — override with better info from the page):
+- Title: ${recall.product_description || ''}
+- Brand (current): ${recall.brand_name || 'Unknown'}
+- Reason (current): ${recall.reason || ''}
+
+Extract this JSON:
+{
+  "brand_name": "The actual company/brand name manufacturing the recalled food (e.g. 'Darwin's Natural Pet Products', 'Sunshine Mills'). Use the official name from the page, not FDA advisory title shorthand.",
+  "affected_products": "Specific product names, sizes, and variants affected. List each one. e.g. 'Natural Selections Chicken Recipe (5 lb, 15 lb), Grain-Free Turkey Formula (all sizes)'",
+  "lot_numbers": "All lot numbers, UPC codes, and best-by dates mentioned. Include everything a consumer would need to check their bag.",
+  "reason_summary": "2-3 sentence plain English explanation of why this recall happened and what the health risk is. Write for a dog owner, not a regulator. e.g. 'Routine testing found Salmonella bacteria in multiple production lots. Salmonella can cause illness in dogs including lethargy, diarrhea, and vomiting. It can also spread to humans handling the food.'",
+  "consumer_action": "What should a dog owner do if they have this food? Be specific. e.g. 'Stop feeding immediately. Throw away or return to store for refund. If your dog shows symptoms (vomiting, diarrhea, lethargy), contact your vet. Wash hands and surfaces that contacted the food.'",
+  "distribution_pattern": "Where was this product sold? States, retailers, online. e.g. 'Sold nationwide at PetSmart, Petco, and Amazon. Also distributed to independent pet stores in 23 states.'",
+  "severity_assessment": "One of: critical, serious, moderate, low. Critical = immediate health danger (Salmonella, foreign objects, toxic levels). Serious = potential health risk. Moderate = quality issue. Low = labeling/packaging issue.",
+  "company_contact": "Company phone number or website for consumer inquiries, if mentioned."
+}
+
+Rules:
+- If a field has no data on the page, use null (not empty string)
+- Be concise but complete
+- Use the actual brand/company name from the page, even if the existing data says something different
+- For lot_numbers, include ALL codes, UPCs, best-by dates — this is what consumers check against their bag`
+      }],
+    });
+
+    // 3. Parse the JSON response
+    const text = response.content[0].text.trim();
+    // Strip markdown fences if present
+    const jsonStr = text.replace(/^```json?\s*/i, '').replace(/\s*```$/i, '').trim();
+    const data = JSON.parse(jsonStr);
+
+    console.log(`[enrich] Successfully enriched ${recall.recall_number}: brand="${data.brand_name}"`);
+    return data;
+
+  } catch (err) {
+    console.error(`[enrich] Failed for ${recall.recall_number}:`, err.message);
+    return null;
+  }
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SOURCE SCRAPERS (unchanged logic, cleaner structure)
+   ════════════════════════════════════════════════════════ */
 
 // SOURCE 1: FDA Animal & Veterinary Outbreaks page
 async function scrapeFDAOutbreaks(brandMap) {
@@ -289,7 +379,6 @@ async function scrapeFDAVetRecalls(brandMap) {
 }
 
 // SOURCE 4: openFDA Enforcement Reports (animal food)
-// Word-boundary match to avoid "corn dog", "hush puppy", "treated" false positives
 function wordMatch(text, term) {
   const re = new RegExp(`(^|[\\s,;:(/"-])${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([\\s,;:)/".!?-]|$)`, 'i');
   return re.test(text);
@@ -316,11 +405,8 @@ const EXCLUDE_TERMS = ['corn dog', 'hot dog', 'hot-dog', 'chili dog', 'slaw dog'
 function isActualPetFood(desc, firm) {
   if (!desc) return false;
   const lower = (desc + ' ' + (firm || '')).toLowerCase();
-  // Exclude false positives first
   if (EXCLUDE_TERMS.some(t => lower.includes(t))) return false;
-  // Check specific pet food phrases (high confidence)
   if (PET_CONFIRM_TERMS.some(t => wordMatch(lower, t))) return true;
-  // Check broader terms — must also have food context
   if (PET_BROAD_TERMS.some(t => wordMatch(lower, t))) {
     if (PET_FOOD_CONTEXT.some(f => lower.includes(f))) return true;
     const firmLower = (firm || '').toLowerCase();
@@ -338,7 +424,7 @@ async function fetchOpenFDAEnforcement(brandMap) {
   try {
     const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
     if (!res.ok) {
-      if (res.status === 404) return []; // no results
+      if (res.status === 404) return [];
       throw new Error(`openFDA API: ${res.status}`);
     }
     const data = await res.json();
@@ -346,13 +432,11 @@ async function fetchOpenFDAEnforcement(brandMap) {
 
     const results = [];
     for (const r of items) {
-      // Filter out false positives
       if (!isActualPetFood(r.product_description, r.recalling_firm)) continue;
 
       const brandRaw = r.recalling_firm || '';
       const brand = extractBrand(brandRaw + ' ' + (r.product_description || ''), brandMap) || cleanBrand(brandRaw) || brandRaw;
 
-      // Map FDA status
       let status = 'Ongoing';
       if (r.status) {
         const s = r.status.toLowerCase();
@@ -387,6 +471,11 @@ async function fetchOpenFDAEnforcement(brandMap) {
   }
 }
 
+
+/* ════════════════════════════════════════════════════════
+   MAIN HANDLER
+   ════════════════════════════════════════════════════════ */
+
 export async function GET(request) {
   // Auth check
   const authHeader = request.headers.get('authorization');
@@ -396,6 +485,7 @@ export async function GET(request) {
   }
 
   const supabase = getSupabase();
+  const anthropic = getAnthropic();
   const startedAt = new Date().toISOString();
   let logId = null;
 
@@ -429,7 +519,7 @@ export async function GET(request) {
         status: 'completed', records_found: 0, records_processed: 0,
         completed_at: new Date().toISOString(),
       }).eq('id', logId);
-      return NextResponse.json({ success: true, source1Count: 0, source2Count: 0, source3Count: 0, source4Count: 0, newRecalls: 0 });
+      return NextResponse.json({ success: true, source1Count: 0, source2Count: 0, source3Count: 0, source4Count: 0, newRecalls: 0, enriched: 0 });
     }
 
     // Check for existing recall_numbers
@@ -445,12 +535,14 @@ export async function GET(request) {
     console.log(`[poll-recalls] ${newRecalls.length} new recalls to insert`);
 
     let insertedCount = 0;
+    let enrichedCount = 0;
+
     if (newRecalls.length > 0) {
       const cleanedRows = newRecalls.map(cleanRow);
       const { data: inserted, error: insertError } = await supabase
         .from('recalls')
         .upsert(cleanedRows, { onConflict: 'recall_number', ignoreDuplicates: true })
-        .select('id, brand_name, recall_number');
+        .select('id, brand_name, recall_number, source_url, product_description, reason');
 
       if (insertError) {
         console.error('Recall insert error:', insertError);
@@ -460,19 +552,64 @@ export async function GET(request) {
       insertedCount = inserted?.length || 0;
       console.log(`[poll-recalls] Inserted ${insertedCount} recalls`);
 
-      /*
-        MATCHING LOGIC: Cross-reference recalls against dog_profiles.
-        SQL migration note: for better performance at scale, create an RPC:
-          CREATE FUNCTION match_recall_brand(brand text) RETURNS TABLE(user_id uuid, email text) AS $$
-            SELECT dp.user_id, up.email FROM dog_profiles dp
-            JOIN user_profiles up ON up.id = dp.user_id
-            WHERE LOWER(SPLIT_PART(dp.current_food_slug, '/', 1)) = LOWER(brand)
-               OR LOWER(dp.current_food) LIKE '%' || LOWER(brand) || '%'
-          $$ LANGUAGE sql;
-        For now, we fetch all dog_profiles and filter in JS.
-      */
+      /* ── AI ENRICHMENT ──
+         For each new recall, fetch the source page and use Claude to extract
+         structured data: correct brand name, affected products, lot numbers,
+         plain-English summary, consumer actions, etc.
+         This runs sequentially to avoid rate limits — ~1s per recall via Haiku. */
       if (inserted && inserted.length > 0) {
-        // Load all dog profiles with their user emails
+        for (const recall of inserted) {
+          try {
+            const enriched = await enrichRecallWithAI(recall, anthropic);
+            if (!enriched) continue;
+
+            // Build update payload — only override fields with better data
+            const update = {};
+            if (enriched.brand_name && enriched.brand_name !== 'Unknown') {
+              update.brand_name = enriched.brand_name;
+            }
+            if (enriched.reason_summary) update.detail_summary = enriched.reason_summary;
+            if (enriched.affected_products) update.affected_products = enriched.affected_products;
+            if (enriched.consumer_action) update.consumer_action = enriched.consumer_action;
+            if (enriched.company_contact) update.company_contact = enriched.company_contact;
+            if (enriched.lot_numbers && (!recall.lot_numbers || recall.lot_numbers === recall.reason)) {
+              update.lot_numbers = enriched.lot_numbers;
+            }
+            if (enriched.distribution_pattern) {
+              update.distribution_pattern = enriched.distribution_pattern;
+            }
+            // Map severity_assessment to severity class if we didn't have one
+            if (enriched.severity_assessment && !recall.severity) {
+              const sevMap = { critical: 'Class I', serious: 'Class I', moderate: 'Class II', low: 'Class III' };
+              const mapped = sevMap[enriched.severity_assessment.toLowerCase()];
+              if (mapped) update.severity = mapped;
+            }
+
+            if (Object.keys(update).length > 0) {
+              const { error: updateError } = await supabase
+                .from('recalls')
+                .update(update)
+                .eq('id', recall.id);
+
+              if (updateError) {
+                console.error(`[enrich] Update failed for ${recall.recall_number}:`, updateError.message);
+              } else {
+                enrichedCount++;
+                // Update the recall object in memory so matching uses the corrected brand
+                if (update.brand_name) recall.brand_name = update.brand_name;
+              }
+            }
+          } catch (enrichErr) {
+            console.error(`[enrich] Error processing ${recall.recall_number}:`, enrichErr.message);
+            // Continue to next recall — don't let one failure stop the batch
+          }
+        }
+        console.log(`[poll-recalls] Enriched ${enrichedCount}/${insertedCount} recalls with AI`);
+      }
+
+      /* ── MATCHING LOGIC ──
+         Cross-reference recalls against dog_profiles. */
+      if (inserted && inserted.length > 0) {
         const { data: allDogs } = await supabase
           .from('dog_profiles')
           .select('user_id, current_food, current_food_slug');
@@ -485,7 +622,6 @@ export async function GET(request) {
         for (const recall of inserted) {
           if (!recall.brand_name) continue;
 
-          // Build list of brand names to search for (raw + mapped)
           const searchBrands = [recall.brand_name.toLowerCase()];
           if (brandMap) {
             for (const m of brandMap) {
@@ -498,7 +634,6 @@ export async function GET(request) {
             }
           }
 
-          // Match against dog_profiles
           const matchedUserIds = new Set();
           (allDogs || []).forEach(dog => {
             if (!dog.current_food_slug && !dog.current_food) return;
@@ -528,7 +663,6 @@ export async function GET(request) {
               else console.log(`[poll-recalls] Queued ${alertRows.length} alerts for ${recall.recall_number}`);
             }
 
-            // Mark recall as matched
             await supabase.from('recalls').update({ matched_to_products: true }).eq('id', recall.id);
           }
         }
@@ -550,6 +684,7 @@ export async function GET(request) {
       source3Count: source3Results.length,
       source4Count: source4Results.length,
       newRecalls: insertedCount,
+      enriched: enrichedCount,
     });
 
   } catch (err) {

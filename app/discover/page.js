@@ -9,12 +9,11 @@ import SearchBox from '../components/SearchBox';
 
 /* ── filter range definitions ── */
 const SCORE_RANGES = [
-  { label: 'Excellent (90–100)', min: 90, max: 100 },
-  { label: 'Great (80–89)', min: 80, max: 89 },
-  { label: 'Good (70–79)', min: 70, max: 79 },
-  { label: 'Fair (60–69)', min: 60, max: 69 },
-  { label: 'Below Avg (50–59)', min: 50, max: 59 },
-  { label: 'Poor (under 50)', min: 0, max: 49 },
+  { label: 'Excellent (90-100)', min: 90, max: 100 },
+  { label: 'Great (80-89)', min: 80, max: 89 },
+  { label: 'Good (70-79)', min: 70, max: 79 },
+  { label: 'Fair (60-69)', min: 60, max: 69 },
+  { label: 'Poor (under 60)', min: 0, max: 59 },
 ];
 
 const PROTEIN_TYPES = ['Chicken', 'Beef', 'Salmon', 'Lamb', 'Turkey', 'Duck', 'Fish', 'Other', 'Specialty / Veterinary'];
@@ -58,7 +57,6 @@ function getScoreTier(score) {
   if (score >= 80) return 'Great';
   if (score >= 70) return 'Good';
   if (score >= 60) return 'Fair';
-  if (score >= 50) return 'Below Avg';
   return 'Poor';
 }
 
@@ -148,11 +146,11 @@ function ProductCard({ food, onClick }) {
       onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
     >
       {food.image_url && !imgErr ? (
-        <div style={{ width: 56, height: 72, borderRadius: 10, overflow: 'hidden', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <img src={food.image_url} alt="" onError={() => setImgErr(true)} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+        <div style={{ width: 56, height: 72, borderRadius: 10, overflow: 'hidden', background: '#f5f2ec', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <img src={food.image_url} alt="" loading="lazy" decoding="async" onError={() => setImgErr(true)} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
         </div>
       ) : (
-        <div style={{ width: 56, height: 72, borderRadius: 10, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🐕</div>
+        <div style={{ width: 56, height: 72, borderRadius: 10, background: '#f5f2ec', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🐕</div>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 12, color: '#8a7e72', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
@@ -194,6 +192,7 @@ function DiscoverContent() {
   const [allFoods, setAllFoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(48);
 
   /* filter state */
   const [selectedScoreRange, setSelectedScoreRange] = useState([]);
@@ -227,18 +226,9 @@ function DiscoverContent() {
   /* fetch all products once */
   useEffect(() => {
     async function load() {
-      let all = [];
-      let offset = 0;
-      const batch = 1000;
-      while (true) {
-        const res = await fetch(`/api/foods?all=true&offset=${offset}&batch=${batch}`);
-        const data = await res.json();
-        if (!data || data.length === 0) break;
-        all = all.concat(data);
-        if (data.length < batch) break;
-        offset += batch;
-      }
-      setAllFoods(all);
+      const res = await fetch('/api/foods?all=true');
+      const data = await res.json();
+      setAllFoods(Array.isArray(data) ? data : []);
       setLoading(false);
     }
     load();
@@ -332,6 +322,9 @@ function DiscoverContent() {
 
   const activeFilterCount = [selectedScoreRange, selectedBrands, selectedProteins, selectedProteinRange, selectedCarbRange, selectedFatRange, selectedFiberRange]
     .filter(a => a.length > 0).length;
+
+  // Reset visible count when filters change
+  useEffect(() => { setVisibleCount(48); }, [filtered]);
 
   function clearAll() {
     setSelectedScoreRange([]);
@@ -550,8 +543,17 @@ function DiscoverContent() {
           {/* product grid */}
           <div style={{ flex: 1, minWidth: 0 }}>
             {loading ? (
-              <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
-                <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <div key={i} style={{ background: '#fff', borderRadius: 16, padding: 16, border: '1px solid #ede8df', display: 'flex', gap: 14, alignItems: 'center' }}>
+                    <div style={{ width: 56, height: 72, borderRadius: 10, background: '#f0ebe3', flexShrink: 0, animation: 'pulse 1.5s ease infinite' }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ width: '40%', height: 10, borderRadius: 4, background: '#f0ebe3', marginBottom: 8, animation: 'pulse 1.5s ease infinite' }} />
+                      <div style={{ width: '75%', height: 12, borderRadius: 4, background: '#f0ebe3', marginBottom: 8, animation: 'pulse 1.5s ease 0.1s infinite' }} />
+                      <div style={{ width: '55%', height: 10, borderRadius: 4, background: '#f0ebe3', animation: 'pulse 1.5s ease 0.2s infinite' }} />
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : sorted.length === 0 ? (
               <div style={{ padding: '60px 32px', borderRadius: 24, border: '2px dashed #e8e0d4', textAlign: 'center', color: '#b5aa99' }}>
@@ -560,11 +562,25 @@ function DiscoverContent() {
                 <div style={{ fontSize: 14, marginTop: 8 }}>Try removing some filters</div>
               </div>
             ) : (
+              <>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
-                {sorted.map((f) => (
+                {sorted.slice(0, visibleCount).map((f) => (
                   <ProductCard key={f.id} food={f} onClick={() => goFood(f)} />
                 ))}
               </div>
+              {visibleCount < sorted.length && (
+                <div style={{ textAlign: 'center', marginTop: 24 }}>
+                  <button onClick={() => setVisibleCount(v => v + 48)} style={{
+                    padding: '12px 32px', borderRadius: 100, border: '1.5px solid #ede8df',
+                    background: '#fff', color: '#1a1612', fontSize: 14, fontWeight: 600,
+                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+                  }}
+                    onMouseEnter={(e) => { e.target.style.background = '#f5f0e8'; }}
+                    onMouseLeave={(e) => { e.target.style.background = '#fff'; }}
+                  >Show more ({sorted.length - visibleCount} remaining)</button>
+                </div>
+              )}
+              </>
             )}
           </div>
         </div>
@@ -612,6 +628,8 @@ function DiscoverContent() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
           <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>

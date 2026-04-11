@@ -10,6 +10,7 @@ input::placeholder { color: #b5aa99; }
 @keyframes slideDown { from { opacity:0; transform:translateY(-8px) } to { opacity:1; transform:translateY(0) } }
 @keyframes scaleIn { from { opacity:0; transform:scale(0.96) } to { opacity:1; transform:scale(1) } }
 @keyframes spin { to { transform: rotate(360deg) } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 @media (max-width: 768px) {
   .hero-layout { flex-direction: column !important; gap: 16px !important; padding: 12px 24px 24px !important; align-items: center !important; }
@@ -23,6 +24,7 @@ input::placeholder { color: #b5aa99; }
   .nav-bar { padding: 12px 16px !important; }
   .nav-logo { font-size: 24px !important; }
   .nav-search { display: none !important; }
+  .nav-discover-link { font-size: 12px !important; }
   .popular-brands { padding: 28px 20px 36px !important; border-radius: 24px 24px 0 0 !important; }
   .product-hero { gap: 20px !important; justify-content: center !important; }
   .product-image-wrap { width: 180px !important; height: 240px !important; }

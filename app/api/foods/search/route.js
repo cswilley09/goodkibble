@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server'
-import { getSupabase } from '@/lib/supabaseServer'
+import { createClient } from '@supabase/supabase-js'
 import { checkRateLimit } from '@/lib/rateLimit'
+
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
+}
 
 function getSearchVariants(query) {
   const q = query.trim()

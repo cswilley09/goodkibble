@@ -19,6 +19,7 @@ const PRO_ALERT_FEATURES = [
   'Recall alerts sent to your email',
   'Score change notifications',
   'Algorithm update alerts',
+  'Manufacturer ingredient change notifications',
 ];
 
 const PRO_OTHER_FEATURES = [
@@ -35,7 +36,6 @@ const FAQS = [
   { q: 'What are recall alerts?', a: "When the FDA issues a recall on any food you or your dogs are connected to, we'll email you immediately. No more checking recall databases manually." },
   { q: 'What are score change notifications?', a: "When we update our scoring methodology based on new research, or when a manufacturer changes their formula and the score changes, we'll let you know which of your saved foods were affected." },
   { q: 'Can I cancel anytime?', a: "Yes. Cancel from your account settings and you'll keep Pro access until the end of your billing period. No questions asked." },
-  { q: 'Is my data shared?', a: "Never. We don't sell data to pet food companies or anyone else. Your dog profiles and food preferences stay private." },
 ];
 
 export default function ProPage() {
@@ -176,8 +176,10 @@ export default function ProPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
               {/* "Everything in Free, plus:" */}
               <div style={{ fontSize: 14, fontFamily: "'DM Sans', sans-serif", color: '#C9A84C', fontWeight: 700 }}>Everything in Free, plus:</div>
-              {/* Alert features in gold box */}
-              <div style={{ border: '1px solid rgba(201,168,76,0.3)', borderRadius: 12, padding: '14px 16px', marginBottom: 4, background: 'rgba(201,168,76,0.04)', display: 'flex', flexDirection: 'column', gap: 10 }}>
+
+              {/* Group 1: Peace of mind */}
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', fontFamily: "'DM Sans', sans-serif" }}>Works while you sleep</div>
+              <div style={{ border: '1px solid rgba(201,168,76,0.3)', borderRadius: 12, padding: '14px 16px', background: 'rgba(201,168,76,0.04)', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {PRO_ALERT_FEATURES.map(f => (
                   <div key={f} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.8)' }}>
                     <span style={{ color: '#639922', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>{'\u2713'}</span>
@@ -185,7 +187,12 @@ export default function ProPage() {
                   </div>
                 ))}
               </div>
-              {/* Other features */}
+
+              {/* Divider */}
+              <div style={{ height: 1, background: '#ede8df', margin: '4px 0' }} />
+
+              {/* Group 2: Power tools */}
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', fontFamily: "'DM Sans', sans-serif" }}>For the deep divers</div>
               {PRO_OTHER_FEATURES.map(f => (
                 <div key={f} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, fontFamily: "'DM Sans', sans-serif", color: 'rgba(255,255,255,0.8)' }}>
                   <span style={{ color: '#639922', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>{'\u2713'}</span>
@@ -226,7 +233,7 @@ export default function ProPage() {
 
       <style>{`
         @media (max-width: 768px) {
-          .nav-discover-link { display: none !important; }
+          .nav-discover-link { font-size: 12px !important; }
           .pro-cards { grid-template-columns: 1fr !important; }
           .pro-cards > div:nth-child(2) { order: -1; }
         }

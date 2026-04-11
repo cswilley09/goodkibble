@@ -450,8 +450,9 @@ export default function SignupPage() {
   const STEP_FOOD_START = 2 + N;
   const STEP_PRIORITIES = 2 + 2 * N;
   const STEP_ACCOUNT = STEP_PRIORITIES + 1;
-  const STEP_CONFIRM = STEP_ACCOUNT + 1;
-  const TOTAL_STEPS = STEP_CONFIRM; // confirmation is last but not counted in progress
+  const STEP_PLAN = STEP_ACCOUNT + 1;
+  const STEP_CONFIRM = STEP_PLAN + 1;
+  const TOTAL_STEPS = STEP_PLAN; // plan is last counted step, confirm is the post-submit screen
 
   // Map step to type
   function stepType(s) {
@@ -461,6 +462,7 @@ export default function SignupPage() {
     if (s >= STEP_FOOD_START && s < STEP_PRIORITIES) return 'food';
     if (s === STEP_PRIORITIES) return 'priorities';
     if (s === STEP_ACCOUNT) return 'account';
+    if (s === STEP_PLAN) return 'plan';
     return 'confirm';
   }
 
@@ -522,24 +524,7 @@ export default function SignupPage() {
     setSubmitting(true);
     setError('');
     try {
-      // 1. Create Supabase auth account
-      const { data: authData, error: authError } = await getSupabase().auth.signUp({
-        email: email.trim(),
-        options: { emailRedirectTo: window.location.origin + '/profile' },
-      });
-      if (authError) {
-        if (authError.message?.includes('already registered')) {
-          setError('already_registered');
-          setSubmitting(false);
-          return;
-        }
-        throw new Error(authError.message);
-      }
-
-      const userId = authData.user?.id;
-      if (!userId) throw new Error('Failed to create account.');
-
-      // 2. Save profile data via API, using auth user ID
+      // 1. Save profile data first (no auth user ID — will be linked when they click magic link)
       const dogsPayload = dogs.slice(0, numDogs).map((d, i) => ({
         dog_name: dogNames[i].trim(),
         breed: d.breed,
@@ -553,7 +538,6 @@ export default function SignupPage() {
         priorities,
       }));
       const payload = {
-        auth_user_id: userId,
         first_name: firstName.trim(),
         email: email.trim(),
         zip_code: zipCode.trim(),
@@ -567,10 +551,21 @@ export default function SignupPage() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
+        if (data.error?.includes('already exists')) {
+          setError('already_registered');
+          setSubmitting(false);
+          return;
+        }
         throw new Error(data.error || 'Something went wrong. Please try again.');
       }
 
-      goTo(STEP_CONFIRM);
+      // 2. Send magic link after profile is saved
+      await getSupabase().auth.signInWithOtp({
+        email: email.trim(),
+        options: { emailRedirectTo: window.location.origin + '/profile' },
+      });
+
+      goTo(STEP_PLAN);
     } catch (err) {
       setError(err.message);
     }
@@ -587,7 +582,7 @@ export default function SignupPage() {
   // Enter key advances to next step
   useEffect(() => {
     function onKeyDown(e) {
-      if (e.key === 'Enter' && !e.shiftKey && step < STEP_CONFIRM) {
+      if (e.key === 'Enter' && !e.shiftKey && step < STEP_PLAN) {
         // Don't intercept Enter inside the food search input
         const tag = e.target.tagName;
         if (tag === 'INPUT' && e.target.closest('[data-food-search]')) return;
@@ -633,14 +628,14 @@ export default function SignupPage() {
         <a href="/" style={{ textDecoration: 'none' }}>
           <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
-        {step < STEP_CONFIRM && (
+        {step < STEP_PLAN && (
           <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: '#8a7e72', letterSpacing: 1, textTransform: 'uppercase' }}>
             Step {step + 1} of {TOTAL_STEPS}
           </span>
         )}
       </nav>
 
-      {step < STEP_CONFIRM && <ProgressDots step={step} total={TOTAL_STEPS} />}
+      {step < STEP_PLAN && <ProgressDots step={step} total={TOTAL_STEPS} />}
 
       <div style={{ maxWidth: 640, margin: '0 auto', padding: '32px 24px 80px', ...fadeStyle }}>
 
@@ -894,6 +889,92 @@ export default function SignupPage() {
           </div>
         )}
 
+        {/* ── CHOOSE YOUR PLAN ── */}
+        {curType === 'plan' && (
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#f7efd8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 20px' }}>{'\u{1F389}'}</div>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
+              You&rsquo;re in, {firstName || 'there'}!
+            </h1>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: '#8a7e72', lineHeight: 1.6, maxWidth: 440, margin: '0 auto 32px' }}>
+              Choose how you want to use GoodKibble.
+            </p>
+
+            <div className="plan-cards" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 560, margin: '0 auto', textAlign: 'left' }}>
+              {/* Free card */}
+              <div style={{
+                background: '#fff', borderRadius: 20, border: '1px solid #ede8df', padding: '24px 20px',
+                display: 'flex', flexDirection: 'column',
+              }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Free</div>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 900, color: '#1a1612', marginBottom: 4 }}>$0</div>
+                <div style={{ fontSize: 12, color: '#b5aa99', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>Free forever</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, flex: 1 }}>
+                  {['Search & score any food', 'Score breakdown (9 categories)', 'Compare up to 2 foods', '1 dog profile'].map(f => (
+                    <div key={f} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: '#3d352b' }}>
+                      <span style={{ color: '#639922', fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>{f}
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => goTo(STEP_CONFIRM)} style={{
+                  width: '100%', padding: '12px 0', borderRadius: 100, border: '1.5px solid #ede8df',
+                  background: 'transparent', color: '#8a7e72', fontSize: 14, fontWeight: 600,
+                  cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                }}>Continue Free</button>
+              </div>
+
+              {/* Pro card */}
+              <div style={{
+                background: '#1a1612', borderRadius: 20, border: '2px solid #C9A84C', padding: '24px 20px',
+                display: 'flex', flexDirection: 'column', position: 'relative',
+              }}>
+                <span style={{
+                  position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)',
+                  background: '#C9A84C', color: '#fff', padding: '3px 12px',
+                  borderRadius: 100, fontSize: 10, fontWeight: 700, whiteSpace: 'nowrap',
+                  fontFamily: "'DM Sans', sans-serif",
+                }}>RECOMMENDED</span>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Pro</div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
+                  <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 900, color: '#faf8f4' }}>$29</span>
+                  <span style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>/year</span>
+                </div>
+                <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>That&rsquo;s $2.42/month</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, flex: 1 }}>
+                  {['Everything in Free, plus:', 'Recall alerts to your email', 'Score change notifications', 'Ingredient deep-dives', 'Unlimited comparisons', 'Up to 5 dog profiles'].map((f, i) => (
+                    <div key={f} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: i === 0 ? '#C9A84C' : 'rgba(255,255,255,0.8)', fontWeight: i === 0 ? 700 : 400 }}>
+                      {i > 0 && <span style={{ color: '#639922', fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>}{f}
+                    </div>
+                  ))}
+                </div>
+                <button onClick={async () => {
+                  try {
+                    const res = await fetch('/api/checkout', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ email: email.trim(), plan: 'yearly' }),
+                    });
+                    const data = await res.json();
+                    if (data.url) window.location.href = data.url;
+                    else goTo(STEP_CONFIRM);
+                  } catch {
+                    goTo(STEP_CONFIRM);
+                  }
+                }} style={{
+                  width: '100%', padding: '12px 0', borderRadius: 100, border: 'none',
+                  background: '#C9A84C', color: '#fff', fontSize: 14, fontWeight: 700,
+                  cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                }}>Get Pro &rarr;</button>
+              </div>
+            </div>
+
+            <button onClick={() => goTo(STEP_CONFIRM)} style={{
+              marginTop: 24, background: 'none', border: 'none', color: '#b5aa99',
+              fontSize: 13, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            }}>Skip for now</button>
+          </div>
+        )}
+
         {/* ── CHECK YOUR EMAIL ── */}
         {curType === 'confirm' && (
           <div style={{ textAlign: 'center' }}>
@@ -925,7 +1006,7 @@ export default function SignupPage() {
         )}
 
         {/* Navigation buttons */}
-        {step >= 1 && step < STEP_CONFIRM && (
+        {step >= 1 && step < STEP_PLAN && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginTop: 40 }}>
             <button onClick={handleBack} style={{ padding: '12px 28px', borderRadius: 100, background: 'transparent', color: '#8a7e72', fontSize: 15, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>&larr; Back</button>
             <button onClick={handleNext} disabled={!canContinue() || submitting} style={{
@@ -948,6 +1029,8 @@ export default function SignupPage() {
           nav { padding: 12px 16px !important; }
           .account-field-row { flex-direction: column !important; align-items: center !important; }
           .signup-email-input { width: 100% !important; text-align: center !important; }
+          .plan-cards { grid-template-columns: 1fr !important; }
+          .plan-cards > div:last-child { order: -1; }
         }
       `}</style>
     </div>

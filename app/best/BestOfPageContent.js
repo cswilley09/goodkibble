@@ -7,11 +7,10 @@ import SignUpButton from '@/app/components/SignUpButton';
 
 function getScoreTier(score) {
   if (score >= 90) return { label: 'Excellent', color: '#639922' };
-  if (score >= 80) return { label: 'Very Good', color: '#639922' };
+  if (score >= 80) return { label: 'Great', color: '#639922' };
   if (score >= 70) return { label: 'Good', color: '#1D9E75' };
-  if (score >= 60) return { label: 'Adequate', color: '#EF9F27' };
-  if (score >= 50) return { label: 'Below Average', color: '#D85A30' };
-  return { label: 'Concerning', color: '#C0392B' };
+  if (score >= 60) return { label: 'Fair', color: '#EF9F27' };
+  return { label: 'Poor', color: '#D85A30' };
 }
 
 function ScoreRing({ score, size = 56 }) {
@@ -279,6 +278,8 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
           <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>

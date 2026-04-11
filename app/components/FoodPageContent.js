@@ -220,8 +220,8 @@ function IngredientBottomSheet({ info, onClose, bottomOffset = 0, gated = false 
         </div>
         {gated ? (
           <div style={{ textAlign: 'center', padding: '12px 0' }}>
-            <span style={{ fontSize: 20, opacity: 0.5 }}>{'\u{1F512}'}</span>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginTop: 8, marginBottom: 12, lineHeight: 1.5 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 10 }}>Ingredient Intelligence</div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 12, lineHeight: 1.5 }}>
               See what each ingredient means for your dog with GoodKibble Pro
             </div>
             <a href="/pro" style={{
@@ -399,7 +399,7 @@ function CompareToggle({ food }) {
   }
 
   return (
-    <button onClick={handleClick} style={{
+    <button onClick={handleClick} className="compare-toggle-btn" style={{
       padding: '10px 20px', borderRadius: 100,
       border: isAdded ? '1.5px solid #1a1612' : '1.5px solid #ede8df',
       background: isAdded ? '#1a1612' : '#fff',
@@ -407,7 +407,7 @@ function CompareToggle({ food }) {
       fontSize: 13, fontWeight: 600,
       cursor: isFull && !isAdded ? 'default' : 'pointer',
       fontFamily: "'DM Sans', sans-serif",
-      display: 'inline-flex', alignItems: 'center', gap: 6, transition: 'all 0.25s',
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all 0.25s',
       opacity: isFull && !isAdded ? 0.5 : 1,
     }}
       onMouseEnter={(e) => {
@@ -435,11 +435,10 @@ function CompareToggle({ food }) {
 /* ── Score tier helper ── */
 function getScoreTier(score) {
   if (score >= 90) return { label: 'Excellent', color: '#639922' };
-  if (score >= 80) return { label: 'Very Good', color: '#639922' };
+  if (score >= 80) return { label: 'Great', color: '#639922' };
   if (score >= 70) return { label: 'Good', color: '#1D9E75' };
-  if (score >= 60) return { label: 'Adequate', color: '#EF9F27' };
-  if (score >= 50) return { label: 'Below Average', color: '#D85A30' };
-  return { label: 'Concerning', color: '#C0392B' };
+  if (score >= 60) return { label: 'Fair', color: '#EF9F27' };
+  return { label: 'Poor', color: '#D85A30' };
 }
 
 /* ── Score Ring ── */
@@ -519,14 +518,25 @@ function CategoryDetailPanel({ catKey, data, color }) {
     ];
     context = 'AAFCO minimum is 5.5% for adults, 8.5% for growth.';
     citation = 'AAFCO, 2016; NRC, 2006';
-  } else if (catKey === 'C_carbs') {
+  } else if (catKey === 'C1_carb_level' || catKey === 'C_carbs') {
     cells = [
       { l: 'Carbs (DMB)', v: `${(Math.round(c.carbs_dmb * 10) / 10)}%` },
-      { l: 'Bracket', v: `→ ${c.score} pts` },
+      { l: 'Bracket', v: `→ ${c.score}/${c.max} pts` },
       { l: 'NRC requirement', v: 'None established' },
     ];
     context = 'Dogs have no dietary requirement for carbohydrates (NRC, 2006). Carbs = 100 − protein − fat − fiber − ash.';
     citation = 'NRC, 2006';
+  } else if (catKey === 'C2_carb_source') {
+    cells = [
+      { l: 'Primary carb source', v: c.primary_carb ? capitalize(c.primary_carb) : 'Not detected' },
+      { l: 'Glycemic tier', v: c.tier_label || 'Unknown' },
+      { l: 'Score', v: `${c.score}/${c.max} pts` },
+    ];
+    if (c.carb_before_protein) {
+      cells.push({ l: 'Position penalty', v: 'Carb appears before animal protein — capped at 2 pts' });
+    }
+    context = 'Carb source quality based on published canine glycemic index data. Low-GI sources (sweet potato, oats, lentils) score higher.';
+    citation = 'Carciofi 2008; Adolphe 2012, 2015; Vastolo 2023; Rankovic 2020; Domingues 2023';
   } else if (catKey === 'D_fiber') {
     cells = [
       { l: 'Fiber (DMB)', v: `${(Math.round(c.fiber_dmb * 10) / 10)}%` },
@@ -538,6 +548,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
     cells = [
       { l: 'First animal protein', v: capitalize(c.first_animal_protein) || 'None' },
       { l: 'Second animal protein', v: capitalize(c.second_animal_protein) || 'None in top 5' },
+      { l: 'Species diversity', v: c.diversity_label || `${(c.species_diversity || []).length} group(s)` },
       { l: 'By-product status', v: capitalize(c.byproduct_status) || 'None' },
       { l: 'Splitting penalty', v: c.splitting_penalty ? capitalize(`${c.splitting_penalty}`) : 'None' },
     ];
@@ -659,10 +670,18 @@ function ScoreBreakdownCard({ breakdown }) {
     { key: 'A_protein', label: 'Protein', color: '#2d7a4f' },
     { key: 'B_fat', label: 'Fat', color: '#c47a20' },
   ];
-  const nutRow2 = [
+  // Support both old (C_carbs) and new (C1+C2) breakdown keys
+  const hasNewCarbs = !!cats?.C1_carb_level;
+  const nutRow2 = hasNewCarbs ? [
+    { key: 'C1_carb_level', label: 'Carb Level', color: '#5a7a9e' },
+    { key: 'C2_carb_source', label: 'Carb Source', color: '#4a8a9e' },
+  ] : [
     { key: 'C_carbs', label: 'Carbs', color: '#5a7a9e' },
     { key: 'D_fiber', label: 'Fiber', color: '#8a6aaf' },
   ];
+  const nutRow3 = hasNewCarbs ? [
+    { key: 'D_fiber', label: 'Fiber', color: '#8a6aaf' },
+  ] : [];
   const ingRow1 = [
     { key: 'E_protein_source', label: 'Protein sources', color: '#C8A415', textColor: '#A08310' },
     { key: 'F_preservatives', label: 'Preservatives', color: '#C8A415', textColor: '#A08310' },
@@ -675,10 +694,12 @@ function ScoreBreakdownCard({ breakdown }) {
   const renderPair = (tiles) => (
     <div className="score-tile-pair" style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
       {tiles.map((t) => (
-        <ScoreTile key={t.key} catKey={t.key} label={t.label}
-          color={t.color} textColor={t.textColor}
-          data={cats[t.key]} isExpanded={expandedCat === t.key}
-          onToggle={toggleExpand} />
+        <div key={t.key} className={tiles.length === 1 ? 'score-tile-single' : ''} style={{ flex: 1, maxWidth: tiles.length === 1 ? 'calc(50% - 5px)' : undefined }}>
+          <ScoreTile catKey={t.key} label={t.label}
+            color={t.color} textColor={t.textColor}
+            data={cats[t.key]} isExpanded={expandedCat === t.key}
+            onToggle={toggleExpand} />
+        </div>
       ))}
     </div>
   );
@@ -696,6 +717,7 @@ function ScoreBreakdownCard({ breakdown }) {
       <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Nutrition</div>
       {renderPair(nutRow1)}
       {renderPair(nutRow2)}
+      {nutRow3.length > 0 && renderPair(nutRow3)}
 
       <div style={{ height: 1, background: '#ede8df', margin: '14px 0 24px' }} />
 
@@ -738,6 +760,7 @@ export default function FoodPageContent({ productId }) {
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
+
   const heroRef = useRef(null);
 
   useEffect(() => {
@@ -824,8 +847,37 @@ export default function FoodPageContent({ productId }) {
       </nav>
 
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '120px 0' }}>
-          <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 80px' }}>
+          {/* Skeleton: back button */}
+          <div style={{ width: 160, height: 14, borderRadius: 4, background: '#f0ebe3', marginBottom: 32, animation: 'pulse 1.5s ease infinite' }} />
+          {/* Skeleton: product hero */}
+          <div className="product-hero" style={{ display: 'flex', gap: 32, marginBottom: 32 }}>
+            <div style={{ width: 260, height: 320, borderRadius: 20, background: '#f0ebe3', flexShrink: 0, animation: 'pulse 1.5s ease infinite' }} />
+            <div style={{ flex: 1 }}>
+              <div style={{ width: '30%', height: 10, borderRadius: 4, background: '#f0ebe3', marginBottom: 10, animation: 'pulse 1.5s ease infinite' }} />
+              <div style={{ width: '80%', height: 24, borderRadius: 4, background: '#f0ebe3', marginBottom: 12, animation: 'pulse 1.5s ease 0.1s infinite' }} />
+              <div style={{ width: '50%', height: 12, borderRadius: 4, background: '#f0ebe3', marginBottom: 24, animation: 'pulse 1.5s ease 0.2s infinite' }} />
+              <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#f0ebe3', animation: 'pulse 1.5s ease infinite' }} />
+                <div>
+                  <div style={{ width: 80, height: 14, borderRadius: 4, background: '#f0ebe3', marginBottom: 6, animation: 'pulse 1.5s ease 0.1s infinite' }} />
+                  <div style={{ width: 120, height: 10, borderRadius: 4, background: '#f0ebe3', animation: 'pulse 1.5s ease 0.2s infinite' }} />
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Skeleton: score breakdown */}
+          <div style={{ background: '#faf8f5', borderRadius: 24, border: '1px solid #ede8df', padding: '40px 32px' }}>
+            <div style={{ width: 140, height: 10, borderRadius: 4, background: '#f0ebe3', marginBottom: 24, animation: 'pulse 1.5s ease infinite' }} />
+            <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
+              <div style={{ flex: 1, height: 60, borderRadius: 12, background: '#f0ebe3', animation: 'pulse 1.5s ease infinite' }} />
+              <div style={{ flex: 1, height: 60, borderRadius: 12, background: '#f0ebe3', animation: 'pulse 1.5s ease 0.1s infinite' }} />
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ flex: 1, height: 60, borderRadius: 12, background: '#f0ebe3', animation: 'pulse 1.5s ease 0.2s infinite' }} />
+              <div style={{ flex: 1, height: 60, borderRadius: 12, background: '#f0ebe3', animation: 'pulse 1.5s ease 0.3s infinite' }} />
+            </div>
+          </div>
         </div>
       ) : !food ? (
         <div style={{ textAlign: 'center', padding: '120px 24px', color: '#8a7e72', fontSize: 17 }}>
@@ -877,6 +929,18 @@ export default function FoodPageContent({ productId }) {
                 </div>
               )}
 
+              {/* Prescription diet disclaimer */}
+              {food.brand && (/prescription|veterinary|vet diet/i.test(food.brand) || /prescription|veterinary|vet diet/i.test(food.name)) && (
+                <div style={{
+                  padding: '10px 14px', borderRadius: 10, background: '#f5f2ec',
+                  border: '1px solid #ede8df', marginBottom: 16,
+                  fontSize: 12, color: '#8a7e72', lineHeight: 1.5,
+                  fontFamily: "'DM Sans', sans-serif",
+                }}>
+                  This score evaluates general formulation quality for healthy adult dogs. Veterinary/prescription diets are formulated for specific clinical conditions and are not intended to score highly on a general-purpose scale.
+                </div>
+              )}
+
               {/* Score ring + label */}
               {food.quality_score != null && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
@@ -889,7 +953,7 @@ export default function FoodPageContent({ productId }) {
                       <a href="/how-we-score" style={{ color: '#b5aa99', textDecoration: 'none' }}
                         onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
                         onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
-                      >How we score</a> · v{food.score_version || '1.4'}
+                      >How we score</a> · v{food.score_version || '1.5'}
                     </div>
                   </div>
                 </div>
@@ -1127,7 +1191,7 @@ export default function FoodPageContent({ productId }) {
               {activeIngredient && !isMobile && (
                 <div onClick={(e) => e.stopPropagation()} style={{
                   position: 'absolute', left: 0, right: 0, top: tooltipTop,
-                  zIndex: 50, borderRadius: 12, overflow: 'hidden',
+                  zIndex: 50, borderRadius: 12, overflow: 'visible',
                   boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
                   animation: 'fadeIn 0.15s ease',
                 }}>
@@ -1143,15 +1207,33 @@ export default function FoodPageContent({ productId }) {
                       {activeIngredient.info.source && <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>Source: {activeIngredient.info.source}</div>}
                     </div>
                   ) : (
-                    <ProGateOverlay title="Ingredient Intelligence" description="See what each ingredient means for your dog with GoodKibble Pro">
-                      <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'DM Sans', sans-serif" }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                          <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#8a7e72' }} />
-                          <span style={{ fontWeight: 700, fontSize: 16 }}>{activeIngredient.info.display_name}</span>
-                        </div>
-                        <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, lineHeight: 1.6 }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ingredient details are available with Pro.</div>
+                    <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'DM Sans', sans-serif", borderRadius: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, paddingRight: 36 }}>
+                        <span style={{
+                          width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
+                          background: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral,
+                        }} />
+                        <span style={{ fontWeight: 700, fontSize: 16 }}>{activeIngredient.info.display_name}</span>
+                        <span style={{
+                          marginLeft: 'auto', fontSize: 10, fontWeight: 600, letterSpacing: 0.5,
+                          textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0,
+                          background: SIGNAL_BG[activeIngredient.info.quality_signal] || SIGNAL_BG.neutral,
+                          color: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral,
+                        }}>{activeIngredient.info.quality_signal}</span>
+                        <span onClick={() => setActiveIngredient(null)} style={{ marginLeft: 8, fontSize: 16, color: 'rgba(255,255,255,0.4)', cursor: 'pointer', lineHeight: 1, padding: '0 4px' }}>&times;</span>
                       </div>
-                    </ProGateOverlay>
+                      <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 10 }}>Ingredient Intelligence</div>
+                        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 14, lineHeight: 1.5, maxWidth: 300, margin: '0 auto 14px' }}>
+                          See what each ingredient means for your dog with GoodKibble Pro
+                        </div>
+                        <a href="/pro" style={{
+                          display: 'inline-block', padding: '10px 24px', borderRadius: 100,
+                          background: '#C9A84C', color: '#fff', fontSize: 13, fontWeight: 700,
+                          textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+                        }}>Unlock with Pro →</a>
+                      </div>
+                    </div>
                   )}
                 </div>
               )}
@@ -1187,6 +1269,8 @@ export default function FoodPageContent({ productId }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
           <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>
@@ -1255,12 +1339,16 @@ export default function FoodPageContent({ productId }) {
         )
       )}
 
+
       <style>{`
         .sticky-buy-bar { display: none !important; }
         @media (max-width: 768px) {
           .sticky-buy-bar { display: flex !important; }
           .product-actions { flex-direction: column !important; align-items: stretch !important; }
-          .buy-amazon-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; }
+          .product-actions .compare-toggle-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; }
+          .score-tile-single { max-width: 100% !important; }
+          .score-tile-pair { flex-direction: column !important; }
+          .buy-amazon-btn { width: 100% !important; padding: 12px !important; font-size: 14px !important; text-align: center !important; }
         }
       `}</style>
     </div>

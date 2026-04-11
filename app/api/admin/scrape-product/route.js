@@ -217,7 +217,7 @@ export async function POST(request) {
       ingredients: extracted.ingredients,
       quality_score: scoreResult.total,
       score_breakdown: scoreResult,
-      score_version: '1.4',
+      score_version: '1.5',
       scored_at: new Date().toISOString(),
     };
 
