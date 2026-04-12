@@ -43,6 +43,7 @@ export async function POST(request) {
       customer_email: email,
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
+      allow_promotion_codes: true,
       success_url: `${origin}/pro/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pro`,
     });
