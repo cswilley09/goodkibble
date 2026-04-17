@@ -807,7 +807,7 @@ export default function ProfilePage() {
                     fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer',
                     fontFamily: "'DM Sans', sans-serif",
                   }}>Upgrade to Pro &rarr;</button>
-                  <div style={{ fontSize: 11, color: '#5a5248', marginTop: 8, fontFamily: "'DM Sans', sans-serif" }}>$29/year &middot; Cancel anytime</div>
+                  <div style={{ fontSize: 11, color: '#5a5248', marginTop: 8, fontFamily: "'DM Sans', sans-serif" }}>Starting at $3.99/month &middot; Cancel anytime</div>
                 </div>
               )}
             </div>
@@ -1147,7 +1147,7 @@ export default function ProfilePage() {
                     <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#639922' }} />
                     <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>GoodKibble Pro &mdash; Active</span>
                   </div>
-                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>Renews annually. You can cancel anytime.</p>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>Renews automatically. You can cancel anytime.</p>
                   <span onClick={() => setShowCancelModal(true)} style={{ fontSize: 12, color: '#b5aa99', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'underline' }}>Cancel subscription</span>
                 </>
               ) : (

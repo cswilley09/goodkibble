@@ -401,6 +401,7 @@ export default function SignupPage() {
   const [zipCode, setZipCode] = useState('');
   const [heardFrom, setHeardFrom] = useState('');
   const [emailError, setEmailError] = useState('');
+  const [billing, setBilling] = useState('yearly');
 
   function isValidEmail(e) {
     const a = e.indexOf('@');
@@ -896,9 +897,37 @@ export default function SignupPage() {
             <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
               You&rsquo;re in, {firstName || 'there'}!
             </h1>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: '#8a7e72', lineHeight: 1.6, maxWidth: 440, margin: '0 auto 32px' }}>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: '#8a7e72', lineHeight: 1.6, maxWidth: 440, margin: '0 auto 24px' }}>
               Choose how you want to use GoodKibble.
             </p>
+
+            {/* Billing toggle */}
+            <div style={{ display: 'inline-flex', marginBottom: 28, position: 'relative' }}>
+              <button onClick={() => setBilling('monthly')} style={{
+                padding: '10px 24px', borderRadius: '100px 0 0 100px', border: 'none',
+                background: billing === 'monthly' ? '#1a1612' : 'transparent',
+                color: billing === 'monthly' ? '#faf8f4' : '#8a7e72',
+                fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                fontFamily: "'DM Sans', sans-serif",
+                ...(billing !== 'monthly' ? { border: '1.5px solid #ede8df', borderRight: 'none' } : {}),
+              }}>Monthly</button>
+              <button onClick={() => setBilling('yearly')} style={{
+                padding: '10px 24px', borderRadius: '0 100px 100px 0', border: 'none',
+                background: billing === 'yearly' ? '#1a1612' : 'transparent',
+                color: billing === 'yearly' ? '#faf8f4' : '#8a7e72',
+                fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                fontFamily: "'DM Sans', sans-serif", position: 'relative',
+                ...(billing !== 'yearly' ? { border: '1.5px solid #ede8df', borderLeft: 'none' } : {}),
+              }}>
+                Yearly
+                <span style={{
+                  position: 'absolute', top: -10, right: -10,
+                  background: '#639922', color: '#fff', padding: '2px 8px',
+                  borderRadius: 100, fontSize: 10, fontWeight: 700,
+                  fontFamily: "'DM Sans', sans-serif",
+                }}>Save 38%</span>
+              </button>
+            </div>
 
             <div className="plan-cards" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 560, margin: '0 auto', textAlign: 'left' }}>
               {/* Free card */}
@@ -936,10 +965,12 @@ export default function SignupPage() {
                 }}>RECOMMENDED</span>
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Pro</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-                  <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 900, color: '#faf8f4' }}>$29</span>
-                  <span style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>/year</span>
+                  <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 900, color: '#faf8f4' }}>{billing === 'yearly' ? '$29' : '$3.99'}</span>
+                  <span style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{billing === 'yearly' ? '/year' : '/month'}</span>
                 </div>
-                <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>That&rsquo;s just $2.42/month</div>
+                <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
+                  {billing === 'yearly' ? "That\u2019s just $2.42/month" : 'Cancel anytime'}
+                </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, flex: 1 }}>
                   {['Everything in Free, plus:', 'Recall alerts to your email', 'Score change notifications', 'Ingredient deep-dives', 'Unlimited comparisons', 'Up to 5 dog profiles'].map((f, i) => (
                     <div key={f} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13, fontFamily: "'DM Sans', sans-serif", color: i === 0 ? '#C9A84C' : 'rgba(255,255,255,0.8)', fontWeight: i === 0 ? 700 : 400 }}>
@@ -952,7 +983,7 @@ export default function SignupPage() {
                     const res = await fetch('/api/checkout', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ email: email.trim(), plan: 'yearly' }),
+                      body: JSON.stringify({ email: email.trim(), plan: billing }),
                     });
                     const data = await res.json();
                     if (data.url) window.location.href = data.url;
