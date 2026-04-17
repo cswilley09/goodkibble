@@ -3,8 +3,6 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 ::selection { background: #e8c840; color: #1a1612; }
 body { font-family: 'DM Sans', sans-serif; background: #faf8f4; color: #1a1612; overflow-x: hidden; }
-body > div { animation: pageReveal 0.15s ease-out both; animation-delay: 0.05s; }
-@keyframes pageReveal { from { opacity: 0; } to { opacity: 1; } }
 input::placeholder { color: #b5aa99; }
 
 @keyframes fadeUp { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:translateY(0) } }
