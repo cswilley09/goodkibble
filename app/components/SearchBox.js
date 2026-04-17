@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function SearchBox({ onSelect, variant = 'hero' }) {
+export default function SearchBox({ onSelect, variant = 'hero', dark = false }) {
   const [text, setText] = useState('');
   const [results, setResults] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -78,13 +78,14 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
     <div ref={boxRef} className="searchbox-root" style={{ position: 'relative', width: '100%', maxWidth: isNav ? 380 : 560, boxSizing: 'border-box' }}>
       <div className="searchbox-bar" style={{
         display: 'flex', alignItems: 'center', width: '100%', boxSizing: 'border-box',
-        background: isNav ? '#f0ebe3' : '#fff',
+        background: isNav ? '#f0ebe3' : (dark ? 'rgba(255,255,255,0.08)' : '#fff'),
         borderRadius: isNav ? 14 : 20,
         padding: isNav ? '4px 4px 4px 16px' : '6px 6px 6px 24px',
-        boxShadow: isNav ? 'none' : '0 8px 40px rgba(26,22,18,0.12), 0 2px 8px rgba(26,22,18,0.06)',
+        boxShadow: isNav || dark ? 'none' : '0 8px 40px rgba(26,22,18,0.12), 0 2px 8px rgba(26,22,18,0.06)',
+        border: dark ? '1px solid rgba(255,255,255,0.1)' : 'none',
       }}>
         <svg width={isNav ? 16 : 20} height={isNav ? 16 : 20} viewBox="0 0 24 24" fill="none"
-          stroke={isNav ? '#8a7e72' : '#b5aa99'} strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}>
+          stroke={isNav ? '#8a7e72' : (dark ? 'rgba(255,255,255,0.3)' : '#b5aa99')} strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}>
           <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" />
         </svg>
         <input type="text"
@@ -95,7 +96,7 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
           style={{
             flex: 1, border: 'none', outline: 'none', minWidth: 0,
             fontSize: isNav ? 14 : 17, padding: isNav ? '10px 8px' : '14px 12px',
-            background: 'transparent', color: '#1a1612',
+            background: 'transparent', color: dark ? '#faf8f4' : '#1a1612',
             fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
           }}
         />
@@ -103,13 +104,14 @@ export default function SearchBox({ onSelect, variant = 'hero' }) {
           <button className="searchbox-btn" onClick={handleSearchButton}
             style={{
               padding: '14px 28px', borderRadius: 14, border: 'none',
-              background: '#1a1612', color: '#faf8f5', fontSize: 15,
+              background: dark ? '#C9A84C' : '#1a1612', color: '#fff', fontSize: 15,
               fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
               whiteSpace: 'nowrap', flexShrink: 0,
             }}>Search</button>
         )}
       </div>
       <style>{`
+        ${dark ? '.searchbox-bar input::placeholder { color: rgba(255,255,255,0.3) !important; }' : ''}
         @media (max-width: 768px) {
           .searchbox-root { max-width: 100% !important; }
           .searchbox-bar { max-width: 100% !important; padding-left: 16px !important; padding-right: 6px !important; }

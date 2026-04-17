@@ -469,6 +469,8 @@ function FooterCTA({ onNavigate, onSelect }) {
 
 export default function Home({ marqueeData = [] }) {
   const [scrolled, setScrolled] = useState(false);
+  const [heroInView, setHeroInView] = useState(true);
+  const heroRef = useRef(null);
   const router = useRouter();
 
   // Derive protein counts from server-provided marquee data
@@ -481,6 +483,15 @@ export default function Home({ marqueeData = [] }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Track whether the hero section is visible for nav color switching
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting), { threshold: 0 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   const goTo = useCallback((path) => router.push(path), [router]);
   const handleSelect = useCallback((food) => {
     if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
@@ -491,21 +502,22 @@ export default function Home({ marqueeData = [] }) {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4' }}>
 
       {/* ═══ NAV ═══ */}
-      <nav className="site-nav" style={{
-        position: 'sticky', top: 0, zIndex: 50, background: '#faf8f4',
+      <nav className={`site-nav${heroInView ? ' nav-hero-mode' : ''}`} style={{
+        position: 'sticky', top: 0, zIndex: 50,
+        background: heroInView ? 'transparent' : '#faf8f4',
         padding: '14px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        borderBottom: scrolled ? '1px solid #ede8df' : '1px solid transparent',
-        boxShadow: scrolled ? '0 2px 12px rgba(26,22,18,0.04)' : 'none',
-        transition: 'border-color 0.3s, box-shadow 0.3s',
+        borderBottom: heroInView ? '1px solid transparent' : (scrolled ? '1px solid #ede8df' : '1px solid transparent'),
+        boxShadow: !heroInView && scrolled ? '0 2px 12px rgba(26,22,18,0.04)' : 'none',
+        transition: 'all 0.3s',
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5, cursor: 'pointer' }} onClick={() => goTo('/')}>
+        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 800, color: heroInView ? '#faf8f4' : '#1a1612', letterSpacing: -0.5, cursor: 'pointer', transition: 'color 0.3s' }} onClick={() => goTo('/')}>
           Good<span style={{ color: '#C9A84C' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span className="nav-discover-link" onClick={() => goTo('/discover')} style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'color 0.2s' }}
-            onMouseEnter={(e) => e.target.style.color = '#1a1612'}
-            onMouseLeave={(e) => e.target.style.color = '#5a5248'}
+          <span className="nav-discover-link" onClick={() => goTo('/discover')} style={{ fontSize: 14, fontWeight: 600, color: heroInView ? 'rgba(255,255,255,0.6)' : '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'color 0.3s' }}
+            onMouseEnter={(e) => e.target.style.color = heroInView ? 'rgba(255,255,255,0.9)' : '#1a1612'}
+            onMouseLeave={(e) => e.target.style.color = heroInView ? 'rgba(255,255,255,0.6)' : '#5a5248'}
           >Discover Foods</span>
           <RecallsNav />
           <CompareBubble />
@@ -514,30 +526,34 @@ export default function Home({ marqueeData = [] }) {
       </nav>
 
       {/* ═══ 1. HERO ═══ */}
-      <div className="hero-section" style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 30, boxSizing: 'border-box' }}>
-        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 16, animation: 'fadeUp 0.6s ease both' }}>1,000+ dog foods scored &amp; analyzed</div>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(38px, 5vw, 58px)', fontWeight: 900, color: '#1a1612', lineHeight: 1.08, letterSpacing: -2, marginBottom: 20, animation: 'fadeUp 0.6s ease 0.1s both' }}>
-          See what&apos;s really in<br />your dog&apos;s food
-        </h1>
-        <p style={{ fontSize: 18, color: '#8a7e72', lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px', fontFamily: "'DM Sans', sans-serif", animation: 'fadeUp 0.6s ease 0.2s both' }}>
-          Search any dog food. Get a full breakdown of ingredients, nutrition, and an honest 0&ndash;100 score.
-        </p>
-        <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
-          <SearchBox onSelect={handleSelect} variant="hero" />
-        </div>
-        {/* Social proof bar */}
-        <div className="social-proof-bar" style={{ marginTop: 20, animation: 'fadeUp 0.6s ease 0.35s both', textAlign: 'center', fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8a7e72', lineHeight: 1.8 }}>
-          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>Trusted by industry professionals</span></span>
-          <span className="proof-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
-          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>9 nutrition categories</span></span>
-          <span className="proof-dot proof-fda-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
-          <span className="proof-fda"><span style={{ fontWeight: 600, color: '#8a7e72' }}>FDA recalls tracked every 6 hours</span></span>
-        </div>
-        <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both', textAlign: 'center' }}>
-          <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#C9A84C', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
-            onMouseEnter={(e) => { e.target.style.color = '#a8882e'; e.target.style.textDecoration = 'underline'; }}
-            onMouseLeave={(e) => { e.target.style.color = '#C9A84C'; e.target.style.textDecoration = 'none'; }}
-          >or discover 1,000+ dog foods by filter →</span>
+      <div ref={heroRef} style={{ background: 'linear-gradient(170deg, #1a1612 0%, #2a2318 100%)', position: 'relative', overflow: 'hidden' }}>
+        {/* Gold radial glow */}
+        <div style={{ position: 'absolute', top: '-20%', left: '50%', transform: 'translateX(-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div className="hero-section" style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 30, boxSizing: 'border-box' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 16, animation: 'fadeUp 0.6s ease both' }}>1,000+ dog foods scored &amp; analyzed</div>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(38px, 5vw, 58px)', fontWeight: 900, color: '#faf8f4', lineHeight: 1.08, letterSpacing: -2, marginBottom: 20, animation: 'fadeUp 0.6s ease 0.1s both' }}>
+            See what&apos;s really in<br />your dog&apos;s food
+          </h1>
+          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px', fontFamily: "'DM Sans', sans-serif", animation: 'fadeUp 0.6s ease 0.2s both' }}>
+            Search any dog food. Get a full breakdown of ingredients, nutrition, and an honest 0&ndash;100 score.
+          </p>
+          <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+            <SearchBox onSelect={handleSelect} variant="hero" dark />
+          </div>
+          {/* Social proof bar */}
+          <div className="social-proof-bar" style={{ marginTop: 20, animation: 'fadeUp 0.6s ease 0.35s both', textAlign: 'center', fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.35)', lineHeight: 1.8 }}>
+            <span><span style={{ fontWeight: 600 }}>Trusted by industry professionals</span></span>
+            <span className="proof-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
+            <span><span style={{ fontWeight: 600 }}>9 nutrition categories</span></span>
+            <span className="proof-dot proof-fda-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
+            <span className="proof-fda"><span style={{ fontWeight: 600 }}>FDA recalls tracked every 6 hours</span></span>
+          </div>
+          <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both', textAlign: 'center' }}>
+            <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#C9A84C', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
+              onMouseEnter={(e) => { e.target.style.color = '#d4b65e'; e.target.style.textDecoration = 'underline'; }}
+              onMouseLeave={(e) => { e.target.style.color = '#C9A84C'; e.target.style.textDecoration = 'none'; }}
+            >or discover 1,000+ dog foods by filter →</span>
+          </div>
         </div>
       </div>
 
@@ -580,6 +596,11 @@ export default function Home({ marqueeData = [] }) {
         .marquee-track:hover { animation-play-state: paused; }
         .marquee-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,22,18,0.10); }
         .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #C9A84C !important; }
+        /* Nav hero mode — restyle child components */
+        .nav-hero-mode .recalls-nav-text { color: rgba(255,255,255,0.6) !important; }
+        .nav-hero-mode .recalls-nav-text:hover { color: rgba(255,255,255,0.9) !important; }
+        .nav-hero-mode .recalls-nav-icon svg { stroke: rgba(255,255,255,0.6) !important; }
+        .nav-hero-mode .compare-bubble:not(.compare-active) { border-color: rgba(255,255,255,0.15) !important; color: rgba(255,255,255,0.5) !important; }
         @media (max-width: 768px) {
           .site-nav { padding: 12px 16px !important; }
           .site-nav > div:first-child { font-size: 22px !important; }
