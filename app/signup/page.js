@@ -375,33 +375,44 @@ function FoodSearch({ onSelect, selectedFood }) {
    ══════════════════════════════════════════════════ */
 export default function SignupPage() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
+  // Restore saved state if user is returning (e.g. back from Stripe)
+  const [savedState] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const raw = sessionStorage.getItem('gk_signup');
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  });
+
+  const init = (key, fallback) => savedState?.[key] ?? fallback;
+
+  const [step, setStep] = useState(() => init('step', 0));
   const [animating, setAnimating] = useState(false);
   const [fadeState, setFadeState] = useState('in');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   // Step 2 — dog count + names
-  const [dogCount, setDogCount] = useState('');
-  const [dogNames, setDogNames] = useState(['']);
+  const [dogCount, setDogCount] = useState(() => init('dogCount', ''));
+  const [dogNames, setDogNames] = useState(() => init('dogNames', ['']));
 
   // Per-dog profiles (array of objects)
-  const [dogs, setDogs] = useState([{ ...EMPTY_DOG }]);
+  const [dogs, setDogs] = useState(() => init('dogs', [{ ...EMPTY_DOG }]));
 
   // Which dog we're profiling / feeding (index)
   const [profileIdx, setProfileIdx] = useState(0);
   const [foodIdx, setFoodIdx] = useState(0);
 
   // Step 5 — priorities
-  const [priorities, setPriorities] = useState([]);
+  const [priorities, setPriorities] = useState(() => init('priorities', []));
 
   // Step 6 — account
-  const [firstName, setFirstName] = useState('');
-  const [email, setEmail] = useState('');
-  const [zipCode, setZipCode] = useState('');
-  const [heardFrom, setHeardFrom] = useState('');
+  const [firstName, setFirstName] = useState(() => init('firstName', ''));
+  const [email, setEmail] = useState(() => init('email', ''));
+  const [zipCode, setZipCode] = useState(() => init('zipCode', ''));
+  const [heardFrom, setHeardFrom] = useState(() => init('heardFrom', ''));
   const [emailError, setEmailError] = useState('');
-  const [billing, setBilling] = useState('yearly');
+  const [billing, setBilling] = useState(() => init('billing', 'yearly'));
 
   function isValidEmail(e) {
     const a = e.indexOf('@');
@@ -502,6 +513,21 @@ export default function SignupPage() {
       setTimeout(() => setAnimating(false), 400);
     }, 250);
   }, [animating]);
+
+  // Persist form state to sessionStorage so the back button from Stripe restores progress
+  useEffect(() => {
+    if (stepType(step) === 'plan') {
+      try {
+        sessionStorage.setItem('gk_signup', JSON.stringify({
+          step, dogCount, dogNames, dogs, priorities,
+          firstName, email, zipCode, heardFrom, billing,
+        }));
+      } catch {}
+    } else if (stepType(step) === 'confirm') {
+      // Done — clear saved state
+      try { sessionStorage.removeItem('gk_signup'); } catch {}
+    }
+  }, [step, dogCount, dogNames, dogs, priorities, firstName, email, zipCode, heardFrom, billing]);
 
   function handleNext() {
     if (curType === 'account' && email.trim() && !isValidEmail(email.trim())) {
