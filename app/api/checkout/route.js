@@ -19,7 +19,7 @@ const PRICE_IDS = {
 
 export async function POST(request) {
   try {
-    const { email, plan } = await request.json();
+    const { email, plan, source } = await request.json();
 
     if (!email || !plan) {
       return NextResponse.json({ error: 'Email and plan are required.' }, { status: 400 });
@@ -45,7 +45,7 @@ export async function POST(request) {
       line_items: [{ price: priceId, quantity: 1 }],
       allow_promotion_codes: true,
       success_url: `${origin}/pro/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/pro`,
+      cancel_url: source === 'signup' ? `${origin}/signup` : `${origin}/pro`,
     });
 
     return NextResponse.json({ url: session.url });
