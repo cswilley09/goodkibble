@@ -539,15 +539,7 @@ export default function Home({ marqueeData = [] }) {
             <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, width: '100%', boxSizing: 'border-box' }}>
               <SearchBox onSelect={handleSelect} variant="hero" />
             </div>
-            {/* Social proof bar */}
-            <div className="social-proof-bar" style={{ marginTop: 20, animation: 'fadeUp 0.6s ease 0.35s both', fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#8a7e72', lineHeight: 1.8 }}>
-              <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>Trusted by industry professionals</span></span>
-              <span className="proof-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
-              <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>9 nutrition categories</span></span>
-              <span className="proof-dot proof-fda-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
-              <span className="proof-fda"><span style={{ fontWeight: 600, color: '#8a7e72' }}>FDA recalls tracked every 6 hours</span></span>
-            </div>
-            <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both' }}>
+            <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.35s both' }}>
               <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#2F6B48', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
                 onMouseEnter={(e) => { e.target.style.color = '#1e4a31'; e.target.style.textDecoration = 'underline'; }}
                 onMouseLeave={(e) => { e.target.style.color = '#2F6B48'; e.target.style.textDecoration = 'none'; }}
@@ -617,8 +609,6 @@ export default function Home({ marqueeData = [] }) {
           .marquee-card { width: 210px !important; }
           .hero-section { padding: 32px 16px 48px !important; }
           .hero-search-wrap { max-width: 100% !important; }
-          .social-proof-bar { font-size: 11px !important; }
-          .proof-fda, .proof-fda-dot { display: none !important; }
         }
       `}</style>
     </div>
