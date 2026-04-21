@@ -143,7 +143,7 @@ export default function KibbleAnalyzer() {
             <tspan fontSize="14" fill="oklch(0.5 0.01 80)">/100</tspan>
           </text>
           <circle cx="104" cy="14" r="3" fill="oklch(0.55 0.14 155)">
-            <animate attributeName="opacity" values="1;0.2;1" dur="1.2s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite" />
           </circle>
         </g>
       </svg>

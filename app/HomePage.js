@@ -521,14 +521,17 @@ export default function Home({ marqueeData = [] }) {
           {/* Left: text + search */}
           <div className="hero-text">
             <div style={{
-              display: 'inline-block',
+              display: 'inline-flex', alignItems: 'center', gap: 8,
               fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase',
               color: '#2F6B48', background: '#E3EFE6',
               padding: '6px 14px', borderRadius: 100,
               marginBottom: 24,
               fontFamily: 'ui-monospace, SFMono-Regular, monospace',
               animation: 'fadeUp 0.6s ease both',
-            }}>1,042 foods · 187 brands · updated today</div>
+            }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#2F6B48', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+              1,042 foods · 187 brands · scored &amp; analyzed
+            </div>
             <h1 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 'clamp(44px, 6vw, 72px)', fontWeight: 400, color: '#1a1612', lineHeight: 1.02, letterSpacing: -1, marginBottom: 28, animation: 'fadeUp 0.6s ease 0.1s both' }}>
               Look up any dog food.<br />
               <em style={{ color: '#2F6B48', fontStyle: 'italic' }}>See what&apos;s really in it.</em>
