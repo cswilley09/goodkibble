@@ -18,7 +18,7 @@ function ScoreRing({ score }) {
         <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" transform="rotate(-90 21 21)" />
         <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>{score}</text>
+          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1a1612' }}>{score}</text>
       </svg>
     </div>
   );
@@ -69,9 +69,9 @@ export default function IngredientPageContent({ ingredient, products, productCou
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
+          fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#5FB37E' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
@@ -83,7 +83,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
 
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 24px 80px' }}>
         {/* Breadcrumb */}
-        <nav style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'DM Sans', sans-serif" }}>
+        <nav style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
           <a href="/" style={{ color: '#b5aa99', textDecoration: 'none' }}>Home</a>
           <span style={{ margin: '0 8px' }}>/</span>
           <a href="/ingredients" style={{ color: '#b5aa99', textDecoration: 'none' }}>Ingredients</a>
@@ -95,7 +95,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
             <h1 style={{
-              fontFamily: "'Playfair Display', serif", fontSize: 'clamp(26px, 4vw, 38px)',
+              fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(26px, 4vw, 38px)',
               fontWeight: 700, color: '#1a1612', lineHeight: 1.2, margin: 0,
             }}>{ingredient.display_name}</h1>
           </div>
@@ -109,11 +109,11 @@ export default function IngredientPageContent({ ingredient, products, productCou
               background: '#f5f2ec', color: ci.color,
             }}>{ci.label}</span>
           </div>
-          <p style={{ fontSize: 15, color: '#3d352b', lineHeight: 1.7, maxWidth: 680, fontFamily: "'DM Sans', sans-serif", marginBottom: 12 }}>
+          <p style={{ fontSize: 15, color: '#3d352b', lineHeight: 1.7, maxWidth: 680, fontFamily: "'Inter', sans-serif", marginBottom: 12 }}>
             {ingredient.short_description}
           </p>
           {ingredient.source && (
-            <p style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic', fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic', fontFamily: "'Inter', sans-serif" }}>
               Source: {ingredient.source}
             </p>
           )}
@@ -125,10 +125,10 @@ export default function IngredientPageContent({ ingredient, products, productCou
             padding: '20px 24px', borderRadius: 16, background: '#FFF3F0',
             border: '1px solid #FECACA', marginBottom: 32,
           }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: '#C62828', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#C62828', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>
               Why this ingredient deserves attention
             </div>
-            <p style={{ fontSize: 13, color: '#5a4040', lineHeight: 1.6, margin: 0, fontFamily: "'DM Sans', sans-serif" }}>
+            <p style={{ fontSize: 13, color: '#5a4040', lineHeight: 1.6, margin: 0, fontFamily: "'Inter', sans-serif" }}>
               {ingredient.short_description} Some pet nutrition experts recommend avoiding or limiting foods with this ingredient. Always consult your veterinarian about dietary concerns specific to your dog.
             </p>
           </div>
@@ -137,10 +137,10 @@ export default function IngredientPageContent({ ingredient, products, productCou
         {/* Products containing this ingredient */}
         <div style={{ marginBottom: 40 }}>
           <h2 style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700,
+            fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 700,
             color: '#1a1612', marginBottom: 4,
           }}>Found in {productCount} dog food{productCount !== 1 ? 's' : ''}</h2>
-          <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>
             Showing top {products.length} by GoodKibble Score
           </p>
           {products.length > 0 ? (
@@ -159,7 +159,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
             border: '1px solid #ede8df',
           }}>
             <h2 style={{
-              fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700,
+              fontFamily: "'Instrument Serif', serif", fontSize: 20, fontWeight: 700,
               color: '#1a1612', marginBottom: 16,
             }}>Related Ingredients</h2>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -169,7 +169,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
                   <a key={r.ingredient_name} href={`/ingredients/${ingredientSlug(r.ingredient_name)}`} style={{
                     padding: '8px 16px', borderRadius: 100, fontSize: 13, fontWeight: 500,
                     background: '#fff', border: `1.5px solid ${rqi.color}30`, color: '#3d352b',
-                    textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+                    textDecoration: 'none', fontFamily: "'Inter', sans-serif",
                     transition: 'background 0.15s',
                   }}>{r.display_name}</a>
                 );
@@ -182,7 +182,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
         <div style={{ marginTop: 24, textAlign: 'center' }}>
           <a href="/ingredients" style={{
             fontSize: 14, fontWeight: 600, color: '#1a1612', textDecoration: 'underline',
-            textUnderlineOffset: 3, fontFamily: "'DM Sans', sans-serif",
+            textUnderlineOffset: 3, fontFamily: "'Inter', sans-serif",
           }}>Browse all 666 ingredients</a>
         </div>
       </div>
@@ -192,8 +192,8 @@ export default function IngredientPageContent({ ingredient, products, productCou
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#f0c930' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#5FB37E' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

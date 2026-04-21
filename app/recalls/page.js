@@ -92,8 +92,8 @@ export default function RecallsPage() {
       padding: '10px 14px', background: '#faf8f4', borderRadius: 10,
       border: '1px solid #f0ebe3',
     }}>
-      <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>{label}</div>
-      <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.4, wordBreak: 'break-word' }}>{value}</div>
+      <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'Inter', sans-serif", lineHeight: 1.4, wordBreak: 'break-word' }}>{value}</div>
     </div>
   );
 
@@ -105,10 +105,10 @@ export default function RecallsPage() {
         background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
+          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
+          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
           <RecallsNav />
           <CompareBubble />
           <SignUpButton />
@@ -127,22 +127,22 @@ export default function RecallsPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <span style={{ fontSize: 22, flexShrink: 0 }}>{'\u{1F514}'}</span>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', fontFamily: "'DM Sans', sans-serif" }}>Never check manually again</div>
-                <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginTop: 2 }}>Pro members get instant email alerts when a recall affects their dog&rsquo;s food</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', fontFamily: "'Inter', sans-serif" }}>Never check manually again</div>
+                <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>Pro members get instant email alerts when a recall affects their dog&rsquo;s food</div>
               </div>
             </div>
             <a href="/pro" className="pro-banner-btn" style={{
-              padding: '8px 20px', borderRadius: 100, background: '#C9A84C', color: '#fff',
+              padding: '8px 20px', borderRadius: 100, background: '#2F6B48', color: '#fff',
               fontSize: 12, fontWeight: 700, border: 'none', cursor: 'pointer',
-              fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap', flexShrink: 0,
+              fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap', flexShrink: 0,
               textDecoration: 'none', display: 'inline-block',
             }}>Get Alerts &rarr;</a>
           </div>
         )}
 
         {/* Header */}
-        <h1 style={{ fontFamily: "Georgia, 'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px' }}>FDA Dog Food Recalls</h1>
-        <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>Updated every 6 hours from FDA and AVMA sources</p>
+        <h1 style={{ fontFamily: "Georgia, 'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px' }}>FDA Dog Food Recalls</h1>
+        <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>Updated every 6 hours from FDA and AVMA sources</p>
 
         {/* Search bar */}
         <div style={{ marginBottom: 12 }}>
@@ -158,32 +158,32 @@ export default function RecallsPage() {
               placeholder="Search by brand, product, or reason..."
               style={{
                 flex: 1, border: 'none', outline: 'none', fontSize: 15, padding: '10px 12px',
-                background: 'transparent', color: '#1a1612', fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+                background: 'transparent', color: '#1a1612', fontFamily: "'Inter', sans-serif", fontWeight: 500,
               }}
             />
             {search && (
               <button onClick={() => setSearch('')} style={{
                 background: '#f0ebe3', border: 'none', color: '#8a7e72', fontSize: 12,
                 cursor: 'pointer', padding: '8px 16px', borderRadius: 10,
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 600, flexShrink: 0,
+                fontFamily: "'Inter', sans-serif", fontWeight: 600, flexShrink: 0,
               }}>Clear</button>
             )}
           </div>
         </div>
 
         {/* Results count */}
-        <div style={{ fontSize: 12, color: '#b5aa99', marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>
+        <div style={{ fontSize: 12, color: '#b5aa99', marginBottom: 12, fontFamily: "'Inter', sans-serif" }}>
           {loading ? '' : `${filtered.length} recall${filtered.length !== 1 ? 's' : ''} found`}
         </div>
 
         {/* Content */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 60, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
+          <div style={{ textAlign: 'center', padding: 60, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
             <div style={{ width: 24, height: 24, border: '3px solid #ede8df', borderTopColor: '#A32D2D', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
             Loading recalls...
           </div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 60, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
+          <div style={{ textAlign: 'center', padding: 60, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
             <div style={{ fontSize: 32, opacity: 0.3, marginBottom: 12 }}>{'\u{1F6E1}\u{FE0F}'}</div>
             {search ? `No recalls match "${search}"` : 'No recalls found in the last year'}
           </div>
@@ -244,28 +244,28 @@ export default function RecallsPage() {
                         letterSpacing: 1, flexShrink: 0, textTransform: 'uppercase',
                         background: urgent ? '#fce8e8' : '#fdf0e0',
                         color: urgent ? '#A32D2D' : '#d4760a',
-                        fontFamily: "'DM Sans', sans-serif",
+                        fontFamily: "'Inter', sans-serif",
                       }}>{urgent ? 'URGENT' : 'CAUTION'}</span>
 
                       {/* Content area */}
                       <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
-                          <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1612', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {r.brand_name || 'Unknown Brand'}
                           </span>
                           {multiBrand && (
                             <span style={{
                               padding: '2px 8px', borderRadius: 100, background: '#f0ebe3',
-                              fontSize: 9, fontWeight: 700, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif",
+                              fontSize: 9, fontWeight: 700, color: '#8a7e72', fontFamily: "'Inter', sans-serif",
                               letterSpacing: 0.5, flexShrink: 0,
                             }}>MULTI-BRAND</span>
                           )}
                         </div>
-                        <div style={{ fontSize: 13, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <div style={{ fontSize: 13, color: '#5a5248', fontFamily: "'Inter', sans-serif", marginTop: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {r.product_description}
                         </div>
                         {r.reason && r.reason !== r.product_description && (
-                          <div className="recall-reason" style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <div className="recall-reason" style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {r.reason}
                           </div>
                         )}
@@ -273,11 +273,11 @@ export default function RecallsPage() {
 
                       {/* Date area */}
                       <div className="recall-date" style={{ textAlign: 'right', flexShrink: 0, minWidth: 100 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>
                           {formatDate(r.recall_date || r.report_date)}
                         </div>
                         {r.lot_numbers && (
-                          <div style={{ fontSize: 10, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif", marginTop: 2 }}>Lots affected</div>
+                          <div style={{ fontSize: 10, color: '#b5aa99', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>Lots affected</div>
                         )}
                       </div>
 
@@ -300,16 +300,16 @@ export default function RecallsPage() {
 
                       {/* Section 1 — AI summary (preferred) or fallback to reason */}
                       {r.detail_summary ? (
-                        <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>{r.detail_summary}</div>
+                        <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>{r.detail_summary}</div>
                       ) : r.reason && r.reason !== r.product_description ? (
-                        <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>{r.reason}</div>
+                        <div style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>{r.reason}</div>
                       ) : null}
 
                       {/* Affected products (from AI enrichment) */}
                       {r.affected_products && (
                         <div style={{ marginBottom: 16 }}>
-                          <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 6 }}>Affected Products</div>
-                          <div style={{ fontSize: 13, color: '#1a1612', lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif" }}>{r.affected_products}</div>
+                          <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 6 }}>Affected Products</div>
+                          <div style={{ fontSize: 13, color: '#1a1612', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>{r.affected_products}</div>
                         </div>
                       )}
 
@@ -325,7 +325,7 @@ export default function RecallsPage() {
 
                       {/* Section 3 — Distribution */}
                       {(r.distribution_pattern || distLine) && (
-                        <div style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.6, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+                        <div style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.6, marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>
                           {r.distribution_pattern || distLine}
                         </div>
                       )}
@@ -336,14 +336,14 @@ export default function RecallsPage() {
                           background: '#fef9ee', border: '1px solid #f0e6c8', borderRadius: 10,
                           padding: '12px 16px', marginBottom: 16,
                         }}>
-                          <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#c47a20', fontFamily: "'DM Sans', sans-serif", marginBottom: 6 }}>What to do</div>
-                          <div style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif" }}>{r.consumer_action}</div>
+                          <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#c47a20', fontFamily: "'Inter', sans-serif", marginBottom: 6 }}>What to do</div>
+                          <div style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>{r.consumer_action}</div>
                         </div>
                       )}
 
                       {/* Company contact (from AI enrichment) */}
                       {r.company_contact && (
-                        <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+                        <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>
                           <strong>Company contact:</strong> {r.company_contact}
                         </div>
                       )}
@@ -353,25 +353,25 @@ export default function RecallsPage() {
                         profileResult && dogs && dogs.length > 0 ? (
                           profileResult.match ? (
                             <div style={{ background: '#fce8e8', borderRadius: 10, padding: '10px 14px', marginBottom: 16 }}>
-                              <div style={{ fontSize: 13, fontWeight: 600, color: '#A32D2D', fontFamily: "'DM Sans', sans-serif" }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: '#A32D2D', fontFamily: "'Inter', sans-serif" }}>
                                 {'\u26A0\uFE0F'} This may affect {profileResult.dog.dog_name}&rsquo;s food
                               </div>
-                              <div style={{ fontSize: 12, color: '#5a3030', fontFamily: "'DM Sans', sans-serif", marginTop: 4 }}>
+                              <div style={{ fontSize: 12, color: '#5a3030', fontFamily: "'Inter', sans-serif", marginTop: 4 }}>
                                 Check the lot numbers above against your bag
                               </div>
                               <button onClick={(e) => { e.stopPropagation(); router.push('/discover'); }} style={{
                                 marginTop: 8, padding: '6px 14px', borderRadius: 100,
                                 border: '1.5px solid #e8c4c4', background: 'transparent',
                                 color: '#A32D2D', fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                                fontFamily: "'DM Sans', sans-serif",
+                                fontFamily: "'Inter', sans-serif",
                               }}>Find Alternatives &rarr;</button>
                             </div>
                           ) : (
                             <div style={{ background: '#eef5e4', borderRadius: 10, padding: '10px 14px', marginBottom: 16 }}>
-                              <div style={{ fontSize: 13, fontWeight: 600, color: '#639922', fontFamily: "'DM Sans', sans-serif" }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: '#639922', fontFamily: "'Inter', sans-serif" }}>
                                 {'\u2713'} Not in your profile
                               </div>
-                              <div style={{ fontSize: 12, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", marginTop: 4 }}>
+                              <div style={{ fontSize: 12, color: '#5a5248', fontFamily: "'Inter', sans-serif", marginTop: 4 }}>
                                 {profileResult.dog.dog_name} eats {profileResult.dog.current_food || 'an unlisted food'}
                               </div>
                             </div>
@@ -384,13 +384,13 @@ export default function RecallsPage() {
                         {r.source_url && (
                           <a href={r.source_url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{
                             padding: '8px 16px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
-                            fontSize: 12, fontWeight: 700, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+                            fontSize: 12, fontWeight: 700, textDecoration: 'none', fontFamily: "'Inter', sans-serif",
                           }}>View FDA Source &rarr;</a>
                         )}
                         <button onClick={(e) => { e.stopPropagation(); router.push('/discover'); }} style={{
                           padding: '8px 16px', borderRadius: 100, border: '1.5px solid #ede8df',
                           background: 'transparent', color: '#1a1612', fontSize: 12, fontWeight: 600,
-                          cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                          cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                         }}>Find Alternatives</button>
                       </div>
 
@@ -399,10 +399,10 @@ export default function RecallsPage() {
                         <div className="recall-pro-strip" onClick={(e) => e.stopPropagation()} style={{
                           background: '#f5f2ec', borderRadius: 10, padding: '12px 18px', marginTop: 20,
                           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                          gap: 12, fontFamily: "'DM Sans', sans-serif",
+                          gap: 12, fontFamily: "'Inter', sans-serif",
                         }}>
                           <span style={{ fontSize: 13, color: '#5a5248' }}>{'\u{1F514}'} Get instant recall alerts to your email</span>
-                          <a href="/pro" style={{ fontSize: 13, color: '#C9A84C', fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Learn about Pro &rarr;</a>
+                          <a href="/pro" style={{ fontSize: 13, color: '#2F6B48', fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Learn about Pro &rarr;</a>
                         </div>
                       )}
                     </div>

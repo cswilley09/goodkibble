@@ -32,11 +32,11 @@ export default function HomepageRecalls() {
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, transparent, #A32D2D, transparent)', opacity: 0.3 }} />
 
       <div style={{ textAlign: 'center', marginBottom: 28 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#A32D2D', marginBottom: 10, fontFamily: "'DM Sans', sans-serif" }}>Recent FDA Recalls</div>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#A32D2D', marginBottom: 10, fontFamily: "'Inter', sans-serif" }}>Recent FDA Recalls</div>
+        <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>
           Is your dog&rsquo;s food safe?
         </h2>
-        <p style={{ fontSize: 15, color: '#5a5248', maxWidth: 480, margin: '0 auto', lineHeight: 1.6, fontFamily: "'DM Sans', sans-serif" }}>
+        <p style={{ fontSize: 15, color: '#5a5248', maxWidth: 480, margin: '0 auto', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>
           The FDA issues dog food recalls regularly. Most pet parents don&rsquo;t find out until it&rsquo;s too late.
         </p>
       </div>
@@ -54,15 +54,15 @@ export default function HomepageRecalls() {
                 letterSpacing: 1, flexShrink: 0,
                 background: isUrgent ? '#fce8e8' : '#fdf0e0',
                 color: isUrgent ? '#A32D2D' : '#d4760a',
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "'Inter', sans-serif",
               }}>{isUrgent ? 'URGENT' : 'CAUTION'}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.brand_name || 'Unknown Brand'}</div>
-                <div style={{ fontSize: 12, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.product_description}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.brand_name || 'Unknown Brand'}</div>
+                <div style={{ fontSize: 12, color: '#5a5248', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.product_description}</div>
               </div>
               <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                <div style={{ fontSize: 11, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{formatDate(r.recall_date || r.report_date)}</div>
-                {r.lot_numbers && <div style={{ fontSize: 10, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>Lots affected</div>}
+                <div style={{ fontSize: 11, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{formatDate(r.recall_date || r.report_date)}</div>
+                {r.lot_numbers && <div style={{ fontSize: 10, color: '#b5aa99', fontFamily: "'Inter', sans-serif" }}>Lots affected</div>}
               </div>
             </div>
           );
@@ -73,12 +73,12 @@ export default function HomepageRecalls() {
         <button onClick={() => router.push('/recalls')} style={{
           padding: '12px 28px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
           fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
-          fontFamily: "'DM Sans', sans-serif", marginBottom: 10,
+          fontFamily: "'Inter', sans-serif", marginBottom: 10,
         }}>View All Recalls &rarr;</button>
         <div>
           <span onClick={() => router.push('/pro')} style={{
-            fontSize: 12, color: '#C9A84C', fontWeight: 600, cursor: 'pointer',
-            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 12, color: '#2F6B48', fontWeight: 600, cursor: 'pointer',
+            fontFamily: "'Inter', sans-serif",
           }}>Get instant recall alerts with Pro &rarr;</span>
         </div>
       </div>

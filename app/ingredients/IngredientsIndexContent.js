@@ -32,9 +32,9 @@ export default function IngredientsIndexContent({ ingredients }) {
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
+          fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#5FB37E' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
@@ -46,17 +46,17 @@ export default function IngredientsIndexContent({ ingredients }) {
 
       <div style={{ maxWidth: 960, margin: '0 auto', padding: '32px 24px 80px' }}>
         {/* Breadcrumb */}
-        <nav style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'DM Sans', sans-serif" }}>
+        <nav style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
           <a href="/" style={{ color: '#b5aa99', textDecoration: 'none' }}>Home</a>
           <span style={{ margin: '0 8px' }}>/</span>
           <span style={{ color: '#6b6157' }}>Ingredients</span>
         </nav>
 
         <h1 style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 4vw, 42px)',
+          fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 42px)',
           fontWeight: 800, color: '#1a1612', marginBottom: 8,
         }}>Dog Food Ingredients</h1>
-        <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 28, fontFamily: "'DM Sans', sans-serif" }}>
+        <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 28, fontFamily: "'Inter', sans-serif" }}>
           {ingredients.length} ingredients explained — tap any ingredient to learn what it is and which products contain it.
         </p>
 
@@ -66,7 +66,7 @@ export default function IngredientsIndexContent({ ingredients }) {
             padding: '8px 16px', borderRadius: 100, border: '1.5px solid #ede8df',
             background: !activeCategory ? '#1a1612' : '#fff',
             color: !activeCategory ? '#faf8f5' : '#3d352b',
-            fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+            fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
           }}>All ({ingredients.length})</button>
           {categories.map(cat => {
             const ci = CATEGORY_INFO[cat] || CATEGORY_INFO.other;
@@ -77,7 +77,7 @@ export default function IngredientsIndexContent({ ingredients }) {
                 border: isActive ? `1.5px solid ${ci.color}` : '1.5px solid #ede8df',
                 background: isActive ? ci.color + '15' : '#fff',
                 color: isActive ? ci.color : '#3d352b',
-                fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
               }}>{ci.label} ({grouped[cat].length})</button>
             );
           })}
@@ -90,7 +90,7 @@ export default function IngredientsIndexContent({ ingredients }) {
             <div key={cat} style={{ marginBottom: 36 }}>
               <h2 style={{
                 fontSize: 16, fontWeight: 700, color: ci.color, marginBottom: 12,
-                fontFamily: "'DM Sans', sans-serif", letterSpacing: 0.5,
+                fontFamily: "'Inter', sans-serif", letterSpacing: 0.5,
               }}>{ci.label}</h2>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {grouped[cat].map(ing => {
@@ -102,7 +102,7 @@ export default function IngredientsIndexContent({ ingredients }) {
                         padding: '7px 14px', borderRadius: 100, fontSize: 13, fontWeight: 500,
                         background: '#fff', border: `1.5px solid ${qi.color}40`,
                         color: '#3d352b', textDecoration: 'none',
-                        fontFamily: "'DM Sans', sans-serif", transition: 'background 0.15s, border-color 0.15s',
+                        fontFamily: "'Inter', sans-serif", transition: 'background 0.15s, border-color 0.15s',
                       }}
                     >{ing.display_name}</a>
                   );
@@ -118,8 +118,8 @@ export default function IngredientsIndexContent({ ingredients }) {
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#f0c930' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#5FB37E' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

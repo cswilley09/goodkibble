@@ -28,8 +28,8 @@ export default function SignUpButton() {
       <>
         {!isUserPro && (
           <span onClick={() => router.push('/pro')} className="nav-pro-link" style={{
-            fontSize: 14, fontWeight: 600, color: '#C9A84C', cursor: 'pointer',
-            fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', gap: 3,
+            fontSize: 14, fontWeight: 600, color: '#2F6B48', cursor: 'pointer',
+            fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: 3,
             transition: 'opacity 0.2s', flexShrink: 0,
           }}
             onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
@@ -41,13 +41,13 @@ export default function SignUpButton() {
           className="signup-btn-circle"
           style={{
             width: 36, height: 36, borderRadius: '50%',
-            background: '#C9A84C', color: '#fff',
+            background: '#2F6B48', color: '#fff',
             fontSize: 14, fontWeight: 700,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             cursor: 'pointer', flexShrink: 0, position: 'relative',
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Inter', sans-serif",
             transition: 'opacity 0.2s',
-            ...(isUserPro ? { boxShadow: '0 0 0 2px #C9A84C, 0 0 8px rgba(201,168,76,0.3)' } : {}),
+            ...(isUserPro ? { boxShadow: '0 0 0 2px #2F6B48, 0 0 8px rgba(201,168,76,0.3)' } : {}),
           }}
           onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
           onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
@@ -57,7 +57,7 @@ export default function SignUpButton() {
             <span style={{
               position: 'absolute', bottom: -2, right: -2,
               width: 14, height: 14, borderRadius: '50%',
-              background: '#C9A84C', color: '#fff', fontSize: 8,
+              background: '#2F6B48', color: '#fff', fontSize: 8,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               border: '2px solid #faf8f4',
             }}>{'\u2605'}</span>
@@ -81,11 +81,11 @@ export default function SignUpButton() {
         className="signup-btn-circle"
         style={{
           width: 36, height: 36, borderRadius: '50%',
-          background: '#C9A84C', color: '#fff',
+          background: '#2F6B48', color: '#fff',
           fontSize: 14, fontWeight: 700,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', flexShrink: 0,
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "'Inter', sans-serif",
         }}
       >{initial}</div>
     );
@@ -95,8 +95,8 @@ export default function SignUpButton() {
   return (
     <>
       <span onClick={() => router.push('/pro')} className="nav-pro-link" style={{
-        fontSize: 14, fontWeight: 600, color: '#C9A84C', cursor: 'pointer',
-        fontFamily: "'DM Sans', sans-serif", display: 'flex', alignItems: 'center', gap: 3,
+        fontSize: 14, fontWeight: 600, color: '#2F6B48', cursor: 'pointer',
+        fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: 3,
         transition: 'opacity 0.2s', flexShrink: 0,
       }}
         onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
@@ -107,10 +107,10 @@ export default function SignUpButton() {
         className="signup-btn-desktop"
         style={{
           padding: '8px 18px', borderRadius: 100,
-          background: '#C9A84C', color: '#fff',
+          background: '#2F6B48', color: '#fff',
           fontSize: 13, fontWeight: 600,
           cursor: 'pointer', flexShrink: 0,
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "'Inter', sans-serif",
           whiteSpace: 'nowrap',
           transition: 'opacity 0.2s',
         }}
@@ -124,7 +124,7 @@ export default function SignUpButton() {
         className="signup-btn-mobile"
         style={{
           width: 32, height: 32, borderRadius: '50%',
-          background: '#C9A84C', color: '#fff',
+          background: '#2F6B48', color: '#fff',
           display: 'none', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', flexShrink: 0,
           transition: 'opacity 0.2s',

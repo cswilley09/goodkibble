@@ -41,7 +41,7 @@ function buildEmailHTML(recall) {
 
     <!-- Header -->
     <div style="text-align:center;padding:24px 0 20px;">
-      <span style="font-size:24px;font-weight:800;color:#1a1612;letter-spacing:-0.5px;">Good<span style="color:#C9A84C;">Kibble</span></span>
+      <span style="font-size:24px;font-weight:800;color:#1a1612;letter-spacing:-0.5px;">Good<span style="color:#2F6B48;">Kibble</span></span>
     </div>
 
     <!-- Main Card -->
@@ -108,7 +108,7 @@ function buildEmailHTML(recall) {
 
         <!-- Secondary Link -->
         <div style="text-align:center;">
-          <a href="https://www.goodkibble.com/dashboard/recalls" style="font-size:13px;color:#C9A84C;text-decoration:none;font-weight:600;">
+          <a href="https://www.goodkibble.com/dashboard/recalls" style="font-size:13px;color:#2F6B48;text-decoration:none;font-weight:600;">
             View All Recalls on GoodKibble →
           </a>
         </div>
@@ -121,7 +121,7 @@ function buildEmailHTML(recall) {
         You're receiving this because you have recall alerts enabled on <strong>GoodKibble Pro</strong>.
       </p>
       <p style="margin:0 0 8px;">
-        To stop receiving recall alerts, update your <a href="https://www.goodkibble.com/profile" style="color:#C9A84C;text-decoration:none;">notification preferences</a>.
+        To stop receiving recall alerts, update your <a href="https://www.goodkibble.com/profile" style="color:#2F6B48;text-decoration:none;">notification preferences</a>.
       </p>
       <p style="margin:0;color:#d4cfc6;">
         © ${new Date().getFullYear()} GoodKibble. Not affiliated with any dog food brand.

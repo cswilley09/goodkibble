@@ -27,7 +27,7 @@ function ScoreRing({ score, size = 56 }) {
       </svg>
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 18, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", color: '#1a1612',
+        fontSize: 18, fontWeight: 700, fontFamily: "'Inter', sans-serif", color: '#1a1612',
       }}>{score}</div>
     </div>
   );
@@ -60,8 +60,8 @@ function RankedCard({ rank, product }) {
     }}>
       {/* Rank */}
       <div style={{
-        fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900,
-        color: rank <= 3 ? '#C9A84C' : '#b5aa99', lineHeight: 1, minWidth: 36, textAlign: 'center',
+        fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 900,
+        color: rank <= 3 ? '#2F6B48' : '#b5aa99', lineHeight: 1, minWidth: 36, textAlign: 'center',
         flexShrink: 0, paddingTop: 4,
       }}>#{rank}</div>
 
@@ -90,7 +90,7 @@ function RankedCard({ rank, product }) {
             }}>{product.brand}</a>
             <h3 style={{ margin: '4px 0 0' }}>
               <a href={`/dog-food/${product.brand_slug}/${product.slug}`} style={{
-                fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700,
+                fontFamily: "'Instrument Serif', serif", fontSize: 18, fontWeight: 700,
                 color: '#1a1612', textDecoration: 'none', lineHeight: 1.3,
               }}>{product.name}</a>
             </h3>
@@ -137,13 +137,13 @@ function RankedCard({ rank, product }) {
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
           <a href={`/dog-food/${product.brand_slug}/${product.slug}`} style={{
             fontSize: 13, fontWeight: 600, color: '#1a1612', textDecoration: 'underline',
-            textUnderlineOffset: 3, fontFamily: "'DM Sans', sans-serif",
+            textUnderlineOffset: 3, fontFamily: "'Inter', sans-serif",
           }}>Full Review</a>
           {product.affiliate_url && (
             <a href={product.affiliate_url} target="_blank" rel="noopener noreferrer nofollow" style={{
               fontSize: 12, fontWeight: 600, padding: '8px 16px', borderRadius: 100,
               background: '#1a1612', color: '#faf8f5', textDecoration: 'none',
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "'Inter', sans-serif",
             }}>Check Price on Amazon</a>
           )}
         </div>
@@ -172,9 +172,9 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
+          fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#5FB37E' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
@@ -186,7 +186,7 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
 
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 24px 80px' }}>
         {/* Breadcrumb */}
-        <nav style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'DM Sans', sans-serif" }}>
+        <nav style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
           <a href="/" style={{ color: '#b5aa99', textDecoration: 'none' }}>Home</a>
           <span style={{ margin: '0 8px' }}>/</span>
           <a href="/best/dog-food" style={{ color: '#b5aa99', textDecoration: 'none' }}>Best</a>
@@ -197,16 +197,16 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
         {/* Hero */}
         <div style={{ marginBottom: 40 }}>
           <h1 style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "'Instrument Serif', serif",
             fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800,
             color: '#1a1612', lineHeight: 1.15, letterSpacing: -1, marginBottom: 8,
           }}>{title}</h1>
-          <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>
             {subtitle}
           </p>
           <div style={{
             fontSize: 14, color: '#5a5248', lineHeight: 1.7, maxWidth: 700,
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Inter', sans-serif",
           }}>
             {intro}
           </div>
@@ -225,10 +225,10 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
           border: '1px solid #ede8df',
         }}>
           <h2 style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700,
+            fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 700,
             color: '#1a1612', marginBottom: 12,
           }}>How We Score</h2>
-          <p style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, fontFamily: "'Inter', sans-serif" }}>
             Every dog food in our database is scored 0-100 across eight categories: protein, fat, carbohydrates, fiber,
             protein source quality, preservatives, additives, and functional ingredients. We use{' '}
             <a href="/how-we-score" style={{ color: '#1a1612', textDecoration: 'underline', textUnderlineOffset: 3 }}>
@@ -246,7 +246,7 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
         {/* Related Rankings */}
         <div style={{ marginTop: 32 }}>
           <h2 style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700,
+            fontFamily: "'Instrument Serif', serif", fontSize: 20, fontWeight: 700,
             color: '#1a1612', marginBottom: 16,
           }}>Related Rankings</h2>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
@@ -254,14 +254,14 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
               <a key={r.href} href={r.href} style={{
                 padding: '12px 20px', borderRadius: 14, border: '1px solid #ede8df',
                 background: '#fff', fontSize: 14, fontWeight: 600, color: '#1a1612',
-                textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+                textDecoration: 'none', fontFamily: "'Inter', sans-serif",
                 transition: 'background 0.15s, border-color 0.15s',
               }}>{r.label}</a>
             ))}
             <a href="/discover" style={{
               padding: '12px 20px', borderRadius: 14, border: '1px solid #ede8df',
               background: '#faf8f5', fontSize: 14, fontWeight: 600, color: '#8a7e72',
-              textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+              textDecoration: 'none', fontFamily: "'Inter', sans-serif",
             }}>Browse All 1,000+ Foods</a>
           </div>
         </div>
@@ -272,8 +272,8 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#f0c930' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#5FB37E' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

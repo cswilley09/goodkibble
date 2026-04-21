@@ -58,7 +58,7 @@ function InfoTooltip({ text, onShow }) {
         width: 20, height: 20, borderRadius: '50%', background: '#e8e0d4',
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 12, fontWeight: 700, color: '#8a7e72', cursor: 'pointer',
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "'Inter', sans-serif",
       }}>i</span>
     </span>
   );
@@ -147,7 +147,7 @@ function IngredientInfoCard({ info, onClose }) {
       marginTop: 12, padding: 16, borderRadius: 12,
       background: '#1a1612', color: '#faf8f5',
       fontSize: 13, lineHeight: 1.55, fontWeight: 400,
-      fontFamily: "'DM Sans', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       animation: 'fadeIn 0.15s ease',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -192,7 +192,7 @@ function IngredientBottomSheet({ info, onClose, bottomOffset = 0, gated = false 
         position: 'fixed', bottom: bottomOffset, left: 0, right: 0,
         background: '#1a1612', color: '#faf8f5',
         borderRadius: '20px 20px 0 0', padding: '24px 24px 32px',
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "'Inter', sans-serif",
         boxShadow: '0 -8px 32px rgba(0,0,0,0.3)',
         zIndex: 9999,
         animation: 'bottomSheetUp 0.25s ease both',
@@ -220,14 +220,14 @@ function IngredientBottomSheet({ info, onClose, bottomOffset = 0, gated = false 
         </div>
         {gated ? (
           <div style={{ textAlign: 'center', padding: '12px 0' }}>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 10 }}>Ingredient Intelligence</div>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#2F6B48', marginBottom: 10 }}>Ingredient Intelligence</div>
             <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 12, lineHeight: 1.5 }}>
               See what each ingredient means for your dog with GoodKibble Pro
             </div>
             <a href="/pro" style={{
               display: 'inline-block', padding: '8px 20px', borderRadius: 100,
-              background: '#C9A84C', color: '#fff', fontSize: 12, fontWeight: 700,
-              textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+              background: '#2F6B48', color: '#fff', fontSize: 12, fontWeight: 700,
+              textDecoration: 'none', fontFamily: "'Inter', sans-serif",
             }}>Unlock with Pro {'\u2192'}</a>
           </div>
         ) : (
@@ -268,7 +268,7 @@ function SubGroupPill({ groupName, subItems, afterSalt, animDelay }) {
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           padding: '8px 16px', borderRadius: 100,
-          fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+          fontSize: 14, fontFamily: "'Inter', sans-serif",
           border: '1px dashed #c4bdb2', background: '#fff',
           color: '#3d352b', cursor: 'pointer', transition: 'background 0.15s',
           verticalAlign: 'middle',
@@ -288,7 +288,7 @@ function SubGroupPill({ groupName, subItems, afterSalt, animDelay }) {
           marginTop: 6, padding: '12px 16px',
           borderRadius: 12, background: '#f5f0e8', border: '1px solid #ede8df',
           fontSize: 13, color: '#5a5248', lineHeight: 1.6,
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "'Inter', sans-serif",
           animation: 'fadeIn 0.15s ease',
         }}>
           {subItems.join(', ')}
@@ -326,12 +326,12 @@ function NutrientRow({ label, value, color }) {
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
       <span style={{
         fontSize: 14, fontWeight: 600, color: color,
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "'Inter', sans-serif",
         minWidth: 110, flexShrink: 0,
       }}>{label}</span>
       <span style={{
         fontSize: 18, fontWeight: 700, color: '#1a1612',
-        fontFamily: "'DM Sans', sans-serif", lineHeight: 1,
+        fontFamily: "'Inter', sans-serif", lineHeight: 1,
         minWidth: 48, flexShrink: 0,
       }}>{value}<span style={{ fontSize: 12, fontWeight: 500, color: '#8a7e72' }}>%</span></span>
       <TickBar value={value} color={color} />
@@ -355,7 +355,7 @@ function NutrientExplainer() {
       <button onClick={() => setOpen(!open)} style={{
         width: '100%', padding: '20px 32px', display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', border: 'none', background: 'transparent', cursor: 'pointer',
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "'Inter', sans-serif",
       }}>
         <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', letterSpacing: 1 }}>
           📖 What do these numbers mean?
@@ -406,7 +406,7 @@ function CompareToggle({ food }) {
       color: isAdded ? '#faf8f5' : isFull ? '#b5aa99' : '#1a1612',
       fontSize: 13, fontWeight: 600,
       cursor: isFull && !isAdded ? 'default' : 'pointer',
-      fontFamily: "'DM Sans', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'all 0.25s',
       opacity: isFull && !isAdded ? 0.5 : 1,
     }}
@@ -461,7 +461,7 @@ function ScoreRing({ score, size = 52 }) {
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: size >= 72 ? 22 : 16, fontWeight: size >= 72 ? 700 : 500, fontFamily: "'DM Sans', sans-serif", color: '#1a1612',
+        fontSize: size >= 72 ? 22 : 16, fontWeight: size >= 72 ? 700 : 500, fontFamily: "'Inter', sans-serif", color: '#1a1612',
       }}>{score}</div>
     </div>
   );
@@ -485,7 +485,7 @@ function TileRing({ score, max, color }) {
       </svg>
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", color: '#1a1612',
+        fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", color: '#1a1612',
       }}>{score}</div>
     </div>
   );
@@ -605,7 +605,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
           <div key={i}>
             <div style={{ fontSize: 11, fontWeight: 500, color: '#b5aa99' }}>{cell.l}</div>
             <div style={{
-              fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif",
               color: cell.green ? '#2d7a4f' : '#1a1612',
             }}>{cell.v}</div>
           </div>
@@ -644,8 +644,8 @@ function ScoreTile({ catKey, label, color, textColor, data, isExpanded, onToggle
         onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.background = '#f4f1ec'; }}
       >
         <TileRing score={data.score} max={data.max} color={color} />
-        <span style={{ fontSize: 14, fontWeight: 600, color: nameColor, flex: 1, minWidth: 0, fontFamily: "'DM Sans', sans-serif" }}>{label}</span>
-        <span style={{ fontSize: 13, fontWeight: 500, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{data.score}/{data.max}</span>
+        <span style={{ fontSize: 14, fontWeight: 600, color: nameColor, flex: 1, minWidth: 0, fontFamily: "'Inter', sans-serif" }}>{label}</span>
+        <span style={{ fontSize: 13, fontWeight: 500, color: '#8a7e72', fontFamily: "'Inter', sans-serif", flexShrink: 0 }}>{data.score}/{data.max}</span>
         <span style={{
           fontSize: 18, color: '#8a7e72', flexShrink: 0, transition: 'transform 0.2s',
           transform: isExpanded ? 'rotate(180deg)' : 'none',
@@ -729,7 +729,7 @@ function ScoreBreakdownCard({ breakdown }) {
 
       <div style={{ textAlign: 'center' }}>
         <a href="/how-we-score" style={{
-          fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif",
+          fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif",
           textDecoration: 'underline', textUnderlineOffset: 3, transition: 'color 0.15s',
         }}
           onMouseEnter={(e) => e.target.style.color = '#1a1612'}
@@ -834,9 +834,9 @@ export default function FoodPageContent({ productId }) {
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
+          fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#5FB37E' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
@@ -888,7 +888,7 @@ export default function FoodPageContent({ productId }) {
           <button onClick={() => router.push('/discover')} style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
-            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 500,
             marginBottom: 32, padding: 0,
           }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -910,7 +910,7 @@ export default function FoodPageContent({ productId }) {
                 onMouseLeave={(e) => e.target.style.color = '#b5aa99'}
               >{food.brand} →</div>
               <h1 style={{
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "'Instrument Serif', serif",
                 fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 700, color: '#1a1612',
                 lineHeight: 1.2, marginBottom: 12, letterSpacing: -0.5,
               }}>{food.name}</h1>
@@ -935,7 +935,7 @@ export default function FoodPageContent({ productId }) {
                   padding: '10px 14px', borderRadius: 10, background: '#f5f2ec',
                   border: '1px solid #ede8df', marginBottom: 16,
                   fontSize: 12, color: '#8a7e72', lineHeight: 1.5,
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                 }}>
                   This score evaluates general formulation quality for healthy adult dogs. Veterinary/prescription diets are formulated for specific clinical conditions and are not intended to score highly on a general-purpose scale.
                 </div>
@@ -946,10 +946,10 @@ export default function FoodPageContent({ productId }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
                   <ScoreRing score={food.quality_score} size={72} />
                   <div>
-                    <div style={{ fontSize: 18, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", marginBottom: 2 }}>
+                    <div style={{ fontSize: 18, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif", marginBottom: 2 }}>
                       {getScoreTier(food.quality_score).label}
                     </div>
-                    <div style={{ fontSize: 13, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
+                    <div style={{ fontSize: 13, color: '#b5aa99', fontFamily: "'Inter', sans-serif" }}>
                       <a href="/how-we-score" style={{ color: '#b5aa99', textDecoration: 'none' }}
                         onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
                         onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
@@ -965,12 +965,12 @@ export default function FoodPageContent({ productId }) {
                   <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" className="buy-amazon-btn" style={{
                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                     padding: '10px 22px', borderRadius: 100, border: 'none',
-                    background: '#C9A84C', color: '#fff', fontSize: 13, fontWeight: 600,
-                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none',
+                    background: '#2F6B48', color: '#fff', fontSize: 13, fontWeight: 600,
+                    cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none',
                     transition: 'background 0.2s',
                   }}
                     onMouseEnter={(e) => e.currentTarget.style.background = '#b5952f'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = '#C9A84C'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#2F6B48'}
                   >Buy on Amazon &rarr;</a>
                 )}
               </div>
@@ -1042,15 +1042,15 @@ export default function FoodPageContent({ productId }) {
               return (
                 <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
                   <div style={{ flex: 1, background: '#eef5e4', borderRadius: 10, padding: '12px 10px', textAlign: 'center' }}>
-                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#639922', lineHeight: 1.1 }}>{good}</div>
+                    <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#639922', lineHeight: 1.1 }}>{good}</div>
                     <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#639922', marginTop: 2 }}>Good</div>
                   </div>
                   <div style={{ flex: 1, background: '#f5f2ec', borderRadius: 10, padding: '12px 10px', textAlign: 'center' }}>
-                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#8a7e72', lineHeight: 1.1 }}>{neutral}</div>
+                    <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#8a7e72', lineHeight: 1.1 }}>{neutral}</div>
                     <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginTop: 2 }}>Neutral</div>
                   </div>
                   <div style={{ flex: 1, background: '#fdf0e0', borderRadius: 10, padding: '12px 10px', textAlign: 'center' }}>
-                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#d4760a', lineHeight: 1.1 }}>{caution}</div>
+                    <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#d4760a', lineHeight: 1.1 }}>{caution}</div>
                     <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#d4760a', marginTop: 2 }}>Caution</div>
                   </div>
                 </div>
@@ -1068,7 +1068,7 @@ export default function FoodPageContent({ productId }) {
                 const hasTooltip = !!info;
 
                 let bgColor = '#fff';
-                if (isSalt) bgColor = '#f0c930';
+                if (isSalt) bgColor = '#5FB37E';
                 else if (isFirst) bgColor = '#1a1612';
                 else if (i < 5) bgColor = '#f5f0e8';
 
@@ -1115,7 +1115,7 @@ export default function FoodPageContent({ productId }) {
                 const pillStyle = {
                   display: 'inline-flex', alignItems: 'center', gap: 5,
                   padding: '8px 16px', borderRadius: 100,
-                  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 14, fontFamily: "'Inter', sans-serif",
                   fontWeight: (isFirst || isSalt) ? 600 : 400,
                   background: bgColor,
                   color: textColor,
@@ -1150,7 +1150,7 @@ export default function FoodPageContent({ productId }) {
                 const clickable = hasTooltip || isSalt;
 
                 const pill = (
-                  <span style={{ ...pillStyle, ...(isActive ? { borderColor: '#C9A84C', background: isSalt ? '#f0c930' : isFirst ? '#1a1612' : '#f7efd8' } : {}) }}
+                  <span style={{ ...pillStyle, ...(isActive ? { borderColor: '#2F6B48', background: isSalt ? '#5FB37E' : isFirst ? '#1a1612' : '#f7efd8' } : {}) }}
                     onMouseEnter={(e) => { if (hasTooltip) e.currentTarget.style.borderColor = '#b5aa99'; }}
                     onMouseLeave={(e) => { if (hasTooltip && !isActive) e.currentTarget.style.borderColor = '#e8e0d4'; }}
                   >
@@ -1196,7 +1196,7 @@ export default function FoodPageContent({ productId }) {
                   animation: 'fadeIn 0.15s ease',
                 }}>
                   {(isPro || activeIngredient.idx < 5) ? (
-                    <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'DM Sans', sans-serif" }}>
+                    <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'Inter', sans-serif" }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                         <span style={{ width: 10, height: 10, borderRadius: '50%', flexShrink: 0, background: SIGNAL_COLORS[activeIngredient.info.quality_signal] || SIGNAL_COLORS.neutral }} />
                         <span style={{ fontWeight: 700, fontSize: 16 }}>{activeIngredient.info.display_name}</span>
@@ -1207,7 +1207,7 @@ export default function FoodPageContent({ productId }) {
                       {activeIngredient.info.source && <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontStyle: 'italic' }}>Source: {activeIngredient.info.source}</div>}
                     </div>
                   ) : (
-                    <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'DM Sans', sans-serif", borderRadius: 12 }}>
+                    <div style={{ padding: '18px 24px', background: '#1a1612', color: '#faf8f5', fontFamily: "'Inter', sans-serif", borderRadius: 12 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, paddingRight: 36 }}>
                         <span style={{
                           width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
@@ -1223,14 +1223,14 @@ export default function FoodPageContent({ productId }) {
                         <span onClick={() => setActiveIngredient(null)} style={{ marginLeft: 8, fontSize: 16, color: 'rgba(255,255,255,0.4)', cursor: 'pointer', lineHeight: 1, padding: '0 4px' }}>&times;</span>
                       </div>
                       <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 10 }}>Ingredient Intelligence</div>
+                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#2F6B48', marginBottom: 10 }}>Ingredient Intelligence</div>
                         <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 14, lineHeight: 1.5, maxWidth: 300, margin: '0 auto 14px' }}>
                           See what each ingredient means for your dog with GoodKibble Pro
                         </div>
                         <a href="/pro" style={{
                           display: 'inline-block', padding: '10px 24px', borderRadius: 100,
-                          background: '#C9A84C', color: '#fff', fontSize: 13, fontWeight: 700,
-                          textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+                          background: '#2F6B48', color: '#fff', fontSize: 13, fontWeight: 700,
+                          textDecoration: 'none', fontFamily: "'Inter', sans-serif",
                         }}>Unlock with Pro →</a>
                       </div>
                     </div>
@@ -1263,8 +1263,8 @@ export default function FoodPageContent({ productId }) {
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div className="footer-logo" style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#f0c930' }}>Kibble</span>
+        <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#5FB37E' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
@@ -1301,7 +1301,7 @@ export default function FoodPageContent({ productId }) {
                   </svg>
                   <div style={{
                     position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 13, fontWeight: 800, fontFamily: "'DM Sans', sans-serif", color: '#1a1612',
+                    fontSize: 13, fontWeight: 800, fontFamily: "'Inter', sans-serif", color: '#1a1612',
                   }}>{food.quality_score}</div>
                 </div>
               );
@@ -1314,8 +1314,8 @@ export default function FoodPageContent({ productId }) {
           <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
             padding: '9px 16px', borderRadius: 100, border: 'none',
-            background: '#C9A84C', color: '#fff', fontSize: 12, fontWeight: 600,
-            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none',
+            background: '#2F6B48', color: '#fff', fontSize: 12, fontWeight: 600,
+            cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none',
             flexShrink: 0, whiteSpace: 'nowrap',
           }}>Buy &rarr;</a>
         </div>

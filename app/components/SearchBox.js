@@ -97,15 +97,15 @@ export default function SearchBox({ onSelect, variant = 'hero', dark = false }) 
             flex: 1, border: 'none', outline: 'none', minWidth: 0,
             fontSize: isNav ? 14 : 17, padding: isNav ? '10px 8px' : '14px 12px',
             background: 'transparent', color: dark ? '#faf8f4' : '#1a1612',
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+            fontFamily: "'Inter', sans-serif", fontWeight: 500,
           }}
         />
         {!isNav && (
           <button className="searchbox-btn" onClick={handleSearchButton}
             style={{
               padding: '14px 28px', borderRadius: 14, border: 'none',
-              background: dark ? '#C9A84C' : '#1a1612', color: '#fff', fontSize: 15,
-              fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              background: dark ? '#2F6B48' : '#1a1612', color: '#fff', fontSize: 15,
+              fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
               whiteSpace: 'nowrap', flexShrink: 0,
             }}>Search</button>
         )}
