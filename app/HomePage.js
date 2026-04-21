@@ -539,7 +539,7 @@ export default function Home({ marqueeData = [] }) {
             <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, width: '100%', boxSizing: 'border-box' }}>
               <SearchBox onSelect={handleSelect} variant="hero" />
             </div>
-            <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.35s both' }}>
+            <div style={{ marginTop: 16, paddingLeft: 24, animation: 'fadeUp 0.6s ease 0.35s both' }}>
               <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#2F6B48', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
                 onMouseEnter={(e) => { e.target.style.color = '#1e4a31'; e.target.style.textDecoration = 'underline'; }}
                 onMouseLeave={(e) => { e.target.style.color = '#2F6B48'; e.target.style.textDecoration = 'none'; }}
