@@ -625,7 +625,7 @@ export default function Home({ marqueeData = [] }) {
         @media (max-width: 768px) {
           /* Hero: hide the analyzer illustration entirely (Tailwind equivalent: hidden md:block) */
           .hero-analyzer { display: none !important; }
-          .hero-section { padding: 56px 16px 32px !important; }
+          .hero-section { padding: 96px 16px 48px !important; }
           .hero-text h1 { font-size: 36px !important; line-height: 1.05 !important; letter-spacing: -0.5px !important; margin-bottom: 20px !important; }
           .hero-search-wrap { max-width: 100% !important; }
           /* Pill copy: shorten on mobile to avoid awkward wrap */
@@ -637,7 +637,7 @@ export default function Home({ marqueeData = [] }) {
           .site-nav > div:last-child { gap: 8px !important; }
           .nav-discover-link { font-size: 12px !important; }
           /* Section spacing — collapse desktop padding to ~48–56px on mobile */
-          .marquee-section { padding: 56px 0 40px !important; }
+          .marquee-section { padding: 80px 0 40px !important; }
           .marquee-heading { margin-bottom: 24px !important; }
           .marquee-h2 { font-size: 26px !important; letter-spacing: -0.5px !important; }
           .why-section { padding: 56px 20px 64px !important; }
