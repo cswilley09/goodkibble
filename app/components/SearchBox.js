@@ -115,7 +115,8 @@ export default function SearchBox({ onSelect, variant = 'hero', dark = false }) 
         @media (max-width: 768px) {
           .searchbox-root { max-width: 100% !important; }
           .searchbox-bar { max-width: 100% !important; padding-left: 16px !important; padding-right: 6px !important; }
-          .searchbox-btn { padding: 12px 18px !important; }
+          .searchbox-bar input { padding: 16px 12px !important; font-size: 16px !important; }
+          .searchbox-btn { padding: 14px 20px !important; min-height: 44px !important; }
         }
       `}</style>
 

@@ -121,7 +121,7 @@ function ProductMarquee({ onCardClick, products: initialProducts }) {
   const doubled = [...products, ...products];
 
   return (
-    <div style={{
+    <div className="marquee-section" style={{
       padding: '72px 0 64px', overflow: 'hidden', position: 'relative',
     }}>
       <div style={{ textAlign: 'center', marginBottom: 40, padding: '0 24px' }}>
@@ -144,7 +144,7 @@ function ProductMarquee({ onCardClick, products: initialProducts }) {
 function WhyStrip() {
   const [ref, visible] = useFadeIn(0.2);
   return (
-    <div ref={ref} style={{
+    <div ref={ref} className="why-section" style={{
       background: 'linear-gradient(180deg, #1a1612 0%, #13100d 100%)',
       padding: '96px 24px 104px',
       position: 'relative',
@@ -275,7 +275,7 @@ function ScoringDemo({ onNavigate }) {
   const cats = demoProduct?.score_breakdown?.categories;
 
   return (
-    <div ref={sectionRef} style={{ background: '#faf8f4', padding: '80px 24px' }}>
+    <div ref={sectionRef} className="scoring-section" style={{ background: '#faf8f4', padding: '80px 24px' }}>
       <div style={{ maxWidth: 820, margin: '0 auto', opacity: demoProduct ? 1 : 0, transform: demoProduct ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 0.7s ease, transform 0.7s ease' }}>
         <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 10, textAlign: 'center' }}>
           A score you can actually understand
@@ -407,7 +407,7 @@ function BrowseByProtein({ proteinCounts, onNavigate }) {
   const [ref, visible] = useFadeIn(0.15);
   const proteins = ['Chicken', 'Salmon', 'Lamb', 'Beef', 'Turkey', 'Fish'];
   return (
-    <div ref={ref} style={{ background: '#fff', padding: '80px 24px', borderTop: '1px solid #ede8df', borderBottom: '1px solid #ede8df' }}>
+    <div ref={ref} className="protein-section" style={{ background: '#fff', padding: '80px 24px', borderTop: '1px solid #ede8df', borderBottom: '1px solid #ede8df' }}>
       <div style={{ maxWidth: 680, margin: '0 auto', ...fade(visible) }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 8 }}>Browse by protein</h2>
@@ -467,7 +467,7 @@ const VALUE_PROPS = [
 function FooterCTA({ onNavigate, onSelect }) {
   const [ref, visible] = useFadeIn(0.15);
   return (
-    <div ref={ref} style={{ background: '#1a1612', padding: '72px 24px 80px', textAlign: 'center', overflow: 'hidden' }}>
+    <div ref={ref} className="footer-cta-section" style={{ background: '#1a1612', padding: '72px 24px 80px', textAlign: 'center', overflow: 'hidden' }}>
       <div style={{ maxWidth: 560, margin: '0 auto', width: '100%', boxSizing: 'border-box', ...fade(visible) }}>
         <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800, color: '#faf8f4', letterSpacing: -0.5, marginBottom: 12 }}>
           Ready to see what&apos;s in your dog&apos;s food?
@@ -555,7 +555,8 @@ export default function Home({ marqueeData = [] }) {
               animation: 'fadeUp 0.6s ease both',
             }}>
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C68A1B', animation: 'heroDot 1.5s ease-in-out infinite' }} />
-              1,042 foods · 187 brands · scored &amp; analyzed
+              <span className="pill-full">1,042 foods · 187 brands · scored &amp; analyzed</span>
+              <span className="pill-short">1,042 foods · 187 brands analyzed</span>
             </div>
             <h1 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 'clamp(44px, 6vw, 72px)', fontWeight: 400, color: '#1a1612', lineHeight: 1.02, letterSpacing: -1, marginBottom: 28, animation: 'fadeUp 0.6s ease 0.1s both' }}>
               Look up any dog food.<br />
@@ -615,22 +616,39 @@ export default function Home({ marqueeData = [] }) {
         .marquee-track:hover { animation-play-state: paused; }
         .marquee-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,22,18,0.10); }
         .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #C68A1B !important; }
+        /* Mobile pill-text swap (long form on desktop, short on mobile) */
+        .pill-short { display: none; }
         @media (max-width: 960px) {
           .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
           .hero-analyzer { max-width: 480px; margin: 0 auto; }
         }
         @media (max-width: 768px) {
-          .site-nav { padding: 12px 16px !important; }
+          /* Hero: hide the analyzer illustration entirely (Tailwind equivalent: hidden md:block) */
+          .hero-analyzer { display: none !important; }
+          .hero-section { padding: 24px 16px 32px !important; }
+          .hero-text h1 { font-size: 36px !important; line-height: 1.05 !important; letter-spacing: -0.5px !important; margin-bottom: 20px !important; }
+          .hero-search-wrap { max-width: 100% !important; }
+          /* Pill copy: shorten on mobile to avoid awkward wrap */
+          .pill-full { display: none !important; }
+          .pill-short { display: inline !important; }
+          /* Nav tightening for 375px */
+          .site-nav { padding: 12px 14px !important; }
           .site-nav > div:first-child { font-size: 22px !important; }
-          .site-nav > div:last-child { gap: 10px !important; }
+          .site-nav > div:last-child { gap: 8px !important; }
           .nav-discover-link { font-size: 12px !important; }
+          /* Section spacing — collapse desktop padding to ~48–56px on mobile */
+          .marquee-section { padding: 48px 0 40px !important; }
+          .why-section { padding: 56px 20px 64px !important; }
+          .scoring-section { padding: 56px 16px !important; }
+          .protein-section { padding: 56px 16px !important; }
+          .footer-cta-section { padding: 56px 20px 64px !important; }
+          .footer-bar { padding: 24px 20px !important; }
+          /* Why dark strip: stack columns with top dividers instead of left */
           .why-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
           .why-grid > div:not(:first-child) { padding-left: 0 !important; border-left: none !important; border-top: 1px solid rgba(255,255,255,0.08) !important; padding-top: 32px !important; }
           .demo-layout { grid-template-columns: 1fr !important; gap: 32px !important; }
           .protein-grid { grid-template-columns: repeat(2, 1fr) !important; }
           .marquee-card { width: 210px !important; }
-          .hero-section { padding: 32px 16px 48px !important; }
-          .hero-search-wrap { max-width: 100% !important; }
         }
       `}</style>
     </div>
