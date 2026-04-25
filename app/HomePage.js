@@ -124,8 +124,13 @@ function ProductMarquee({ onCardClick, products: initialProducts }) {
     <div className="marquee-section" style={{
       padding: '72px 0 64px', overflow: 'hidden', position: 'relative',
     }}>
-      <div style={{ textAlign: 'center', marginBottom: 40, padding: '0 24px' }}>
-        <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 8 }}>See how popular brands stack up</h2>
+      <div className="marquee-heading" style={{ textAlign: 'center', marginBottom: 40, padding: '0 24px' }}>
+        <div style={{
+          fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase',
+          color: '#C68A1B', fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+          marginBottom: 12,
+        }}>Leaderboard</div>
+        <h2 className="marquee-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 8 }}>See how popular brands stack up</h2>
         <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'Inter', sans-serif", maxWidth: 480, margin: '0 auto' }}>Every kibble scored 0–100 across nutrition and ingredient quality</p>
       </div>
       <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to right, #faf8f4, transparent)', pointerEvents: 'none' }} />
@@ -625,7 +630,7 @@ export default function Home({ marqueeData = [] }) {
         @media (max-width: 768px) {
           /* Hero: hide the analyzer illustration entirely (Tailwind equivalent: hidden md:block) */
           .hero-analyzer { display: none !important; }
-          .hero-section { padding: 24px 16px 32px !important; }
+          .hero-section { padding: 24px 16px 8px !important; }
           .hero-text h1 { font-size: 36px !important; line-height: 1.05 !important; letter-spacing: -0.5px !important; margin-bottom: 20px !important; }
           .hero-search-wrap { max-width: 100% !important; }
           /* Pill copy: shorten on mobile to avoid awkward wrap */
@@ -637,7 +642,9 @@ export default function Home({ marqueeData = [] }) {
           .site-nav > div:last-child { gap: 8px !important; }
           .nav-discover-link { font-size: 12px !important; }
           /* Section spacing — collapse desktop padding to ~48–56px on mobile */
-          .marquee-section { padding: 48px 0 40px !important; }
+          .marquee-section { padding: 16px 0 40px !important; }
+          .marquee-heading { margin-bottom: 24px !important; }
+          .marquee-h2 { font-size: 26px !important; letter-spacing: -0.5px !important; }
           .why-section { padding: 56px 20px 64px !important; }
           .scoring-section { padding: 56px 16px !important; }
           .protein-section { padding: 56px 16px !important; }
