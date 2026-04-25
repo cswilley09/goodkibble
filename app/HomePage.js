@@ -450,7 +450,7 @@ const VALUE_PROPS = [
   },
   {
     title: 'Manufacturer-Sourced Data',
-    desc: 'All nutritional data comes directly from manufacturer websites. No guesswork, no retailer approximations.',
+    desc: 'All nutritional data comes directly from the manufacturer. No guesswork, no retailer approximations.',
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E5A93D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
   },
   {
