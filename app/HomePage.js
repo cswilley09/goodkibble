@@ -565,9 +565,9 @@ export default function Home({ marqueeData = [] }) {
               <SearchBox onSelect={handleSelect} variant="hero" />
             </div>
             <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.35s both' }}>
-              <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#C68A1B', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
-                onMouseEnter={(e) => { e.target.style.color = '#8a5912'; e.target.style.textDecoration = 'underline'; }}
-                onMouseLeave={(e) => { e.target.style.color = '#C68A1B'; e.target.style.textDecoration = 'none'; }}
+              <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#1a1612', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
+                onMouseEnter={(e) => { e.target.style.textDecoration = 'underline'; }}
+                onMouseLeave={(e) => { e.target.style.textDecoration = 'none'; }}
               >or discover 1,000+ dog foods by filter →</span>
             </div>
           </div>
