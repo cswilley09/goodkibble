@@ -75,7 +75,7 @@ export default function LoginPage() {
             <div style={{ fontSize: 48, marginBottom: 16 }}>{'\u{2705}'}</div>
             <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 8 }}>You&rsquo;re already signed in!</h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 24 }}>
-              You&rsquo;re logged in as <strong style={{ color: '#2F6B48' }}>{session.user.email}</strong>
+              You&rsquo;re logged in as <strong style={{ color: '#C68A1B' }}>{session.user.email}</strong>
             </p>
             <a href="/profile" style={{ padding: '14px 36px', borderRadius: 100, background: '#1a1612', color: '#faf8f4', fontSize: 16, fontWeight: 700, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Go to Profile &rarr;</a>
           </div>
@@ -103,7 +103,7 @@ export default function LoginPage() {
                   color: '#1a1612', boxSizing: 'border-box',
                   transition: 'border-color 0.2s',
                 }}
-                onFocus={e => (e.target.style.borderColor = '#2F6B48')}
+                onFocus={e => (e.target.style.borderColor = '#C68A1B')}
                 onBlur={e => (e.target.style.borderColor = '#ede8df')}
               />
 
@@ -127,7 +127,7 @@ export default function LoginPage() {
 
             <p style={{ textAlign: 'center', marginTop: 24, fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72' }}>
               Don&rsquo;t have an account?{' '}
-              <a href="/signup" style={{ color: '#2F6B48', fontWeight: 600, textDecoration: 'none' }}>Sign up &rarr;</a>
+              <a href="/signup" style={{ color: '#C68A1B', fontWeight: 600, textDecoration: 'none' }}>Sign up &rarr;</a>
             </p>
           </>
         ) : (
@@ -137,7 +137,7 @@ export default function LoginPage() {
               Check your email!
             </h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', lineHeight: 1.6, marginBottom: 8 }}>
-              We sent a sign-in link to <strong style={{ color: '#2F6B48' }}>{email.trim()}</strong>.
+              We sent a sign-in link to <strong style={{ color: '#C68A1B' }}>{email.trim()}</strong>.
               <br />Click it to log in.
             </p>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#b5aa99', marginBottom: 28 }}>
@@ -151,7 +151,7 @@ export default function LoginPage() {
                 opacity: loading ? 0.6 : 1,
               }}>Resend Email</button>
               <button onClick={() => { setSent(false); setEmail(''); }} style={{
-                padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#2F6B48',
+                padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#C68A1B',
                 fontSize: 14, fontWeight: 600, border: 'none',
                 cursor: 'pointer', fontFamily: "'Inter', sans-serif",
               }}>Try a different email</button>

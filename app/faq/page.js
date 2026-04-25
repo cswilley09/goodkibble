@@ -127,7 +127,7 @@ function AccordionItem({ q, a, link, isOpen, onToggle }) {
           <p style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, fontFamily: "'Inter', sans-serif" }}>{a}</p>
           {link && (
             <a href={link.href} style={{
-              display: 'inline-block', marginTop: 8, fontSize: 13, color: '#2F6B48',
+              display: 'inline-block', marginTop: 8, fontSize: 13, color: '#C68A1B',
               fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif",
             }}>{link.text}</a>
           )}
@@ -180,7 +180,7 @@ function FoodRequestForm() {
     <form onSubmit={handleSubmit} style={{
       background: '#fff', borderRadius: 20, border: '1px solid #ede8df', padding: 32,
     }}>
-      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#2F6B48', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Request</div>
+      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#C68A1B', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Request</div>
       <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 700, color: '#1a1612', marginBottom: 6 }}>
         Can't find your dog's food?
       </h2>
@@ -196,7 +196,7 @@ function FoodRequestForm() {
           fontSize: 14, fontFamily: "'Inter', sans-serif", background: '#faf8f5',
           outline: 'none', color: '#1a1612', marginBottom: 12, boxSizing: 'border-box',
         }}
-        onFocus={e => e.target.style.borderColor = '#2F6B48'}
+        onFocus={e => e.target.style.borderColor = '#C68A1B'}
         onBlur={e => e.target.style.borderColor = '#ede8df'}
       />
       <textarea
@@ -210,7 +210,7 @@ function FoodRequestForm() {
           outline: 'none', color: '#1a1612', marginBottom: 16, resize: 'vertical',
           boxSizing: 'border-box',
         }}
-        onFocus={e => e.target.style.borderColor = '#2F6B48'}
+        onFocus={e => e.target.style.borderColor = '#C68A1B'}
         onBlur={e => e.target.style.borderColor = '#ede8df'}
       />
       {status === 'error' && (
@@ -254,7 +254,7 @@ export default function FAQPage() {
         <div onClick={goHome} style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#5FB37E' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(food) => {
             if (food?.brand_slug && food?.slug) router.push(`/dog-food/${food.brand_slug}/${food.slug}`);
@@ -279,7 +279,7 @@ export default function FAQPage() {
           <div key={catIdx} style={{ marginBottom: 40 }}>
             <div style={{
               fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase',
-              color: '#2F6B48', marginBottom: 16, fontFamily: "'Inter', sans-serif",
+              color: '#C68A1B', marginBottom: 16, fontFamily: "'Inter', sans-serif",
             }}>{cat.label}</div>
             <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #ede8df', padding: '0 24px' }}>
               {cat.questions.map((item, qIdx) => (
@@ -308,7 +308,7 @@ export default function FAQPage() {
         flexWrap: 'wrap', gap: 12,
       }}>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#5FB37E' }}>Kibble</span>
+          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

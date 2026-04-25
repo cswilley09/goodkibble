@@ -132,7 +132,7 @@ export default function RecallsPage() {
               </div>
             </div>
             <a href="/pro" className="pro-banner-btn" style={{
-              padding: '8px 20px', borderRadius: 100, background: '#2F6B48', color: '#fff',
+              padding: '8px 20px', borderRadius: 100, background: '#C68A1B', color: '#fff',
               fontSize: 12, fontWeight: 700, border: 'none', cursor: 'pointer',
               fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap', flexShrink: 0,
               textDecoration: 'none', display: 'inline-block',
@@ -402,7 +402,7 @@ export default function RecallsPage() {
                           gap: 12, fontFamily: "'Inter', sans-serif",
                         }}>
                           <span style={{ fontSize: 13, color: '#5a5248' }}>{'\u{1F514}'} Get instant recall alerts to your email</span>
-                          <a href="/pro" style={{ fontSize: 13, color: '#2F6B48', fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Learn about Pro &rarr;</a>
+                          <a href="/pro" style={{ fontSize: 13, color: '#C68A1B', fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Learn about Pro &rarr;</a>
                         </div>
                       )}
                     </div>

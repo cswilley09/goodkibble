@@ -51,7 +51,7 @@ export default function KibbleAnalyzer() {
   // frac = vertical position in image (0 = top, 1 = bottom).
   // side = which side of the image the label sits on.
   const pieces = [
-    { frac: 0.08, side: 'left',  color: 'oklch(0.55 0.14 155)', label: 'Fresh chicken',  pct: 38 },
+    { frac: 0.08, side: 'left',  color: 'oklch(0.55 0.14 75)', label: 'Fresh chicken',  pct: 38 },
     { frac: 0.27, side: 'right', color: 'oklch(0.60 0.13 90)',  label: 'Whole grains',   pct: 22 },
     { frac: 0.50, side: 'left',  color: 'oklch(0.60 0.11 55)',  label: 'Peas & lentils', pct: 18 },
     { frac: 0.74, side: 'right', color: 'oklch(0.55 0.10 40)',  label: 'Fats & oils',    pct: 12 },
@@ -63,8 +63,8 @@ export default function KibbleAnalyzer() {
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
         <defs>
           <radialGradient id="ka-halo" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="oklch(0.55 0.14 155)" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="oklch(0.55 0.14 155)" stopOpacity="0" />
+            <stop offset="0%" stopColor="oklch(0.55 0.14 75)" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="oklch(0.55 0.14 75)" stopOpacity="0" />
           </radialGradient>
         </defs>
 
@@ -74,7 +74,7 @@ export default function KibbleAnalyzer() {
         {/* Single sweeping arc — one rotation per loop, starts at 12 o'clock CW */}
         <circle
           cx={imgCX} cy={H / 2} r={imgH * 0.48 + 10}
-          fill="none" stroke="oklch(0.55 0.14 155)" strokeWidth="1.4"
+          fill="none" stroke="oklch(0.55 0.14 75)" strokeWidth="1.4"
           strokeDasharray={`${Math.PI * 2 * (imgH * 0.48 + 10) * 0.28} 10000`}
           strokeLinecap="round"
           transform={`rotate(${t * 360 - 90} ${imgCX} ${H / 2})`}
@@ -138,11 +138,11 @@ export default function KibbleAnalyzer() {
           <text x="10" y="18" fontFamily="ui-monospace, monospace" fontSize="9" letterSpacing="1.5" fill="oklch(0.5 0.01 80)">
             ANALYZING
           </text>
-          <text x="10" y="52" fontFamily='"Instrument Serif", serif' fontSize="34" fill="oklch(0.55 0.14 155)" fontWeight="400">
+          <text x="10" y="52" fontFamily='"Instrument Serif", serif' fontSize="34" fill="oklch(0.55 0.14 75)" fontWeight="400">
             {scoreAnim}
             <tspan fontSize="14" fill="oklch(0.5 0.01 80)">/100</tspan>
           </text>
-          <circle cx="104" cy="14" r="3" fill="oklch(0.55 0.14 155)" style={{ animation: 'heroDot 1.5s ease-in-out infinite' }} />
+          <circle cx="104" cy="14" r="3" fill="oklch(0.55 0.14 75)" style={{ animation: 'heroDot 1.5s ease-in-out infinite' }} />
         </g>
       </svg>
     </div>

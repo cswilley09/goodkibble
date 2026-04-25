@@ -32,7 +32,7 @@ const cardStyle = {
   background: '#fff', borderRadius: 20, border: '1px solid #ede8df', padding: 28, marginBottom: 24,
 };
 const eyebrow = (text) => ({
-  fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700, color: '#2F6B48',
+  fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700, color: '#C68A1B',
   textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16,
 });
 const mobileCardPad = { padding: 28 };
@@ -54,7 +54,7 @@ function BreedPicker({ value, onChange }) {
     <div ref={ref} style={{ position: 'relative' }}>
       <input type="text" value={text} placeholder="Search breed..."
         onChange={e => { setText(e.target.value); onChange(''); setOpen(true); }}
-        onFocus={e => { e.target.style.borderColor = '#2F6B48'; if (q && matches.length) setOpen(true); }}
+        onFocus={e => { e.target.style.borderColor = '#C68A1B'; if (q && matches.length) setOpen(true); }}
         onBlur={e => { if (!open) e.target.style.borderColor = '#ede8df'; }}
         style={{
           width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df',
@@ -70,7 +70,7 @@ function BreedPicker({ value, onChange }) {
         }}>
           {matches.map(b => (
             <div key={b} onMouseDown={e => { e.preventDefault(); setText(b); onChange(b); setOpen(false); }}
-              style={{ padding: '9px 14px', fontSize: 14, cursor: 'pointer', fontFamily: "'Inter', sans-serif", color: b === value ? '#2F6B48' : '#1a1612', fontWeight: b === value ? 600 : 400 }}
+              style={{ padding: '9px 14px', fontSize: 14, cursor: 'pointer', fontFamily: "'Inter', sans-serif", color: b === value ? '#C68A1B' : '#1a1612', fontWeight: b === value ? 600 : 400 }}
               onMouseEnter={e => (e.currentTarget.style.background = '#f5f2ec')}
               onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
             >{b}</div>
@@ -122,7 +122,7 @@ function FoodPicker({ value, onChange }) {
   }
   if (value && value.name) {
     return (
-      <div style={{ background: '#f7efd8', border: '1.5px solid #2F6B48', borderRadius: 10, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: '#f7efd8', border: '1.5px solid #C68A1B', borderRadius: 10, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1, minWidth: 0 }}>
           <span style={{ color: '#2d7a4f', fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>
           <span style={{ fontSize: 13, color: '#1a1612', fontFamily: "'Inter', sans-serif", fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value.name}</span>
@@ -453,9 +453,9 @@ export default function ProfilePage() {
               <button key={d.id} onClick={() => { setActiveDogIdx(i); setEditing(false); }} style={{
                 padding: '8px 20px', borderRadius: 100, fontSize: 13, fontWeight: 600,
                 fontFamily: "'Inter', sans-serif", cursor: 'pointer', transition: 'all 0.2s',
-                background: i === activeDogIdx ? '#2F6B48' : 'transparent',
+                background: i === activeDogIdx ? '#C68A1B' : 'transparent',
                 color: i === activeDogIdx ? '#fff' : '#8a7e72',
-                border: i === activeDogIdx ? '1.5px solid #2F6B48' : '1.5px solid #ede8df',
+                border: i === activeDogIdx ? '1.5px solid #C68A1B' : '1.5px solid #ede8df',
               }}>{d.dog_name}</button>
             ))}
           </div>
@@ -468,7 +468,7 @@ export default function ProfilePage() {
             return (
               <button key={t} onClick={() => setTab(t.toLowerCase())} style={{
                 flex: 1, padding: '14px 0', background: 'none', border: 'none',
-                borderBottom: active ? '2px solid #2F6B48' : '2px solid transparent',
+                borderBottom: active ? '2px solid #C68A1B' : '2px solid transparent',
                 color: active ? '#1a1612' : '#b5aa99',
                 fontSize: 14, fontWeight: active ? 600 : 500,
                 cursor: 'pointer', fontFamily: "'Inter', sans-serif",
@@ -543,7 +543,7 @@ export default function ProfilePage() {
                       }}>View Full Breakdown &rarr;</button>
                       {currentFoodData.affiliate_url && (
                         <a href={currentFoodData.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
-                          padding: '10px 24px', borderRadius: 100, background: '#2F6B48', color: '#fff',
+                          padding: '10px 24px', borderRadius: 100, background: '#C68A1B', color: '#fff',
                           fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                           textDecoration: 'none', display: 'inline-block',
                         }}>Buy on Amazon &rarr;</a>
@@ -682,14 +682,14 @@ export default function ProfilePage() {
                         fontFamily: "'Inter', sans-serif", cursor: 'pointer',
                         background: altProteinOnly ? '#f7efd8' : 'transparent',
                         color: altProteinOnly ? '#1a1612' : '#8a7e72',
-                        border: altProteinOnly ? '1.5px solid #2F6B48' : '1.5px solid #ede8df',
+                        border: altProteinOnly ? '1.5px solid #C68A1B' : '1.5px solid #ede8df',
                       }}>{currentFoodData.primary_protein} only</button>
                       <button onClick={() => setAltProteinOnly(false)} style={{
                         padding: '7px 16px', borderRadius: 100, fontSize: 12, fontWeight: 600,
                         fontFamily: "'Inter', sans-serif", cursor: 'pointer',
                         background: !altProteinOnly ? '#f7efd8' : 'transparent',
                         color: !altProteinOnly ? '#1a1612' : '#8a7e72',
-                        border: !altProteinOnly ? '1.5px solid #2F6B48' : '1.5px solid #ede8df',
+                        border: !altProteinOnly ? '1.5px solid #C68A1B' : '1.5px solid #ede8df',
                       }}>All proteins</button>
                     </div>
                   )}
@@ -760,7 +760,7 @@ export default function ProfilePage() {
                     {dog.priorities.map(p => (
                       <span key={p} style={{
                         padding: '5px 10px', borderRadius: 100,
-                        background: '#f7efd8', border: '1px solid #2F6B48',
+                        background: '#f7efd8', border: '1px solid #C68A1B',
                         fontSize: 11, fontWeight: 600, color: '#1a1612',
                         fontFamily: "'Inter', sans-serif",
                       }}>{p}</span>
@@ -782,11 +782,11 @@ export default function ProfilePage() {
                     padding: '10px 0', borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
                     cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                   }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#2F6B48')}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#C68A1B')}
                     onMouseLeave={e => (e.currentTarget.style.color = '#1a1612')}
                   >
                     <span style={{ fontSize: 13, fontWeight: 600 }}>{item.label}</span>
-                    <span style={{ fontSize: 13, color: '#2F6B48', fontWeight: 600 }}>&rarr;</span>
+                    <span style={{ fontSize: 13, color: '#C68A1B', fontWeight: 600 }}>&rarr;</span>
                   </div>
                 ))}
               </div>
@@ -797,13 +797,13 @@ export default function ProfilePage() {
                   background: 'linear-gradient(135deg, #1a1612, #2a2318)', borderRadius: 20,
                   padding: 20, textAlign: 'center',
                 }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#2F6B48', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Upgrade</div>
+                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C68A1B', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Upgrade</div>
                   <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 18, fontWeight: 800, color: '#faf8f4', marginBottom: 6 }}>Get more from GoodKibble</div>
                   <p style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>
                     Recall alerts, ingredient deep-dives, unlimited comparisons, and up to 5 dog profiles.
                   </p>
                   <button onClick={() => router.push('/pro')} style={{
-                    width: '100%', padding: '10px 0', borderRadius: 100, background: '#2F6B48', color: '#fff',
+                    width: '100%', padding: '10px 0', borderRadius: 100, background: '#C68A1B', color: '#fff',
                     fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer',
                     fontFamily: "'Inter', sans-serif",
                   }}>Upgrade to Pro &rarr;</button>
@@ -834,8 +834,8 @@ export default function ProfilePage() {
                       setEditFood(undefined); // undefined = not changed, null = cleared
                     }
                   }} style={{
-                    padding: '6px 16px', borderRadius: 100, background: 'transparent', color: '#2F6B48',
-                    fontSize: 12, fontWeight: 600, border: '1.5px solid #2F6B48',
+                    padding: '6px 16px', borderRadius: 100, background: 'transparent', color: '#C68A1B',
+                    fontSize: 12, fontWeight: 600, border: '1.5px solid #C68A1B',
                     cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                   }}>Edit</button>
                 )}
@@ -899,7 +899,7 @@ export default function ProfilePage() {
                           fontFamily: "'Inter', sans-serif", cursor: 'pointer',
                           background: editData.gender === g ? '#f7efd8' : '#fff',
                           color: editData.gender === g ? '#1a1612' : '#8a7e72',
-                          border: editData.gender === g ? '1.5px solid #2F6B48' : '1.5px solid #ede8df',
+                          border: editData.gender === g ? '1.5px solid #C68A1B' : '1.5px solid #ede8df',
                         }}>{g === 'male' ? 'Male' : 'Female'}</button>
                       ))}
                     </div>
@@ -914,7 +914,7 @@ export default function ProfilePage() {
                           fontFamily: "'Inter', sans-serif", cursor: 'pointer',
                           background: editData.is_neutered === v ? '#f7efd8' : '#fff',
                           color: editData.is_neutered === v ? '#1a1612' : '#8a7e72',
-                          border: editData.is_neutered === v ? '1.5px solid #2F6B48' : '1.5px solid #ede8df',
+                          border: editData.is_neutered === v ? '1.5px solid #C68A1B' : '1.5px solid #ede8df',
                         }}>{v ? 'Yes' : 'No'}</button>
                       ))}
                     </div>
@@ -996,7 +996,7 @@ export default function ProfilePage() {
                   {dog.priorities.map(p => (
                     <span key={p} style={{
                       padding: '8px 16px', borderRadius: 100,
-                      background: '#f7efd8', border: '1.5px solid #2F6B48',
+                      background: '#f7efd8', border: '1.5px solid #C68A1B',
                       fontSize: 13, fontWeight: 600, color: '#1a1612',
                       fontFamily: "'Inter', sans-serif",
                     }}>{p}</span>
@@ -1056,7 +1056,7 @@ export default function ProfilePage() {
                               <div key={f.id} onClick={() => goToFood(f)} style={{
                                 flex: '0 0 calc((100% - 20px) / 3.5)', scrollSnapAlign: 'start', minWidth: 160,
                                 background: '#faf8f4', borderRadius: 12,
-                                border: isHighest ? '2px solid #2F6B48' : '1px solid #ede8df',
+                                border: isHighest ? '2px solid #C68A1B' : '1px solid #ede8df',
                                 padding: '12px 14px', position: 'relative', cursor: 'pointer',
                                 transition: 'box-shadow 0.2s',
                               }}
@@ -1066,7 +1066,7 @@ export default function ProfilePage() {
                                 {isHighest && (
                                   <span style={{
                                     position: 'absolute', top: 6, right: 6,
-                                    background: '#2F6B48', color: '#fff', padding: '2px 7px',
+                                    background: '#C68A1B', color: '#fff', padding: '2px 7px',
                                     borderRadius: 100, fontSize: 8, fontWeight: 700,
                                     fontFamily: "'Inter', sans-serif",
                                   }}>BEST</span>
@@ -1153,7 +1153,7 @@ export default function ProfilePage() {
               ) : (
                 <>
                   <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>You&rsquo;re on the Free plan</p>
-                  <a href="/pro" style={{ display: 'inline-block', padding: '10px 24px', borderRadius: 100, background: '#2F6B48', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Upgrade to Pro &rarr;</a>
+                  <a href="/pro" style={{ display: 'inline-block', padding: '10px 24px', borderRadius: 100, background: '#C68A1B', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Upgrade to Pro &rarr;</a>
                 </>
               )}
             </div>
@@ -1162,7 +1162,7 @@ export default function ProfilePage() {
             <div style={cardStyle}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...eyebrow() }}>
                 Email Notifications
-                {isPro && <span style={{ background: 'linear-gradient(135deg, #2F6B48, #d4b65e)', color: '#fff', padding: '2px 8px', borderRadius: 100, fontSize: 9, fontWeight: 700 }}>{'\u2605'} PRO</span>}
+                {isPro && <span style={{ background: 'linear-gradient(135deg, #C68A1B, #d4b65e)', color: '#fff', padding: '2px 8px', borderRadius: 100, fontSize: 9, fontWeight: 700 }}>{'\u2605'} PRO</span>}
               </div>
               {isPro ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -1207,7 +1207,7 @@ export default function ProfilePage() {
               ) : (
                 <div style={{ textAlign: 'center', padding: '16px 0' }}>
                   <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 12, fontFamily: "'Inter', sans-serif" }}>Upgrade to Pro to enable email notifications</p>
-                  <a href="/pro" style={{ fontSize: 13, fontWeight: 600, color: '#2F6B48', textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Learn about Pro &rarr;</a>
+                  <a href="/pro" style={{ fontSize: 13, fontWeight: 600, color: '#C68A1B', textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Learn about Pro &rarr;</a>
                 </div>
               )}
             </div>
@@ -1228,7 +1228,7 @@ export default function ProfilePage() {
                   <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{row.label}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>{row.value}</span>
-                    <span style={{ fontSize: 12, color: '#2F6B48', cursor: 'pointer', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>Edit</span>
+                    <span style={{ fontSize: 12, color: '#C68A1B', cursor: 'pointer', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>Edit</span>
                   </div>
                 </div>
               ))}

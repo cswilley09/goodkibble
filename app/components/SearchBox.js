@@ -104,7 +104,7 @@ export default function SearchBox({ onSelect, variant = 'hero', dark = false }) 
           <button className="searchbox-btn" onClick={handleSearchButton}
             style={{
               padding: '14px 28px', borderRadius: 14, border: 'none',
-              background: dark ? '#2F6B48' : '#1a1612', color: '#fff', fontSize: 15,
+              background: dark ? '#C68A1B' : '#1a1612', color: '#fff', fontSize: 15,
               fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
               whiteSpace: 'nowrap', flexShrink: 0,
             }}>Search</button>

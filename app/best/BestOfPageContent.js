@@ -61,7 +61,7 @@ function RankedCard({ rank, product }) {
       {/* Rank */}
       <div style={{
         fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 900,
-        color: rank <= 3 ? '#2F6B48' : '#b5aa99', lineHeight: 1, minWidth: 36, textAlign: 'center',
+        color: rank <= 3 ? '#C68A1B' : '#b5aa99', lineHeight: 1, minWidth: 36, textAlign: 'center',
         flexShrink: 0, paddingTop: 4,
       }}>#{rank}</div>
 
@@ -174,7 +174,7 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
         <div onClick={goHome} style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#5FB37E' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
@@ -273,7 +273,7 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#5FB37E' }}>Kibble</span>
+          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

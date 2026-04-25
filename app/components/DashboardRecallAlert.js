@@ -87,13 +87,13 @@ export default function DashboardRecallAlert({ dogName, currentFood, currentFood
           background: 'linear-gradient(135deg, #1a1612, #2a2318)', borderRadius: 20,
           padding: 28, textAlign: 'center',
         }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#2F6B48', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>You found this recall by checking manually.</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#C68A1B', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>You found this recall by checking manually.</div>
           <h3 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 8px' }}>What about the next one?</h3>
           <p style={{ fontSize: 13, color: '#8a7e72', maxWidth: 380, margin: '0 auto 16px', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>
             Pro members get instant email alerts when a recall affects their food. You&rsquo;ll know within hours &mdash; not days or weeks.
           </p>
           <button onClick={() => router.push('/pro')} style={{
-            padding: '12px 28px', borderRadius: 100, background: '#2F6B48', color: '#fff',
+            padding: '12px 28px', borderRadius: 100, background: '#C68A1B', color: '#fff',
             fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
             fontFamily: "'Inter', sans-serif",
           }}>Get Recall Alerts &mdash; $29/year &rarr;</button>

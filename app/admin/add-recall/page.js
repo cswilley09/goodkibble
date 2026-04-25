@@ -116,7 +116,7 @@ export default function AddRecallPage() {
             <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 4 }}>Add Recall</div>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', margin: 0 }}>Paste a URL, upload a PDF, or paste email text. AI extracts the recall details.</p>
           </div>
-          <a href="/admin/add-product" style={{ fontSize: 12, color: '#2F6B48', fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Add Product &rarr;</a>
+          <a href="/admin/add-product" style={{ fontSize: 12, color: '#C68A1B', fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Add Product &rarr;</a>
         </div>
 
         {/* Tabs */}
@@ -226,7 +226,7 @@ export default function AddRecallPage() {
 
             <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #ede8df', overflow: 'hidden' }}>
               {/* Severity indicator */}
-              <div style={{ height: 4, background: editData.severity === 'Class I' ? '#A32D2D' : editData.severity === 'Class II' ? '#d4760a' : '#2F6B48' }} />
+              <div style={{ height: 4, background: editData.severity === 'Class I' ? '#A32D2D' : editData.severity === 'Class II' ? '#d4760a' : '#C68A1B' }} />
 
               <div style={{ padding: 20 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>

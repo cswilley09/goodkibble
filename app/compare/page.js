@@ -203,7 +203,7 @@ function AddCardSearch({ onSelect, compact }) {
 
   return (
     <div style={{
-      borderLeft: '2px solid #5FB37E', padding: compact ? 12 : 20,
+      borderLeft: '2px solid #E5A93D', padding: compact ? 12 : 20,
       animation: 'scaleIn 0.2s ease', background: '#fff',
       minWidth: compact ? 180 : undefined,
     }}>
@@ -222,7 +222,7 @@ function AddCardSearch({ onSelect, compact }) {
           border: '1.5px solid #ede8df', fontSize: 13,
           fontFamily: "'Inter', sans-serif", outline: 'none', background: '#faf8f5',
         }}
-        onFocus={(e) => e.target.style.borderColor = '#5FB37E'}
+        onFocus={(e) => e.target.style.borderColor = '#E5A93D'}
         onBlur={(e) => e.target.style.borderColor = '#ede8df'}
       />
       <div style={{ marginTop: 6, maxHeight: 200, overflowY: 'auto' }}>
@@ -361,7 +361,7 @@ export default function ComparePage() {
         <div onClick={goHome} style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#5FB37E' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
@@ -415,7 +415,7 @@ export default function ComparePage() {
                 setTimeout(() => setSaved(false), 2500);
               }} style={{
                 padding: '8px 16px', borderRadius: 100,
-                background: saved ? '#2d7a4f' : '#2F6B48', color: '#fff',
+                background: saved ? '#2d7a4f' : '#C68A1B', color: '#fff',
                 fontSize: 13, fontWeight: 600, border: 'none',
                 cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 transition: 'background 0.2s',
@@ -631,7 +631,7 @@ export default function ComparePage() {
                 background: '#faf8f4', borderTop: '2px solid #ede8df', borderBottom: '1px solid #ede8df',
                 padding: isMobile ? '10px 10px' : '12px 24px',
               }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#2F6B48', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: "'Inter', sans-serif" }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#C68A1B', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: "'Inter', sans-serif" }}>
                   Top 5 Ingredients
                 </span>
               </div>
@@ -692,7 +692,7 @@ export default function ComparePage() {
             }}>
               <div style={{ fontSize: 13, color: '#3d352b', lineHeight: 1.5, flex: 1 }}>
                 Want to save this comparison and get notified if scores change?{' '}
-                <span onClick={() => router.push('/pro')} style={{ color: '#2F6B48', fontWeight: 700, cursor: 'pointer' }}>Upgrade to Pro &rarr;</span>
+                <span onClick={() => router.push('/pro')} style={{ color: '#C68A1B', fontWeight: 700, cursor: 'pointer' }}>Upgrade to Pro &rarr;</span>
               </div>
               <button onClick={() => setProBannerDismissed(true)} style={{
                 background: 'none', border: 'none', color: '#8a7e72', fontSize: 18,
@@ -710,7 +710,7 @@ export default function ComparePage() {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 24 : 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#5FB37E' }}>Kibble</span>
+          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

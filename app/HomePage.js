@@ -154,7 +154,7 @@ function WhyStrip() {
       <div aria-hidden style={{
         position: 'absolute', top: '-30%', left: '50%', transform: 'translateX(-50%)',
         width: 800, height: 500, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(95,179,126,0.08) 0%, transparent 65%)',
+        background: 'radial-gradient(circle, rgba(229,169,61,0.08) 0%, transparent 65%)',
         pointerEvents: 'none',
       }} />
       <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', ...fade(visible) }}>
@@ -162,10 +162,10 @@ function WhyStrip() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase',
-            color: '#5FB37E', fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+            color: '#E5A93D', fontFamily: 'ui-monospace, SFMono-Regular, monospace',
             marginBottom: 16,
           }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#5FB37E', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#E5A93D', animation: 'heroDot 1.5s ease-in-out infinite' }} />
             Why GoodKibble
           </div>
           <h2 style={{
@@ -174,7 +174,7 @@ function WhyStrip() {
             lineHeight: 1.1, letterSpacing: -0.5, margin: 0,
           }}>
             Built on data,{' '}
-            <em style={{ color: '#5FB37E', fontStyle: 'italic' }}>not marketing.</em>
+            <em style={{ color: '#E5A93D', fontStyle: 'italic' }}>not marketing.</em>
           </h2>
         </div>
         <div className="why-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 48 }}>
@@ -186,8 +186,8 @@ function WhyStrip() {
             }}>
               <div style={{
                 width: 48, height: 48, borderRadius: 12,
-                background: 'rgba(95,179,126,0.1)',
-                border: '1px solid rgba(95,179,126,0.18)',
+                background: 'rgba(229,169,61,0.1)',
+                border: '1px solid rgba(229,169,61,0.18)',
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                 marginBottom: 20,
               }}>{vp.icon}</div>
@@ -217,10 +217,10 @@ const DEMO_CATS = [
   { key: 'B_fat', name: 'Fat', max: 15, color: '#EF9F27' },
   { key: 'C_carbs', name: 'Carbohydrates', max: 15, color: '#378ADD' },
   { key: 'D_fiber', name: 'Fiber', max: 5, color: '#7F77DD' },
-  { key: 'E_protein_source', name: 'Protein Sources', max: 15, color: '#2F6B48' },
-  { key: 'F_preservatives', name: 'Preservatives', max: 10, color: '#2F6B48' },
-  { key: 'G_additives', name: 'Additives', max: 5, color: '#2F6B48' },
-  { key: 'H_functional', name: 'Functional', max: 10, color: '#2F6B48' },
+  { key: 'E_protein_source', name: 'Protein Sources', max: 15, color: '#C68A1B' },
+  { key: 'F_preservatives', name: 'Preservatives', max: 10, color: '#C68A1B' },
+  { key: 'G_additives', name: 'Additives', max: 5, color: '#C68A1B' },
+  { key: 'H_functional', name: 'Functional', max: 10, color: '#C68A1B' },
 ];
 
 function AnimatedScore({ target, max, active, delay }) {
@@ -335,10 +335,10 @@ function ScoringDemo({ onNavigate }) {
                     <path id="botArc" d="M 163,118 A 65,65 0 0,1 37,118" fill="none"/>
                   </defs>
                   <g filter="url(#stampWorn)" opacity="0.78">
-                    <circle cx="100" cy="100" r="93" fill="none" stroke="#2F6B48" strokeWidth="4.5"/>
-                    <circle cx="100" cy="100" r="81" fill="none" stroke="#2F6B48" strokeWidth="2"/>
-                    <circle cx="100" cy="100" r="87" fill="none" stroke="#2F6B48" strokeWidth="0.5" strokeDasharray="2,4" opacity="0.5"/>
-                    <g fill="#2F6B48" fontSize="7" textAnchor="middle" fontFamily="serif">
+                    <circle cx="100" cy="100" r="93" fill="none" stroke="#C68A1B" strokeWidth="4.5"/>
+                    <circle cx="100" cy="100" r="81" fill="none" stroke="#C68A1B" strokeWidth="2"/>
+                    <circle cx="100" cy="100" r="87" fill="none" stroke="#C68A1B" strokeWidth="0.5" strokeDasharray="2,4" opacity="0.5"/>
+                    <g fill="#C68A1B" fontSize="7" textAnchor="middle" fontFamily="serif">
                       <text x="100" y="14">★</text>
                       <text x="100" y="194">★</text>
                       <text x="9" y="104">★</text>
@@ -348,17 +348,17 @@ function ScoringDemo({ onNavigate }) {
                       <text x="27" y="174">★</text>
                       <text x="173" y="174">★</text>
                     </g>
-                    <text fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="8" fontWeight="700" letterSpacing="3.5" fill="#2F6B48" textAnchor="middle">
+                    <text fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="8" fontWeight="700" letterSpacing="3.5" fill="#C68A1B" textAnchor="middle">
                       <textPath href="#topArc" startOffset="50%">GOODKIBBLE RATED</textPath>
                     </text>
-                    <text x="100" y="95" textAnchor="middle" fontFamily="Georgia, 'Instrument Serif', 'Times New Roman', serif" fontSize="52" fontWeight="bold" fill="#2F6B48" style={{ fontWeight: 900, letterSpacing: '-2px' }}>
+                    <text x="100" y="95" textAnchor="middle" fontFamily="Georgia, 'Instrument Serif', 'Times New Roman', serif" fontSize="52" fontWeight="bold" fill="#C68A1B" style={{ fontWeight: 900, letterSpacing: '-2px' }}>
                       {demoProduct.quality_score}
                     </text>
-                    <rect x="18" y="100" width="164" height="24" rx="2" fill="#2F6B48"/>
+                    <rect x="18" y="100" width="164" height="24" rx="2" fill="#C68A1B"/>
                     <text x="100" y="117" textAnchor="middle" fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="13" fontWeight="800" letterSpacing="5" fill="#FAF8F4">
                       {getScoreTier(demoProduct.quality_score).toUpperCase()}
                     </text>
-                    <text fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="7.5" fontWeight="600" letterSpacing="2" fill="#2F6B48" opacity="0.85" textAnchor="middle">
+                    <text fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="7.5" fontWeight="600" letterSpacing="2" fill="#C68A1B" opacity="0.85" textAnchor="middle">
                       <textPath href="#botArc" startOffset="50%">★ CERTIFIED QUALITY ★</textPath>
                     </text>
                   </g>
@@ -395,12 +395,12 @@ function ScoringDemo({ onNavigate }) {
    ═══════════════════════════════════════ */
 
 const PROTEIN_ICONS = {
-  Chicken: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="18" cy="17" rx="8" ry="10" stroke="#2F6B48" strokeWidth="1.5"/><path d="M10 15c-3 1-5 3-4 5s3 1 5 0" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><path d="M26 15c3 1 5 3 4 5s-3 1-5 0" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 26c-1 2-2 4-1 5" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><path d="M22 26c1 2 2 4 1 5" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><path d="M18 10v12" stroke="#2F6B48" strokeWidth="0.8" opacity="0.4" strokeLinecap="round"/></svg>,
-  Salmon: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 18c0 0 4-8 14-8s14 8 14 8-4 8-14 8S4 18 4 18z" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2-3 4-4 4-4s-1 5-2 6" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2 3 4 4 4 4s-1-5-2-6" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="10" cy="17.5" r="1.5" fill="#2F6B48"/><path d="M16 14c1 2 1 6 0 8" stroke="#2F6B48" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><path d="M20 13c1 2.5 1 7 0 10" stroke="#2F6B48" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><path d="M24 14.5c.8 1.5.8 5 0 7" stroke="#2F6B48" strokeWidth="1" strokeLinecap="round" opacity="0.5"/></svg>,
-  Lamb: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="18" cy="18" rx="11" ry="8" stroke="#2F6B48" strokeWidth="1.5"/><path d="M10 12c1-2 3-2 4 0s3 2 4 0 3-2 4 0 3 2 4 0" stroke="#2F6B48" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="28" cy="14" rx="4" ry="3.5" stroke="#2F6B48" strokeWidth="1.5"/><circle cx="29.5" cy="13.5" r="0.8" fill="#2F6B48"/><path d="M31 11.5c1.5-1 3-0.5 3 1" stroke="#2F6B48" strokeWidth="1.2" strokeLinecap="round"/><path d="M26 11c-1-1.5-0.5-3 1-3" stroke="#2F6B48" strokeWidth="1.2" strokeLinecap="round"/><line x1="12" y1="25" x2="12" y2="30" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><line x1="16" y1="25.5" x2="16" y2="30" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="25.5" x2="21" y2="30" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><line x1="25" y1="25" x2="25" y2="30" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/></svg>,
-  Beef: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="17" cy="18" rx="12" ry="7" stroke="#2F6B48" strokeWidth="1.5"/><ellipse cx="30" cy="14" rx="4" ry="3.5" stroke="#2F6B48" strokeWidth="1.5"/><path d="M27 16c1-.5 2-1.5 3-2" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><path d="M28 11c-.5-2-1.5-3-1-4" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><path d="M33 11.5c.5-2 1-3 .5-4" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><path d="M34 13c1.5 0 2-.5 1.5-1.5" stroke="#2F6B48" strokeWidth="1.2" strokeLinecap="round"/><circle cx="31" cy="13.5" r="0.8" fill="#2F6B48"/><circle cx="33" cy="15.5" r="0.5" fill="#2F6B48"/><path d="M5 15c-2-1-3-3-2.5-5" stroke="#2F6B48" strokeWidth="1.3" strokeLinecap="round"/><path d="M20 24c0 1-1 1.5-2 1.5s-2-.5-2-1.5" stroke="#2F6B48" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><line x1="10" y1="24" x2="10" y2="30" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><line x1="14" y1="24.5" x2="14" y2="30" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="24.5" x2="21" y2="30" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><line x1="25" y1="24" x2="25" y2="30" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><path d="M9 30h2" stroke="#2F6B48" strokeWidth="1.3" strokeLinecap="round"/><path d="M13 30h2" stroke="#2F6B48" strokeWidth="1.3" strokeLinecap="round"/><path d="M20 30h2" stroke="#2F6B48" strokeWidth="1.3" strokeLinecap="round"/><path d="M24 30h2" stroke="#2F6B48" strokeWidth="1.3" strokeLinecap="round"/></svg>,
-  Turkey: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 8c4 2 6 6 6 10" stroke="#2F6B48" strokeWidth="1.3" strokeLinecap="round"/><path d="M4 12c4 1 6 4 7 8" stroke="#2F6B48" strokeWidth="1.3" strokeLinecap="round"/><path d="M3 16c3 1 6 3 8 6" stroke="#2F6B48" strokeWidth="1.3" strokeLinecap="round"/><path d="M8 6c3 3 5 7 4 12" stroke="#2F6B48" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="18" cy="20" rx="8" ry="6" stroke="#2F6B48" strokeWidth="1.5"/><path d="M24 16c2-3 3-6 2.5-9" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><circle cx="26" cy="7" r="3" stroke="#2F6B48" strokeWidth="1.5"/><circle cx="27" cy="6.5" r="0.8" fill="#2F6B48"/><path d="M29 7.5l2.5 0.5-2.5 1" stroke="#2F6B48" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/><path d="M25.5 9c-.5 1.5-1 2.5-1 3" stroke="#2F6B48" strokeWidth="1.2" strokeLinecap="round"/><line x1="16" y1="25.5" x2="16" y2="31" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="25.5" x2="21" y2="31" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 31h4" stroke="#2F6B48" strokeWidth="1.2" strokeLinecap="round"/><path d="M19 31h4" stroke="#2F6B48" strokeWidth="1.2" strokeLinecap="round"/></svg>,
-  Fish: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 18c0 0 3.5-7 13-7s13 7 13 7-3.5 7-13 7S5 18 5 18z" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M29 14l5-4v16l-5-4" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="11" cy="17.5" r="1.8" fill="#2F6B48"/><circle cx="11.5" cy="17" r="0.6" fill="#FAF8F4"/><path d="M17 11c0-3 2-5 4-5-1 2-1 4 0 6" stroke="#2F6B48" strokeWidth="1.2" strokeLinecap="round"/><path d="M19 25c0 2 1 3.5 2.5 4-0.5-1.5-0.5-3 0.5-4.5" stroke="#2F6B48" strokeWidth="1.2" strokeLinecap="round"/><path d="M15 14.5c-1 2-1 5 0 7" stroke="#2F6B48" strokeWidth="1" strokeLinecap="round"/></svg>,
+  Chicken: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="18" cy="17" rx="8" ry="10" stroke="#C68A1B" strokeWidth="1.5"/><path d="M10 15c-3 1-5 3-4 5s3 1 5 0" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M26 15c3 1 5 3 4 5s-3 1-5 0" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 26c-1 2-2 4-1 5" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M22 26c1 2 2 4 1 5" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M18 10v12" stroke="#C68A1B" strokeWidth="0.8" opacity="0.4" strokeLinecap="round"/></svg>,
+  Salmon: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 18c0 0 4-8 14-8s14 8 14 8-4 8-14 8S4 18 4 18z" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2-3 4-4 4-4s-1 5-2 6" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2 3 4 4 4 4s-1-5-2-6" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="10" cy="17.5" r="1.5" fill="#C68A1B"/><path d="M16 14c1 2 1 6 0 8" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><path d="M20 13c1 2.5 1 7 0 10" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><path d="M24 14.5c.8 1.5.8 5 0 7" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/></svg>,
+  Lamb: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="18" cy="18" rx="11" ry="8" stroke="#C68A1B" strokeWidth="1.5"/><path d="M10 12c1-2 3-2 4 0s3 2 4 0 3-2 4 0 3 2 4 0" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="28" cy="14" rx="4" ry="3.5" stroke="#C68A1B" strokeWidth="1.5"/><circle cx="29.5" cy="13.5" r="0.8" fill="#C68A1B"/><path d="M31 11.5c1.5-1 3-0.5 3 1" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M26 11c-1-1.5-0.5-3 1-3" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><line x1="12" y1="25" x2="12" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="16" y1="25.5" x2="16" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="25.5" x2="21" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="25" y1="25" x2="25" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  Beef: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="17" cy="18" rx="12" ry="7" stroke="#C68A1B" strokeWidth="1.5"/><ellipse cx="30" cy="14" rx="4" ry="3.5" stroke="#C68A1B" strokeWidth="1.5"/><path d="M27 16c1-.5 2-1.5 3-2" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M28 11c-.5-2-1.5-3-1-4" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M33 11.5c.5-2 1-3 .5-4" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M34 13c1.5 0 2-.5 1.5-1.5" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><circle cx="31" cy="13.5" r="0.8" fill="#C68A1B"/><circle cx="33" cy="15.5" r="0.5" fill="#C68A1B"/><path d="M5 15c-2-1-3-3-2.5-5" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M20 24c0 1-1 1.5-2 1.5s-2-.5-2-1.5" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><line x1="10" y1="24" x2="10" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="14" y1="24.5" x2="14" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="24.5" x2="21" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="25" y1="24" x2="25" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M9 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M13 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M20 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M24 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  Turkey: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 8c4 2 6 6 6 10" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M4 12c4 1 6 4 7 8" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M3 16c3 1 6 3 8 6" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M8 6c3 3 5 7 4 12" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="18" cy="20" rx="8" ry="6" stroke="#C68A1B" strokeWidth="1.5"/><path d="M24 16c2-3 3-6 2.5-9" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><circle cx="26" cy="7" r="3" stroke="#C68A1B" strokeWidth="1.5"/><circle cx="27" cy="6.5" r="0.8" fill="#C68A1B"/><path d="M29 7.5l2.5 0.5-2.5 1" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/><path d="M25.5 9c-.5 1.5-1 2.5-1 3" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><line x1="16" y1="25.5" x2="16" y2="31" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="25.5" x2="21" y2="31" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 31h4" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M19 31h4" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/></svg>,
+  Fish: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 18c0 0 3.5-7 13-7s13 7 13 7-3.5 7-13 7S5 18 5 18z" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M29 14l5-4v16l-5-4" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="11" cy="17.5" r="1.8" fill="#C68A1B"/><circle cx="11.5" cy="17" r="0.6" fill="#FAF8F4"/><path d="M17 11c0-3 2-5 4-5-1 2-1 4 0 6" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M19 25c0 2 1 3.5 2.5 4-0.5-1.5-0.5-3 0.5-4.5" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M15 14.5c-1 2-1 5 0 7" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round"/></svg>,
 };
 
 function BrowseByProtein({ proteinCounts, onNavigate }) {
@@ -446,17 +446,17 @@ const VALUE_PROPS = [
   {
     title: 'Transparent Scoring',
     desc: 'Every score is broken down across 8 categories. See exactly why a food earned its rating.',
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5FB37E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E5A93D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>,
   },
   {
     title: 'Manufacturer-Sourced Data',
     desc: 'All nutritional data comes directly from manufacturer websites. No guesswork, no retailer approximations.',
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5FB37E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E5A93D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
   },
   {
     title: 'Apples-to-Apples Nutrition',
     desc: "We strip moisture out of the equation so every food is compared on equal footing. Real nutrition, side by side.",
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5FB37E" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="#5FB37E"/><circle cx="17" cy="12" r="2" fill="#5FB37E"/><circle cx="11" cy="18" r="2" fill="#5FB37E"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E5A93D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="#E5A93D"/><circle cx="17" cy="12" r="2" fill="#E5A93D"/><circle cx="11" cy="18" r="2" fill="#E5A93D"/></svg>,
   },
 ];
 
@@ -481,7 +481,7 @@ function FooterCTA({ onNavigate, onSelect }) {
           background: 'transparent', color: '#d4c9b8', fontSize: 15, fontWeight: 600,
           cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'all 0.2s',
         }}
-          onMouseEnter={(e) => { e.target.style.background = '#5FB37E'; e.target.style.color = '#1a1612'; e.target.style.borderColor = '#5FB37E'; }}
+          onMouseEnter={(e) => { e.target.style.background = '#E5A93D'; e.target.style.color = '#1a1612'; e.target.style.borderColor = '#E5A93D'; }}
           onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#d4c9b8'; e.target.style.borderColor = '#3d352b'; }}
         >Discover 1,000+ dog foods →</button>
       </div>
@@ -527,7 +527,7 @@ export default function Home({ marqueeData = [] }) {
         transition: 'all 0.3s',
       }}>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 400, color: '#1a1612', letterSpacing: -0.5, cursor: 'pointer' }} onClick={() => goTo('/')}>
-          Good<span style={{ color: '#2F6B48', fontStyle: 'italic' }}>Kibble</span>
+          Good<span style={{ color: '#C68A1B', fontStyle: 'italic' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span className="nav-discover-link" onClick={() => goTo('/discover')} style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'color 0.2s' }}
@@ -548,26 +548,26 @@ export default function Home({ marqueeData = [] }) {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase',
-              color: '#2F6B48', background: '#E3EFE6',
+              color: '#C68A1B', background: '#F5E8C8',
               padding: '6px 14px', borderRadius: 100,
               marginBottom: 24,
               fontFamily: 'ui-monospace, SFMono-Regular, monospace',
               animation: 'fadeUp 0.6s ease both',
             }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#2F6B48', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C68A1B', animation: 'heroDot 1.5s ease-in-out infinite' }} />
               1,042 foods · 187 brands · scored &amp; analyzed
             </div>
             <h1 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 'clamp(44px, 6vw, 72px)', fontWeight: 400, color: '#1a1612', lineHeight: 1.02, letterSpacing: -1, marginBottom: 28, animation: 'fadeUp 0.6s ease 0.1s both' }}>
               Look up any dog food.<br />
-              <em style={{ color: '#2F6B48', fontStyle: 'italic' }}>See what&apos;s really in it.</em>
+              <em style={{ color: '#C68A1B', fontStyle: 'italic' }}>See what&apos;s really in it.</em>
             </h1>
             <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, width: '100%', boxSizing: 'border-box' }}>
               <SearchBox onSelect={handleSelect} variant="hero" />
             </div>
             <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.35s both' }}>
-              <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#2F6B48', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
-                onMouseEnter={(e) => { e.target.style.color = '#1e4a31'; e.target.style.textDecoration = 'underline'; }}
-                onMouseLeave={(e) => { e.target.style.color = '#2F6B48'; e.target.style.textDecoration = 'none'; }}
+              <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#C68A1B', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
+                onMouseEnter={(e) => { e.target.style.color = '#8a5912'; e.target.style.textDecoration = 'underline'; }}
+                onMouseLeave={(e) => { e.target.style.color = '#C68A1B'; e.target.style.textDecoration = 'none'; }}
               >or discover 1,000+ dog foods by filter →</span>
             </div>
           </div>
@@ -596,7 +596,7 @@ export default function Home({ marqueeData = [] }) {
 
       {/* ═══ FOOTER ═══ */}
       <div style={{ borderTop: '1px solid #3d352b', padding: '28px 40px', background: '#1a1612', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#faf8f4' }}>Good<span style={{ color: '#5FB37E' }}>Kibble</span></div>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#faf8f4' }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#5a5248', fontFamily: "'Inter', sans-serif", flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#5a5248', textDecoration: 'none' }}>Terms</a>
           <a href="/privacy" style={{ color: '#5a5248', textDecoration: 'none' }}>Privacy</a>
@@ -614,7 +614,7 @@ export default function Home({ marqueeData = [] }) {
         }
         .marquee-track:hover { animation-play-state: paused; }
         .marquee-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,22,18,0.10); }
-        .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #2F6B48 !important; }
+        .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #C68A1B !important; }
         @media (max-width: 960px) {
           .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
           .hero-analyzer { max-width: 480px; margin: 0 auto; }

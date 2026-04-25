@@ -22,7 +22,7 @@ export function ProGateOverlay({ title, description, buttonText, children }) {
         <div style={{ fontSize: 16, fontWeight: 800, color: '#fff', fontFamily: "'Inter', sans-serif" }}>{title}</div>
         <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', maxWidth: 260, lineHeight: 1.5, fontFamily: "'Inter', sans-serif" }}>{description}</div>
         <button onClick={() => router.push('/pro')} style={{
-          padding: '10px 24px', borderRadius: 100, background: '#2F6B48', color: '#fff',
+          padding: '10px 24px', borderRadius: 100, background: '#C68A1B', color: '#fff',
           fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer',
           fontFamily: "'Inter', sans-serif", marginTop: 4, flexShrink: 0,
         }}>{buttonText || 'Unlock with Pro →'}</button>
@@ -55,7 +55,7 @@ export function ProGateModal({ icon, title, description, buttonText, subtext, on
         <h3 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 20, fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>{title}</h3>
         <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 24, maxWidth: 320, margin: '0 auto 24px', lineHeight: 1.6 }}>{description}</p>
         <button onClick={() => router.push('/pro')} style={{
-          padding: '12px 28px', borderRadius: 100, background: '#2F6B48', color: '#fff',
+          padding: '12px 28px', borderRadius: 100, background: '#C68A1B', color: '#fff',
           fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
           fontFamily: "'Inter', sans-serif",
         }}>{buttonText || 'Unlock with Pro →'}</button>

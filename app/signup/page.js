@@ -86,7 +86,7 @@ const dropdownPanelStyle = {
 };
 const dropdownOptionStyle = (sel) => ({
   padding: '10px 16px', fontSize: 15, fontWeight: sel ? 600 : 500,
-  color: sel ? '#2F6B48' : '#1a1612', background: sel ? '#f7efd8' : 'transparent',
+  color: sel ? '#C68A1B' : '#1a1612', background: sel ? '#f7efd8' : 'transparent',
   borderRadius: 8, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
   transition: 'background 0.15s', whiteSpace: 'nowrap',
 });
@@ -106,8 +106,8 @@ function AutoInput({ value, onChange, placeholder, type = 'text', min, minW = 60
     }
   }, [value, minW, maxW]);
   const base = {
-    border: 'none', borderBottom: '2.5px dotted #2F6B48', background: 'transparent',
-    color: '#2F6B48', fontWeight: 700, fontFamily: "'Instrument Serif', serif",
+    border: 'none', borderBottom: '2.5px dotted #C68A1B', background: 'transparent',
+    color: '#C68A1B', fontWeight: 700, fontFamily: "'Instrument Serif', serif",
     fontSize: 'inherit', textAlign: 'center', outline: 'none', padding: '2px 4px',
     width: w, minWidth: minW, ...extra,
   };
@@ -140,15 +140,15 @@ function InlineDropdown({ value, onChange, options, width, placeholder }) {
   return (
     <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}>
       <span onClick={() => setOpen(!open)} style={{
-        border: 'none', borderBottom: '2.5px dotted #2F6B48', background: 'transparent',
-        color: '#2F6B48', fontWeight: 700, fontFamily: "'Instrument Serif', serif",
+        border: 'none', borderBottom: '2.5px dotted #C68A1B', background: 'transparent',
+        color: '#C68A1B', fontWeight: 700, fontFamily: "'Instrument Serif', serif",
         fontSize: 'inherit', textAlign: 'center', cursor: 'pointer',
         padding: '2px 20px 2px 4px', display: 'inline-block', position: 'relative', minWidth: width || 60,
       }}>
         {selectedLabel}
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{
           position: 'absolute', right: 2, top: '50%', transform: 'translateY(-50%)',
-        }}><path d="M1 1l4 4 4-4" stroke="#2F6B48" strokeWidth="1.5" strokeLinecap="round" /></svg>
+        }}><path d="M1 1l4 4 4-4" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" /></svg>
       </span>
       {open && (
         <div style={dropdownPanelStyle}>
@@ -193,7 +193,7 @@ function BreedAutocomplete({ value, onChange, style: extra }) {
   function highlight(b) {
     const idx = b.toLowerCase().indexOf(query);
     if (idx === -1 || !query) return b;
-    return <>{b.slice(0, idx)}<span style={{ color: '#2F6B48', fontWeight: 700 }}>{b.slice(idx, idx + query.length)}</span>{b.slice(idx + query.length)}</>;
+    return <>{b.slice(0, idx)}<span style={{ color: '#C68A1B', fontWeight: 700 }}>{b.slice(idx, idx + query.length)}</span>{b.slice(idx + query.length)}</>;
   }
   return (
     <span ref={ref} style={{ position: 'relative', display: 'inline-block' }}>
@@ -205,8 +205,8 @@ function BreedAutocomplete({ value, onChange, style: extra }) {
         onChange={(e) => { setText(e.target.value); onChange(''); setOpen(true); setShowAll(false); }}
         onFocus={() => { if (query && allMatches.length > 0) setOpen(true); }}
         style={{
-          border: 'none', borderBottom: '2.5px dotted #2F6B48', background: 'transparent',
-          color: '#2F6B48', fontWeight: 700, fontFamily: "'Instrument Serif', serif",
+          border: 'none', borderBottom: '2.5px dotted #C68A1B', background: 'transparent',
+          color: '#C68A1B', fontWeight: 700, fontFamily: "'Instrument Serif', serif",
           fontSize: 'inherit', textAlign: 'center', outline: 'none', padding: '2px 4px',
           width: w, minWidth: 120, ...extra,
         }}
@@ -228,7 +228,7 @@ function BreedAutocomplete({ value, onChange, style: extra }) {
             })}
             {!showAll && allMatches.length > 6 && (
               <div onMouseDown={(e) => { e.preventDefault(); setShowAll(true); }}
-                style={{ padding: '10px 16px', fontSize: 13, fontWeight: 600, color: '#2F6B48', cursor: 'pointer', textAlign: 'center', borderTop: '1px solid #f0ebe3', fontFamily: "'Inter', sans-serif" }}
+                style={{ padding: '10px 16px', fontSize: 13, fontWeight: 600, color: '#C68A1B', cursor: 'pointer', textAlign: 'center', borderTop: '1px solid #f0ebe3', fontFamily: "'Inter', sans-serif" }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = '#f5f2ec')}
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               >Show all {allMatches.length} results</div>
@@ -244,13 +244,13 @@ function DogIcon() {
   return (
     <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="32" cy="50" rx="18" ry="4" fill="#ede8df" />
-      <path d="M18 28c-3-8-1-16 2-18s6 2 8 6" stroke="#2F6B48" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M46 28c3-8 1-16-2-18s-6 2-8 6" stroke="#2F6B48" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <ellipse cx="32" cy="34" rx="14" ry="12" stroke="#2F6B48" strokeWidth="2.5" fill="none" />
-      <circle cx="27" cy="31" r="2" fill="#2F6B48" /><circle cx="37" cy="31" r="2" fill="#2F6B48" />
-      <ellipse cx="32" cy="36" rx="3" ry="2" fill="#2F6B48" />
-      <path d="M29 40c1.5 2 4.5 2 6 0" stroke="#2F6B48" strokeWidth="2" strokeLinecap="round" fill="none" />
-      <path d="M22 44c0 4 4 6 10 6s10-2 10-6" stroke="#2F6B48" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <path d="M18 28c-3-8-1-16 2-18s6 2 8 6" stroke="#C68A1B" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <path d="M46 28c3-8 1-16-2-18s-6 2-8 6" stroke="#C68A1B" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+      <ellipse cx="32" cy="34" rx="14" ry="12" stroke="#C68A1B" strokeWidth="2.5" fill="none" />
+      <circle cx="27" cy="31" r="2" fill="#C68A1B" /><circle cx="37" cy="31" r="2" fill="#C68A1B" />
+      <ellipse cx="32" cy="36" rx="3" ry="2" fill="#C68A1B" />
+      <path d="M29 40c1.5 2 4.5 2 6 0" stroke="#C68A1B" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M22 44c0 4 4 6 10 6s10-2 10-6" stroke="#C68A1B" strokeWidth="2.5" strokeLinecap="round" fill="none" />
     </svg>
   );
 }
@@ -265,13 +265,13 @@ function ProgressDots({ step, total }) {
           <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
             <div style={{
               width: current ? 14 : 10, height: current ? 14 : 10, borderRadius: '50%',
-              background: completed || current ? '#2F6B48' : '#ede8df',
+              background: completed || current ? '#C68A1B' : '#ede8df',
               border: current ? '3px solid rgba(201,168,76,0.3)' : 'none',
               transition: 'all 0.3s ease',
             }} />
             {i < total - 1 && (
               <div style={{ width: Math.max(12, Math.min(32, 200 / total)), height: 2,
-                background: completed ? '#2F6B48' : '#ede8df', transition: 'background 0.3s ease' }} />
+                background: completed ? '#C68A1B' : '#ede8df', transition: 'background 0.3s ease' }} />
             )}
           </div>
         );
@@ -322,7 +322,7 @@ function FoodSearch({ onSelect, selectedFood }) {
   if (selectedFood) {
     return (
       <div style={{ width: '100%', maxWidth: 500, margin: '0 auto' }}>
-        <div style={{ background: '#f7efd8', border: '1.5px solid #2F6B48', borderRadius: 12, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ background: '#f7efd8', border: '1.5px solid #C68A1B', borderRadius: 12, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
             <span style={{ color: '#2d7a4f', fontSize: 16, fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>
             <span style={{ fontSize: 14, color: '#1a1612', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selectedFood.name}</span>
@@ -682,7 +682,7 @@ export default function SignupPage() {
             </button>
             <p style={{ marginTop: 32, fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#8a7e72' }}>
               Already have an account?{' '}
-              <a href="/login" style={{ color: '#2F6B48', fontWeight: 600, textDecoration: 'none' }}>Sign in &rarr;</a>
+              <a href="/login" style={{ color: '#C68A1B', fontWeight: 600, textDecoration: 'none' }}>Sign in &rarr;</a>
             </p>
           </div>
         )}
@@ -732,7 +732,7 @@ export default function SignupPage() {
         {/* ── DOG PROFILE ── */}
         {curType === 'profile' && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#2F6B48', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#C68A1B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>
               {numDogs > 1 ? `Dog ${curDogIdx + 1} of ${numDogs}: ${curDogName}` : `Tell us about ${curDogName}`}
             </div>
             {numDogs > 1 && curDogIdx === 0 && (
@@ -779,7 +779,7 @@ export default function SignupPage() {
         {/* ── CURRENT FOOD ── */}
         {curType === 'food' && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#2F6B48', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#C68A1B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>
               {numDogs > 1 ? `${curDogName}\u2019s current food (${curDogIdx + 1} of ${numDogs})` : `${curDogName}\u2019s current food`}
             </div>
             <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 28px', letterSpacing: -0.5 }}>
@@ -790,7 +790,7 @@ export default function SignupPage() {
             {curDogIdx > 0 && dogs[0].food && !curDog.food && !curDog.foodAlt && (
               <div style={{ marginBottom: 20 }}>
                 <button onClick={() => { copyFoodFromFirst(curDogIdx); }} style={{
-                  padding: '10px 20px', borderRadius: 100, border: '1.5px solid #2F6B48',
+                  padding: '10px 20px', borderRadius: 100, border: '1.5px solid #C68A1B',
                   background: '#f7efd8', color: '#1a1612', fontSize: 14, fontWeight: 600,
                   cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 }}>
@@ -818,7 +818,7 @@ export default function SignupPage() {
                     if (!selected) { updateDog(curDogIdx, 'food', null); updateDog(curDogIdx, 'foodAltText', ''); }
                   }} style={{
                     padding: '10px 20px', borderRadius: 100,
-                    border: selected ? '2px solid #2F6B48' : '1.5px solid #ede8df',
+                    border: selected ? '2px solid #C68A1B' : '1.5px solid #ede8df',
                     background: selected ? '#f7efd8' : '#fff',
                     color: '#1a1612', fontSize: 14, fontWeight: 600,
                     cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'all 0.2s ease',
@@ -833,7 +833,7 @@ export default function SignupPage() {
                   onChange={e => updateDog(curDogIdx, 'foodAltText', e.target.value)}
                   placeholder={curDog.foodAlt === 'no_kibble' ? 'What do you feed? (e.g., raw diet, homemade, fresh food...)' : "Type your dog's food brand and product name"}
                   style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1.5px solid #ede8df', fontSize: 15, fontFamily: "'Inter', sans-serif", background: '#fff', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' }}
-                  onFocus={e => (e.target.style.borderColor = '#2F6B48')}
+                  onFocus={e => (e.target.style.borderColor = '#C68A1B')}
                   onBlur={e => (e.target.style.borderColor = '#ede8df')}
                 />
               </div>
@@ -844,7 +844,7 @@ export default function SignupPage() {
         {/* ── PRIORITIES ── */}
         {curType === 'priorities' && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#2F6B48', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>What matters to you</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#C68A1B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>What matters to you</div>
             <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 8px', letterSpacing: -0.5 }}>
               When it comes to {numDogs > 1 ? 'your dogs\u2019' : `${firstDogName}\u2019s`} food, I care most about...
             </h2>
@@ -855,7 +855,7 @@ export default function SignupPage() {
                 return (
                   <button key={p.label} onClick={() => togglePriority(p.label)} style={{
                     padding: '12px 16px', borderRadius: 14,
-                    border: selected ? '2px solid #2F6B48' : '1.5px solid #ede8df',
+                    border: selected ? '2px solid #C68A1B' : '1.5px solid #ede8df',
                     background: selected ? '#f7efd8' : '#fff',
                     color: '#1a1612', fontSize: 14, fontWeight: 600,
                     cursor: 'pointer', fontFamily: "'Inter', sans-serif",
@@ -870,7 +870,7 @@ export default function SignupPage() {
         {/* ── ACCOUNT ── */}
         {curType === 'account' && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#2F6B48', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>Almost done</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#C68A1B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>Almost done</div>
             <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 8px', letterSpacing: -0.5 }}>
               Save {numDogs > 1 ? 'your dogs\u2019 profiles' : `${firstDogName}\u2019s profile`}
             </h2>
@@ -980,16 +980,16 @@ export default function SignupPage() {
 
               {/* Pro card */}
               <div style={{
-                background: '#1a1612', borderRadius: 20, border: '2px solid #2F6B48', padding: '24px 20px',
+                background: '#1a1612', borderRadius: 20, border: '2px solid #C68A1B', padding: '24px 20px',
                 display: 'flex', flexDirection: 'column', position: 'relative',
               }}>
                 <span style={{
                   position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)',
-                  background: '#2F6B48', color: '#fff', padding: '3px 12px',
+                  background: '#C68A1B', color: '#fff', padding: '3px 12px',
                   borderRadius: 100, fontSize: 10, fontWeight: 700, whiteSpace: 'nowrap',
                   fontFamily: "'Inter', sans-serif",
                 }}>RECOMMENDED</span>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#2F6B48', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>Pro</div>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C68A1B', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>Pro</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
                   <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 900, color: '#faf8f4' }}>{billing === 'yearly' ? '$29' : '$3.99'}</span>
                   <span style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{billing === 'yearly' ? '/year' : '/month'}</span>
@@ -999,7 +999,7 @@ export default function SignupPage() {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, flex: 1 }}>
                   {['Everything in Free, plus:', 'Recall alerts to your email', 'Score change notifications', 'Ingredient deep-dives', 'Unlimited comparisons', 'Up to 5 dog profiles'].map((f, i) => (
-                    <div key={f} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13, fontFamily: "'Inter', sans-serif", color: i === 0 ? '#2F6B48' : 'rgba(255,255,255,0.8)', fontWeight: i === 0 ? 700 : 400 }}>
+                    <div key={f} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13, fontFamily: "'Inter', sans-serif", color: i === 0 ? '#C68A1B' : 'rgba(255,255,255,0.8)', fontWeight: i === 0 ? 700 : 400 }}>
                       {i > 0 && <span style={{ color: '#639922', fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>}{f}
                     </div>
                   ))}
@@ -1019,7 +1019,7 @@ export default function SignupPage() {
                   }
                 }} style={{
                   width: '100%', padding: '12px 0', borderRadius: 100, border: 'none',
-                  background: '#2F6B48', color: '#fff', fontSize: 14, fontWeight: 700,
+                  background: '#C68A1B', color: '#fff', fontSize: 14, fontWeight: 700,
                   cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 }}>Get Pro &rarr;</button>
               </div>
@@ -1040,7 +1040,7 @@ export default function SignupPage() {
               Check your email!
             </h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', marginBottom: 8, lineHeight: 1.6 }}>
-              We sent a magic link to <strong style={{ color: '#2F6B48' }}>{email.trim()}</strong>.
+              We sent a magic link to <strong style={{ color: '#C68A1B' }}>{email.trim()}</strong>.
               <br />Click the link in your email to activate your profile.
             </p>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#b5aa99', marginBottom: 28 }}>
@@ -1058,7 +1058,7 @@ export default function SignupPage() {
         {error === 'already_registered' && curType === 'account' && (
           <div style={{ textAlign: 'center', marginTop: 16, padding: '16px 20px', background: '#f7efd8', borderRadius: 14, fontFamily: "'Inter', sans-serif" }}>
             <p style={{ fontSize: 14, color: '#1a1612', marginBottom: 8 }}>Looks like you already have an account!</p>
-            <a href="/login" style={{ fontSize: 14, fontWeight: 600, color: '#2F6B48', textDecoration: 'none' }}>Sign in instead &rarr;</a>
+            <a href="/login" style={{ fontSize: 14, fontWeight: 600, color: '#C68A1B', textDecoration: 'none' }}>Sign in instead &rarr;</a>
           </div>
         )}
 

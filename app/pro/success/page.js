@@ -64,7 +64,7 @@ export default function ProSuccessPage() {
         }}>
           <div style={{
             fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700,
-            color: '#2F6B48', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16,
+            color: '#C68A1B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16,
           }}>What you unlocked</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {unlocked.map(f => (

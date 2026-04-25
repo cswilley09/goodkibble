@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap');
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-::selection { background: #c8e6d0; color: #1a1612; }
+::selection { background: #f5e8c8; color: #1a1612; }
 body { font-family: 'Inter', system-ui, sans-serif; background: #faf8f4; color: #1a1612; overflow-x: hidden; }
 input::placeholder { color: #b5aa99; }
 

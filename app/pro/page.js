@@ -89,7 +89,7 @@ export default function ProPage() {
       <div style={{ maxWidth: 800, margin: '0 auto', padding: '48px 24px 80px', textAlign: 'center' }}>
         {/* Hero */}
         <span style={{
-          display: 'inline-block', background: 'linear-gradient(135deg, #2F6B48, #d4b65e)',
+          display: 'inline-block', background: 'linear-gradient(135deg, #C68A1B, #d4b65e)',
           color: '#fff', padding: '4px 12px', borderRadius: 100,
           fontSize: 11, fontWeight: 700, marginBottom: 20,
           fontFamily: "'Inter', sans-serif",
@@ -160,14 +160,14 @@ export default function ProPage() {
           </div>
 
           {/* Pro Card */}
-          <div style={{ background: '#1a1612', borderRadius: 24, border: '2px solid #2F6B48', padding: 32, position: 'relative' }}>
+          <div style={{ background: '#1a1612', borderRadius: 24, border: '2px solid #C68A1B', padding: 32, position: 'relative' }}>
             <span style={{
               position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
-              background: '#2F6B48', color: '#fff', padding: '4px 16px',
+              background: '#C68A1B', color: '#fff', padding: '4px 16px',
               borderRadius: 100, fontSize: 11, fontWeight: 700, whiteSpace: 'nowrap',
               fontFamily: "'Inter', sans-serif",
             }}>MOST POPULAR</span>
-            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#2F6B48', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Pro</div>
+            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C68A1B', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Pro</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
               <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 36, fontWeight: 900, color: '#faf8f4' }}>{price}</span>
               <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{period}</span>
@@ -175,10 +175,10 @@ export default function ProPage() {
             <div style={{ fontSize: 13, color: '#8a7e72', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>{subtitle}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
               {/* "Everything in Free, plus:" */}
-              <div style={{ fontSize: 14, fontFamily: "'Inter', sans-serif", color: '#2F6B48', fontWeight: 700 }}>Everything in Free, plus:</div>
+              <div style={{ fontSize: 14, fontFamily: "'Inter', sans-serif", color: '#C68A1B', fontWeight: 700 }}>Everything in Free, plus:</div>
 
               {/* Group 1: Peace of mind */}
-              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#2F6B48', fontFamily: "'Inter', sans-serif" }}>Works while you sleep</div>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C68A1B', fontFamily: "'Inter', sans-serif" }}>Works while you sleep</div>
               <div style={{ border: '1px solid rgba(201,168,76,0.3)', borderRadius: 12, padding: '14px 16px', background: 'rgba(201,168,76,0.04)', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {PRO_ALERT_FEATURES.map(f => (
                   <div key={f} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, fontFamily: "'Inter', sans-serif", color: 'rgba(255,255,255,0.8)' }}>
@@ -192,7 +192,7 @@ export default function ProPage() {
               <div style={{ height: 1, background: '#ede8df', margin: '4px 0' }} />
 
               {/* Group 2: Power tools */}
-              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#2F6B48', fontFamily: "'Inter', sans-serif" }}>For the deep divers</div>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C68A1B', fontFamily: "'Inter', sans-serif" }}>For the deep divers</div>
               {PRO_OTHER_FEATURES.map(f => (
                 <div key={f} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, fontFamily: "'Inter', sans-serif", color: 'rgba(255,255,255,0.8)' }}>
                   <span style={{ color: '#639922', fontWeight: 700, flexShrink: 0, marginTop: 1 }}>{'\u2713'}</span>
@@ -209,7 +209,7 @@ export default function ProPage() {
             ) : (
               <button onClick={handleUpgrade} disabled={checkoutLoading} style={{
                 width: '100%', padding: 14, borderRadius: 100, border: 'none',
-                background: '#2F6B48', color: '#fff', fontSize: 15, fontWeight: 700,
+                background: '#C68A1B', color: '#fff', fontSize: 15, fontWeight: 700,
                 cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 opacity: checkoutLoading ? 0.6 : 1,
               }}>{checkoutLoading ? 'Loading...' : 'Get GoodKibble Pro \u2192'}</button>

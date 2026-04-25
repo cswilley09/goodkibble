@@ -37,7 +37,7 @@ export default function RecallTracker() {
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 24px', color: '#8a7e72', fontFamily: "'Inter', sans-serif", fontSize: 16 }}>
-        <div style={{ width: 32, height: 32, border: '3px solid #ede8df', borderTopColor: '#2F6B48', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
+        <div style={{ width: 32, height: 32, border: '3px solid #ede8df', borderTopColor: '#C68A1B', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
         Loading recall data...
       </div>
     );
@@ -180,7 +180,7 @@ export default function RecallTracker() {
                   </span>
                   {recall.source_url && (
                     <a href={recall.source_url} target="_blank" rel="noopener noreferrer" style={{
-                      fontSize: 11, fontWeight: 600, color: '#2F6B48',
+                      fontSize: 11, fontWeight: 600, color: '#C68A1B',
                       textDecoration: 'none', fontFamily: "'Inter', sans-serif",
                     }}>View FDA Source &rarr;</a>
                   )}

@@ -77,7 +77,7 @@ export default function HomepageRecalls() {
         }}>View All Recalls &rarr;</button>
         <div>
           <span onClick={() => router.push('/pro')} style={{
-            fontSize: 12, color: '#2F6B48', fontWeight: 600, cursor: 'pointer',
+            fontSize: 12, color: '#C68A1B', fontWeight: 600, cursor: 'pointer',
             fontFamily: "'Inter', sans-serif",
           }}>Get instant recall alerts with Pro &rarr;</span>
         </div>

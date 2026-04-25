@@ -65,7 +65,7 @@ export default function AddProductPage() {
     return (
       <div style={{ minHeight: '100vh', background: '#faf8f4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ maxWidth: 360, width: '100%', padding: 24, textAlign: 'center' }}>
-          <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#1a1612', marginBottom: 24 }}>Good<span style={{ color: '#2F6B48' }}>Kibble</span> Admin</div>
+          <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#1a1612', marginBottom: 24 }}>Good<span style={{ color: '#C68A1B' }}>Kibble</span> Admin</div>
           <input type="password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && password === ADMIN_PASSWORD) setAuthed(true); }} placeholder="Admin password" style={inputStyle} />
           <button onClick={() => { if (password === ADMIN_PASSWORD) setAuthed(true); else setError('Wrong password'); }} style={{ width: '100%', padding: 12, borderRadius: 100, marginTop: 12, background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Enter</button>
           {error && <p style={{ color: '#b5483a', fontSize: 13, marginTop: 8, fontFamily: "'Inter', sans-serif" }}>{error}</p>}
@@ -218,15 +218,15 @@ export default function AddProductPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
             {!bulkMode && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 11, color: autopilot ? '#2F6B48' : '#b5aa99', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>{autopilot ? 'Auto' : 'Review'}</span>
-                <div onClick={() => setAutopilot(!autopilot)} style={{ width: 38, height: 20, borderRadius: 10, cursor: 'pointer', background: autopilot ? '#2F6B48' : '#ede8df', position: 'relative' }}>
+                <span style={{ fontSize: 11, color: autopilot ? '#C68A1B' : '#b5aa99', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>{autopilot ? 'Auto' : 'Review'}</span>
+                <div onClick={() => setAutopilot(!autopilot)} style={{ width: 38, height: 20, borderRadius: 10, cursor: 'pointer', background: autopilot ? '#C68A1B' : '#ede8df', position: 'relative' }}>
                   <div style={{ width: 16, height: 16, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2, left: autopilot ? 20 : 2, transition: 'left 0.2s', boxShadow: '0 1px 2px rgba(0,0,0,0.15)' }} />
                 </div>
               </div>
             )}
             <button onClick={() => { setBulkMode(!bulkMode); resetSingle(); resetBulk(); }} style={{
               padding: '6px 14px', borderRadius: 100, fontSize: 12, fontWeight: 600,
-              background: bulkMode ? '#2F6B48' : 'transparent', color: bulkMode ? '#fff' : '#8a7e72',
+              background: bulkMode ? '#C68A1B' : 'transparent', color: bulkMode ? '#fff' : '#8a7e72',
               border: bulkMode ? 'none' : '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'Inter', sans-serif",
             }}>{bulkMode ? 'Bulk Mode ON' : 'Bulk Mode'}</button>
           </div>
@@ -257,7 +257,7 @@ export default function AddProductPage() {
                     </div>
                   ) : (
                     <div onDragOver={e => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onDrop={e => { e.preventDefault(); setDragOver(false); handleImageSelect(e.dataTransfer?.files?.[0]); }} onClick={() => !loading && fileRef.current?.click()}
-                      style={{ border: `2px dashed ${dragOver ? '#2F6B48' : '#ede8df'}`, borderRadius: 14, padding: '20px', textAlign: 'center', background: dragOver ? '#faf5e8' : '#fff', cursor: 'pointer', opacity: loading ? 0.5 : 1 }}>
+                      style={{ border: `2px dashed ${dragOver ? '#C68A1B' : '#ede8df'}`, borderRadius: 14, padding: '20px', textAlign: 'center', background: dragOver ? '#faf5e8' : '#fff', cursor: 'pointer', opacity: loading ? 0.5 : 1 }}>
                       <div style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{'\u{1F4F7}'} Drop image or click</div>
                     </div>
                   )}
@@ -266,7 +266,7 @@ export default function AddProductPage() {
                 <button type="submit" disabled={!canSubmit} style={{ width: '100%', padding: 14, borderRadius: 100, border: 'none', background: canSubmit ? '#1a1612' : '#ede8df', color: canSubmit ? '#faf8f4' : '#b5aa99', fontSize: 15, fontWeight: 700, cursor: canSubmit ? 'pointer' : 'default', fontFamily: "'Inter', sans-serif" }}>{loading ? 'Processing...' : 'Scrape & Score'}</button>
               </form>
             )}
-            {loading && <div style={{ padding: '14px 20px', borderRadius: 12, background: '#fff', border: '1px solid #ede8df', marginTop: 16, display: 'flex', alignItems: 'center', gap: 12, fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#5a5248' }}><div style={{ width: 16, height: 16, border: '2px solid #ede8df', borderTopColor: '#2F6B48', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />{STATUS_MSGS[statusIdx]}</div>}
+            {loading && <div style={{ padding: '14px 20px', borderRadius: 12, background: '#fff', border: '1px solid #ede8df', marginTop: 16, display: 'flex', alignItems: 'center', gap: 12, fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#5a5248' }}><div style={{ width: 16, height: 16, border: '2px solid #ede8df', borderTopColor: '#C68A1B', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />{STATUS_MSGS[statusIdx]}</div>}
 
             {/* Review */}
             {isReview && <ReviewCard editData={editData} updateField={updateField} dmb={dmb} serverScore={serverScore} onSave={confirmSingleSave} onDiscard={resetSingle} saving={saving} />}
@@ -328,7 +328,7 @@ export default function AddProductPage() {
                   <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{Math.round((bulkProgress.current / bulkProgress.total) * 100)}%</span>
                 </div>
                 <div style={{ height: 6, borderRadius: 3, background: '#ede8df', marginBottom: 4 }}>
-                  <div style={{ height: '100%', borderRadius: 3, background: '#2F6B48', width: `${(bulkProgress.current / bulkProgress.total) * 100}%`, transition: 'width 0.3s' }} />
+                  <div style={{ height: '100%', borderRadius: 3, background: '#C68A1B', width: `${(bulkProgress.current / bulkProgress.total) * 100}%`, transition: 'width 0.3s' }} />
                 </div>
                 <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{bulkProgress.name}</div>
               </div>
@@ -378,7 +378,7 @@ export default function AddProductPage() {
                     <button onClick={() => { if (reviewIdx < bulkItems.length - 1) setReviewIdx(reviewIdx + 1); else setBulkPhase('summary'); }} style={{ padding: '6px 14px', borderRadius: 100, border: '1.5px solid #ede8df', background: 'transparent', color: '#1a1612', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Next {'\u2192'}</button>
                   </div>
                   <div style={{ height: 4, borderRadius: 2, background: '#ede8df', marginBottom: 16 }}>
-                    <div style={{ height: '100%', borderRadius: 2, background: '#2F6B48', width: `${((reviewIdx + 1) / bulkItems.length) * 100}%`, transition: 'width 0.2s' }} />
+                    <div style={{ height: '100%', borderRadius: 2, background: '#C68A1B', width: `${((reviewIdx + 1) / bulkItems.length) * 100}%`, transition: 'width 0.2s' }} />
                   </div>
 
                   {/* Full editable review card */}
@@ -400,7 +400,7 @@ export default function AddProductPage() {
                       <div key={i} onClick={() => setReviewIdx(i)} style={{
                         width: i === reviewIdx ? 12 : 8, height: i === reviewIdx ? 12 : 8,
                         borderRadius: '50%', cursor: 'pointer', transition: 'all 0.2s',
-                        background: r.status === 'approved' ? '#2d7a4f' : r.status === 'skipped' ? '#b5483a' : i === reviewIdx ? '#2F6B48' : '#ede8df',
+                        background: r.status === 'approved' ? '#2d7a4f' : r.status === 'skipped' ? '#b5483a' : i === reviewIdx ? '#C68A1B' : '#ede8df',
                         border: i === reviewIdx ? '2px solid rgba(201,168,76,0.3)' : 'none',
                       }} />
                     ))}
@@ -409,7 +409,7 @@ export default function AddProductPage() {
                     {approvedCount} approved &middot; {skippedCount} skipped &middot; {bulkItems.length - approvedCount - skippedCount} remaining
                   </div>
                   <div style={{ textAlign: 'center', marginTop: 12 }}>
-                    <button onClick={() => setBulkPhase('summary')} style={{ fontSize: 13, color: '#2F6B48', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>Skip to Summary {'\u2192'}</button>
+                    <button onClick={() => setBulkPhase('summary')} style={{ fontSize: 13, color: '#C68A1B', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>Skip to Summary {'\u2192'}</button>
                   </div>
                 </div>
               );
@@ -430,7 +430,7 @@ export default function AddProductPage() {
                       <strong style={{ color: '#2d7a4f' }}>{saved.length}</strong> saved to database &middot;
                       <strong style={{ color: '#b5483a' }}> {skipped.length}</strong> skipped
                       {saveErrors.length > 0 && <> &middot; <strong style={{ color: '#c47a20' }}>{saveErrors.length}</strong> save errors</>}
-                      {pending.length > 0 && <> &middot; <strong style={{ color: '#2F6B48' }}>{pending.length}</strong> not reviewed</>}
+                      {pending.length > 0 && <> &middot; <strong style={{ color: '#C68A1B' }}>{pending.length}</strong> not reviewed</>}
                     </div>
                   </div>
 

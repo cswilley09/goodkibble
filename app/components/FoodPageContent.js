@@ -220,13 +220,13 @@ function IngredientBottomSheet({ info, onClose, bottomOffset = 0, gated = false 
         </div>
         {gated ? (
           <div style={{ textAlign: 'center', padding: '12px 0' }}>
-            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#2F6B48', marginBottom: 10 }}>Ingredient Intelligence</div>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C68A1B', marginBottom: 10 }}>Ingredient Intelligence</div>
             <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 12, lineHeight: 1.5 }}>
               See what each ingredient means for your dog with GoodKibble Pro
             </div>
             <a href="/pro" style={{
               display: 'inline-block', padding: '8px 20px', borderRadius: 100,
-              background: '#2F6B48', color: '#fff', fontSize: 12, fontWeight: 700,
+              background: '#C68A1B', color: '#fff', fontSize: 12, fontWeight: 700,
               textDecoration: 'none', fontFamily: "'Inter', sans-serif",
             }}>Unlock with Pro {'\u2192'}</a>
           </div>
@@ -836,7 +836,7 @@ export default function FoodPageContent({ productId }) {
         <div onClick={goHome} style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#5FB37E' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
@@ -965,12 +965,12 @@ export default function FoodPageContent({ productId }) {
                   <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" className="buy-amazon-btn" style={{
                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                     padding: '10px 22px', borderRadius: 100, border: 'none',
-                    background: '#2F6B48', color: '#fff', fontSize: 13, fontWeight: 600,
+                    background: '#C68A1B', color: '#fff', fontSize: 13, fontWeight: 600,
                     cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none',
                     transition: 'background 0.2s',
                   }}
                     onMouseEnter={(e) => e.currentTarget.style.background = '#b5952f'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = '#2F6B48'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = '#C68A1B'}
                   >Buy on Amazon &rarr;</a>
                 )}
               </div>
@@ -1068,7 +1068,7 @@ export default function FoodPageContent({ productId }) {
                 const hasTooltip = !!info;
 
                 let bgColor = '#fff';
-                if (isSalt) bgColor = '#5FB37E';
+                if (isSalt) bgColor = '#E5A93D';
                 else if (isFirst) bgColor = '#1a1612';
                 else if (i < 5) bgColor = '#f5f0e8';
 
@@ -1150,7 +1150,7 @@ export default function FoodPageContent({ productId }) {
                 const clickable = hasTooltip || isSalt;
 
                 const pill = (
-                  <span style={{ ...pillStyle, ...(isActive ? { borderColor: '#2F6B48', background: isSalt ? '#5FB37E' : isFirst ? '#1a1612' : '#f7efd8' } : {}) }}
+                  <span style={{ ...pillStyle, ...(isActive ? { borderColor: '#C68A1B', background: isSalt ? '#E5A93D' : isFirst ? '#1a1612' : '#f7efd8' } : {}) }}
                     onMouseEnter={(e) => { if (hasTooltip) e.currentTarget.style.borderColor = '#b5aa99'; }}
                     onMouseLeave={(e) => { if (hasTooltip && !isActive) e.currentTarget.style.borderColor = '#e8e0d4'; }}
                   >
@@ -1223,13 +1223,13 @@ export default function FoodPageContent({ productId }) {
                         <span onClick={() => setActiveIngredient(null)} style={{ marginLeft: 8, fontSize: 16, color: 'rgba(255,255,255,0.4)', cursor: 'pointer', lineHeight: 1, padding: '0 4px' }}>&times;</span>
                       </div>
                       <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#2F6B48', marginBottom: 10 }}>Ingredient Intelligence</div>
+                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C68A1B', marginBottom: 10 }}>Ingredient Intelligence</div>
                         <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 14, lineHeight: 1.5, maxWidth: 300, margin: '0 auto 14px' }}>
                           See what each ingredient means for your dog with GoodKibble Pro
                         </div>
                         <a href="/pro" style={{
                           display: 'inline-block', padding: '10px 24px', borderRadius: 100,
-                          background: '#2F6B48', color: '#fff', fontSize: 13, fontWeight: 700,
+                          background: '#C68A1B', color: '#fff', fontSize: 13, fontWeight: 700,
                           textDecoration: 'none', fontFamily: "'Inter', sans-serif",
                         }}>Unlock with Pro →</a>
                       </div>
@@ -1264,7 +1264,7 @@ export default function FoodPageContent({ productId }) {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#5FB37E' }}>Kibble</span>
+          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
@@ -1314,7 +1314,7 @@ export default function FoodPageContent({ productId }) {
           <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
             padding: '9px 16px', borderRadius: 100, border: 'none',
-            background: '#2F6B48', color: '#fff', fontSize: 12, fontWeight: 600,
+            background: '#C68A1B', color: '#fff', fontSize: 12, fontWeight: 600,
             cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none',
             flexShrink: 0, whiteSpace: 'nowrap',
           }}>Buy &rarr;</a>

@@ -111,7 +111,7 @@ export default function NewsQueuePage() {
               fontSize: 13, fontWeight: 600, cursor: pollLoading ? 'default' : 'pointer',
               fontFamily: "'Inter', sans-serif",
             }}>{pollLoading ? 'Polling...' : 'Poll Now'}</button>
-            <a href="/admin/add-recall" style={{ fontSize: 12, color: '#2F6B48', fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Add Recall &rarr;</a>
+            <a href="/admin/add-recall" style={{ fontSize: 12, color: '#C68A1B', fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Add Recall &rarr;</a>
           </div>
         </div>
 
