@@ -84,6 +84,7 @@ export async function GET(request) {
     const itemBlocks = xml.match(/<item>[\s\S]*?<\/item>/gi) || [];
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const minAllowed = new Date('2025-01-01');
 
     const items = [];
     for (const block of itemBlocks) {
@@ -95,9 +96,10 @@ export async function GET(request) {
       const pubDate = pubDateStr ? new Date(pubDateStr) : null;
 
       if (!title || !guid) continue;
-      if (pubDate && pubDate < sevenDaysAgo) continue;
+      // Reject items without a pubDate, anything older than 7 days, or anything before the hard floor.
+      if (!pubDate || isNaN(pubDate.getTime()) || pubDate < sevenDaysAgo || pubDate < minAllowed) continue;
 
-      items.push({ title, source_url: link, guid, pub_date: pubDate?.toISOString() || null, source_name: sourceName });
+      items.push({ title, source_url: link, guid, pub_date: pubDate.toISOString(), source_name: sourceName });
     }
 
     console.log(`[poll-news] Found ${items.length} recent items from Google News`);
