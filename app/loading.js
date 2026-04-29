@@ -2,7 +2,7 @@ export default function Loading() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4' }}>
       {/* Nav skeleton */}
-      <nav style={{
+      <nav className="nav-bar" style={{
         position: 'sticky', top: 0, zIndex: 50, background: '#faf8f4',
         padding: '14px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',

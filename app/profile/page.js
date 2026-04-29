@@ -387,7 +387,7 @@ export default function ProfilePage() {
   if (!user || noAuth) {
     return (
       <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
-        <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid #ede8df', background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40 }}>
+        <nav className="nav-bar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid #ede8df', background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40 }}>
           <a href="/" style={{ textDecoration: 'none' }}><span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span></a>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
@@ -418,7 +418,7 @@ export default function ProfilePage() {
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
       {/* Nav */}
-      <nav style={{
+      <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 24px', borderBottom: '1px solid #ede8df',
         background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40,

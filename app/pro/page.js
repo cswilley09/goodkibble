@@ -70,7 +70,7 @@ export default function ProPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
-      <nav style={{
+      <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 24px', borderBottom: '1px solid #ede8df',
         background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40,

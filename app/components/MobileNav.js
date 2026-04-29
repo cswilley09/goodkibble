@@ -292,7 +292,9 @@ export default function MobileNav() {
       <style>{`
         @media (max-width: 768px) {
           .gk-mobilenav { display: flex !important; }
-          .site-nav { display: none !important; }
+          /* Hide existing per-page top navs at mobile so we don't double up */
+          .site-nav,
+          .nav-bar { display: none !important; }
         }
         @media (min-width: 769px) {
           .gk-mobilenav,

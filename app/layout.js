@@ -1,6 +1,7 @@
 import './globals.css';
 import { CompareProvider } from './components/CompareContext';
 import { AuthProvider } from './components/AuthContext';
+import MobileNav from './components/MobileNav';
 import { defaultMetadata } from '@/lib/metadata';
 import Script from 'next/script';
 
@@ -19,7 +20,7 @@ export default function RootLayout({ children }) {
             gtag('config', 'G-37RJW3BJTX');
           `}
         </Script>
-        <AuthProvider><CompareProvider>{children}</CompareProvider></AuthProvider>
+        <AuthProvider><CompareProvider><MobileNav />{children}</CompareProvider></AuthProvider>
       </body>
     </html>
   );

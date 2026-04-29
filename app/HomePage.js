@@ -5,7 +5,6 @@ import CompareBubble from './components/CompareBubble';
 import SignUpButton from './components/SignUpButton';
 import RecallsNav from './components/RecallsNav';
 import KibbleAnalyzer from './components/KibbleAnalyzer';
-import MobileNav from './components/MobileNav';
 import { useRouter } from 'next/navigation';
 
 /* ═══════════════════════════════════════
@@ -517,10 +516,7 @@ export default function Home({ marqueeData = [] }) {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4' }}>
 
-      {/* ═══ MOBILE NAV (hidden ≥ 769px via component CSS) ═══ */}
-      <MobileNav />
-
-      {/* ═══ NAV (desktop, hidden ≤ 768px via component CSS) ═══ */}
+      {/* ═══ NAV (desktop only — MobileNav is rendered globally in app/layout.js) ═══ */}
       <nav className="site-nav" style={{
         position: 'sticky', top: 0, zIndex: 50,
         background: '#faf8f4',

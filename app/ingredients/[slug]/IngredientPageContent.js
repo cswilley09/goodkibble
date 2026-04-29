@@ -83,7 +83,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
 
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 24px 80px' }}>
         {/* Breadcrumb */}
-        <nav style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
+        <nav className="nav-bar" style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
           <a href="/" style={{ color: '#b5aa99', textDecoration: 'none' }}>Home</a>
           <span style={{ margin: '0 8px' }}>/</span>
           <a href="/ingredients" style={{ color: '#b5aa99', textDecoration: 'none' }}>Ingredients</a>
