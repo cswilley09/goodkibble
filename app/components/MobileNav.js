@@ -4,12 +4,24 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './AuthContext';
 
+const HAIRLINE = '1px solid rgba(28,24,20,0.10)';
+
+const navItemStyle = {
+  display: 'flex', alignItems: 'center',
+  padding: '18px 24px',
+  fontFamily: "'Instrument Serif', Georgia, serif",
+  fontSize: 22, fontWeight: 400, lineHeight: 1.2, color: '#1C1814',
+  textDecoration: 'none',
+  borderBottom: HAIRLINE,
+};
+
 const accountItemStyle = {
   display: 'flex', alignItems: 'center',
-  width: '100%', padding: '16px 24px',
+  width: '100%', padding: '18px 24px',
   fontFamily: "'Inter', sans-serif",
-  fontSize: 18, fontWeight: 400, color: '#1C1814',
+  fontSize: 18, fontWeight: 400, lineHeight: 1.2, color: '#1C1814',
   textDecoration: 'none',
+  borderBottom: HAIRLINE,
 };
 
 /**
@@ -215,36 +227,33 @@ export default function MobileNav() {
           </button>
         </div>
 
-        {/* Primary nav — display type, generous padding, no dividers */}
+        {/* Primary nav — Instrument Serif 22px, hairline dividers between items */}
         <nav style={{ marginTop: 32 }}>
           {[
             { label: 'Discover Foods', href: '/discover' },
             { label: 'Recalls',        href: '/recalls'  },
             { label: 'Compare',        href: '/compare'  },
-          ].map((it) => (
+          ].map((it, i, arr) => (
             <Link
               key={it.href}
               href={it.href}
               onClick={() => setOpen(false)}
               style={{
-                display: 'flex', alignItems: 'center',
-                padding: '20px 24px',
-                fontFamily: "'Instrument Serif', Georgia, serif",
-                fontSize: 24, fontWeight: 400, color: '#1C1814',
-                textDecoration: 'none',
+                ...navItemStyle,
+                borderBottom: i < arr.length - 1 ? HAIRLINE : 'none',
               }}
             >{it.label}</Link>
           ))}
         </nav>
 
-        {/* Account section */}
+        {/* Account section — 32px above label, 8px below it, then items */}
         <div style={{ marginTop: 32 }}>
           <div style={{
             padding: '0 24px',
             fontFamily: "'Inter', sans-serif",
             fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase',
             color: 'rgba(28,24,20,0.60)',
-            marginBottom: 12,
+            marginBottom: 8,
           }}>Account</div>
 
           {isLoggedIn ? (
@@ -252,20 +261,23 @@ export default function MobileNav() {
               {/* TODO: route — /saved and /settings don't exist yet, falling back to /profile */}
               <Link href="/profile" onClick={() => setOpen(false)} style={accountItemStyle}>Saved foods</Link>
               <Link href="/profile" onClick={() => setOpen(false)} style={accountItemStyle}>Settings</Link>
-              <button type="button" onClick={handleSignOut} style={{ ...accountItemStyle, background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer' }}>
-                Sign out
-              </button>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                style={{ ...accountItemStyle, borderBottom: 'none', background: 'transparent', textAlign: 'left', cursor: 'pointer' }}
+              >Sign out</button>
             </>
           ) : (
-            <Link href="/login" onClick={() => setOpen(false)} style={accountItemStyle}>Sign in</Link>
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              style={{ ...accountItemStyle, borderBottom: 'none' }}
+            >Sign in</Link>
           )}
         </div>
 
-        {/* Spacer pushes the Pro CTA to the bottom */}
-        <div style={{ flex: 1 }} />
-
-        {/* Get Pro CTA (or Manage subscription link if already Pro) */}
-        <div style={{ padding: '0 24px 32px' }}>
+        {/* Get Pro CTA pinned to bottom via margin-top: auto (single anchor) */}
+        <div style={{ marginTop: 'auto', padding: '0 24px 32px' }}>
           {isPro ? (
             <div style={{ textAlign: 'center' }}>
               <Link
@@ -296,7 +308,7 @@ export default function MobileNav() {
                 onClick={() => setOpen(false)}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                  width: '100%', minHeight: 48,
+                  width: '100%', height: 56,
                   background: '#C8941F', color: '#1C1814',
                   borderRadius: 9999, textDecoration: 'none',
                   fontFamily: "'Inter', sans-serif",
