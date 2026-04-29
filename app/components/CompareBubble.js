@@ -35,7 +35,7 @@ export default function CompareBubble() {
           background: active ? '#1a1612' : 'transparent',
           color: active ? '#faf8f5' : '#b5aa99',
           fontSize: 13, fontWeight: 600, cursor: active ? 'pointer' : 'default',
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "'Inter', sans-serif",
           transition: 'all 0.25s',
           display: 'inline-flex', alignItems: 'center', gap: 6,
           opacity: active ? 1 : 0.5,

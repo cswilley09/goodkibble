@@ -70,22 +70,22 @@ function ScoreRing({ score, compact }) {
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`} />
         <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: compact ? 12 : 26, fontWeight: 800, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
+          style={{ fontSize: compact ? 12 : 26, fontWeight: 800, fontFamily: "'Inter', sans-serif", fill: '#1a1612' }}>
           {score}
         </text>
       </svg>
       {!compact && (
         <>
-          <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", color, marginTop: 4 }}>
+          <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", color, marginTop: 4 }}>
             {getScoreTier(score)}
           </span>
-          <span style={{ fontSize: 10, fontFamily: "'DM Sans', sans-serif", color: '#b5aa99', marginTop: 1 }}>
+          <span style={{ fontSize: 10, fontFamily: "'Inter', sans-serif", color: '#b5aa99', marginTop: 1 }}>
             GoodKibble Score
           </span>
         </>
       )}
       {compact && (
-        <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+        <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: '#8a7e72', marginTop: 2 }}>
           {getScoreTier(score)}
         </span>
       )}
@@ -110,7 +110,7 @@ function NutrientExplainer() {
       <button onClick={() => setOpen(!open)} style={{
         width: '100%', padding: '18px 28px', display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', border: 'none', background: 'transparent', cursor: 'pointer',
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "'Inter', sans-serif",
       }}>
         <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', letterSpacing: 1 }}>
           📖 What do these numbers mean?
@@ -203,7 +203,7 @@ function AddCardSearch({ onSelect, compact }) {
 
   return (
     <div style={{
-      borderLeft: '2px solid #f0c930', padding: compact ? 12 : 20,
+      borderLeft: '2px solid #E5A93D', padding: compact ? 12 : 20,
       animation: 'scaleIn 0.2s ease', background: '#fff',
       minWidth: compact ? 180 : undefined,
     }}>
@@ -220,9 +220,9 @@ function AddCardSearch({ onSelect, compact }) {
         style={{
           width: '100%', padding: '9px 12px', borderRadius: 10,
           border: '1.5px solid #ede8df', fontSize: 13,
-          fontFamily: "'DM Sans', sans-serif", outline: 'none', background: '#faf8f5',
+          fontFamily: "'Inter', sans-serif", outline: 'none', background: '#faf8f5',
         }}
-        onFocus={(e) => e.target.style.borderColor = '#f0c930'}
+        onFocus={(e) => e.target.style.borderColor = '#E5A93D'}
         onBlur={(e) => e.target.style.borderColor = '#ede8df'}
       />
       <div style={{ marginTop: 6, maxHeight: 200, overflowY: 'auto' }}>
@@ -359,9 +359,9 @@ export default function ComparePage() {
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
+          fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
@@ -377,7 +377,7 @@ export default function ComparePage() {
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
-          cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+          cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 500,
           marginBottom: isMobile ? 20 : 32, padding: 0,
         }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -387,8 +387,8 @@ export default function ComparePage() {
         {/* header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isMobile ? 20 : 36, flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{
-              fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 24 : 'clamp(28px, 3vw, 40px)',
+            <h1 className="page-title" style={{
+              fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 24 : 'clamp(28px, 3vw, 40px)',
               fontWeight: 800, color: '#1a1612', letterSpacing: -1,
             }}>Compare Foods</h1>
             <p style={{ fontSize: isMobile ? 13 : 15, color: '#8a7e72', marginTop: 4 }}>
@@ -415,15 +415,15 @@ export default function ComparePage() {
                 setTimeout(() => setSaved(false), 2500);
               }} style={{
                 padding: '8px 16px', borderRadius: 100,
-                background: saved ? '#2d7a4f' : '#C9A84C', color: '#fff',
+                background: saved ? '#2d7a4f' : '#C68A1B', color: '#fff',
                 fontSize: 13, fontWeight: 600, border: 'none',
-                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 transition: 'background 0.2s',
               }}>{saved ? '\u2713 Saved!' : 'Save Comparison'}</button>
               <button onClick={clearAll} style={{
                 padding: '8px 16px', borderRadius: 100, border: '1px solid #e8e0d4',
                 background: '#fff', color: '#8a7e72', fontSize: 13, fontWeight: 500,
-                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                cursor: 'pointer', fontFamily: "'Inter', sans-serif",
               }}>Clear All</button>
             </div>
           )}
@@ -431,7 +431,7 @@ export default function ComparePage() {
             <button onClick={clearAll} style={{
               padding: '8px 16px', borderRadius: 100, border: '1px solid #e8e0d4',
               background: '#fff', color: '#8a7e72', fontSize: 13, fontWeight: 500,
-              cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              cursor: 'pointer', fontFamily: "'Inter', sans-serif",
             }}>Clear All</button>
           )}
         </div>
@@ -458,7 +458,7 @@ export default function ComparePage() {
             <div style={{
               textAlign: 'center', fontSize: 11, color: '#b5aa99', fontWeight: 500,
               marginBottom: 8, letterSpacing: 0.5,
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "'Inter', sans-serif",
             }}>
               ← Swipe to compare →
             </div>
@@ -514,7 +514,7 @@ export default function ComparePage() {
                     <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
                       position: 'absolute', top: 4, right: 4, padding: '2px 6px', borderRadius: 100,
                       border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
-                      fontSize: 10, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", zIndex: 2,
+                      fontSize: 10, cursor: 'pointer', fontFamily: "'Inter', sans-serif", zIndex: 2,
                     }}>&times;</button>
                   )}
 
@@ -581,7 +581,7 @@ export default function ComparePage() {
                       }}>
                         <div style={{
                           fontSize: isMobile ? 16 : 22, fontWeight: 700, color: '#1a1612',
-                          fontFamily: "'DM Sans', sans-serif", lineHeight: 1,
+                          fontFamily: "'Inter', sans-serif", lineHeight: 1,
                           minWidth: isMobile ? undefined : 44, flexShrink: 0,
                         }}>
                           {val}<span style={{ fontSize: 12, fontWeight: 500, color: '#8a7e72' }}>%</span>
@@ -617,7 +617,7 @@ export default function ComparePage() {
                   background: colBg(idx),
                   display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
                 }}>
-                  <span style={{ fontSize: isMobile ? 12 : 15, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                  <span style={{ fontSize: isMobile ? 12 : 15, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>
                     {f.primary_protein || '\u2014'}
                   </span>
                 </div>
@@ -631,7 +631,7 @@ export default function ComparePage() {
                 background: '#faf8f4', borderTop: '2px solid #ede8df', borderBottom: '1px solid #ede8df',
                 padding: isMobile ? '10px 10px' : '12px 24px',
               }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#C9A84C', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif" }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#C68A1B', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: "'Inter', sans-serif" }}>
                   Top 5 Ingredients
                 </span>
               </div>
@@ -665,7 +665,7 @@ export default function ComparePage() {
                           )}
                           <span style={{
                             fontSize: isMobile ? 10 : 13, fontWeight: rowIdx === 0 ? 700 : 500,
-                            color: '#1a1612', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.4, textAlign: isMobile ? 'center' : 'left',
+                            color: '#1a1612', fontFamily: "'Inter', sans-serif", lineHeight: 1.4, textAlign: isMobile ? 'center' : 'left',
                           }}>{ing.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</span>
                         </>) : (
                           <span style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>&mdash;</span>
@@ -687,12 +687,12 @@ export default function ComparePage() {
             <div className="compare-pro-nudge" style={{
               marginTop: 20, background: '#f5f0e8', borderRadius: 12,
               padding: '14px 20px', display: 'flex', alignItems: 'center',
-              justifyContent: 'space-between', gap: 12, fontFamily: "'DM Sans', sans-serif",
+              justifyContent: 'space-between', gap: 12, fontFamily: "'Inter', sans-serif",
               position: 'relative',
             }}>
               <div style={{ fontSize: 13, color: '#3d352b', lineHeight: 1.5, flex: 1 }}>
                 Want to save this comparison and get notified if scores change?{' '}
-                <span onClick={() => router.push('/pro')} style={{ color: '#C9A84C', fontWeight: 700, cursor: 'pointer' }}>Upgrade to Pro &rarr;</span>
+                <span onClick={() => router.push('/pro')} style={{ color: '#C68A1B', fontWeight: 700, cursor: 'pointer' }}>Upgrade to Pro &rarr;</span>
               </div>
               <button onClick={() => setProBannerDismissed(true)} style={{
                 background: 'none', border: 'none', color: '#8a7e72', fontSize: 18,
@@ -709,8 +709,8 @@ export default function ComparePage() {
         borderTop: '1px solid #ede8df', padding: isMobile ? '24px 16px' : '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div className="footer-logo" style={{ fontFamily: "'Playfair Display', serif", fontSize: isMobile ? 24 : 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#f0c930' }}>Kibble</span>
+        <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 24 : 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

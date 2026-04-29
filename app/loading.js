@@ -2,17 +2,17 @@ export default function Loading() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4' }}>
       {/* Nav skeleton */}
-      <nav style={{
+      <nav className="nav-bar" style={{
         position: 'sticky', top: 0, zIndex: 50, background: '#faf8f4',
         padding: '14px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         borderBottom: '1px solid transparent',
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>
-          Good<span style={{ color: '#C9A84C' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>
+          Good<span style={{ color: '#C68A1B' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', fontFamily: "'DM Sans', sans-serif" }}>Discover Foods</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', fontFamily: "'Inter', sans-serif" }}>Discover Foods</span>
         </div>
       </nav>
 

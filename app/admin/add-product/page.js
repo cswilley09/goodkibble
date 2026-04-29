@@ -19,8 +19,8 @@ function scoreColor(s) { return s >= 80 ? '#2d7a4f' : s >= 60 ? '#c47a20' : '#b5
 function scoreBg(s) { return s >= 80 ? '#e6f4e0' : s >= 60 ? '#fff0dc' : '#fce4e4'; }
 function scoreLabel(s) { return s >= 90 ? 'Excellent' : s >= 80 ? 'Great' : s >= 70 ? 'Good' : s >= 60 ? 'Fair' : 'Poor'; }
 
-const inputStyle = { width: '100%', padding: '8px 12px', borderRadius: 8, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'DM Sans', sans-serif", color: '#1a1612', boxSizing: 'border-box' };
-const labelStyle = { fontSize: 11, fontWeight: 600, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block', letterSpacing: 0.5, textTransform: 'uppercase' };
+const inputStyle = { width: '100%', padding: '8px 12px', borderRadius: 8, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'Inter', sans-serif", color: '#1a1612', boxSizing: 'border-box' };
+const labelStyle = { fontSize: 11, fontWeight: 600, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block', letterSpacing: 0.5, textTransform: 'uppercase' };
 
 export default function AddProductPage() {
   const [authed, setAuthed] = useState(false);
@@ -65,10 +65,10 @@ export default function AddProductPage() {
     return (
       <div style={{ minHeight: '100vh', background: '#faf8f4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ maxWidth: 360, width: '100%', padding: 24, textAlign: 'center' }}>
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 800, color: '#1a1612', marginBottom: 24 }}>Good<span style={{ color: '#C9A84C' }}>Kibble</span> Admin</div>
+          <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#1a1612', marginBottom: 24 }}>Good<span style={{ color: '#C68A1B' }}>Kibble</span> Admin</div>
           <input type="password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && password === ADMIN_PASSWORD) setAuthed(true); }} placeholder="Admin password" style={inputStyle} />
-          <button onClick={() => { if (password === ADMIN_PASSWORD) setAuthed(true); else setError('Wrong password'); }} style={{ width: '100%', padding: 12, borderRadius: 100, marginTop: 12, background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Enter</button>
-          {error && <p style={{ color: '#b5483a', fontSize: 13, marginTop: 8, fontFamily: "'DM Sans', sans-serif" }}>{error}</p>}
+          <button onClick={() => { if (password === ADMIN_PASSWORD) setAuthed(true); else setError('Wrong password'); }} style={{ width: '100%', padding: 12, borderRadius: 100, marginTop: 12, background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Enter</button>
+          {error && <p style={{ color: '#b5483a', fontSize: 13, marginTop: 8, fontFamily: "'Inter', sans-serif" }}>{error}</p>}
         </div>
       </div>
     );
@@ -212,29 +212,29 @@ export default function AddProductPage() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 4 }}>Add Product</div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72', margin: 0 }}>{bulkMode ? 'Scrape an entire brand catalog at once' : 'Paste a URL, upload a screenshot, or both.'}</p>
+            <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 4 }}>Add Product</div>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', margin: 0 }}>{bulkMode ? 'Scrape an entire brand catalog at once' : 'Paste a URL, upload a screenshot, or both.'}</p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
             {!bulkMode && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 11, color: autopilot ? '#C9A84C' : '#b5aa99', fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>{autopilot ? 'Auto' : 'Review'}</span>
-                <div onClick={() => setAutopilot(!autopilot)} style={{ width: 38, height: 20, borderRadius: 10, cursor: 'pointer', background: autopilot ? '#C9A84C' : '#ede8df', position: 'relative' }}>
+                <span style={{ fontSize: 11, color: autopilot ? '#C68A1B' : '#b5aa99', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>{autopilot ? 'Auto' : 'Review'}</span>
+                <div onClick={() => setAutopilot(!autopilot)} style={{ width: 38, height: 20, borderRadius: 10, cursor: 'pointer', background: autopilot ? '#C68A1B' : '#ede8df', position: 'relative' }}>
                   <div style={{ width: 16, height: 16, borderRadius: '50%', background: '#fff', position: 'absolute', top: 2, left: autopilot ? 20 : 2, transition: 'left 0.2s', boxShadow: '0 1px 2px rgba(0,0,0,0.15)' }} />
                 </div>
               </div>
             )}
             <button onClick={() => { setBulkMode(!bulkMode); resetSingle(); resetBulk(); }} style={{
               padding: '6px 14px', borderRadius: 100, fontSize: 12, fontWeight: 600,
-              background: bulkMode ? '#C9A84C' : 'transparent', color: bulkMode ? '#fff' : '#8a7e72',
-              border: bulkMode ? 'none' : '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+              background: bulkMode ? '#C68A1B' : 'transparent', color: bulkMode ? '#fff' : '#8a7e72',
+              border: bulkMode ? 'none' : '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'Inter', sans-serif",
             }}>{bulkMode ? 'Bulk Mode ON' : 'Bulk Mode'}</button>
           </div>
         </div>
 
         {/* ═══ ERROR ═══ */}
         {error && (
-          <div style={{ padding: '12px 16px', borderRadius: 12, background: '#fce4e4', border: '1px solid #e8c4c4', marginBottom: 16, fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#b5483a' }}>
+          <div style={{ padding: '12px 16px', borderRadius: 12, background: '#fce4e4', border: '1px solid #e8c4c4', marginBottom: 16, fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#b5483a' }}>
             {error}
             <button onClick={() => { resetSingle(); resetBulk(); }} style={{ marginLeft: 12, padding: '4px 12px', borderRadius: 100, border: '1px solid #e8c4c4', background: 'transparent', color: '#b5483a', fontSize: 11, cursor: 'pointer' }}>Reset</button>
           </div>
@@ -257,24 +257,24 @@ export default function AddProductPage() {
                     </div>
                   ) : (
                     <div onDragOver={e => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onDrop={e => { e.preventDefault(); setDragOver(false); handleImageSelect(e.dataTransfer?.files?.[0]); }} onClick={() => !loading && fileRef.current?.click()}
-                      style={{ border: `2px dashed ${dragOver ? '#C9A84C' : '#ede8df'}`, borderRadius: 14, padding: '20px', textAlign: 'center', background: dragOver ? '#faf5e8' : '#fff', cursor: 'pointer', opacity: loading ? 0.5 : 1 }}>
-                      <div style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{'\u{1F4F7}'} Drop image or click</div>
+                      style={{ border: `2px dashed ${dragOver ? '#C68A1B' : '#ede8df'}`, borderRadius: 14, padding: '20px', textAlign: 'center', background: dragOver ? '#faf5e8' : '#fff', cursor: 'pointer', opacity: loading ? 0.5 : 1 }}>
+                      <div style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{'\u{1F4F7}'} Drop image or click</div>
                     </div>
                   )}
                   <input ref={fileRef} type="file" accept="image/*" hidden onChange={e => handleImageSelect(e.target.files?.[0])} />
                 </div>
-                <button type="submit" disabled={!canSubmit} style={{ width: '100%', padding: 14, borderRadius: 100, border: 'none', background: canSubmit ? '#1a1612' : '#ede8df', color: canSubmit ? '#faf8f4' : '#b5aa99', fontSize: 15, fontWeight: 700, cursor: canSubmit ? 'pointer' : 'default', fontFamily: "'DM Sans', sans-serif" }}>{loading ? 'Processing...' : 'Scrape & Score'}</button>
+                <button type="submit" disabled={!canSubmit} style={{ width: '100%', padding: 14, borderRadius: 100, border: 'none', background: canSubmit ? '#1a1612' : '#ede8df', color: canSubmit ? '#faf8f4' : '#b5aa99', fontSize: 15, fontWeight: 700, cursor: canSubmit ? 'pointer' : 'default', fontFamily: "'Inter', sans-serif" }}>{loading ? 'Processing...' : 'Scrape & Score'}</button>
               </form>
             )}
-            {loading && <div style={{ padding: '14px 20px', borderRadius: 12, background: '#fff', border: '1px solid #ede8df', marginTop: 16, display: 'flex', alignItems: 'center', gap: 12, fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#5a5248' }}><div style={{ width: 16, height: 16, border: '2px solid #ede8df', borderTopColor: '#C9A84C', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />{STATUS_MSGS[statusIdx]}</div>}
+            {loading && <div style={{ padding: '14px 20px', borderRadius: 12, background: '#fff', border: '1px solid #ede8df', marginTop: 16, display: 'flex', alignItems: 'center', gap: 12, fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#5a5248' }}><div style={{ width: 16, height: 16, border: '2px solid #ede8df', borderTopColor: '#C68A1B', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />{STATUS_MSGS[statusIdx]}</div>}
 
             {/* Review */}
             {isReview && <ReviewCard editData={editData} updateField={updateField} dmb={dmb} serverScore={serverScore} onSave={confirmSingleSave} onDiscard={resetSingle} saving={saving} />}
             {savedResult && (
               <div style={{ marginTop: 16 }}>
-                <div style={{ padding: '12px 16px', borderRadius: 12, background: '#e6f4e0', border: '1px solid #c4e0ba', fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#2d7a4f', fontWeight: 600, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ padding: '12px 16px', borderRadius: 12, background: '#e6f4e0', border: '1px solid #c4e0ba', fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#2d7a4f', fontWeight: 600, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span>{'\u2713'} Product added!</span>
-                  <button onClick={resetSingle} style={{ padding: '5px 14px', borderRadius: 100, border: '1px solid #c4e0ba', background: 'transparent', color: '#2d7a4f', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Add Another</button>
+                  <button onClick={resetSingle} style={{ padding: '5px 14px', borderRadius: 100, border: '1px solid #c4e0ba', background: 'transparent', color: '#2d7a4f', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Add Another</button>
                 </div>
               </div>
             )}
@@ -292,9 +292,9 @@ export default function AddProductPage() {
                 <label style={labelStyle}>Brand catalog page URL</label>
                 <div style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
                   <input type="url" value={catalogUrl} onChange={e => setCatalogUrl(e.target.value)} disabled={discovering} placeholder="https://www.brandname.com/products" style={{ ...inputStyle, flex: 1, opacity: discovering ? 0.5 : 1 }} />
-                  <button type="submit" disabled={discovering || !catalogUrl.trim()} style={{ padding: '10px 24px', borderRadius: 100, border: 'none', background: !discovering && catalogUrl.trim() ? '#1a1612' : '#ede8df', color: !discovering && catalogUrl.trim() ? '#faf8f4' : '#b5aa99', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap' }}>{discovering ? 'Scanning...' : 'Discover Products'}</button>
+                  <button type="submit" disabled={discovering || !catalogUrl.trim()} style={{ padding: '10px 24px', borderRadius: 100, border: 'none', background: !discovering && catalogUrl.trim() ? '#1a1612' : '#ede8df', color: !discovering && catalogUrl.trim() ? '#faf8f4' : '#b5aa99', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap' }}>{discovering ? 'Scanning...' : 'Discover Products'}</button>
                 </div>
-                {discovering && <div style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>Scanning catalog page for products...</div>}
+                {discovering && <div style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>Scanning catalog page for products...</div>}
               </form>
             )}
 
@@ -302,21 +302,21 @@ export default function AddProductPage() {
             {bulkPhase === 'discover' && discoveredProducts.length > 0 && (
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600, color: '#1a1612' }}>Found {discoveredProducts.length} products{discoveredBrand ? ` from ${discoveredBrand}` : ''}</div>
-                  <button onClick={resetBulk} style={{ fontSize: 12, color: '#8a7e72', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: "'DM Sans', sans-serif" }}>Start Over</button>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, fontWeight: 600, color: '#1a1612' }}>Found {discoveredProducts.length} products{discoveredBrand ? ` from ${discoveredBrand}` : ''}</div>
+                  <button onClick={resetBulk} style={{ fontSize: 12, color: '#8a7e72', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: "'Inter', sans-serif" }}>Start Over</button>
                 </div>
                 <div style={{ background: '#fff', borderRadius: 14, border: '1px solid #ede8df', overflow: 'hidden', marginBottom: 16 }}>
                   {discoveredProducts.map((p, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', borderBottom: i < discoveredProducts.length - 1 ? '1px solid #f5f2ec' : 'none' }}>
                       <input type="checkbox" checked={bulkSelected.has(i)} onChange={() => { const s = new Set(bulkSelected); if (s.has(i)) s.delete(i); else s.add(i); setBulkSelected(s); }} style={{ accentColor: '#1a1612', width: 16, height: 16 }} />
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
-                        <div style={{ fontSize: 11, color: '#b5aa99', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: "'DM Sans', sans-serif" }}>{p.url}</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
+                        <div style={{ fontSize: 11, color: '#b5aa99', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: "'Inter', sans-serif" }}>{p.url}</div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <button onClick={scrapeSelected} disabled={bulkSelected.size === 0} style={{ width: '100%', padding: 14, borderRadius: 100, border: 'none', background: bulkSelected.size > 0 ? '#1a1612' : '#ede8df', color: bulkSelected.size > 0 ? '#faf8f4' : '#b5aa99', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Scrape Selected ({bulkSelected.size} products)</button>
+                <button onClick={scrapeSelected} disabled={bulkSelected.size === 0} style={{ width: '100%', padding: 14, borderRadius: 100, border: 'none', background: bulkSelected.size > 0 ? '#1a1612' : '#ede8df', color: bulkSelected.size > 0 ? '#faf8f4' : '#b5aa99', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Scrape Selected ({bulkSelected.size} products)</button>
               </div>
             )}
 
@@ -324,13 +324,13 @@ export default function AddProductPage() {
             {bulkPhase === 'scraping' && (
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>Scraping product {bulkProgress.current} of {bulkProgress.total}...</span>
-                  <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{Math.round((bulkProgress.current / bulkProgress.total) * 100)}%</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>Scraping product {bulkProgress.current} of {bulkProgress.total}...</span>
+                  <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{Math.round((bulkProgress.current / bulkProgress.total) * 100)}%</span>
                 </div>
                 <div style={{ height: 6, borderRadius: 3, background: '#ede8df', marginBottom: 4 }}>
-                  <div style={{ height: '100%', borderRadius: 3, background: '#C9A84C', width: `${(bulkProgress.current / bulkProgress.total) * 100}%`, transition: 'width 0.3s' }} />
+                  <div style={{ height: '100%', borderRadius: 3, background: '#C68A1B', width: `${(bulkProgress.current / bulkProgress.total) * 100}%`, transition: 'width 0.3s' }} />
                 </div>
-                <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{bulkProgress.name}</div>
+                <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{bulkProgress.name}</div>
               </div>
             )}
 
@@ -341,7 +341,7 @@ export default function AddProductPage() {
                 // Check if there are any pending items left
                 const hasPending = bulkItems.some(r => r.product && r.status === 'pending');
                 return (
-                  <div style={{ textAlign: 'center', padding: 40, fontFamily: "'DM Sans', sans-serif" }}>
+                  <div style={{ textAlign: 'center', padding: 40, fontFamily: "'Inter', sans-serif" }}>
                     <div style={{ fontSize: 14, color: '#8a7e72', marginBottom: 16 }}>
                       {hasPending ? 'Finding next product...' : 'All products reviewed!'}
                     </div>
@@ -356,7 +356,7 @@ export default function AddProductPage() {
                     }} style={{
                       padding: '10px 24px', borderRadius: 100, border: 'none',
                       background: '#1a1612', color: '#faf8f4', fontSize: 14, fontWeight: 700,
-                      cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                     }}>{hasPending ? 'Continue Review' : 'View Summary'}</button>
                   </div>
                 );
@@ -373,12 +373,12 @@ export default function AddProductPage() {
                 <div>
                   {/* Header bar */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                    <button onClick={() => { if (reviewIdx > 0) setReviewIdx(reviewIdx - 1); }} disabled={reviewIdx === 0} style={{ padding: '6px 14px', borderRadius: 100, border: '1.5px solid #ede8df', background: 'transparent', color: reviewIdx > 0 ? '#1a1612' : '#b5aa99', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>{'\u2190'} Prev</button>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>Product {reviewIdx + 1} of {bulkItems.length}</span>
-                    <button onClick={() => { if (reviewIdx < bulkItems.length - 1) setReviewIdx(reviewIdx + 1); else setBulkPhase('summary'); }} style={{ padding: '6px 14px', borderRadius: 100, border: '1.5px solid #ede8df', background: 'transparent', color: '#1a1612', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Next {'\u2192'}</button>
+                    <button onClick={() => { if (reviewIdx > 0) setReviewIdx(reviewIdx - 1); }} disabled={reviewIdx === 0} style={{ padding: '6px 14px', borderRadius: 100, border: '1.5px solid #ede8df', background: 'transparent', color: reviewIdx > 0 ? '#1a1612' : '#b5aa99', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>{'\u2190'} Prev</button>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>Product {reviewIdx + 1} of {bulkItems.length}</span>
+                    <button onClick={() => { if (reviewIdx < bulkItems.length - 1) setReviewIdx(reviewIdx + 1); else setBulkPhase('summary'); }} style={{ padding: '6px 14px', borderRadius: 100, border: '1.5px solid #ede8df', background: 'transparent', color: '#1a1612', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Next {'\u2192'}</button>
                   </div>
                   <div style={{ height: 4, borderRadius: 2, background: '#ede8df', marginBottom: 16 }}>
-                    <div style={{ height: '100%', borderRadius: 2, background: '#C9A84C', width: `${((reviewIdx + 1) / bulkItems.length) * 100}%`, transition: 'width 0.2s' }} />
+                    <div style={{ height: '100%', borderRadius: 2, background: '#C68A1B', width: `${((reviewIdx + 1) / bulkItems.length) * 100}%`, transition: 'width 0.2s' }} />
                   </div>
 
                   {/* Full editable review card */}
@@ -400,16 +400,16 @@ export default function AddProductPage() {
                       <div key={i} onClick={() => setReviewIdx(i)} style={{
                         width: i === reviewIdx ? 12 : 8, height: i === reviewIdx ? 12 : 8,
                         borderRadius: '50%', cursor: 'pointer', transition: 'all 0.2s',
-                        background: r.status === 'approved' ? '#2d7a4f' : r.status === 'skipped' ? '#b5483a' : i === reviewIdx ? '#C9A84C' : '#ede8df',
+                        background: r.status === 'approved' ? '#2d7a4f' : r.status === 'skipped' ? '#b5483a' : i === reviewIdx ? '#C68A1B' : '#ede8df',
                         border: i === reviewIdx ? '2px solid rgba(201,168,76,0.3)' : 'none',
                       }} />
                     ))}
                   </div>
-                  <div style={{ textAlign: 'center', marginTop: 8, fontSize: 11, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
+                  <div style={{ textAlign: 'center', marginTop: 8, fontSize: 11, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
                     {approvedCount} approved &middot; {skippedCount} skipped &middot; {bulkItems.length - approvedCount - skippedCount} remaining
                   </div>
                   <div style={{ textAlign: 'center', marginTop: 12 }}>
-                    <button onClick={() => setBulkPhase('summary')} style={{ fontSize: 13, color: '#C9A84C', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>Skip to Summary {'\u2192'}</button>
+                    <button onClick={() => setBulkPhase('summary')} style={{ fontSize: 13, color: '#C68A1B', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>Skip to Summary {'\u2192'}</button>
                   </div>
                 </div>
               );
@@ -425,12 +425,12 @@ export default function AddProductPage() {
                 <div>
                   <div style={{ textAlign: 'center', marginBottom: 24 }}>
                     <div style={{ fontSize: 36, marginBottom: 12 }}>{'\u{1F389}'}</div>
-                    <div style={{ fontSize: 24, fontWeight: 800, color: '#1a1612', fontFamily: "'Playfair Display', serif", marginBottom: 6 }}>Review Complete</div>
-                    <div style={{ fontSize: 15, color: '#3d352b', fontFamily: "'DM Sans', sans-serif" }}>
+                    <div style={{ fontSize: 24, fontWeight: 800, color: '#1a1612', fontFamily: "'Instrument Serif', serif", marginBottom: 6 }}>Review Complete</div>
+                    <div style={{ fontSize: 15, color: '#3d352b', fontFamily: "'Inter', sans-serif" }}>
                       <strong style={{ color: '#2d7a4f' }}>{saved.length}</strong> saved to database &middot;
                       <strong style={{ color: '#b5483a' }}> {skipped.length}</strong> skipped
                       {saveErrors.length > 0 && <> &middot; <strong style={{ color: '#c47a20' }}>{saveErrors.length}</strong> save errors</>}
-                      {pending.length > 0 && <> &middot; <strong style={{ color: '#C9A84C' }}>{pending.length}</strong> not reviewed</>}
+                      {pending.length > 0 && <> &middot; <strong style={{ color: '#C68A1B' }}>{pending.length}</strong> not reviewed</>}
                     </div>
                   </div>
 
@@ -451,14 +451,14 @@ export default function AddProductPage() {
                             {isSaved ? '\u2713' : isSkipped ? '\u2717' : hasSaveError ? '\u26A0' : '\u25CB'}
                           </span>
                           {p && (
-                            <div style={{ width: 28, height: 28, borderRadius: 6, background: scoreBg(p.quality_score), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: scoreColor(p.quality_score), fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{p.quality_score}</div>
+                            <div style={{ width: 28, height: 28, borderRadius: 6, background: scoreBg(p.quality_score), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, color: scoreColor(p.quality_score), fontFamily: "'Inter', sans-serif", flexShrink: 0 }}>{p.quality_score}</div>
                           )}
-                          <div style={{ flex: 1, minWidth: 0, fontFamily: "'DM Sans', sans-serif" }}>
+                          <div style={{ flex: 1, minWidth: 0, fontFamily: "'Inter', sans-serif" }}>
                             <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1612' }}>{p?.brand || r.name || 'Error'}</span>
                             <span style={{ fontSize: 13, color: '#5a5248' }}> — {p?.name || r.error || ''}</span>
                             {hasSaveError && <div style={{ fontSize: 11, color: '#c47a20', marginTop: 2 }}>{r.saveError}</div>}
                           </div>
-                          <span style={{ fontSize: 10, color: '#8a7e72', flexShrink: 0, fontFamily: "'DM Sans', sans-serif" }}>
+                          <span style={{ fontSize: 10, color: '#8a7e72', flexShrink: 0, fontFamily: "'Inter', sans-serif" }}>
                             {isSaved ? 'Saved' : isSkipped ? 'Skipped' : hasSaveError ? 'Error' : 'Pending'}
                           </span>
                         </div>
@@ -470,13 +470,13 @@ export default function AddProductPage() {
                     <button onClick={resetBulk} style={{
                       padding: '14px 32px', borderRadius: 100, border: 'none',
                       background: '#1a1612', color: '#faf8f4',
-                      fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                     }}>Scrape Another Brand</button>
                     {pending.length > 0 && (
                       <button onClick={() => { setReviewIdx(bulkItems.findIndex(r => r.status === 'pending')); setBulkPhase('review'); }} style={{
                         padding: '14px 24px', borderRadius: 100, border: '1.5px solid #ede8df',
                         background: 'transparent', color: '#8a7e72', fontSize: 14, fontWeight: 600,
-                        cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                        cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                       }}>Review Remaining ({pending.length})</button>
                     )}
                   </div>
@@ -488,14 +488,14 @@ export default function AddProductPage() {
             {bulkPhase === 'done' && bulkSaveResult && (
               <div style={{ textAlign: 'center', padding: '40px 0' }}>
                 <div style={{ fontSize: 40, marginBottom: 16 }}>{'\u{1F389}'}</div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: '#1a1612', fontFamily: "'Playfair Display', serif", marginBottom: 8 }}>Bulk save complete</div>
-                <div style={{ fontSize: 16, color: '#3d352b', fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>
+                <div style={{ fontSize: 22, fontWeight: 800, color: '#1a1612', fontFamily: "'Instrument Serif', serif", marginBottom: 8 }}>Bulk save complete</div>
+                <div style={{ fontSize: 16, color: '#3d352b', fontFamily: "'Inter', sans-serif", marginBottom: 4 }}>
                   <strong style={{ color: '#2d7a4f' }}>{bulkSaveResult.saved}</strong> saved
                   {bulkSaveResult.skipped > 0 && <> &middot; <strong>{bulkSaveResult.skipped}</strong> duplicates skipped</>}
                   {bulkSaveResult.errors?.length > 0 && <> &middot; <strong style={{ color: '#b5483a' }}>{bulkSaveResult.errors.length}</strong> errors</>}
                 </div>
-                {bulkSaveResult.errors?.length > 0 && <div style={{ fontSize: 12, color: '#b5483a', marginTop: 8, fontFamily: "'DM Sans', sans-serif" }}>{bulkSaveResult.errors.join('; ')}</div>}
-                <button onClick={resetBulk} style={{ marginTop: 24, padding: '12px 32px', borderRadius: 100, border: 'none', background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>Scrape Another Brand</button>
+                {bulkSaveResult.errors?.length > 0 && <div style={{ fontSize: 12, color: '#b5483a', marginTop: 8, fontFamily: "'Inter', sans-serif" }}>{bulkSaveResult.errors.join('; ')}</div>}
+                <button onClick={resetBulk} style={{ marginTop: 24, padding: '12px 32px', borderRadius: 100, border: 'none', background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 700, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Scrape Another Brand</button>
               </div>
             )}
           </>
@@ -509,11 +509,11 @@ export default function AddProductPage() {
 function ReviewCard({ editData, updateField, dmb, serverScore, onSave, onDiscard, saving, approveLabel, discardLabel }) {
   return (
     <div style={{ marginTop: 16 }}>
-      <div style={{ padding: '12px 16px', borderRadius: 12, background: '#fff8dc', border: '1px solid #ede8b0', fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8a7e20', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
+      <div style={{ padding: '12px 16px', borderRadius: 12, background: '#fff8dc', border: '1px solid #ede8b0', fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#8a7e20', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
         <span>{'\u{1F50D}'} <strong>Review &amp; edit</strong></span>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={onSave} disabled={saving} style={{ padding: '6px 16px', borderRadius: 100, border: 'none', background: '#2d7a4f', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: saving ? 0.6 : 1, fontFamily: "'DM Sans', sans-serif" }}>{saving ? 'Saving...' : approveLabel || '\u2713 Save'}</button>
-          <button onClick={onDiscard} style={{ padding: '6px 14px', borderRadius: 100, border: '1.5px solid #ede8df', background: 'transparent', color: '#8a7e72', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>{discardLabel || 'Discard'}</button>
+          <button onClick={onSave} disabled={saving} style={{ padding: '6px 16px', borderRadius: 100, border: 'none', background: '#2d7a4f', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: saving ? 0.6 : 1, fontFamily: "'Inter', sans-serif" }}>{saving ? 'Saving...' : approveLabel || '\u2713 Save'}</button>
+          <button onClick={onDiscard} style={{ padding: '6px 14px', borderRadius: 100, border: '1.5px solid #ede8df', background: 'transparent', color: '#8a7e72', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>{discardLabel || 'Discard'}</button>
         </div>
       </div>
       <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #ede8df', overflow: 'hidden' }}>
@@ -528,10 +528,10 @@ function ReviewCard({ editData, updateField, dmb, serverScore, onSave, onDiscard
               )}
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 2, fontFamily: "'DM Sans', sans-serif" }}>{editData.brand || 'Brand'}</div>
-              <div style={{ fontSize: 17, fontWeight: 700, color: '#1a1612', lineHeight: 1.3, fontFamily: "'DM Sans', sans-serif", marginBottom: 4 }}>{editData.name || 'Product Name'}</div>
+              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 2, fontFamily: "'Inter', sans-serif" }}>{editData.brand || 'Brand'}</div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: '#1a1612', lineHeight: 1.3, fontFamily: "'Inter', sans-serif", marginBottom: 4 }}>{editData.name || 'Product Name'}</div>
               {editData.quality_score != null && (
-                <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 100, fontSize: 12, fontWeight: 700, background: scoreBg(editData.quality_score), color: scoreColor(editData.quality_score), fontFamily: "'DM Sans', sans-serif" }}>
+                <div style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 100, fontSize: 12, fontWeight: 700, background: scoreBg(editData.quality_score), color: scoreColor(editData.quality_score), fontFamily: "'Inter', sans-serif" }}>
                   {editData.quality_score} — {scoreLabel(editData.quality_score)}
                 </div>
               )}
@@ -541,7 +541,7 @@ function ReviewCard({ editData, updateField, dmb, serverScore, onSave, onDiscard
           <div style={{ marginBottom: 10 }}>
             <label style={labelStyle}>Product Image URL</label>
             <input value={editData.image_url || ''} onChange={e => updateField('image_url', e.target.value)} placeholder="https://..." style={{ ...inputStyle, fontSize: 12 }} />
-            {!editData.image_url && <div style={{ fontSize: 11, color: '#c47a20', marginTop: 4, fontFamily: "'DM Sans', sans-serif" }}>{'\u26A0'} No image found — paste a URL above</div>}
+            {!editData.image_url && <div style={{ fontSize: 11, color: '#c47a20', marginTop: 4, fontFamily: "'Inter', sans-serif" }}>{'\u26A0'} No image found — paste a URL above</div>}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
             <div><label style={labelStyle}>Brand</label><input value={editData.brand || ''} onChange={e => updateField('brand', e.target.value)} style={inputStyle} /></div>
@@ -561,7 +561,7 @@ function ReviewCard({ editData, updateField, dmb, serverScore, onSave, onDiscard
           {dmb && (
             <div style={{ display: 'flex', justifyContent: 'center', gap: 16 }}>
               {[{ l: 'P-DMB', v: dmb.protein_dmb }, { l: 'F-DMB', v: dmb.fat_dmb }, { l: 'Fb-DMB', v: dmb.fiber_dmb }, { l: 'C-DMB', v: dmb.carbs_dmb }].map(d => (
-                <span key={d.l} style={{ fontSize: 11, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{d.l}: <strong>{Math.round(d.v * 10) / 10}%</strong></span>
+                <span key={d.l} style={{ fontSize: 11, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{d.l}: <strong>{Math.round(d.v * 10) / 10}%</strong></span>
               ))}
             </div>
           )}
@@ -570,9 +570,9 @@ function ReviewCard({ editData, updateField, dmb, serverScore, onSave, onDiscard
           <div style={{ padding: '16px 20px', borderBottom: '1px solid #f5f2ec' }}>
             {Object.entries(serverScore.categories).map(([k, c]) => (
               <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <span style={{ fontSize: 11, color: '#8a7e72', width: 90, flexShrink: 0, fontFamily: "'DM Sans', sans-serif" }}>{k.replace('_', ': ')}</span>
+                <span style={{ fontSize: 11, color: '#8a7e72', width: 90, flexShrink: 0, fontFamily: "'Inter', sans-serif" }}>{k.replace('_', ': ')}</span>
                 <div style={{ flex: 1, height: 4, borderRadius: 2, background: '#ede8df' }}><div style={{ height: '100%', borderRadius: 2, background: (c.score / c.max) >= 0.7 ? '#639922' : '#EF9F27', width: `${(c.score / c.max) * 100}%` }} /></div>
-                <span style={{ fontSize: 11, fontWeight: 600, width: 36, textAlign: 'right', fontFamily: "'DM Sans', sans-serif" }}>{c.score}/{c.max}</span>
+                <span style={{ fontSize: 11, fontWeight: 600, width: 36, textAlign: 'right', fontFamily: "'Inter', sans-serif" }}>{c.score}/{c.max}</span>
               </div>
             ))}
           </div>

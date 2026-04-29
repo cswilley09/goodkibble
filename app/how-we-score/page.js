@@ -30,7 +30,7 @@ function CategoryDetail({ color, name, maxPts, type, children, defaultOpen = fal
       <button onClick={() => setOpen(!open)} style={{
         width: '100%', display: 'flex', alignItems: 'center', gap: 12,
         padding: '18px 0', border: 'none', background: 'none', cursor: 'pointer',
-        fontFamily: "'DM Sans', sans-serif", textAlign: 'left',
+        fontFamily: "'Inter', sans-serif", textAlign: 'left',
       }}>
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: color, flexShrink: 0 }} />
         <div style={{ flex: 1 }}>
@@ -58,7 +58,7 @@ function CategoryDetail({ color, name, maxPts, type, children, defaultOpen = fal
 function ThresholdTable({ headers, rows }) {
   return (
     <div style={{ overflowX: 'auto', margin: '16px 0' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, fontFamily: "'DM Sans', sans-serif" }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, fontFamily: "'Inter', sans-serif" }}>
         <thead>
           <tr>
             {headers.map((h, i) => (
@@ -70,7 +70,7 @@ function ThresholdTable({ headers, rows }) {
           {rows.map((row, i) => (
             <tr key={i} style={{ background: i % 2 === 0 ? '#faf8f5' : '#fff' }}>
               {row.map((cell, j) => (
-                <td key={j} style={{ padding: '8px 12px', borderBottom: '1px solid #f0ebe3', color: j === 0 ? '#1a1612' : '#5a5248', fontWeight: j === 1 ? 600 : 400, fontFamily: j === 1 ? "'DM Sans', sans-serif" : 'inherit' }}>{cell}</td>
+                <td key={j} style={{ padding: '8px 12px', borderBottom: '1px solid #f0ebe3', color: j === 0 ? '#1a1612' : '#5a5248', fontWeight: j === 1 ? 600 : 400, fontFamily: j === 1 ? "'Inter', sans-serif" : 'inherit' }}>{cell}</td>
               ))}
             </tr>
           ))}
@@ -95,13 +95,13 @@ function GlanceBar({ label, pts, max, color }) {
   const pct = (pts / max) * 100;
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-      <div style={{ width: 130, fontSize: 13, color: '#5a5248', fontFamily: "'DM Sans', sans-serif", flexShrink: 0 }}>{label}</div>
+      <div style={{ width: 130, fontSize: 13, color: '#5a5248', fontFamily: "'Inter', sans-serif", flexShrink: 0 }}>{label}</div>
       <div style={{ flex: 1, height: 24, background: '#EDEAE2', borderRadius: 6, overflow: 'hidden', position: 'relative' }}>
         <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: '#fff', fontFamily: "'DM Sans', sans-serif" }}>{pts}</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: '#fff', fontFamily: "'Inter', sans-serif" }}>{pts}</span>
         </div>
       </div>
-      <div style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif", minWidth: 28, textAlign: 'right' }}>/{max}</div>
+      <div style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'Inter', sans-serif", minWidth: 28, textAlign: 'right' }}>/{max}</div>
     </div>
   );
 }
@@ -126,9 +126,9 @@ export default function HowWeScorePage() {
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
+          fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
@@ -143,8 +143,8 @@ export default function HowWeScorePage() {
         {/* ─── Section 1: Hero ─── */}
         <div style={{ marginBottom: 56, animation: 'fadeUp 0.5s ease' }}>
           <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Methodology</div>
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
+          <h1 className="page-title" style={{
+            fontFamily: "'Instrument Serif', serif",
             fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: '#1a1612',
             lineHeight: 1.1, letterSpacing: -1, marginBottom: 16,
           }}>How we score dog food</h1>
@@ -154,7 +154,7 @@ export default function HowWeScorePage() {
           <span style={{
             display: 'inline-block', padding: '5px 14px', borderRadius: 100,
             background: '#f0ebe3', fontSize: 12, color: '#8a7e72', fontWeight: 500,
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Inter', sans-serif",
           }}>Methodology v1.5 · Last updated April 2026</span>
         </div>
 
@@ -176,7 +176,7 @@ export default function HowWeScorePage() {
                   width: 32, height: 32, borderRadius: '50%', background: '#f0ebe3',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 12, fontWeight: 700, color: '#8a7e72', marginBottom: 12,
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                 }}>{p.n}</div>
                 <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 6 }}>{p.title}</div>
                 <div style={{ fontSize: 13, color: '#8a7e72', lineHeight: 1.5 }}>{p.desc}</div>
@@ -187,7 +187,7 @@ export default function HowWeScorePage() {
 
         {/* ─── Section 2b: Two Layers ─── */}
         <div style={{ marginBottom: 56 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>Two layers, clearly separated</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>Two layers, clearly separated</h2>
           <p style={{ fontSize: 14, color: '#5a5248', lineHeight: 1.7, marginBottom: 20 }}>
             Throughout this methodology, we separate two distinct layers. We will never blur them.
           </p>
@@ -212,7 +212,7 @@ export default function HowWeScorePage() {
 
         {/* ─── Section 2b: Why Dry Matter Basis? ─── */}
         <div style={{ marginBottom: 56, background: '#fff', borderRadius: 24, border: '1px solid #ede8df', padding: '36px 32px' }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8, textAlign: 'center' }}>Why Dry Matter Basis?</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8, textAlign: 'center' }}>Why Dry Matter Basis?</h2>
           <p style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.6, marginBottom: 32, textAlign: 'center', maxWidth: 560, margin: '0 auto 32px' }}>
             The guaranteed analysis on the bag includes moisture. We remove it so you see the real nutrition.
           </p>
@@ -222,7 +222,7 @@ export default function HowWeScorePage() {
             {/* Box 1 — Label says */}
             <div style={{ flex: '1 1 0', maxWidth: 200, background: '#f5f2ec', border: '1px solid #ede8df', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 8 }}>Label says</div>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: '#8a7e72', lineHeight: 1 }}>26%</div>
+              <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 900, color: '#8a7e72', lineHeight: 1 }}>26%</div>
               <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>protein</div>
             </div>
 
@@ -231,7 +231,7 @@ export default function HowWeScorePage() {
             {/* Box 2 — Remove moisture */}
             <div style={{ flex: '1 1 0', maxWidth: 200, background: '#e8f1fb', border: '1px solid #c4d9f0', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#378ADD', marginBottom: 8 }}>Remove moisture</div>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: '#378ADD', lineHeight: 1 }}>10%</div>
+              <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 900, color: '#378ADD', lineHeight: 1 }}>10%</div>
               <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>water content</div>
             </div>
 
@@ -240,7 +240,7 @@ export default function HowWeScorePage() {
             {/* Box 3 — Real nutrition */}
             <div style={{ flex: '1 1 0', maxWidth: 200, background: '#eef5e4', border: '1px solid #c8e0a8', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#639922', marginBottom: 8 }}>Real nutrition</div>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 900, color: '#639922', lineHeight: 1 }}>28.9%</div>
+              <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 900, color: '#639922', lineHeight: 1 }}>28.9%</div>
               <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>DMB protein</div>
             </div>
           </div>
@@ -262,7 +262,7 @@ export default function HowWeScorePage() {
 
         {/* ─── Section 3: Score at a Glance ─── */}
         <div style={{ marginBottom: 56 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>The score at a glance</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>The score at a glance</h2>
           <p style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.6, marginBottom: 24 }}>
             Every dry kibble is scored 0–100 across eight categories. The first four measure nutritional content from the guaranteed analysis. The last four evaluate ingredient quality from the ingredient list.
           </p>
@@ -279,13 +279,13 @@ export default function HowWeScorePage() {
             <GlanceBar label="Preservatives" pts={10} max={10} color={CAT_COLORS.teal} />
             <GlanceBar label="Additives" pts={5} max={5} color={CAT_COLORS.teal} />
             <GlanceBar label="Functional" pts={10} max={10} color={CAT_COLORS.teal} />
-            <div style={{ textAlign: 'right', fontSize: 12, color: '#8a7e72', marginTop: 12, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>Total: 100 points</div>
+            <div style={{ textAlign: 'right', fontSize: 12, color: '#8a7e72', marginTop: 12, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}>Total: 100 points</div>
           </div>
         </div>
 
         {/* ─── Section 4: What the Scores Mean ─── */}
         <div style={{ marginBottom: 56 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>What the scores mean</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>What the scores mean</h2>
           <div style={{ padding: '24px 28px', background: '#fff', borderRadius: 20, border: '1px solid #ede8df', marginTop: 16 }}>
             {[
               { range: '90–100', label: 'Excellent', color: TIER_COLORS.excellent, desc: 'Exceeds standards across all categories' },
@@ -298,7 +298,7 @@ export default function HowWeScorePage() {
                 display: 'flex', alignItems: 'center', gap: 14, padding: '10px 0',
                 borderBottom: i < 4 ? '1px solid #f0ebe3' : 'none',
               }}>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: tier.color, minWidth: 60 }}>{tier.range}</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: tier.color, minWidth: 60 }}>{tier.range}</div>
                 <div style={{ fontWeight: 600, fontSize: 14, color: tier.color, minWidth: 110 }}>{tier.label}</div>
                 <div style={{ fontSize: 13, color: '#8a7e72', flex: 1 }}>{tier.desc}</div>
               </div>
@@ -308,7 +308,7 @@ export default function HowWeScorePage() {
 
         {/* ─── Section 5: Category Details ─── */}
         <div style={{ marginBottom: 56 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>Category details</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>Category details</h2>
           <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20 }}>Click any category to see the exact thresholds and the science behind them.</p>
 
           <div style={{ background: '#fff', borderRadius: 20, border: '1px solid #ede8df', padding: '0 28px' }}>
@@ -533,7 +533,7 @@ export default function HowWeScorePage() {
 
         {/* ─── Section 6: Limitations ─── */}
         <div style={{ marginBottom: 56 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>What this score doesn&apos;t tell you</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 8 }}>What this score doesn&apos;t tell you</h2>
           <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20 }}>Being honest about our limitations is part of being trustworthy.</p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -563,7 +563,7 @@ export default function HowWeScorePage() {
 
         {/* ─── Section 7: Our Commitment ─── */}
         <div style={{ marginBottom: 56 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 16 }}>A living methodology</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 16 }}>A living methodology</h2>
           <P>The GoodKibble Score is not a static formula written once and forgotten. Veterinary nutrition is an evolving field, and our methodology evolves with it.</P>
           <P>Every scoring threshold is reviewed when relevant new peer-reviewed research is published. When we update the methodology, every product in our database is rescored under the new version so all scores remain directly comparable. Previous versions are archived and documented below.</P>
           <P>We are actively working with veterinary nutrition professionals to review and strengthen this methodology. If you are a veterinary professional and would like to provide feedback, we welcome your input.</P>
@@ -579,7 +579,7 @@ export default function HowWeScorePage() {
               { v: 'v1.0', desc: 'Initial methodology.' },
             ].map((ver, i) => (
               <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 5 ? '1px solid #f0ebe3' : 'none' }}>
-                <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', minWidth: 100, fontFamily: "'DM Sans', sans-serif" }}>{ver.v}</div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', minWidth: 100, fontFamily: "'Inter', sans-serif" }}>{ver.v}</div>
                 <div style={{ fontSize: 12, color: '#8a7e72' }}>{ver.desc}</div>
               </div>
             ))}
@@ -588,7 +588,7 @@ export default function HowWeScorePage() {
 
         {/* ─── Section 9: References ─── */}
         <div style={{ marginBottom: 40 }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 16 }}>References</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1a1612', marginBottom: 16 }}>References</h2>
           <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.8 }}>
             <ol style={{ paddingLeft: 20, margin: 0 }}>
               <li>AAFCO (2016). <em>Dog Food Nutrient Profiles.</em></li>
@@ -622,8 +622,8 @@ export default function HowWeScorePage() {
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#f0c930' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

@@ -32,7 +32,7 @@ const cardStyle = {
   background: '#fff', borderRadius: 20, border: '1px solid #ede8df', padding: 28, marginBottom: 24,
 };
 const eyebrow = (text) => ({
-  fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 700, color: '#C9A84C',
+  fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700, color: '#C68A1B',
   textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16,
 });
 const mobileCardPad = { padding: 28 };
@@ -54,11 +54,11 @@ function BreedPicker({ value, onChange }) {
     <div ref={ref} style={{ position: 'relative' }}>
       <input type="text" value={text} placeholder="Search breed..."
         onChange={e => { setText(e.target.value); onChange(''); setOpen(true); }}
-        onFocus={e => { e.target.style.borderColor = '#C9A84C'; if (q && matches.length) setOpen(true); }}
+        onFocus={e => { e.target.style.borderColor = '#C68A1B'; if (q && matches.length) setOpen(true); }}
         onBlur={e => { if (!open) e.target.style.borderColor = '#ede8df'; }}
         style={{
           width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df',
-          fontSize: 14, fontFamily: "'DM Sans', sans-serif", background: '#fff', outline: 'none',
+          fontSize: 14, fontFamily: "'Inter', sans-serif", background: '#fff', outline: 'none',
           color: '#1a1612', fontWeight: 600, boxSizing: 'border-box',
         }}
       />
@@ -70,7 +70,7 @@ function BreedPicker({ value, onChange }) {
         }}>
           {matches.map(b => (
             <div key={b} onMouseDown={e => { e.preventDefault(); setText(b); onChange(b); setOpen(false); }}
-              style={{ padding: '9px 14px', fontSize: 14, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", color: b === value ? '#C9A84C' : '#1a1612', fontWeight: b === value ? 600 : 400 }}
+              style={{ padding: '9px 14px', fontSize: 14, cursor: 'pointer', fontFamily: "'Inter', sans-serif", color: b === value ? '#C68A1B' : '#1a1612', fontWeight: b === value ? 600 : 400 }}
               onMouseEnter={e => (e.currentTarget.style.background = '#f5f2ec')}
               onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
             >{b}</div>
@@ -122,10 +122,10 @@ function FoodPicker({ value, onChange }) {
   }
   if (value && value.name) {
     return (
-      <div style={{ background: '#f7efd8', border: '1.5px solid #C9A84C', borderRadius: 10, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ background: '#f7efd8', border: '1.5px solid #C68A1B', borderRadius: 10, padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1, minWidth: 0 }}>
           <span style={{ color: '#2d7a4f', fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>
-          <span style={{ fontSize: 13, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value.name}</span>
+          <span style={{ fontSize: 13, color: '#1a1612', fontFamily: "'Inter', sans-serif", fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value.name}</span>
         </div>
         <button onClick={() => onChange(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8a7e72', fontSize: 16, padding: '0 0 0 8px' }}>&times;</button>
       </div>
@@ -137,7 +137,7 @@ function FoodPicker({ value, onChange }) {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b5aa99" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" /></svg>
         <input type="text" placeholder="Search for a food..." value={text} onChange={handleChange}
           onFocus={() => { if (results.length) setOpen(true); }}
-          style={{ flex: 1, border: 'none', outline: 'none', fontSize: 14, padding: '8px 8px', background: 'transparent', color: '#1a1612', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, minWidth: 0 }}
+          style={{ flex: 1, border: 'none', outline: 'none', fontSize: 14, padding: '8px 8px', background: 'transparent', color: '#1a1612', fontFamily: "'Inter', sans-serif", fontWeight: 500, minWidth: 0 }}
         />
       </div>
       {open && (
@@ -183,11 +183,11 @@ function ScoreCircle({ score, size = 48 }) {
         <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={c} strokeDashoffset={o} strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`} />
         <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: size * 0.32, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
+          style={{ fontSize: size * 0.32, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1a1612' }}>
           {score}
         </text>
       </svg>
-      <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>{tier}</span>
+      <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: '#8a7e72', marginTop: 2 }}>{tier}</span>
     </div>
   );
 }
@@ -197,7 +197,7 @@ function NutrientPill({ label, value, color }) {
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 600,
       color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 10px',
-      fontFamily: "'DM Sans', sans-serif",
+      fontFamily: "'Inter', sans-serif",
     }}>
       <span style={{ width: 5, height: 5, borderRadius: '50%', background: color, flexShrink: 0 }} />
       {label} {value != null ? `${Math.round(value * 10) / 10}%` : '—'}
@@ -379,7 +379,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div style={{ minHeight: '100vh', background: '#faf8f4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: '#8a7e72' }}>Loading...</div>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72' }}>Loading...</div>
       </div>
     );
   }
@@ -387,10 +387,10 @@ export default function ProfilePage() {
   if (!user || noAuth) {
     return (
       <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
-        <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid #ede8df', background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40 }}>
-          <a href="/" style={{ textDecoration: 'none' }}><span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span></a>
+        <nav className="nav-bar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid #ede8df', background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40 }}>
+          <a href="/" style={{ textDecoration: 'none' }}><span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span></a>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
+            <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
             <RecallsNav />
             <CompareBubble />
             <SignUpButton />
@@ -398,15 +398,15 @@ export default function ProfilePage() {
         </nav>
         <div style={{ maxWidth: 500, margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 20 }}>{'\u{1F436}'}</div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1a1612', marginBottom: 12 }}>
+          <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1a1612', marginBottom: 12 }}>
             Sign in to view your profile
           </h1>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: '#8a7e72', marginBottom: 32 }}>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', marginBottom: 32 }}>
             Log in to see your dog&rsquo;s dashboard, food recommendations, and saved comparisons.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
-            <a href="/login" style={{ padding: '14px 36px', borderRadius: 100, background: '#1a1612', color: '#faf8f4', fontSize: 16, fontWeight: 700, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" }}>Sign In</a>
-            <a href="/signup" style={{ padding: '14px 36px', borderRadius: 100, background: 'transparent', color: '#1a1612', fontSize: 16, fontWeight: 600, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif", border: '1.5px solid #ede8df' }}>Sign Up</a>
+            <a href="/login" style={{ padding: '14px 36px', borderRadius: 100, background: '#1a1612', color: '#faf8f4', fontSize: 16, fontWeight: 700, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Sign In</a>
+            <a href="/signup" style={{ padding: '14px 36px', borderRadius: 100, background: 'transparent', color: '#1a1612', fontSize: 16, fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif", border: '1.5px solid #ede8df' }}>Sign Up</a>
           </div>
         </div>
       </div>
@@ -418,16 +418,16 @@ export default function ProfilePage() {
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
       {/* Nav */}
-      <nav style={{
+      <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 24px', borderBottom: '1px solid #ede8df',
         background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
+          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
+          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
           <RecallsNav />
           <CompareBubble />
           <SignUpButton />
@@ -438,10 +438,10 @@ export default function ProfilePage() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>{'\u{1F436}'}</div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px', letterSpacing: -0.5 }}>
+          <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px', letterSpacing: -0.5 }}>
             {displayName}&rsquo;s Dashboard
           </h1>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8a7e72' }}>
+          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72' }}>
             Welcome back, {user.first_name}!
           </p>
         </div>
@@ -452,10 +452,10 @@ export default function ProfilePage() {
             {dogs.map((d, i) => (
               <button key={d.id} onClick={() => { setActiveDogIdx(i); setEditing(false); }} style={{
                 padding: '8px 20px', borderRadius: 100, fontSize: 13, fontWeight: 600,
-                fontFamily: "'DM Sans', sans-serif", cursor: 'pointer', transition: 'all 0.2s',
-                background: i === activeDogIdx ? '#C9A84C' : 'transparent',
+                fontFamily: "'Inter', sans-serif", cursor: 'pointer', transition: 'all 0.2s',
+                background: i === activeDogIdx ? '#C68A1B' : 'transparent',
                 color: i === activeDogIdx ? '#fff' : '#8a7e72',
-                border: i === activeDogIdx ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
+                border: i === activeDogIdx ? '1.5px solid #C68A1B' : '1.5px solid #ede8df',
               }}>{d.dog_name}</button>
             ))}
           </div>
@@ -468,10 +468,10 @@ export default function ProfilePage() {
             return (
               <button key={t} onClick={() => setTab(t.toLowerCase())} style={{
                 flex: 1, padding: '14px 0', background: 'none', border: 'none',
-                borderBottom: active ? '2px solid #C9A84C' : '2px solid transparent',
+                borderBottom: active ? '2px solid #C68A1B' : '2px solid transparent',
                 color: active ? '#1a1612' : '#b5aa99',
                 fontSize: 14, fontWeight: active ? 600 : 500,
-                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 transition: 'color 0.2s, border-color 0.2s',
               }}>{t}</button>
             );
@@ -498,7 +498,7 @@ export default function ProfilePage() {
                       )}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 4 }}>{currentFoodData.brand}</div>
-                        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#1a1612', lineHeight: 1.3, marginBottom: 6 }}>{currentFoodData.name}</div>
+                        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 20, fontWeight: 700, color: '#1a1612', lineHeight: 1.3, marginBottom: 6 }}>{currentFoodData.name}</div>
                         {currentFoodData.primary_protein && (
                           <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 10 }}>Primary Protein: {currentFoodData.primary_protein}</div>
                         )}
@@ -516,7 +516,7 @@ export default function ProfilePage() {
                     {/* Percentile bar */}
                     {percentile != null && (
                       <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #f5f2ec' }}>
-                        <div style={{ fontSize: 13, color: '#5a5248', marginBottom: 10, fontFamily: "'DM Sans', sans-serif" }}>
+                        <div style={{ fontSize: 13, color: '#5a5248', marginBottom: 10, fontFamily: "'Inter', sans-serif" }}>
                           {displayName}&rsquo;s food scores better than <strong style={{ color: '#639922' }}>{percentile}%</strong> of all kibbles
                         </div>
                         <div style={{ position: 'relative', height: 8, borderRadius: 100, background: 'linear-gradient(to right, #D97B2A, #EF9F27, #7BAF2E, #639922)', overflow: 'visible' }}>
@@ -539,26 +539,26 @@ export default function ProfilePage() {
                     <div style={{ display: 'flex', gap: 10, marginTop: 20, flexWrap: 'wrap', alignItems: 'center' }}>
                       <button onClick={() => goToFood(currentFoodData)} style={{
                         padding: '10px 24px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
-                        fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                       }}>View Full Breakdown &rarr;</button>
                       {currentFoodData.affiliate_url && (
                         <a href={currentFoodData.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{
-                          padding: '10px 24px', borderRadius: 100, background: '#C9A84C', color: '#fff',
-                          fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                          padding: '10px 24px', borderRadius: 100, background: '#C68A1B', color: '#fff',
+                          fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                           textDecoration: 'none', display: 'inline-block',
                         }}>Buy on Amazon &rarr;</a>
                       )}
                       <button onClick={() => setChangingFood(true)} style={{
                         padding: '10px 24px', borderRadius: 100, border: '1.5px solid #ede8df',
                         background: 'transparent', color: '#8a7e72', fontSize: 13, fontWeight: 600,
-                        cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                        cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                       }}>Change Food</button>
                     </div>
 
                     {/* Inline food change picker */}
                     {changingFood && (
                       <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #f5f2ec' }}>
-                        <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 8 }}>Search for {displayName}&rsquo;s new food:</div>
+                        <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 8 }}>Search for {displayName}&rsquo;s new food:</div>
                         <FoodPicker value={changeFoodSaving ? null : undefined} onChange={async (food) => {
                           if (!food || !food.slug) return;
                           setChangeFoodSaving(true);
@@ -592,17 +592,17 @@ export default function ProfilePage() {
                           <button onClick={() => setChangingFood(false)} style={{
                             padding: '6px 16px', borderRadius: 100, border: '1px solid #ede8df',
                             background: 'transparent', color: '#8a7e72', fontSize: 12, fontWeight: 600,
-                            cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                            cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                           }}>Cancel</button>
                           {changeFoodSaving && (
-                            <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", alignSelf: 'center' }}>Saving...</span>
+                            <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", alignSelf: 'center' }}>Saving...</span>
                           )}
                         </div>
                       </div>
                     )}
                   </>
                 ) : (
-                  <div style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
+                  <div style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
                     {dog?.current_food ? (
                       <span>Current food: <strong>{dog.current_food}</strong> — we couldn&rsquo;t match it to our database for scoring.</span>
                     ) : (
@@ -613,11 +613,11 @@ export default function ProfilePage() {
                         <button onClick={() => setChangingFood(true)} style={{
                           padding: '8px 20px', borderRadius: 100, border: '1.5px solid #ede8df',
                           background: '#fff', color: '#1a1612', fontSize: 13, fontWeight: 600,
-                          cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                          cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                         }}>{dog?.current_food ? 'Change Food' : 'Add Food'}</button>
                       ) : (
                         <div>
-                          <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 8 }}>Search for {displayName}&rsquo;s food:</div>
+                          <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 8 }}>Search for {displayName}&rsquo;s food:</div>
                           <FoodPicker value={changeFoodSaving ? null : undefined} onChange={async (food) => {
                             if (!food || !food.slug) return;
                             setChangeFoodSaving(true);
@@ -651,10 +651,10 @@ export default function ProfilePage() {
                             <button onClick={() => setChangingFood(false)} style={{
                               padding: '6px 16px', borderRadius: 100, border: '1px solid #ede8df',
                               background: 'transparent', color: '#8a7e72', fontSize: 12, fontWeight: 600,
-                              cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                              cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                             }}>Cancel</button>
                             {changeFoodSaving && (
-                              <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", alignSelf: 'center' }}>Saving...</span>
+                              <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", alignSelf: 'center' }}>Saving...</span>
                             )}
                           </div>
                         </div>
@@ -668,10 +668,10 @@ export default function ProfilePage() {
               {currentFoodData && (
                 <div style={cardStyle}>
                   <div style={eyebrow()}>Top-Scored {altProteinOnly && currentFoodData.primary_protein ? currentFoodData.primary_protein : ''} Kibbles</div>
-                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>
                     {altProteinOnly && currentFoodData.primary_protein ? (<>Top-scoring {currentFoodData.primary_protein.toLowerCase()} kibbles on our 0&ndash;100 scale.</>) : <>Top-scoring kibbles on our 0&ndash;100 scale.</>}
                   </p>
-                  <p style={{ fontSize: 11, color: '#b5aa99', fontStyle: 'italic', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+                  <p style={{ fontSize: 11, color: '#b5aa99', fontStyle: 'italic', marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>
                     Switching foods should always be done gradually. Consult your vet before making changes.
                   </p>
 
@@ -679,17 +679,17 @@ export default function ProfilePage() {
                     <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
                       <button onClick={() => setAltProteinOnly(true)} style={{
                         padding: '7px 16px', borderRadius: 100, fontSize: 12, fontWeight: 600,
-                        fontFamily: "'DM Sans', sans-serif", cursor: 'pointer',
+                        fontFamily: "'Inter', sans-serif", cursor: 'pointer',
                         background: altProteinOnly ? '#f7efd8' : 'transparent',
                         color: altProteinOnly ? '#1a1612' : '#8a7e72',
-                        border: altProteinOnly ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
+                        border: altProteinOnly ? '1.5px solid #C68A1B' : '1.5px solid #ede8df',
                       }}>{currentFoodData.primary_protein} only</button>
                       <button onClick={() => setAltProteinOnly(false)} style={{
                         padding: '7px 16px', borderRadius: 100, fontSize: 12, fontWeight: 600,
-                        fontFamily: "'DM Sans', sans-serif", cursor: 'pointer',
+                        fontFamily: "'Inter', sans-serif", cursor: 'pointer',
                         background: !altProteinOnly ? '#f7efd8' : 'transparent',
                         color: !altProteinOnly ? '#1a1612' : '#8a7e72',
-                        border: !altProteinOnly ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
+                        border: !altProteinOnly ? '1.5px solid #C68A1B' : '1.5px solid #ede8df',
                       }}>All proteins</button>
                     </div>
                   )}
@@ -701,7 +701,7 @@ export default function ProfilePage() {
                       ))}
                     </div>
                   ) : (
-                    <div style={{ fontSize: 13, color: '#8a7e72', textAlign: 'center', padding: '20px 0', fontFamily: "'DM Sans', sans-serif" }}>
+                    <div style={{ fontSize: 13, color: '#8a7e72', textAlign: 'center', padding: '20px 0', fontFamily: "'Inter', sans-serif" }}>
                       {currentFoodData.quality_score >= 90
                         ? <>{displayName}&rsquo;s food is already top-tier! No higher-scored alternatives found.</>
                         : 'No alternatives found with the current filter.'}
@@ -713,7 +713,7 @@ export default function ProfilePage() {
                       <button onClick={() => router.push(`/discover?protein=${encodeURIComponent(currentFoodData.primary_protein)}`)} style={{
                         padding: '10px 24px', borderRadius: 100, fontSize: 13, fontWeight: 600,
                         background: 'transparent', color: '#1a1612', border: '1.5px solid #ede8df',
-                        cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                        cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                       }}>Browse All {currentFoodData.primary_protein} Kibbles &rarr;</button>
                     </div>
                   )}
@@ -738,15 +738,15 @@ export default function ProfilePage() {
                       display: 'flex', justifyContent: 'space-between', padding: '8px 0',
                       borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
                     }}>
-                      <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{row.label}</span>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{row.value}</span>
+                      <span style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{row.label}</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>{row.value}</span>
                     </div>
                   ))}
                   <div style={{ marginTop: 12 }}>
                     <button onClick={() => { setTab('profile'); }} style={{
                       padding: '6px 14px', borderRadius: 100, background: 'transparent', color: '#1a1612',
                       fontSize: 11, fontWeight: 600, border: '1.5px solid #ede8df',
-                      cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                     }}>Edit Profile</button>
                   </div>
                 </div>
@@ -760,9 +760,9 @@ export default function ProfilePage() {
                     {dog.priorities.map(p => (
                       <span key={p} style={{
                         padding: '5px 10px', borderRadius: 100,
-                        background: '#f7efd8', border: '1px solid #C9A84C',
+                        background: '#f7efd8', border: '1px solid #C68A1B',
                         fontSize: 11, fontWeight: 600, color: '#1a1612',
-                        fontFamily: "'DM Sans', sans-serif",
+                        fontFamily: "'Inter', sans-serif",
                       }}>{p}</span>
                     ))}
                   </div>
@@ -780,13 +780,13 @@ export default function ProfilePage() {
                   <div key={item.label} onClick={item.action} style={{
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                     padding: '10px 0', borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
-                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                   }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#C9A84C')}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#C68A1B')}
                     onMouseLeave={e => (e.currentTarget.style.color = '#1a1612')}
                   >
                     <span style={{ fontSize: 13, fontWeight: 600 }}>{item.label}</span>
-                    <span style={{ fontSize: 13, color: '#C9A84C', fontWeight: 600 }}>&rarr;</span>
+                    <span style={{ fontSize: 13, color: '#C68A1B', fontWeight: 600 }}>&rarr;</span>
                   </div>
                 ))}
               </div>
@@ -797,17 +797,17 @@ export default function ProfilePage() {
                   background: 'linear-gradient(135deg, #1a1612, #2a2318)', borderRadius: 20,
                   padding: 20, textAlign: 'center',
                 }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 8, fontFamily: "'DM Sans', sans-serif" }}>Upgrade</div>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 800, color: '#faf8f4', marginBottom: 6 }}>Get more from GoodKibble</div>
-                  <p style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C68A1B', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Upgrade</div>
+                  <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 18, fontWeight: 800, color: '#faf8f4', marginBottom: 6 }}>Get more from GoodKibble</div>
+                  <p style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>
                     Recall alerts, ingredient deep-dives, unlimited comparisons, and up to 5 dog profiles.
                   </p>
                   <button onClick={() => router.push('/pro')} style={{
-                    width: '100%', padding: '10px 0', borderRadius: 100, background: '#C9A84C', color: '#fff',
+                    width: '100%', padding: '10px 0', borderRadius: 100, background: '#C68A1B', color: '#fff',
                     fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer',
-                    fontFamily: "'DM Sans', sans-serif",
+                    fontFamily: "'Inter', sans-serif",
                   }}>Upgrade to Pro &rarr;</button>
-                  <div style={{ fontSize: 11, color: '#5a5248', marginTop: 8, fontFamily: "'DM Sans', sans-serif" }}>Starting at $3.99/month &middot; Cancel anytime</div>
+                  <div style={{ fontSize: 11, color: '#5a5248', marginTop: 8, fontFamily: "'Inter', sans-serif" }}>Starting at $3.99/month &middot; Cancel anytime</div>
                 </div>
               )}
             </div>
@@ -834,9 +834,9 @@ export default function ProfilePage() {
                       setEditFood(undefined); // undefined = not changed, null = cleared
                     }
                   }} style={{
-                    padding: '6px 16px', borderRadius: 100, background: 'transparent', color: '#C9A84C',
-                    fontSize: 12, fontWeight: 600, border: '1.5px solid #C9A84C',
-                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    padding: '6px 16px', borderRadius: 100, background: 'transparent', color: '#C68A1B',
+                    fontSize: 12, fontWeight: 600, border: '1.5px solid #C68A1B',
+                    cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                   }}>Edit</button>
                 )}
               </div>
@@ -855,8 +855,8 @@ export default function ProfilePage() {
                       display: 'flex', justifyContent: 'space-between', padding: '11px 0',
                       borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
                     }}>
-                      <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{row.label}</span>
-                      <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif", textAlign: 'right', maxWidth: '60%' }}>{row.value}</span>
+                      <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{row.label}</span>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif", textAlign: 'right', maxWidth: '60%' }}>{row.value}</span>
                     </div>
                   ))}
                 </>
@@ -864,20 +864,20 @@ export default function ProfilePage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                   {/* Breed */}
                   <div>
-                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Breed</label>
+                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block' }}>Breed</label>
                     <BreedPicker value={editData.breed} onChange={v => setEditData(d => ({ ...d, breed: v }))} />
                   </div>
                   {/* Age */}
                   <div style={{ display: 'flex', gap: 10 }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Age</label>
+                      <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block' }}>Age</label>
                       <input type="number" min="0" value={editData.age_value} onChange={e => setEditData(d => ({ ...d, age_value: e.target.value }))}
-                        style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, fontFamily: "'DM Sans', sans-serif", background: '#fff', outline: 'none', fontWeight: 600, color: '#1a1612', boxSizing: 'border-box' }} />
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, fontFamily: "'Inter', sans-serif", background: '#fff', outline: 'none', fontWeight: 600, color: '#1a1612', boxSizing: 'border-box' }} />
                     </div>
                     <div style={{ width: 120 }}>
-                      <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Unit</label>
+                      <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block' }}>Unit</label>
                       <select value={editData.age_unit} onChange={e => setEditData(d => ({ ...d, age_unit: e.target.value }))}
-                        style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, fontFamily: "'DM Sans', sans-serif", background: '#fff', outline: 'none', fontWeight: 600, color: '#1a1612', boxSizing: 'border-box' }}>
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, fontFamily: "'Inter', sans-serif", background: '#fff', outline: 'none', fontWeight: 600, color: '#1a1612', boxSizing: 'border-box' }}>
                         <option value="years">Years</option>
                         <option value="months">Months</option>
                       </select>
@@ -885,43 +885,43 @@ export default function ProfilePage() {
                   </div>
                   {/* Weight */}
                   <div>
-                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Weight (lbs)</label>
+                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block' }}>Weight (lbs)</label>
                     <input type="number" min="0" value={editData.weight_lbs} onChange={e => setEditData(d => ({ ...d, weight_lbs: e.target.value }))}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, fontFamily: "'DM Sans', sans-serif", background: '#fff', outline: 'none', fontWeight: 600, color: '#1a1612', boxSizing: 'border-box' }} />
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, fontFamily: "'Inter', sans-serif", background: '#fff', outline: 'none', fontWeight: 600, color: '#1a1612', boxSizing: 'border-box' }} />
                   </div>
                   {/* Gender */}
                   <div>
-                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Gender</label>
+                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block' }}>Gender</label>
                     <div style={{ display: 'flex', gap: 8 }}>
                       {['male', 'female'].map(g => (
                         <button key={g} onClick={() => setEditData(d => ({ ...d, gender: g }))} style={{
                           flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 14, fontWeight: 600,
-                          fontFamily: "'DM Sans', sans-serif", cursor: 'pointer',
+                          fontFamily: "'Inter', sans-serif", cursor: 'pointer',
                           background: editData.gender === g ? '#f7efd8' : '#fff',
                           color: editData.gender === g ? '#1a1612' : '#8a7e72',
-                          border: editData.gender === g ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
+                          border: editData.gender === g ? '1.5px solid #C68A1B' : '1.5px solid #ede8df',
                         }}>{g === 'male' ? 'Male' : 'Female'}</button>
                       ))}
                     </div>
                   </div>
                   {/* Neutered */}
                   <div>
-                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Neutered</label>
+                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block' }}>Neutered</label>
                     <div style={{ display: 'flex', gap: 8 }}>
                       {[true, false].map(v => (
                         <button key={String(v)} onClick={() => setEditData(d => ({ ...d, is_neutered: v }))} style={{
                           flex: 1, padding: '10px 0', borderRadius: 10, fontSize: 14, fontWeight: 600,
-                          fontFamily: "'DM Sans', sans-serif", cursor: 'pointer',
+                          fontFamily: "'Inter', sans-serif", cursor: 'pointer',
                           background: editData.is_neutered === v ? '#f7efd8' : '#fff',
                           color: editData.is_neutered === v ? '#1a1612' : '#8a7e72',
-                          border: editData.is_neutered === v ? '1.5px solid #C9A84C' : '1.5px solid #ede8df',
+                          border: editData.is_neutered === v ? '1.5px solid #C68A1B' : '1.5px solid #ede8df',
                         }}>{v ? 'Yes' : 'No'}</button>
                       ))}
                     </div>
                   </div>
                   {/* Current Food */}
                   <div>
-                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", marginBottom: 4, display: 'block' }}>Current Food</label>
+                    <label style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block' }}>Current Food</label>
                     <FoodPicker value={editFood} onChange={setEditFood} />
                   </div>
 
@@ -975,13 +975,13 @@ export default function ProfilePage() {
                       setSaving(false);
                     }} style={{
                       flex: 1, padding: '12px 0', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
-                      fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 14, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                       opacity: saving ? 0.6 : 1,
                     }}>{saving ? 'Saving...' : 'Save Changes'}</button>
                     <button onClick={() => { setEditing(false); setEditFood(null); }} style={{
                       padding: '12px 24px', borderRadius: 100, background: 'transparent', color: '#8a7e72',
                       fontSize: 14, fontWeight: 600, border: '1.5px solid #ede8df',
-                      cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                      cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                     }}>Cancel</button>
                   </div>
                 </div>
@@ -996,9 +996,9 @@ export default function ProfilePage() {
                   {dog.priorities.map(p => (
                     <span key={p} style={{
                       padding: '8px 16px', borderRadius: 100,
-                      background: '#f7efd8', border: '1.5px solid #C9A84C',
+                      background: '#f7efd8', border: '1.5px solid #C68A1B',
                       fontSize: 13, fontWeight: 600, color: '#1a1612',
-                      fontFamily: "'DM Sans', sans-serif",
+                      fontFamily: "'Inter', sans-serif",
                     }}>{p}</span>
                   ))}
                 </div>
@@ -1025,13 +1025,13 @@ export default function ProfilePage() {
                       <div key={comp.id} style={{ borderTop: compIdx > 0 ? '1px solid #ede8df' : 'none', paddingTop: compIdx > 0 ? 20 : 0, paddingBottom: 20 }}>
                         {/* Date + actions */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                          <span style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
+                          <span style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'Inter', sans-serif" }}>
                             {new Date(comp.saved_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             {' \u00B7 '}{comp.items.length} products
                           </span>
                           <button onClick={() => deleteComparison(comp.id)} style={{
                             background: 'none', border: 'none', cursor: 'pointer', color: '#b5aa99',
-                            fontSize: 11, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, padding: '2px 6px',
+                            fontSize: 11, fontFamily: "'Inter', sans-serif", fontWeight: 600, padding: '2px 6px',
                           }}
                             onMouseEnter={e => (e.currentTarget.style.color = '#b5483a')}
                             onMouseLeave={e => (e.currentTarget.style.color = '#b5aa99')}
@@ -1040,7 +1040,7 @@ export default function ProfilePage() {
 
                         {/* Scroll indicator */}
                         {comp.items.length > 3 && (
-                          <div style={{ fontSize: 11, color: '#b5aa99', textAlign: 'right', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
+                          <div style={{ fontSize: 11, color: '#b5aa99', textAlign: 'right', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>
                             {'\u2190'} Scroll to see all {comp.items.length} foods {'\u2192'}
                           </div>
                         )}
@@ -1056,7 +1056,7 @@ export default function ProfilePage() {
                               <div key={f.id} onClick={() => goToFood(f)} style={{
                                 flex: '0 0 calc((100% - 20px) / 3.5)', scrollSnapAlign: 'start', minWidth: 160,
                                 background: '#faf8f4', borderRadius: 12,
-                                border: isHighest ? '2px solid #C9A84C' : '1px solid #ede8df',
+                                border: isHighest ? '2px solid #C68A1B' : '1px solid #ede8df',
                                 padding: '12px 14px', position: 'relative', cursor: 'pointer',
                                 transition: 'box-shadow 0.2s',
                               }}
@@ -1066,9 +1066,9 @@ export default function ProfilePage() {
                                 {isHighest && (
                                   <span style={{
                                     position: 'absolute', top: 6, right: 6,
-                                    background: '#C9A84C', color: '#fff', padding: '2px 7px',
+                                    background: '#C68A1B', color: '#fff', padding: '2px 7px',
                                     borderRadius: 100, fontSize: 8, fontWeight: 700,
-                                    fontFamily: "'DM Sans', sans-serif",
+                                    fontFamily: "'Inter', sans-serif",
                                   }}>BEST</span>
                                 )}
 
@@ -1080,12 +1080,12 @@ export default function ProfilePage() {
                                     </div>
                                   )}
                                   <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 1, fontFamily: "'DM Sans', sans-serif" }}>{f.brand}</div>
+                                    <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 1, fontFamily: "'Inter', sans-serif" }}>{f.brand}</div>
                                     <div style={{
                                       fontSize: 12, fontWeight: 700, color: '#1a1612', lineHeight: 1.3,
                                       display: '-webkit-box', WebkitLineClamp: 2,
                                       WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                                      fontFamily: "'DM Sans', sans-serif",
+                                      fontFamily: "'Inter', sans-serif",
                                     }}>{f.name}</div>
                                   </div>
                                 </div>
@@ -1097,8 +1097,8 @@ export default function ProfilePage() {
                                   return (
                                     <div key={n.key} style={{ marginBottom: 5 }}>
                                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-                                        <span style={{ fontSize: 9, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{n.label}</span>
-                                        <span style={{ fontSize: 9, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>
+                                        <span style={{ fontSize: 9, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{n.label}</span>
+                                        <span style={{ fontSize: 9, fontWeight: 700, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>
                                           {val != null ? `${Math.round(val * 10) / 10}%` : '\u2014'}
                                         </span>
                                       </div>
@@ -1121,13 +1121,13 @@ export default function ProfilePage() {
               <div style={cardStyle}>
                 <div style={{ textAlign: 'center', padding: '32px 0' }}>
                   <div style={{ fontSize: 32, opacity: 0.4, marginBottom: 12 }}>{'\u{1F4CC}'}</div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>No saved comparisons yet</div>
-                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>No saved comparisons yet</div>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>
                     Compare foods and tap &ldquo;Save Comparison&rdquo; to keep them here.
                   </p>
                   <button onClick={() => router.push('/compare')} style={{
                     padding: '10px 28px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
-                    fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13, fontWeight: 600, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                   }}>Compare Foods &rarr;</button>
                 </div>
               </div>
@@ -1145,15 +1145,15 @@ export default function ProfilePage() {
                 <>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
                     <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#639922' }} />
-                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>GoodKibble Pro &mdash; Active</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>GoodKibble Pro &mdash; Active</span>
                   </div>
-                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>Renews automatically. You can cancel anytime.</p>
-                  <span onClick={() => setShowCancelModal(true)} style={{ fontSize: 12, color: '#b5aa99', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textDecoration: 'underline' }}>Cancel subscription</span>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>Renews automatically. You can cancel anytime.</p>
+                  <span onClick={() => setShowCancelModal(true)} style={{ fontSize: 12, color: '#b5aa99', cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'underline' }}>Cancel subscription</span>
                 </>
               ) : (
                 <>
-                  <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 16, fontFamily: "'DM Sans', sans-serif" }}>You&rsquo;re on the Free plan</p>
-                  <a href="/pro" style={{ display: 'inline-block', padding: '10px 24px', borderRadius: 100, background: '#C9A84C', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" }}>Upgrade to Pro &rarr;</a>
+                  <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>You&rsquo;re on the Free plan</p>
+                  <a href="/pro" style={{ display: 'inline-block', padding: '10px 24px', borderRadius: 100, background: '#C68A1B', color: '#fff', fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Upgrade to Pro &rarr;</a>
                 </>
               )}
             </div>
@@ -1162,7 +1162,7 @@ export default function ProfilePage() {
             <div style={cardStyle}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...eyebrow() }}>
                 Email Notifications
-                {isPro && <span style={{ background: 'linear-gradient(135deg, #C9A84C, #d4b65e)', color: '#fff', padding: '2px 8px', borderRadius: 100, fontSize: 9, fontWeight: 700 }}>{'\u2605'} PRO</span>}
+                {isPro && <span style={{ background: 'linear-gradient(135deg, #C68A1B, #d4b65e)', color: '#fff', padding: '2px 8px', borderRadius: 100, fontSize: 9, fontWeight: 700 }}>{'\u2605'} PRO</span>}
               </div>
               {isPro ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -1176,8 +1176,8 @@ export default function ProfilePage() {
                     <div key={n.key} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                       <span style={{ fontSize: 18, flexShrink: 0, marginTop: 2 }}>{n.emoji}</span>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{n.title}</div>
-                        <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>{n.desc}</div>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>{n.title}</div>
+                        <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.5, fontFamily: "'Inter', sans-serif" }}>{n.desc}</div>
                       </div>
                       <div onClick={async () => {
                         const newVal = !user[n.key];
@@ -1206,8 +1206,8 @@ export default function ProfilePage() {
                 </div>
               ) : (
                 <div style={{ textAlign: 'center', padding: '16px 0' }}>
-                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 12, fontFamily: "'DM Sans', sans-serif" }}>Upgrade to Pro to enable email notifications</p>
-                  <a href="/pro" style={{ fontSize: 13, fontWeight: 600, color: '#C9A84C', textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" }}>Learn about Pro &rarr;</a>
+                  <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 12, fontFamily: "'Inter', sans-serif" }}>Upgrade to Pro to enable email notifications</p>
+                  <a href="/pro" style={{ fontSize: 13, fontWeight: 600, color: '#C68A1B', textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Learn about Pro &rarr;</a>
                 </div>
               )}
             </div>
@@ -1225,10 +1225,10 @@ export default function ProfilePage() {
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 0',
                   borderBottom: i < arr.length - 1 ? '1px solid #f5f2ec' : 'none',
                 }}>
-                  <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>{row.label}</span>
+                  <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{row.label}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{row.value}</span>
-                    <span style={{ fontSize: 12, color: '#C9A84C', cursor: 'pointer', fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>Edit</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>{row.value}</span>
+                    <span style={{ fontSize: 12, color: '#C68A1B', cursor: 'pointer', fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>Edit</span>
                   </div>
                 </div>
               ))}
@@ -1239,10 +1239,10 @@ export default function ProfilePage() {
               <button onClick={handleLogout} style={{
                 padding: '10px 32px', borderRadius: 100, background: 'transparent', color: '#8a7e72',
                 fontSize: 14, fontWeight: 600, border: '1.5px solid #ede8df',
-                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                cursor: 'pointer', fontFamily: "'Inter', sans-serif",
               }}>Log Out</button>
               <div style={{ marginTop: 16 }}>
-                <span style={{ fontSize: 12, color: '#d4760a', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>
+                <span style={{ fontSize: 12, color: '#d4760a', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
                   Delete Account
                 </span>
               </div>
@@ -1263,14 +1263,14 @@ export default function ProfilePage() {
             background: '#fff', borderRadius: 24, padding: '36px 32px',
             maxWidth: 420, width: 'calc(100vw - 48px)',
             boxShadow: '0 20px 60px rgba(0,0,0,0.15)', zIndex: 9999,
-            textAlign: 'center', fontFamily: "'DM Sans', sans-serif",
+            textAlign: 'center', fontFamily: "'Inter', sans-serif",
           }}>
             <div onClick={() => setShowCancelModal(false)} style={{
               position: 'absolute', top: 16, right: 16, fontSize: 18, color: '#b5aa99',
               cursor: 'pointer', lineHeight: 1, padding: 4,
             }}>&times;</div>
             <div style={{ fontSize: 36, marginBottom: 16 }}>{'\u{1F436}'}</div>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>
+            <h3 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 20, fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>
               Are you sure?
             </h3>
             <p style={{ fontSize: 14, color: '#5a5248', marginBottom: 20, lineHeight: 1.6 }}>

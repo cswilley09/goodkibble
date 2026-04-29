@@ -5,10 +5,10 @@ import CompareBubble from '@/app/components/CompareBubble';
 import SignUpButton from '@/app/components/SignUpButton';
 
 const section = { marginBottom: 36 };
-const h2Style = { fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: '#1a1612', marginBottom: 10 };
-const h3Style = { fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700, color: '#1a1612', marginBottom: 8, marginTop: 16 };
-const pStyle = { fontSize: 14, color: '#3d352b', lineHeight: 1.75, fontFamily: "'DM Sans', sans-serif", marginBottom: 12 };
-const liStyle = { fontSize: 14, color: '#3d352b', lineHeight: 1.75, fontFamily: "'DM Sans', sans-serif", marginBottom: 6 };
+const h2Style = { fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 700, color: '#1a1612', marginBottom: 10 };
+const h3Style = { fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, color: '#1a1612', marginBottom: 8, marginTop: 16 };
+const pStyle = { fontSize: 14, color: '#3d352b', lineHeight: 1.75, fontFamily: "'Inter', sans-serif", marginBottom: 12 };
+const liStyle = { fontSize: 14, color: '#3d352b', lineHeight: 1.75, fontFamily: "'Inter', sans-serif", marginBottom: 6 };
 
 export default function PrivacyPage() {
   const router = useRouter();
@@ -22,9 +22,9 @@ export default function PrivacyPage() {
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
+          fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
@@ -36,7 +36,7 @@ export default function PrivacyPage() {
 
       <div style={{ maxWidth: 740, margin: '0 auto', padding: '48px 24px 80px' }}>
         <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8 }}>Legal</p>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#1a1612', marginBottom: 40 }}>Privacy Policy</h1>
+        <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#1a1612', marginBottom: 40 }}>Privacy Policy</h1>
 
         <div style={section}>
           <h2 style={h2Style}>1. Introduction</h2>
@@ -175,8 +175,8 @@ export default function PrivacyPage() {
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#f0c930' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

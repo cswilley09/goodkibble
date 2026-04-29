@@ -36,8 +36,8 @@ export default function RecallTracker() {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '60px 24px', color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", fontSize: 16 }}>
-        <div style={{ width: 32, height: 32, border: '3px solid #ede8df', borderTopColor: '#C9A84C', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
+      <div style={{ textAlign: 'center', padding: '60px 24px', color: '#8a7e72', fontFamily: "'Inter', sans-serif", fontSize: 16 }}>
+        <div style={{ width: 32, height: 32, border: '3px solid #ede8df', borderTopColor: '#C68A1B', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
         Loading recall data...
       </div>
     );
@@ -45,7 +45,7 @@ export default function RecallTracker() {
 
   if (error) {
     return (
-      <div style={{ textAlign: 'center', padding: '60px 24px', color: '#b5483a', fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>
+      <div style={{ textAlign: 'center', padding: '60px 24px', color: '#b5483a', fontFamily: "'Inter', sans-serif", fontSize: 14 }}>
         Failed to load recall data: {error}
       </div>
     );
@@ -74,8 +74,8 @@ export default function RecallTracker() {
             background: '#fff', borderRadius: 16, border: '1px solid #ede8df',
             padding: '20px 16px', textAlign: 'center',
           }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 900, color: s.color }}>{s.value}</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8a7e72', marginTop: 4 }}>{s.label}</div>
+            <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 900, color: s.color }}>{s.value}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: '#8a7e72', marginTop: 4 }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -97,7 +97,7 @@ export default function RecallTracker() {
             style={{
               flex: 1, border: 'none', outline: 'none', fontSize: 14, padding: '10px 12px',
               background: 'transparent', color: '#1a1612',
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+              fontFamily: "'Inter', sans-serif", fontWeight: 500,
             }}
           />
           {search && (
@@ -107,7 +107,7 @@ export default function RecallTracker() {
             }}>&times;</button>
           )}
         </div>
-        <div style={{ fontSize: 12, color: '#b5aa99', marginTop: 6, fontFamily: "'DM Sans', sans-serif" }}>
+        <div style={{ fontSize: 12, color: '#b5aa99', marginTop: 6, fontFamily: "'Inter', sans-serif" }}>
           Showing {filtered.length} of {recalls.length} recalls from the last {summary.periodDays || 365} days
         </div>
       </div>
@@ -119,10 +119,10 @@ export default function RecallTracker() {
           borderRadius: 16, border: '1px solid #ede8df',
         }}>
           <div style={{ fontSize: 36, opacity: 0.3, marginBottom: 12 }}>{'\u{1F6E1}\u{FE0F}'}</div>
-          <div style={{ fontSize: 16, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>
+          <div style={{ fontSize: 16, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>
             {search ? 'No recalls match your search' : 'No recalls found'}
           </div>
-          <p style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
             {search ? 'Try a different brand name or keyword.' : 'No FDA recalls or advisories were found for the selected period.'}
           </p>
         </div>
@@ -142,7 +142,7 @@ export default function RecallTracker() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 8 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 700, color: '#1a1612',
+                      fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, color: '#1a1612',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                     }}>
                       {recall.brand_name || 'Unknown Brand'}
@@ -152,12 +152,12 @@ export default function RecallTracker() {
                     <span style={{
                       padding: '3px 10px', borderRadius: 100, fontSize: 10, fontWeight: 700,
                       background: sev.bg, color: sev.color,
-                      fontFamily: "'DM Sans', sans-serif", letterSpacing: 0.3,
+                      fontFamily: "'Inter', sans-serif", letterSpacing: 0.3,
                     }}>{sev.label}</span>
                     <span style={{
                       padding: '3px 10px', borderRadius: 100, fontSize: 10, fontWeight: 700,
                       background: stat.bg, color: stat.color,
-                      fontFamily: "'DM Sans', sans-serif", letterSpacing: 0.3,
+                      fontFamily: "'Inter', sans-serif", letterSpacing: 0.3,
                     }}>{recall.status || 'Ongoing'}</span>
                   </div>
                 </div>
@@ -165,7 +165,7 @@ export default function RecallTracker() {
                 {/* Description */}
                 <div style={{
                   fontSize: 13, color: '#5a5248', lineHeight: 1.5, marginBottom: 10,
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
                 }}>
                   {recall.product_description || recall.reason || 'No description available'}
@@ -173,15 +173,15 @@ export default function RecallTracker() {
 
                 {/* Footer: date + source link */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif" }}>
+                  <span style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'Inter', sans-serif" }}>
                     {formatDate(recall.recall_date || recall.report_date || recall.created_at)}
                     {recall.source === 'fda_outbreaks' && ' \u00B7 FDA Advisory'}
                     {recall.source === 'fda_rss' && ' \u00B7 FDA Recall'}
                   </span>
                   {recall.source_url && (
                     <a href={recall.source_url} target="_blank" rel="noopener noreferrer" style={{
-                      fontSize: 11, fontWeight: 600, color: '#C9A84C',
-                      textDecoration: 'none', fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 11, fontWeight: 600, color: '#C68A1B',
+                      textDecoration: 'none', fontFamily: "'Inter', sans-serif",
                     }}>View FDA Source &rarr;</a>
                   )}
                 </div>

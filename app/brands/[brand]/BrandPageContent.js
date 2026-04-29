@@ -32,11 +32,11 @@ function ScoreRing({ score }) {
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform="rotate(-90 21 21)" />
         <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
+          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1a1612' }}>
           {score}
         </text>
       </svg>
-      <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+      <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: '#8a7e72', marginTop: 2 }}>
         {getScoreTier(score)}
       </span>
     </div>
@@ -102,9 +102,9 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
+          fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
@@ -118,7 +118,7 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
-          cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
+          cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 500,
           marginBottom: 32, padding: 0,
         }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -127,8 +127,8 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
 
         {/* Brand header */}
         <div style={{ marginBottom: 32 }}>
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 4vw, 42px)',
+          <h1 className="page-title" style={{
+            fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 42px)',
             fontWeight: 700, color: '#1a1612', marginBottom: 8,
           }}>{brandName}</h1>
           <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 16 }}>
@@ -139,19 +139,19 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             {avgScore && (
               <div style={{ background: '#faf8f5', border: '1px solid #ede8df', borderRadius: 12, padding: '12px 20px', textAlign: 'center' }}>
-                <div style={{ fontSize: 24, fontWeight: 700, color: '#1a1612', fontFamily: "'DM Sans', sans-serif" }}>{avgScore}</div>
+                <div style={{ fontSize: 24, fontWeight: 700, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>{avgScore}</div>
                 <div style={{ fontSize: 11, fontWeight: 600, color: '#8a7e72', letterSpacing: 1, textTransform: 'uppercase' }}>Avg Score</div>
               </div>
             )}
             {avgProtein && (
               <div style={{ background: '#faf8f5', border: '1px solid #ede8df', borderRadius: 12, padding: '12px 20px', textAlign: 'center' }}>
-                <div style={{ fontSize: 24, fontWeight: 700, color: '#2d7a4f', fontFamily: "'DM Sans', sans-serif" }}>{avgProtein}%</div>
+                <div style={{ fontSize: 24, fontWeight: 700, color: '#2d7a4f', fontFamily: "'Inter', sans-serif" }}>{avgProtein}%</div>
                 <div style={{ fontSize: 11, fontWeight: 600, color: '#8a7e72', letterSpacing: 1, textTransform: 'uppercase' }}>Avg Protein</div>
               </div>
             )}
             {avgFat && (
               <div style={{ background: '#faf8f5', border: '1px solid #ede8df', borderRadius: 12, padding: '12px 20px', textAlign: 'center' }}>
-                <div style={{ fontSize: 24, fontWeight: 700, color: '#c47a20', fontFamily: "'DM Sans', sans-serif" }}>{avgFat}%</div>
+                <div style={{ fontSize: 24, fontWeight: 700, color: '#c47a20', fontFamily: "'Inter', sans-serif" }}>{avgFat}%</div>
                 <div style={{ fontSize: 11, fontWeight: 600, color: '#8a7e72', letterSpacing: 1, textTransform: 'uppercase' }}>Avg Fat</div>
               </div>
             )}
@@ -170,8 +170,8 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#f0c930' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

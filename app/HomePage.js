@@ -11,11 +11,11 @@ import { useRouter } from 'next/navigation';
    HELPERS
    ═══════════════════════════════════════ */
 
-// 3-tier score → token-driven color (good / mid / poor).
 function getScoreColor(score) {
-  if (score >= 80) return 'var(--color-score-good)';
-  if (score >= 50) return 'var(--color-score-mid)';
-  return 'var(--color-score-poor)';
+  if (score >= 90) return '#639922';
+  if (score >= 70) return '#7BAF2E';
+  if (score >= 50) return '#EF9F27';
+  return '#D97B2A';
 }
 
 function getScoreTier(score) {
@@ -56,61 +56,51 @@ function MarqueeCard({ p, onClick }) {
   const color = getScoreColor(p.quality_score);
   return (
     <div onClick={() => onClick(p)} className="marquee-card" style={{
-      width: 240, flexShrink: 0,
-      background: 'var(--color-surface)',
-      borderRadius: 'var(--radius-lg)',
-      border: 'var(--border-default)',
-      cursor: 'pointer',
-      transition: 'transform 0.25s, border-color 0.25s',
+      width: 240, flexShrink: 0, background: '#fff', borderRadius: 16,
+      border: '1px solid #ede8df', cursor: 'pointer',
+      transition: 'transform 0.25s, box-shadow 0.25s',
       overflow: 'hidden',
     }}>
-      <div style={{ height: 140, background: 'var(--color-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+      <div style={{ height: 140, background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         {p.image_url && !imgErr ? (
           <img src={p.image_url} alt="" onError={() => setImgErr(true)}
-            style={{ maxHeight: 110, maxWidth: '70%', objectFit: 'contain' }} />
+            style={{ maxHeight: 110, maxWidth: '70%', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.08))' }} />
         ) : (
           <span style={{ fontSize: 40, opacity: 0.3 }}>🐕</span>
         )}
         {p.quality_score != null && (
           <div style={{
-            position: 'absolute', bottom: -16, left: '50%', transform: 'translateX(-50%)',
-            width: 48, height: 48, borderRadius: 'var(--radius-pill)',
-            background: color,
+            position: 'absolute', bottom: -18, left: '50%', transform: 'translateX(-50%)',
+            width: 44, height: 44, borderRadius: '50%', background: color,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: '3px solid var(--color-surface)', zIndex: 1,
+            border: '3px solid #fff', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', zIndex: 1,
           }}>
-            <span className="t-body" style={{ fontWeight: 500, color: 'var(--color-surface)' }}>{p.quality_score}</span>
+            <span style={{ fontSize: 16, fontWeight: 800, color: '#fff', fontFamily: "'Inter', sans-serif" }}>{p.quality_score}</span>
           </div>
         )}
       </div>
-      <div style={{ padding: 'var(--space-8) var(--space-4) var(--space-4)', textAlign: 'center' }}>
-        <div className="t-micro" style={{ color: 'var(--color-ink-60)', marginBottom: 'var(--space-1)' }}>{p.brand}</div>
-        <div className="t-display-sm" style={{
-          color: 'var(--color-ink)', marginBottom: 'var(--space-1)',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }}>{p.name}</div>
+      <div style={{ padding: '28px 16px 18px', textAlign: 'center' }}>
+        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 4, fontFamily: "'Inter', sans-serif" }}>{p.brand}</div>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 14, fontWeight: 700, color: '#1a1612', lineHeight: 1.3, marginBottom: 6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
         {p.primary_protein && (
-          <div className="t-body-sm" style={{ color: 'var(--color-ink-60)', marginBottom: 'var(--space-3)' }}>
+          <div style={{ fontSize: 11, color: '#8a7e72', marginBottom: 10, fontFamily: "'Inter', sans-serif" }}>
             Primary Protein: {p.primary_protein}
           </div>
         )}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
           {p.protein_dmb != null && (
-            <span className="t-micro" style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)', color: 'var(--color-ink-60)', background: 'var(--color-sand)', borderRadius: 'var(--radius-pill)', padding: '4px 8px' }}>
-              <span style={{ width: 6, height: 6, borderRadius: 'var(--radius-pill)', background: 'var(--color-score-good)', flexShrink: 0 }} />{(Math.round(p.protein_dmb * 10) / 10)}%
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'Inter', sans-serif" }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#639922', flexShrink: 0 }} />{(Math.round(p.protein_dmb * 10) / 10)}%
             </span>
           )}
           {p.fat_dmb != null && (
-            <span className="t-micro" style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)', color: 'var(--color-ink-60)', background: 'var(--color-sand)', borderRadius: 'var(--radius-pill)', padding: '4px 8px' }}>
-              <span style={{ width: 6, height: 6, borderRadius: 'var(--radius-pill)', background: 'var(--color-marigold)', flexShrink: 0 }} />{(Math.round(p.fat_dmb * 10) / 10)}%
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'Inter', sans-serif" }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#EF9F27', flexShrink: 0 }} />{(Math.round(p.fat_dmb * 10) / 10)}%
             </span>
           )}
           {p.carbs_dmb != null && (
-            <span className="t-micro" style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)', color: 'var(--color-ink-60)', background: 'var(--color-sand)', borderRadius: 'var(--radius-pill)', padding: '4px 8px' }}>
-              <span style={{ width: 6, height: 6, borderRadius: 'var(--radius-pill)', background: 'var(--color-ink-60)', flexShrink: 0 }} />{(Math.round(p.carbs_dmb * 10) / 10)}%
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'Inter', sans-serif" }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#378ADD', flexShrink: 0 }} />{(Math.round(p.carbs_dmb * 10) / 10)}%
             </span>
           )}
         </div>
@@ -131,78 +121,90 @@ function ProductMarquee({ onCardClick, products: initialProducts }) {
   const doubled = [...products, ...products];
 
   return (
-    <section className="marquee-section" style={{
-      paddingTop: 'var(--space-16)', paddingBottom: 'var(--space-16)',
-      overflow: 'hidden', position: 'relative',
+    <div className="marquee-section" style={{
+      padding: '72px 0 64px', overflow: 'hidden', position: 'relative',
     }}>
-      <div className="gk-container" style={{ textAlign: 'center', marginBottom: 'var(--space-12)' }}>
-        <h2 className="t-display-md" style={{ color: 'var(--color-ink)', marginBottom: 'var(--space-2)' }}>See how popular brands stack up</h2>
-        <p className="t-body" style={{ color: 'var(--color-ink-60)', maxWidth: 480, margin: '0 auto' }}>Every kibble scored 0–100 across nutrition and ingredient quality</p>
+      <div className="marquee-heading" style={{ textAlign: 'center', marginBottom: 40, padding: '0 24px' }}>
+        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1a1612', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 8 }}>See how popular brands stack up</h2>
+        <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'Inter', sans-serif", maxWidth: 480, margin: '0 auto' }}>Every kibble scored 0–100 across nutrition and ingredient quality</p>
       </div>
-      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 64, zIndex: 2, background: 'linear-gradient(to right, var(--color-paper), transparent)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 64, zIndex: 2, background: 'linear-gradient(to left, var(--color-paper), transparent)', pointerEvents: 'none' }} />
-      <div className="marquee-track" style={{ display: 'flex', gap: 'var(--space-4)', width: 'max-content', animation: 'marquee 45s linear infinite' }}>
+      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to right, #faf8f4, transparent)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to left, #faf8f4, transparent)', pointerEvents: 'none' }} />
+      <div className="marquee-track" style={{ display: 'flex', gap: 20, width: 'max-content', animation: 'marquee 45s linear infinite' }}>
         {doubled.map((p, i) => <MarqueeCard key={`${p.id}-${i}`} p={p} onClick={onCardClick} />)}
       </div>
-    </section>
+    </div>
   );
 }
 
 /* ═══════════════════════════════════════
-   SECTION 3: WHY GOODKIBBLE (DARK EDITORIAL)
+   SECTION 3: STATS STRIP
    ═══════════════════════════════════════ */
 
 function WhyStrip() {
   const [ref, visible] = useFadeIn(0.2);
   return (
-    <section ref={ref} style={{
-      background: 'var(--color-ink)',
-      paddingTop: 'var(--space-24)', paddingBottom: 'var(--space-24)',
-      position: 'relative', overflow: 'hidden',
+    <div ref={ref} className="why-section" style={{
+      background: 'linear-gradient(180deg, #1a1612 0%, #13100d 100%)',
+      padding: '96px 24px 104px',
+      position: 'relative',
+      overflow: 'hidden',
     }}>
-      {/* Soft marigold glow */}
+      {/* Soft green glow */}
       <div aria-hidden style={{
         position: 'absolute', top: '-30%', left: '50%', transform: 'translateX(-50%)',
-        width: 800, height: 500, borderRadius: 'var(--radius-pill)',
-        background: 'radial-gradient(circle, rgba(200,148,31,0.08) 0%, transparent 65%)',
+        width: 800, height: 500, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(229,169,61,0.08) 0%, transparent 65%)',
         pointerEvents: 'none',
       }} />
-      <div className="gk-container" style={{ position: 'relative', ...fade(visible) }}>
-        <div style={{ textAlign: 'center', marginBottom: 'var(--space-12)' }}>
-          <div className="t-eyebrow" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)',
-            color: 'var(--color-marigold)',
-            marginBottom: 'var(--space-4)',
+      <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', ...fade(visible) }}>
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase',
+            color: '#E5A93D', fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+            marginBottom: 16,
           }}>
-            <span style={{ width: 6, height: 6, borderRadius: 'var(--radius-pill)', background: 'var(--color-marigold)', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#E5A93D', animation: 'heroDot 1.5s ease-in-out infinite' }} />
             Why GoodKibble
           </div>
-          <h2 className="t-display-lg" style={{ color: 'var(--color-paper)' }}>
+          <h2 className="statement-h2" style={{
+            fontFamily: "'Instrument Serif', Georgia, serif",
+            fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 400, color: '#faf8f4',
+            lineHeight: 1.05, letterSpacing: -0.5, margin: 0,
+          }}>
             Built on data,{' '}
-            <em style={{ color: 'var(--color-marigold)', fontStyle: 'italic' }}>not marketing.</em>
+            <em style={{ color: '#E5A93D', fontStyle: 'italic' }}>not marketing.</em>
           </h2>
         </div>
-        <div className="why-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-12)' }}>
+        <div className="why-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 48 }}>
           {VALUE_PROPS.map((vp, i) => (
             <div key={vp.title} style={{
               textAlign: 'left',
-              paddingLeft: i === 0 ? 0 : 'var(--space-8)',
-              borderLeft: i === 0 ? 'none' : '1px solid rgba(244,239,228,0.08)',
+              paddingLeft: i === 0 ? 0 : 32,
+              borderLeft: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)',
             }}>
               <div style={{
-                width: 48, height: 48, borderRadius: 'var(--radius-md)',
-                background: 'rgba(200,148,31,0.10)',
-                border: '1px solid rgba(200,148,31,0.20)',
+                width: 48, height: 48, borderRadius: 12,
+                background: 'rgba(229,169,61,0.1)',
+                border: '1px solid rgba(229,169,61,0.18)',
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                marginBottom: 'var(--space-6)',
+                marginBottom: 20,
               }}>{vp.icon}</div>
-              <div className="t-display-sm" style={{ color: 'var(--color-paper)', marginBottom: 'var(--space-3)' }}>{vp.title}</div>
-              <p className="t-body-sm" style={{ color: 'rgba(244,239,228,0.6)', margin: 0 }}>{vp.desc}</p>
+              <div style={{
+                fontFamily: "'Instrument Serif', Georgia, serif",
+                fontSize: 24, fontWeight: 400, color: '#faf8f4',
+                lineHeight: 1.2, marginBottom: 10, letterSpacing: -0.3,
+              }}>{vp.title}</div>
+              <p style={{
+                fontSize: 14, color: '#8a7e72', lineHeight: 1.65,
+                fontFamily: "'Inter', sans-serif", margin: 0,
+              }}>{vp.desc}</p>
             </div>
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -210,17 +212,15 @@ function WhyStrip() {
    SECTION 4: SCORING VISUAL DEMO
    ═══════════════════════════════════════ */
 
-// TODO: token — DEMO_CATS uses data-viz colors not yet promoted to tokens.
 const DEMO_CATS = [
-  { key: 'A_protein',         name: 'Protein',         max: 25, color: 'var(--color-score-good)' },
-  { key: 'B_fat',              name: 'Fat',             max: 15, color: 'var(--color-marigold)' },
-  { key: 'C_carbs',            name: 'Carbohydrates',   max: 15, color: 'var(--color-ink-60)' },
-  // TODO: token — fiber data-viz color (purple) is not yet in the token system
-  { key: 'D_fiber',            name: 'Fiber',           max: 5,  color: '#7F77DD' },
-  { key: 'E_protein_source',   name: 'Protein Sources', max: 15, color: 'var(--color-marigold)' },
-  { key: 'F_preservatives',    name: 'Preservatives',   max: 10, color: 'var(--color-marigold)' },
-  { key: 'G_additives',        name: 'Additives',       max: 5,  color: 'var(--color-marigold)' },
-  { key: 'H_functional',       name: 'Functional',      max: 10, color: 'var(--color-marigold)' },
+  { key: 'A_protein', name: 'Protein', max: 25, color: '#639922' },
+  { key: 'B_fat', name: 'Fat', max: 15, color: '#EF9F27' },
+  { key: 'C_carbs', name: 'Carbohydrates', max: 15, color: '#378ADD' },
+  { key: 'D_fiber', name: 'Fiber', max: 5, color: '#7F77DD' },
+  { key: 'E_protein_source', name: 'Protein Sources', max: 15, color: '#C68A1B' },
+  { key: 'F_preservatives', name: 'Preservatives', max: 10, color: '#C68A1B' },
+  { key: 'G_additives', name: 'Additives', max: 5, color: '#C68A1B' },
+  { key: 'H_functional', name: 'Functional', max: 10, color: '#C68A1B' },
 ];
 
 function AnimatedScore({ target, max, active, delay }) {
@@ -275,42 +275,34 @@ function ScoringDemo({ onNavigate }) {
   const cats = demoProduct?.score_breakdown?.categories;
 
   return (
-    <section ref={sectionRef} style={{
-      background: 'var(--color-paper)',
-      paddingTop: 'var(--space-16)', paddingBottom: 'var(--space-16)',
-    }}>
-      <div className="gk-container" style={{
-        maxWidth: 820,
-        opacity: demoProduct ? 1 : 0,
-        transform: demoProduct ? 'translateY(0)' : 'translateY(24px)',
-        transition: 'opacity 0.7s ease, transform 0.7s ease',
-      }}>
-        <h2 className="t-display-md" style={{ color: 'var(--color-ink)', marginBottom: 'var(--space-3)', textAlign: 'center' }}>
+    <div ref={sectionRef} className="scoring-section" style={{ background: '#faf8f4', padding: '80px 24px' }}>
+      <div style={{ maxWidth: 820, margin: '0 auto', opacity: demoProduct ? 1 : 0, transform: demoProduct ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 0.7s ease, transform 0.7s ease' }}>
+        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1a1612', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 10, textAlign: 'center' }}>
           A score you can actually understand
         </h2>
-        <p className="t-body-lg" style={{ color: 'var(--color-ink-60)', maxWidth: 560, margin: '0 auto', marginBottom: 'var(--space-12)', textAlign: 'center' }}>
+        <p style={{ fontSize: 16, color: '#5a5248', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 44px', textAlign: 'center', fontFamily: "'Inter', sans-serif" }}>
           Here&apos;s how a real product breaks down across all 8 categories.
         </p>
 
-        <div className="demo-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 'var(--space-12)', alignItems: 'center', marginBottom: 'var(--space-12)' }}>
+        <div className="demo-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: 40, alignItems: 'center', marginBottom: 40 }}>
           {/* Left: category bars */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {DEMO_CATS.map((cat, i) => {
               const earned = cats?.[cat.key]?.score ?? Math.round(cat.max * 0.8);
               const pct = Math.min((earned / cat.max) * 100, 100);
               const delay = BAR_DELAYS[i];
               return (
-                <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-                  <div style={{ width: 8, height: 8, borderRadius: 'var(--radius-pill)', background: cat.color, flexShrink: 0 }} />
-                  <span className="t-label" style={{ color: 'var(--color-ink)', width: 120, flexShrink: 0 }}>{cat.name}</span>
-                  <div style={{ flex: 1, height: 8, borderRadius: 'var(--radius-pill)', background: 'var(--color-ink-08)', overflow: 'hidden' }}>
+                <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: cat.color, flexShrink: 0 }} />
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif", width: 120, flexShrink: 0 }}>{cat.name}</span>
+                  <div style={{ flex: 1, height: 8, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
                     <div style={{
-                      height: '100%', borderRadius: 'var(--radius-pill)', background: cat.color,
+                      height: '100%', borderRadius: 100, background: cat.color,
                       width: animated ? `${pct}%` : '0%',
                       transition: `width 1600ms ease-out ${delay}ms`,
                     }} />
                   </div>
-                  <span className="t-label" style={{ color: 'var(--color-ink-60)', width: 48, textAlign: 'right', flexShrink: 0 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', fontFamily: "'Inter', sans-serif", width: 40, textAlign: 'right', flexShrink: 0 }}>
                     <AnimatedScore target={earned} max={cat.max} active={animated} delay={delay} />
                   </span>
                 </div>
@@ -318,7 +310,7 @@ function ScoringDemo({ onNavigate }) {
             })}
           </div>
 
-          {/* Right: certification stamp */}
+          {/* Right: gold certification stamp */}
           <div style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
             opacity: animated ? 0.78 : 0,
@@ -326,7 +318,7 @@ function ScoringDemo({ onNavigate }) {
             transition: 'opacity 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 850ms, transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 850ms',
           }}>
             {demoProduct ? (
-              <div style={{ width: 192, color: 'var(--color-marigold)' }}>
+              <div style={{ width: 190 }}>
                 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                   <defs>
                     <filter id="stampWorn" x="-5%" y="-5%" width="110%" height="110%">
@@ -343,10 +335,10 @@ function ScoringDemo({ onNavigate }) {
                     <path id="botArc" d="M 163,118 A 65,65 0 0,1 37,118" fill="none"/>
                   </defs>
                   <g filter="url(#stampWorn)" opacity="0.78">
-                    <circle cx="100" cy="100" r="93" fill="none" stroke="currentColor" strokeWidth="4.5"/>
-                    <circle cx="100" cy="100" r="81" fill="none" stroke="currentColor" strokeWidth="2"/>
-                    <circle cx="100" cy="100" r="87" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2,4" opacity="0.5"/>
-                    <g fill="currentColor" fontSize="7" textAnchor="middle" fontFamily="serif">
+                    <circle cx="100" cy="100" r="93" fill="none" stroke="#C68A1B" strokeWidth="4.5"/>
+                    <circle cx="100" cy="100" r="81" fill="none" stroke="#C68A1B" strokeWidth="2"/>
+                    <circle cx="100" cy="100" r="87" fill="none" stroke="#C68A1B" strokeWidth="0.5" strokeDasharray="2,4" opacity="0.5"/>
+                    <g fill="#C68A1B" fontSize="7" textAnchor="middle" fontFamily="serif">
                       <text x="100" y="14">★</text>
                       <text x="100" y="194">★</text>
                       <text x="9" y="104">★</text>
@@ -356,17 +348,17 @@ function ScoringDemo({ onNavigate }) {
                       <text x="27" y="174">★</text>
                       <text x="173" y="174">★</text>
                     </g>
-                    <text fontSize="8" fontWeight="500" letterSpacing="3.5" fill="currentColor" textAnchor="middle" style={{ fontFamily: 'var(--font-sans)' }}>
+                    <text fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="8" fontWeight="700" letterSpacing="3.5" fill="#C68A1B" textAnchor="middle">
                       <textPath href="#topArc" startOffset="50%">GOODKIBBLE RATED</textPath>
                     </text>
-                    <text x="100" y="95" textAnchor="middle" fontSize="52" fill="currentColor" style={{ fontFamily: 'var(--font-display)', fontWeight: 400, letterSpacing: '-2px' }}>
+                    <text x="100" y="95" textAnchor="middle" fontFamily="Georgia, 'Instrument Serif', 'Times New Roman', serif" fontSize="52" fontWeight="bold" fill="#C68A1B" style={{ fontWeight: 900, letterSpacing: '-2px' }}>
                       {demoProduct.quality_score}
                     </text>
-                    <rect x="18" y="100" width="164" height="24" rx="2" fill="currentColor"/>
-                    <text x="100" y="117" textAnchor="middle" fontSize="13" fontWeight="500" letterSpacing="5" fill="var(--color-paper)" style={{ fontFamily: 'var(--font-sans)' }}>
+                    <rect x="18" y="100" width="164" height="24" rx="2" fill="#C68A1B"/>
+                    <text x="100" y="117" textAnchor="middle" fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="13" fontWeight="800" letterSpacing="5" fill="#FAF8F4">
                       {getScoreTier(demoProduct.quality_score).toUpperCase()}
                     </text>
-                    <text fontSize="7.5" fontWeight="500" letterSpacing="2" fill="currentColor" opacity="0.85" textAnchor="middle" style={{ fontFamily: 'var(--font-sans)' }}>
+                    <text fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="7.5" fontWeight="600" letterSpacing="2" fill="#C68A1B" opacity="0.85" textAnchor="middle">
                       <textPath href="#botArc" startOffset="50%">★ CERTIFIED QUALITY ★</textPath>
                     </text>
                   </g>
@@ -374,34 +366,27 @@ function ScoringDemo({ onNavigate }) {
               </div>
             ) : (
               <div style={{
-                width: 192, height: 192, borderRadius: 'var(--radius-pill)', border: '4px solid var(--color-ink-08)',
+                width: 190, height: 190, borderRadius: '50%', border: '4px solid #ede8df',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <div style={{ width: 24, height: 24, border: '3px solid var(--color-ink-40)', borderTopColor: 'transparent', borderRadius: 'var(--radius-pill)', animation: 'spin 0.8s linear infinite' }} />
+                <div style={{ width: 24, height: 24, border: '3px solid #b5aa99', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
               </div>
             )}
           </div>
         </div>
 
         <div style={{ textAlign: 'center' }}>
-          <button
-            type="button"
-            onClick={() => onNavigate('/how-we-score')}
-            className="gk-tap"
-            style={{
-              minHeight: 48, padding: '0 var(--space-8)',
-              borderRadius: 'var(--radius-pill)', border: 'none',
-              background: 'var(--color-ink)', color: 'var(--color-paper)',
-              fontFamily: 'var(--font-sans)', fontSize: 'var(--text-body-sm)', fontWeight: 500,
-              cursor: 'pointer',
-              transition: 'opacity 0.2s',
-            }}
-            onMouseEnter={(e) => { e.target.style.opacity = '0.85'; }}
-            onMouseLeave={(e) => { e.target.style.opacity = '1'; }}
+          <button onClick={() => onNavigate('/how-we-score')} style={{
+            padding: '14px 32px', borderRadius: 100, border: 'none',
+            background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 600,
+            cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'background 0.2s',
+          }}
+            onMouseEnter={(e) => { e.target.style.background = '#3d352b'; }}
+            onMouseLeave={(e) => { e.target.style.background = '#1a1612'; }}
           >See full methodology →</button>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -410,119 +395,97 @@ function ScoringDemo({ onNavigate }) {
    ═══════════════════════════════════════ */
 
 const PROTEIN_ICONS = {
-  Chicken: <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><ellipse cx="18" cy="17" rx="8" ry="10" stroke="currentColor" strokeWidth="1.5"/><path d="M10 15c-3 1-5 3-4 5s3 1 5 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M26 15c3 1 5 3 4 5s-3 1-5 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 26c-1 2-2 4-1 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M22 26c1 2 2 4 1 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M18 10v12" stroke="currentColor" strokeWidth="0.8" opacity="0.4" strokeLinecap="round"/></svg>,
-  Salmon: <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><path d="M4 18c0 0 4-8 14-8s14 8 14 8-4 8-14 8S4 18 4 18z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2-3 4-4 4-4s-1 5-2 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2 3 4 4 4 4s-1-5-2-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="10" cy="17.5" r="1.5" fill="currentColor"/></svg>,
-  Lamb: <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><ellipse cx="18" cy="18" rx="11" ry="8" stroke="currentColor" strokeWidth="1.5"/><path d="M10 12c1-2 3-2 4 0s3 2 4 0 3-2 4 0 3 2 4 0" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="28" cy="14" rx="4" ry="3.5" stroke="currentColor" strokeWidth="1.5"/></svg>,
-  Beef: <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><ellipse cx="17" cy="18" rx="12" ry="7" stroke="currentColor" strokeWidth="1.5"/><ellipse cx="30" cy="14" rx="4" ry="3.5" stroke="currentColor" strokeWidth="1.5"/><circle cx="31" cy="13.5" r="0.8" fill="currentColor"/></svg>,
-  Turkey: <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><ellipse cx="18" cy="20" rx="8" ry="6" stroke="currentColor" strokeWidth="1.5"/><circle cx="26" cy="7" r="3" stroke="currentColor" strokeWidth="1.5"/><circle cx="27" cy="6.5" r="0.8" fill="currentColor"/></svg>,
-  Fish: <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><path d="M5 18c0 0 3.5-7 13-7s13 7 13 7-3.5 7-13 7S5 18 5 18z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M29 14l5-4v16l-5-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="11" cy="17.5" r="1.8" fill="currentColor"/></svg>,
+  Chicken: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="18" cy="17" rx="8" ry="10" stroke="#C68A1B" strokeWidth="1.5"/><path d="M10 15c-3 1-5 3-4 5s3 1 5 0" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M26 15c3 1 5 3 4 5s-3 1-5 0" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 26c-1 2-2 4-1 5" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M22 26c1 2 2 4 1 5" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M18 10v12" stroke="#C68A1B" strokeWidth="0.8" opacity="0.4" strokeLinecap="round"/></svg>,
+  Salmon: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 18c0 0 4-8 14-8s14 8 14 8-4 8-14 8S4 18 4 18z" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2-3 4-4 4-4s-1 5-2 6" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2 3 4 4 4 4s-1-5-2-6" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="10" cy="17.5" r="1.5" fill="#C68A1B"/><path d="M16 14c1 2 1 6 0 8" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><path d="M20 13c1 2.5 1 7 0 10" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><path d="M24 14.5c.8 1.5.8 5 0 7" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/></svg>,
+  Lamb: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="18" cy="18" rx="11" ry="8" stroke="#C68A1B" strokeWidth="1.5"/><path d="M10 12c1-2 3-2 4 0s3 2 4 0 3-2 4 0 3 2 4 0" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="28" cy="14" rx="4" ry="3.5" stroke="#C68A1B" strokeWidth="1.5"/><circle cx="29.5" cy="13.5" r="0.8" fill="#C68A1B"/><path d="M31 11.5c1.5-1 3-0.5 3 1" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M26 11c-1-1.5-0.5-3 1-3" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><line x1="12" y1="25" x2="12" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="16" y1="25.5" x2="16" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="25.5" x2="21" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="25" y1="25" x2="25" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  Beef: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="17" cy="18" rx="12" ry="7" stroke="#C68A1B" strokeWidth="1.5"/><ellipse cx="30" cy="14" rx="4" ry="3.5" stroke="#C68A1B" strokeWidth="1.5"/><path d="M27 16c1-.5 2-1.5 3-2" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M28 11c-.5-2-1.5-3-1-4" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M33 11.5c.5-2 1-3 .5-4" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M34 13c1.5 0 2-.5 1.5-1.5" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><circle cx="31" cy="13.5" r="0.8" fill="#C68A1B"/><circle cx="33" cy="15.5" r="0.5" fill="#C68A1B"/><path d="M5 15c-2-1-3-3-2.5-5" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M20 24c0 1-1 1.5-2 1.5s-2-.5-2-1.5" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><line x1="10" y1="24" x2="10" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="14" y1="24.5" x2="14" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="24.5" x2="21" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="25" y1="24" x2="25" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M9 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M13 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M20 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M24 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  Turkey: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 8c4 2 6 6 6 10" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M4 12c4 1 6 4 7 8" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M3 16c3 1 6 3 8 6" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M8 6c3 3 5 7 4 12" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="18" cy="20" rx="8" ry="6" stroke="#C68A1B" strokeWidth="1.5"/><path d="M24 16c2-3 3-6 2.5-9" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><circle cx="26" cy="7" r="3" stroke="#C68A1B" strokeWidth="1.5"/><circle cx="27" cy="6.5" r="0.8" fill="#C68A1B"/><path d="M29 7.5l2.5 0.5-2.5 1" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/><path d="M25.5 9c-.5 1.5-1 2.5-1 3" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><line x1="16" y1="25.5" x2="16" y2="31" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="25.5" x2="21" y2="31" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 31h4" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M19 31h4" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/></svg>,
+  Fish: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 18c0 0 3.5-7 13-7s13 7 13 7-3.5 7-13 7S5 18 5 18z" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M29 14l5-4v16l-5-4" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="11" cy="17.5" r="1.8" fill="#C68A1B"/><circle cx="11.5" cy="17" r="0.6" fill="#FAF8F4"/><path d="M17 11c0-3 2-5 4-5-1 2-1 4 0 6" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M19 25c0 2 1 3.5 2.5 4-0.5-1.5-0.5-3 0.5-4.5" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M15 14.5c-1 2-1 5 0 7" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round"/></svg>,
 };
 
 function BrowseByProtein({ proteinCounts, onNavigate }) {
   const [ref, visible] = useFadeIn(0.15);
   const proteins = ['Chicken', 'Salmon', 'Lamb', 'Beef', 'Turkey', 'Fish'];
   return (
-    <section ref={ref} style={{
-      background: 'var(--color-surface)',
-      paddingTop: 'var(--space-16)', paddingBottom: 'var(--space-16)',
-      borderTop: 'var(--border-default)', borderBottom: 'var(--border-default)',
-    }}>
-      <div className="gk-container gk-container--editorial" style={{ ...fade(visible) }}>
-        <div style={{ textAlign: 'center', marginBottom: 'var(--space-12)' }}>
-          <h2 className="t-display-md" style={{ color: 'var(--color-ink)', marginBottom: 'var(--space-2)' }}>Browse by protein</h2>
-          <p className="t-body" style={{ color: 'var(--color-ink-60)' }}>Find foods by your dog&apos;s preferred protein source</p>
+    <div ref={ref} className="protein-section" style={{ background: '#fff', padding: '80px 24px', borderTop: '1px solid #ede8df', borderBottom: '1px solid #ede8df' }}>
+      <div style={{ maxWidth: 680, margin: '0 auto', ...fade(visible) }}>
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1a1612', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 8 }}>Browse by protein</h2>
+          <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>Find foods by your dog&apos;s preferred protein source</p>
         </div>
-        <div className="protein-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-3)' }}>
+        <div className="protein-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
           {proteins.map((name) => (
-            <a
-              key={name}
-              href={`/discover?protein=${encodeURIComponent(name)}`}
-              className="protein-tile gk-tap"
+            <div key={name}
+              onClick={() => onNavigate(`/discover?protein=${encodeURIComponent(name)}`)}
+              className="protein-tile"
               style={{
-                padding: 'var(--space-6) var(--space-4)',
-                borderRadius: 'var(--radius-lg)',
-                background: 'var(--color-paper)',
-                border: 'var(--border-default)',
-                cursor: 'pointer',
-                transition: 'transform 0.2s, border-color 0.2s',
+                padding: '24px 16px', borderRadius: 16, background: '#faf8f4',
+                border: '1px solid #ede8df', cursor: 'pointer',
+                transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
                 textAlign: 'center',
-                color: 'var(--color-marigold)',
-                textDecoration: 'none',
               }}
             >
-              <div style={{ marginBottom: 'var(--space-2)', display: 'flex', justifyContent: 'center' }}>{PROTEIN_ICONS[name]}</div>
-              <div className="t-label" style={{ color: 'var(--color-ink)', marginBottom: 'var(--space-1)' }}>{name}</div>
-              <div className="t-body-sm" style={{ color: 'var(--color-ink-40)' }}>
+              <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'center' }}>{PROTEIN_ICONS[name]}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1612', fontFamily: "'Inter', sans-serif", marginBottom: 4 }}>{name}</div>
+              <div style={{ fontSize: 12, color: '#b5aa99', fontFamily: "'Inter', sans-serif" }}>
                 {proteinCounts[name] ? `${proteinCounts[name]} products` : '—'}
               </div>
-            </a>
+            </div>
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
 /* ═══════════════════════════════════════
-   VALUE PROPS (consumed by WhyStrip)
+   SECTION 6: WHY GOODKIBBLE
    ═══════════════════════════════════════ */
 
 const VALUE_PROPS = [
   {
     title: 'Transparent Scoring',
     desc: 'Every score is broken down across 8 categories. See exactly why a food earned its rating.',
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-marigold)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E5A93D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>,
   },
   {
     title: 'Manufacturer-Sourced Data',
     desc: 'All nutritional data comes directly from the manufacturer. No guesswork, no retailer approximations.',
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-marigold)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E5A93D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
   },
   {
     title: 'Apples-to-Apples Nutrition',
-    desc: 'We strip moisture out of the equation so every food is compared on equal footing. Real nutrition, side by side.',
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-marigold)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="var(--color-marigold)"/><circle cx="17" cy="12" r="2" fill="var(--color-marigold)"/><circle cx="11" cy="18" r="2" fill="var(--color-marigold)"/></svg>,
+    desc: "We strip moisture out of the equation so every food is compared on equal footing. Real nutrition, side by side.",
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E5A93D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="#E5A93D"/><circle cx="17" cy="12" r="2" fill="#E5A93D"/><circle cx="11" cy="18" r="2" fill="#E5A93D"/></svg>,
   },
 ];
 
 /* ═══════════════════════════════════════
-   SECTION 6: FOOTER CTA
+   SECTION 7: FOOTER CTA
    ═══════════════════════════════════════ */
 
 function FooterCTA({ onNavigate, onSelect }) {
   const [ref, visible] = useFadeIn(0.15);
   return (
-    <section ref={ref} style={{
-      background: 'var(--color-ink)',
-      paddingTop: 'var(--space-16)', paddingBottom: 'var(--space-16)',
-      textAlign: 'center', overflow: 'hidden',
-    }}>
-      <div className="gk-container gk-container--editorial" style={{ maxWidth: 560, ...fade(visible) }}>
-        <h2 className="t-display-md" style={{ color: 'var(--color-paper)', marginBottom: 'var(--space-3)' }}>
+    <div ref={ref} className="footer-cta-section" style={{ background: '#1a1612', padding: '72px 24px 80px', textAlign: 'center', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 560, margin: '0 auto', width: '100%', boxSizing: 'border-box', ...fade(visible) }}>
+        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#faf8f4', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 12 }}>
           Ready to see what&apos;s in your dog&apos;s food?
         </h2>
-        <p className="t-body" style={{ color: 'rgba(244,239,228,0.6)', marginBottom: 'var(--space-8)' }}>Search any brand or browse our full database</p>
-        <div style={{ marginBottom: 'var(--space-6)' }}>
+        <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 32, fontFamily: "'Inter', sans-serif" }}>Search any brand or browse our full database</p>
+        <div style={{ marginBottom: 20 }}>
           <SearchBox onSelect={onSelect} variant="hero" />
         </div>
-        <button
-          type="button"
-          onClick={() => onNavigate('/discover')}
-          className="gk-tap"
-          style={{
-            minHeight: 48, padding: '0 var(--space-8)',
-            borderRadius: 'var(--radius-pill)',
-            border: '1px solid rgba(244,239,228,0.2)',
-            background: 'transparent', color: 'rgba(244,239,228,0.85)',
-            fontFamily: 'var(--font-sans)', fontSize: 'var(--text-body-sm)', fontWeight: 500,
-            cursor: 'pointer',
-            transition: 'background 0.2s, color 0.2s, border-color 0.2s',
-          }}
-          onMouseEnter={(e) => { e.target.style.background = 'var(--color-marigold)'; e.target.style.color = 'var(--color-ink)'; e.target.style.borderColor = 'var(--color-marigold)'; }}
-          onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = 'rgba(244,239,228,0.85)'; e.target.style.borderColor = 'rgba(244,239,228,0.2)'; }}
+        <button onClick={() => onNavigate('/discover')} style={{
+          padding: '14px 36px', borderRadius: 100, border: '1.5px solid #3d352b',
+          background: 'transparent', color: '#d4c9b8', fontSize: 15, fontWeight: 600,
+          cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'all 0.2s',
+        }}
+          onMouseEnter={(e) => { e.target.style.background = '#E5A93D'; e.target.style.color = '#1a1612'; e.target.style.borderColor = '#E5A93D'; }}
+          onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#d4c9b8'; e.target.style.borderColor = '#3d352b'; }}
         >Discover 1,000+ dog foods →</button>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -551,24 +514,26 @@ export default function Home({ marqueeData = [] }) {
   }, [router]);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--color-paper)' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4' }}>
 
-      {/* ═══ NAV ═══ */}
+      {/* ═══ NAV (desktop only — MobileNav is rendered globally in app/layout.js) ═══ */}
       <nav className="site-nav" style={{
         position: 'sticky', top: 0, zIndex: 50,
-        background: 'var(--color-paper)',
-        padding: 'var(--space-3) var(--container-padding-desktop)',
+        background: '#faf8f4',
+        padding: '14px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        borderBottom: scrolled ? 'var(--border-default)' : '1px solid transparent',
-        transition: 'border-color 0.3s',
+        borderBottom: scrolled ? '1px solid #ede8df' : '1px solid transparent',
+        boxShadow: scrolled ? '0 2px 12px rgba(26,22,18,0.04)' : 'none',
+        transition: 'all 0.3s',
       }}>
-        <a href="/" style={{ textDecoration: 'none', color: 'var(--color-ink)' }}>
-          <span className="t-display-sm" style={{ letterSpacing: '-0.005em' }}>
-            Good<span style={{ color: 'var(--color-marigold)' }}>Kibble</span>
-          </span>
-        </a>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-          <a className="nav-discover-link t-body-sm" href="/discover" style={{ color: 'var(--color-ink-60)', textDecoration: 'none', fontWeight: 500 }}>Discover Foods</a>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', cursor: 'pointer' }} onClick={() => goTo('/')}>
+          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <span className="nav-discover-link" onClick={() => goTo('/discover')} style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'color 0.2s' }}
+            onMouseEnter={(e) => e.target.style.color = '#1a1612'}
+            onMouseLeave={(e) => e.target.style.color = '#5a5248'}
+          >Discover Foods</span>
           <RecallsNav />
           <CompareBubble />
           <SignUpButton />
@@ -576,56 +541,49 @@ export default function Home({ marqueeData = [] }) {
       </nav>
 
       {/* ═══ 1. HERO ═══ */}
-      <section className="hero-section gk-container" style={{ paddingTop: 'var(--space-12)', paddingBottom: 'var(--space-16)', position: 'relative', zIndex: 30 }}>
-        <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 'var(--space-12)', alignItems: 'center' }}>
+      <div className="hero-section" style={{ padding: '56px 40px 64px', maxWidth: 1200, width: '100%', margin: '0 auto', position: 'relative', zIndex: 30, boxSizing: 'border-box' }}>
+        <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 48, alignItems: 'center' }}>
           {/* Left: text + search */}
           <div className="hero-text">
-            <div className="t-eyebrow" style={{
-              display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)',
-              color: 'var(--color-marigold)', background: 'var(--color-sand)',
-              padding: 'var(--space-2) var(--space-4)',
-              borderRadius: 'var(--radius-pill)',
-              marginBottom: 'var(--space-6)',
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase',
+              color: '#C68A1B', background: '#F5E8C8',
+              padding: '6px 14px', borderRadius: 100,
+              marginBottom: 24,
+              fontFamily: 'ui-monospace, SFMono-Regular, monospace',
               animation: 'fadeUp 0.6s ease both',
             }}>
-              <span style={{ width: 7, height: 7, borderRadius: 'var(--radius-pill)', background: 'var(--color-marigold)', animation: 'heroDot 1.5s ease-in-out infinite' }} />
-              1,042 foods · 187 brands · scored &amp; analyzed
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C68A1B', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+              <span className="pill-full">1,042 foods · 187 brands · scored &amp; analyzed</span>
+              <span className="pill-short">1,042 foods · 187 brands analyzed</span>
             </div>
-            <h1 className="t-display-xl" style={{ color: 'var(--color-ink)', marginBottom: 'var(--space-8)', animation: 'fadeUp 0.6s ease 0.1s both' }}>
+            <h1 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 'clamp(44px, 6vw, 72px)', fontWeight: 400, color: '#1a1612', lineHeight: 1.02, letterSpacing: -1, marginBottom: 28, animation: 'fadeUp 0.6s ease 0.1s both' }}>
               Look up any dog food.<br />
-              <em style={{ color: 'var(--color-marigold)', fontStyle: 'italic' }}>See what&apos;s really in it.</em>
+              <em style={{ color: '#C68A1B', fontStyle: 'italic' }}>See what&apos;s really in it.</em>
             </h1>
-            <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, width: '100%' }}>
+            <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, width: '100%', boxSizing: 'border-box' }}>
               <SearchBox onSelect={handleSelect} variant="hero" />
             </div>
-            <div style={{ marginTop: 'var(--space-4)', animation: 'fadeUp 0.6s ease 0.35s both' }}>
-              <a
-                href="/discover"
-                className="gk-tap t-body"
-                style={{
-                  display: 'inline-flex', alignItems: 'center',
-                  minHeight: 44, padding: 'var(--space-2) 0',
-                  color: 'var(--color-ink)', textDecoration: 'none',
-                  fontWeight: 500,
-                  transition: 'color 0.2s',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none'; }}
-              >or discover 1,000+ dog foods by filter →</a>
+            <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.35s both' }}>
+              <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#1a1612', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
+                onMouseEnter={(e) => { e.target.style.textDecoration = 'underline'; }}
+                onMouseLeave={(e) => { e.target.style.textDecoration = 'none'; }}
+              >or discover 1,000+ dog foods by filter →</span>
             </div>
           </div>
 
-          {/* Right: KibbleAnalyzer (hidden below md via globals.css) */}
+          {/* Right: KibbleAnalyzer */}
           <div className="hero-analyzer" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', animation: 'fadeIn 0.8s ease 0.3s both' }}>
             <KibbleAnalyzer />
           </div>
         </div>
-      </section>
+      </div>
 
       {/* ═══ 2. MARQUEE ═══ */}
       <ProductMarquee onCardClick={handleSelect} products={marqueeData} />
 
-      {/* ═══ 3. WHY GOODKIBBLE (dark editorial strip) ═══ */}
+      {/* ═══ 3. WHY GOODKIBBLE (dark strip) ═══ */}
       <WhyStrip />
 
       {/* ═══ 4. SCORING DEMO ═══ */}
@@ -638,23 +596,16 @@ export default function Home({ marqueeData = [] }) {
       <FooterCTA onNavigate={goTo} onSelect={handleSelect} />
 
       {/* ═══ FOOTER ═══ */}
-      <footer style={{
-        background: 'var(--color-ink)',
-        borderTop: '1px solid rgba(244,239,228,0.08)',
-        padding: 'var(--space-6) var(--container-padding-desktop)',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-3)',
-      }}>
-        <div className="t-display-sm" style={{ color: 'var(--color-paper)' }}>
-          Good<span style={{ color: 'var(--color-marigold)' }}>Kibble</span>
-        </div>
-        <div className="t-body-sm" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', color: 'rgba(244,239,228,0.5)', flexWrap: 'wrap' }}>
-          <a href="/terms" style={{ color: 'rgba(244,239,228,0.5)', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: 'rgba(244,239,228,0.5)', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: 'rgba(244,239,228,0.5)', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: 'rgba(244,239,228,0.5)', textDecoration: 'none' }}>FAQ</a>
+      <div style={{ borderTop: '1px solid #3d352b', padding: '28px 40px', background: '#1a1612', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#faf8f4' }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#5a5248', fontFamily: "'Inter', sans-serif", flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: '#5a5248', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: '#5a5248', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: '#5a5248', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: '#5a5248', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
-      </footer>
+      </div>
 
       {/* ═══ STYLES ═══ */}
       <style>{`
@@ -663,23 +614,45 @@ export default function Home({ marqueeData = [] }) {
           100% { transform: translateX(-50%); }
         }
         .marquee-track:hover { animation-play-state: paused; }
-        .marquee-card:hover { transform: translateY(-4px); border-color: var(--color-marigold); }
-        .protein-tile:hover { transform: translateY(-3px); border-color: var(--color-marigold); }
-
-        /* Hero responsive: stack at md, hide analyzer below md (also in globals.css) */
+        .marquee-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,22,18,0.10); }
+        .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #C68A1B !important; }
+        /* Mobile pill-text swap (long form on desktop, short on mobile) */
+        .pill-short { display: none; }
         @media (max-width: 960px) {
-          .hero-grid { grid-template-columns: 1fr !important; gap: var(--space-8) !important; }
+          .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
           .hero-analyzer { max-width: 480px; margin: 0 auto; }
         }
         @media (max-width: 768px) {
-          .site-nav { padding: var(--space-3) var(--container-padding-mobile) !important; }
-          .nav-discover-link { display: none !important; }
-          .demo-layout { grid-template-columns: 1fr !important; gap: var(--space-8) !important; }
+          /* Hero: hide the analyzer illustration entirely (Tailwind equivalent: hidden md:block) */
+          .hero-analyzer { display: none !important; }
+          .hero-section { padding: 56px 16px 32px !important; }
+          .hero-text h1 { font-size: 36px !important; line-height: 1.05 !important; letter-spacing: -0.5px !important; margin-bottom: 20px !important; }
+          .hero-search-wrap { max-width: 100% !important; }
+          /* Pill copy: shorten on mobile to avoid awkward wrap */
+          .pill-full { display: none !important; }
+          .pill-short { display: inline !important; }
+          /* Nav tightening for 375px */
+          .site-nav { padding: 12px 14px !important; }
+          .site-nav > div:first-child { font-size: 22px !important; }
+          .site-nav > div:last-child { gap: 8px !important; }
+          .nav-discover-link { font-size: 12px !important; }
+          /* Section spacing — collapse desktop padding to ~48–56px on mobile */
+          .marquee-section { padding: 56px 0 40px !important; }
+          .marquee-heading { margin-bottom: 24px !important; }
+          /* Unified mobile heading sizes */
+          .section-h2 { font-size: 26px !important; line-height: 1.1 !important; }
+          .statement-h2 { font-size: 30px !important; line-height: 1.05 !important; }
+          .why-section { padding: 56px 20px 64px !important; }
+          .scoring-section { padding: 56px 16px !important; }
+          .protein-section { padding: 56px 16px !important; }
+          .footer-cta-section { padding: 56px 20px 64px !important; }
+          .footer-bar { padding: 24px 20px !important; }
+          /* Why dark strip: stack columns with top dividers instead of left */
+          .why-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+          .why-grid > div:not(:first-child) { padding-left: 0 !important; border-left: none !important; border-top: 1px solid rgba(255,255,255,0.08) !important; padding-top: 32px !important; }
+          .demo-layout { grid-template-columns: 1fr !important; gap: 32px !important; }
           .protein-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .why-grid { grid-template-columns: 1fr !important; gap: var(--space-12) !important; }
-          .why-grid > div:not(:first-child) { padding-left: 0 !important; border-left: none !important; border-top: 1px solid rgba(244,239,228,0.08) !important; padding-top: var(--space-8) !important; }
-          .marquee-card { width: 224px !important; }
-          .hero-section { padding-top: var(--space-8) !important; padding-bottom: var(--space-12) !important; }
+          .marquee-card { width: 210px !important; }
         }
       `}</style>
     </div>

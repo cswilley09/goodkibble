@@ -74,11 +74,11 @@ function ScoreRing({ score }) {
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform="rotate(-90 21 21)" />
         <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif", fill: '#1a1612' }}>
+          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1a1612' }}>
           {score}
         </text>
       </svg>
-      <span style={{ fontSize: 9, fontFamily: "'DM Sans', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+      <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: '#8a7e72', marginTop: 2 }}>
         {getScoreTier(score)}
       </span>
     </div>
@@ -108,7 +108,7 @@ function FilterSection({ title, children, defaultOpen = true, forceOpen = false 
       <button onClick={() => setOpen(!open)} style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%',
         border: 'none', background: 'none', cursor: 'pointer', padding: '4px 0',
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "'Inter', sans-serif",
       }}>
         <span style={{ fontSize: 13, fontWeight: 700, color: '#1a1612', letterSpacing: 1, textTransform: 'uppercase' }}>{title}</span>
         <span style={{ fontSize: 14, color: '#8a7e72', transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
@@ -124,7 +124,7 @@ function CheckOption({ label, checked, onChange, count }) {
     <label style={{
       display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0',
       cursor: 'pointer', fontSize: 14, color: '#3d352b',
-      fontFamily: "'DM Sans', sans-serif",
+      fontFamily: "'Inter', sans-serif",
     }}>
       <input type="checkbox" checked={checked} onChange={onChange} style={{ accentColor: '#1a1612', width: 16, height: 16 }} />
       <span style={{ flex: 1 }}>{label}</span>
@@ -390,9 +390,9 @@ function DiscoverContent() {
           style={{
             width: '100%', padding: '8px 12px', borderRadius: 10,
             border: '1.5px solid #ede8df', fontSize: 13, marginBottom: 8,
-            fontFamily: "'DM Sans', sans-serif", outline: 'none', background: '#faf8f5',
+            fontFamily: "'Inter', sans-serif", outline: 'none', background: '#faf8f5',
           }}
-          onFocus={(e) => e.target.style.borderColor = '#f0c930'}
+          onFocus={(e) => e.target.style.borderColor = '#E5A93D'}
           onBlur={(e) => e.target.style.borderColor = '#ede8df'}
         />
         <div style={{ maxHeight: 200, overflowY: 'auto' }}>
@@ -447,9 +447,9 @@ function DiscoverContent() {
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800,
+          fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
           color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#f0c930' }}>Kibble</span></div>
+        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
@@ -464,8 +464,8 @@ function DiscoverContent() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>
         {/* header */}
         <div style={{ marginBottom: 8 }}>
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 3vw, 40px)',
+          <h1 className="page-title" style={{
+            fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3vw, 40px)',
             fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 4,
           }}>Discover Foods</h1>
         </div>
@@ -476,7 +476,7 @@ function DiscoverContent() {
             width: '100%', padding: '12px 20px', borderRadius: 14,
             border: '1.5px solid #ede8df', background: '#fff',
             fontSize: 14, fontWeight: 600, color: '#1a1612', cursor: 'pointer',
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Inter', sans-serif",
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           }}>
             <span>Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}</span>
@@ -490,7 +490,7 @@ function DiscoverContent() {
           flexWrap: 'wrap', gap: 12, marginBottom: 20,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif" }}>
+            <span style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
               {getResultText()}
             </span>
             {activeFilterCount > 0 && (
@@ -498,7 +498,7 @@ function DiscoverContent() {
                 onClick={clearAll}
                 style={{
                   fontSize: 13, color: '#b5aa99', cursor: 'pointer',
-                  fontFamily: "'DM Sans', sans-serif", transition: 'color 0.15s',
+                  fontFamily: "'Inter', sans-serif", transition: 'color 0.15s',
                 }}
                 onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
                 onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
@@ -508,14 +508,14 @@ function DiscoverContent() {
             )}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 13, color: '#b5aa99', fontFamily: "'DM Sans', sans-serif", whiteSpace: 'nowrap' }}>Sort by:</span>
+            <span style={{ fontSize: 13, color: '#b5aa99', fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap' }}>Sort by:</span>
             <select
               value={sortValue}
               onChange={(e) => handleSortChange(e.target.value)}
               style={{
                 padding: '8px 12px', borderRadius: 10, border: '1.5px solid #ede8df',
                 background: '#fff', fontSize: 13, color: '#1a1612', cursor: 'pointer',
-                fontFamily: "'DM Sans', sans-serif", outline: 'none',
+                fontFamily: "'Inter', sans-serif", outline: 'none',
                 appearance: 'none', WebkitAppearance: 'none',
                 backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'10\' height=\'6\' viewBox=\'0 0 10 6\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M1 1L5 5L9 1\' stroke=\'%238a7e72\' stroke-width=\'1.5\' stroke-linecap=\'round\'/%3E%3C/svg%3E")',
                 backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center',
@@ -573,7 +573,7 @@ function DiscoverContent() {
                   <button onClick={() => setVisibleCount(v => v + 48)} style={{
                     padding: '12px 32px', borderRadius: 100, border: '1.5px solid #ede8df',
                     background: '#fff', color: '#1a1612', fontSize: 14, fontWeight: 600,
-                    cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+                    cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'all 0.2s',
                   }}
                     onMouseEnter={(e) => { e.target.style.background = '#f5f0e8'; }}
                     onMouseLeave={(e) => { e.target.style.background = '#fff'; }}
@@ -609,7 +609,7 @@ function DiscoverContent() {
               width: '100%', padding: '14px', borderRadius: 14,
               border: 'none', background: '#1a1612', color: '#faf8f5',
               fontSize: 15, fontWeight: 600, cursor: 'pointer', marginTop: 16,
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "'Inter', sans-serif",
             }}>
               Show {filtered.length} result{filtered.length !== 1 ? 's' : ''}
             </button>
@@ -622,8 +622,8 @@ function DiscoverContent() {
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#f0c930' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
+          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
