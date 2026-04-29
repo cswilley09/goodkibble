@@ -666,29 +666,31 @@ function ScoreBreakdownCard({ breakdown }) {
     setExpandedCat(expandedCat === key ? null : key);
   };
 
+  // Brand palette alignment (matches homepage DEMO_CATS):
+  // Protein -> score-good, Fat -> marigold, Carbs/Fiber -> ink-60/40, ingredient rows -> marigold.
   const nutRow1 = [
-    { key: 'A_protein', label: 'Protein', color: '#2d7a4f' },
-    { key: 'B_fat', label: 'Fat', color: '#c47a20' },
+    { key: 'A_protein', label: 'Protein', color: '#3F7A3D' },
+    { key: 'B_fat',     label: 'Fat',     color: '#C8941F' },
   ];
   // Support both old (C_carbs) and new (C1+C2) breakdown keys
   const hasNewCarbs = !!cats?.C1_carb_level;
   const nutRow2 = hasNewCarbs ? [
-    { key: 'C1_carb_level', label: 'Carb Level', color: '#5a7a9e' },
-    { key: 'C2_carb_source', label: 'Carb Source', color: '#4a8a9e' },
+    { key: 'C1_carb_level',  label: 'Carb Level',  color: 'rgba(28,24,20,0.60)' },
+    { key: 'C2_carb_source', label: 'Carb Source', color: 'rgba(28,24,20,0.60)' },
   ] : [
-    { key: 'C_carbs', label: 'Carbs', color: '#5a7a9e' },
-    { key: 'D_fiber', label: 'Fiber', color: '#8a6aaf' },
+    { key: 'C_carbs', label: 'Carbs', color: 'rgba(28,24,20,0.60)' },
+    { key: 'D_fiber', label: 'Fiber', color: 'rgba(28,24,20,0.40)' },
   ];
   const nutRow3 = hasNewCarbs ? [
-    { key: 'D_fiber', label: 'Fiber', color: '#8a6aaf' },
+    { key: 'D_fiber', label: 'Fiber', color: 'rgba(28,24,20,0.40)' },
   ] : [];
   const ingRow1 = [
-    { key: 'E_protein_source', label: 'Protein sources', color: '#C8A415', textColor: '#A08310' },
-    { key: 'F_preservatives', label: 'Preservatives', color: '#C8A415', textColor: '#A08310' },
+    { key: 'E_protein_source', label: 'Protein sources', color: '#C8941F' },
+    { key: 'F_preservatives',  label: 'Preservatives',   color: '#C8941F' },
   ];
   const ingRow2 = [
-    { key: 'G_additives', label: 'Additives', color: '#C8A415', textColor: '#A08310' },
-    { key: 'H_functional', label: 'Functional', color: '#C8A415', textColor: '#A08310' },
+    { key: 'G_additives',  label: 'Additives',  color: '#C8941F' },
+    { key: 'H_functional', label: 'Functional', color: '#C8941F' },
   ];
 
   const renderPair = (tiles) => (
