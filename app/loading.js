@@ -19,13 +19,13 @@ export default function Loading() {
       {/* Hero skeleton */}
       <div style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', boxSizing: 'border-box' }}>
         {/* Tagline */}
-        <div style={{ width: 200, height: 14, borderRadius: 8, background: '#ede8df', margin: '0 auto 16px' }} />
+        <div style={{ width: 200, height: 14, borderRadius: 8, background: 'rgba(28,24,20,0.08)', margin: '0 auto 16px' }} />
         {/* Heading line 1 */}
-        <div style={{ width: 380, maxWidth: '80%', height: 44, borderRadius: 10, background: '#ede8df', margin: '0 auto 10px' }} />
+        <div style={{ width: 380, maxWidth: '80%', height: 44, borderRadius: 10, background: 'rgba(28,24,20,0.08)', margin: '0 auto 10px' }} />
         {/* Heading line 2 */}
-        <div style={{ width: 320, maxWidth: '70%', height: 44, borderRadius: 10, background: '#ede8df', margin: '0 auto 20px' }} />
+        <div style={{ width: 320, maxWidth: '70%', height: 44, borderRadius: 10, background: 'rgba(28,24,20,0.08)', margin: '0 auto 20px' }} />
         {/* Subtitle */}
-        <div style={{ width: 440, maxWidth: '90%', height: 16, borderRadius: 8, background: '#ede8df', margin: '0 auto 32px' }} />
+        <div style={{ width: 440, maxWidth: '90%', height: 16, borderRadius: 8, background: 'rgba(28,24,20,0.08)', margin: '0 auto 32px' }} />
         {/* Search bar */}
         <div style={{
           maxWidth: 520, margin: '0 auto', height: 58, borderRadius: 20,
@@ -33,7 +33,7 @@ export default function Loading() {
           boxShadow: '0 8px 40px rgba(26,22,18,0.12), 0 2px 8px rgba(26,22,18,0.06)',
         }} />
         {/* Browse link */}
-        <div style={{ width: 260, height: 14, borderRadius: 8, background: '#ede8df', margin: '16px auto 0' }} />
+        <div style={{ width: 260, height: 14, borderRadius: 8, background: 'rgba(28,24,20,0.08)', margin: '16px auto 0' }} />
       </div>
 
       {/* Marquee skeleton */}
@@ -42,7 +42,7 @@ export default function Loading() {
           {[...Array(5)].map((_, i) => (
             <div key={i} style={{
               width: 240, height: 160, borderRadius: 20, background: '#fff',
-              border: '1px solid #ede8df', flexShrink: 0,
+              border: '1px solid rgba(28,24,20,0.08)', flexShrink: 0,
             }} />
           ))}
         </div>

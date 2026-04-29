@@ -16,6 +16,14 @@
   --color-score-mid:  #C8941F;
   --color-score-poor: #A8442A;
 
+  /* Macro nutrient chart colors. Three reuse brand tokens; carbs taupe is new.
+     Use var(--color-ink-60) as a neutral fallback for chart categories
+     that aren't macros. */
+  --color-macro-protein: #3F7A3D;
+  --color-macro-fat:     #C8941F;
+  --color-macro-carbs:   #7A6A4F;
+  --color-macro-fiber:   #A8442A;
+
   --color-ink-08: rgba(28, 24, 20, 0.08);  /* card borders */
   --color-ink-60: rgba(28, 24, 20, 0.60);  /* secondary text */
   --color-ink-40: rgba(28, 24, 20, 0.40);  /* tertiary text, placeholders */

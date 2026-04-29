@@ -5,12 +5,12 @@ const SEVERITY_STYLES = {
   'Class I': { bg: '#fce4e4', color: '#b5483a', border: '#b5483a', label: 'Class I' },
   'Class II': { bg: '#fff0dc', color: '#c47a20', border: '#c47a20', label: 'Class II' },
   'Class III': { bg: '#fff8dc', color: '#8a7e20', border: '#d4c040', label: 'Class III' },
-  null: { bg: '#f0ebe3', color: '#8a7e72', border: '#b5aa99', label: 'Unclassified' },
+  null: { bg: '#f0ebe3', color: 'rgba(28,24,20,0.60)', border: 'rgba(28,24,20,0.40)', label: 'Unclassified' },
 };
 
 const STATUS_STYLES = {
   'Ongoing': { color: '#b5483a', bg: 'rgba(181,72,58,0.08)' },
-  'Terminated': { color: '#8a7e72', bg: 'rgba(138,126,114,0.08)' },
+  'Terminated': { color: 'rgba(28,24,20,0.60)', bg: 'rgba(138,126,114,0.08)' },
   'Completed': { color: '#2d7a4f', bg: 'rgba(45,122,79,0.08)' },
 };
 
@@ -36,8 +36,8 @@ export default function RecallTracker() {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '60px 24px', color: '#8a7e72', fontFamily: "'Inter', sans-serif", fontSize: 16 }}>
-        <div style={{ width: 32, height: 32, border: '3px solid #ede8df', borderTopColor: '#C8941F', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
+      <div style={{ textAlign: 'center', padding: '60px 24px', color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif", fontSize: 16 }}>
+        <div style={{ width: 32, height: 32, border: '3px solid rgba(28,24,20,0.08)', borderTopColor: '#C8941F', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
         Loading recall data...
       </div>
     );
@@ -71,11 +71,11 @@ export default function RecallTracker() {
           { label: 'Ingredient Changes', value: summary.totalIngredientChanges || 0, color: '#c47a20' },
         ].map(s => (
           <div key={s.label} style={{
-            background: '#fff', borderRadius: 16, border: '1px solid #ede8df',
+            background: '#fff', borderRadius: 16, border: '1px solid rgba(28,24,20,0.08)',
             padding: '20px 16px', textAlign: 'center',
           }}>
             <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 900, color: s.color }}>{s.value}</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: '#8a7e72', marginTop: 4 }}>{s.label}</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: 'rgba(28,24,20,0.60)', marginTop: 4 }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -84,9 +84,9 @@ export default function RecallTracker() {
       <div style={{ marginBottom: 20 }}>
         <div style={{
           display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 12,
-          border: '1.5px solid #ede8df', padding: '4px 4px 4px 16px',
+          border: '1.5px solid rgba(28,24,20,0.08)', padding: '4px 4px 4px 16px',
         }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b5aa99" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(28,24,20,0.40)" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}>
             <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" />
           </svg>
           <input
@@ -102,12 +102,12 @@ export default function RecallTracker() {
           />
           {search && (
             <button onClick={() => setSearch('')} style={{
-              background: 'none', border: 'none', color: '#b5aa99', fontSize: 16,
+              background: 'none', border: 'none', color: 'rgba(28,24,20,0.40)', fontSize: 16,
               cursor: 'pointer', padding: '6px 12px',
             }}>&times;</button>
           )}
         </div>
-        <div style={{ fontSize: 12, color: '#b5aa99', marginTop: 6, fontFamily: "'Inter', sans-serif" }}>
+        <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)', marginTop: 6, fontFamily: "'Inter', sans-serif" }}>
           Showing {filtered.length} of {recalls.length} recalls from the last {summary.periodDays || 365} days
         </div>
       </div>
@@ -116,13 +116,13 @@ export default function RecallTracker() {
       {filtered.length === 0 ? (
         <div style={{
           textAlign: 'center', padding: '48px 24px', background: '#fff',
-          borderRadius: 16, border: '1px solid #ede8df',
+          borderRadius: 16, border: '1px solid rgba(28,24,20,0.08)',
         }}>
           <div style={{ fontSize: 36, opacity: 0.3, marginBottom: 12 }}>{'\u{1F6E1}\u{FE0F}'}</div>
           <div style={{ fontSize: 16, fontWeight: 600, color: '#1C1814', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>
             {search ? 'No recalls match your search' : 'No recalls found'}
           </div>
-          <p style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
+          <p style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>
             {search ? 'Try a different brand name or keyword.' : 'No FDA recalls or advisories were found for the selected period.'}
           </p>
         </div>
@@ -133,7 +133,7 @@ export default function RecallTracker() {
             const stat = STATUS_STYLES[recall.status] || STATUS_STYLES['Ongoing'];
             return (
               <div key={recall.id || i} style={{
-                background: '#fff', borderRadius: 14, border: '1px solid #ede8df',
+                background: '#fff', borderRadius: 14, border: '1px solid rgba(28,24,20,0.08)',
                 borderLeft: `4px solid ${sev.border}`,
                 padding: '18px 20px',
                 animation: `fadeIn 0.3s ease ${i * 0.03}s both`,
@@ -173,7 +173,7 @@ export default function RecallTracker() {
 
                 {/* Footer: date + source link */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'Inter', sans-serif" }}>
+                  <span style={{ fontSize: 11, color: 'rgba(28,24,20,0.40)', fontFamily: "'Inter', sans-serif" }}>
                     {formatDate(recall.recall_date || recall.report_date || recall.created_at)}
                     {recall.source === 'fda_outbreaks' && ' \u00B7 FDA Advisory'}
                     {recall.source === 'fda_rss' && ' \u00B7 FDA Recall'}

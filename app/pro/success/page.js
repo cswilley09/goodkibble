@@ -38,7 +38,7 @@ export default function ProSuccessPage() {
     <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
       <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid #ede8df',
+        padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)',
         background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
@@ -54,12 +54,12 @@ export default function ProSuccessPage() {
           fontWeight: 900, color: '#1C1814', margin: '0 0 12px', letterSpacing: -1,
         }}>Welcome to GoodKibble Pro!</h1>
         <p style={{
-          fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72',
+          fontFamily: "'Inter', sans-serif", fontSize: 16, color: 'rgba(28,24,20,0.60)',
           marginBottom: 32, lineHeight: 1.6,
         }}>Your account has been upgraded. All Pro features are now unlocked.</p>
 
         <div style={{
-          background: '#fff', borderRadius: 20, border: '1px solid #ede8df',
+          background: '#fff', borderRadius: 20, border: '1px solid rgba(28,24,20,0.08)',
           padding: 28, textAlign: 'left', marginBottom: 32,
         }}>
           <div style={{
@@ -87,7 +87,7 @@ export default function ProSuccessPage() {
           }}>Go to Dashboard &rarr;</button>
           <button onClick={() => router.push('/discover')} style={{
             padding: '14px 32px', borderRadius: 100, background: 'transparent', color: '#1C1814',
-            fontSize: 16, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer',
+            fontSize: 16, fontWeight: 600, border: '1.5px solid rgba(28,24,20,0.08)', cursor: 'pointer',
             fontFamily: "'Inter', sans-serif",
           }}>Browse Foods &rarr;</button>
         </div>

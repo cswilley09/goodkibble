@@ -40,7 +40,7 @@ function ProductImage({ src, alt }) {
     <div className="product-image-wrap" style={{
       width: 260, height: 320, borderRadius: 20, overflow: 'hidden',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: '#fff', flexShrink: 0, border: '1px solid #ede8df',
+      background: '#fff', flexShrink: 0, border: '1px solid rgba(28,24,20,0.08)',
     }}>
       <img src={src} alt={alt} onError={() => setErr(true)}
         style={{ width: '90%', height: '90%', objectFit: 'contain' }} />
@@ -57,7 +57,7 @@ function InfoTooltip({ text, onShow }) {
       <span style={{
         width: 20, height: 20, borderRadius: '50%', background: '#e8e0d4',
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 12, fontWeight: 700, color: '#8a7e72', cursor: 'pointer',
+        fontSize: 12, fontWeight: 700, color: 'rgba(28,24,20,0.60)', cursor: 'pointer',
         fontFamily: "'Inter', sans-serif",
       }}>i</span>
     </span>
@@ -136,7 +136,7 @@ function lookupIngredient(ing, ingredientInfo) {
   return null;
 }
 
-const SIGNAL_COLORS = { good: '#2d7a4f', neutral: '#8a7e72', caution: '#d4852a' };
+const SIGNAL_COLORS = { good: '#2d7a4f', neutral: 'rgba(28,24,20,0.60)', caution: '#d4852a' };
 const SIGNAL_BG = { good: 'rgba(45,122,79,0.12)', neutral: 'rgba(138,126,114,0.12)', caution: 'rgba(212,133,42,0.12)' };
 
 /* IngredientInfoCard — rendered in document flow below the pills */
@@ -171,7 +171,7 @@ function IngredientInfoCard({ info, onClose }) {
         {info.short_description}
       </div>
       {info.source && (
-        <div style={{ fontSize: 11, color: '#8a7e72', fontStyle: 'italic' }}>
+        <div style={{ fontSize: 11, color: 'rgba(28,24,20,0.60)', fontStyle: 'italic' }}>
           Source: {info.source}
         </div>
       )}
@@ -281,12 +281,12 @@ function SubGroupPill({ groupName, subItems, afterSalt, animDelay }) {
           padding: '2px 7px', borderRadius: 100, fontWeight: 600,
         }}>{subItems.length}</span>
         {groupName}
-        <span style={{ fontSize: 10, color: '#b5aa99', transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+        <span style={{ fontSize: 10, color: 'rgba(28,24,20,0.40)', transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
       </span>
       {expanded && (
         <div style={{
           marginTop: 6, padding: '12px 16px',
-          borderRadius: 12, background: '#f5f0e8', border: '1px solid #ede8df',
+          borderRadius: 12, background: '#f5f0e8', border: '1px solid rgba(28,24,20,0.08)',
           fontSize: 13, color: '#5a5248', lineHeight: 1.6,
           fontFamily: "'Inter', sans-serif",
           animation: 'fadeIn 0.15s ease',
@@ -305,7 +305,7 @@ function TickBar({ value, color }) {
   const ticks = [10, 20, 30, 40].map(v => (v / SHARED_MAX) * 100);
   return (
     <div style={{ flex: 1, position: 'relative', height: 10 }}>
-      <div style={{ position: 'absolute', inset: 0, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', inset: 0, borderRadius: 100, background: 'rgba(28,24,20,0.08)', overflow: 'hidden' }}>
         <div style={{
           height: '100%', borderRadius: 100, background: color,
           width: `${pct}%`, transition: 'width 0.8s ease',
@@ -333,7 +333,7 @@ function NutrientRow({ label, value, color }) {
         fontSize: 18, fontWeight: 700, color: '#1C1814',
         fontFamily: "'Inter', sans-serif", lineHeight: 1,
         minWidth: 48, flexShrink: 0,
-      }}>{value}<span style={{ fontSize: 12, fontWeight: 500, color: '#8a7e72' }}>%</span></span>
+      }}>{value}<span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(28,24,20,0.60)' }}>%</span></span>
       <TickBar value={value} color={color} />
     </div>
   );
@@ -349,7 +349,7 @@ function NutrientExplainer() {
   ];
   return (
     <div style={{
-      marginTop: 28, borderRadius: 24, border: '1px solid #ede8df',
+      marginTop: 28, borderRadius: 24, border: '1px solid rgba(28,24,20,0.08)',
       background: '#faf8f5', overflow: 'hidden',
     }}>
       <button onClick={() => setOpen(!open)} style={{
@@ -360,12 +360,12 @@ function NutrientExplainer() {
         <span style={{ fontSize: 14, fontWeight: 700, color: '#1C1814', letterSpacing: 1 }}>
           📖 What do these numbers mean?
         </span>
-        <span style={{ fontSize: 18, color: '#8a7e72', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+        <span style={{ fontSize: 18, color: 'rgba(28,24,20,0.60)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
       </button>
       {open && (
         <div style={{ padding: '0 32px 28px' }}>
           {nutrients.map((n) => (
-            <div key={n.name} style={{ marginBottom: 20, paddingBottom: 20, borderBottom: '1px solid #ede8df' }}>
+            <div key={n.name} style={{ marginBottom: 20, paddingBottom: 20, borderBottom: '1px solid rgba(28,24,20,0.08)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                 <span style={{ width: 10, height: 10, borderRadius: '50%', background: n.color, display: 'inline-block' }} />
                 <span style={{ fontSize: 15, fontWeight: 700, color: '#1C1814' }}>{n.name}</span>
@@ -373,7 +373,7 @@ function NutrientExplainer() {
               <p style={{ fontSize: 14, color: '#5a5047', lineHeight: 1.6 }}>{n.desc}</p>
             </div>
           ))}
-          <p style={{ fontSize: 12, color: '#b5aa99', lineHeight: 1.5, fontStyle: 'italic' }}>
+          <p style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)', lineHeight: 1.5, fontStyle: 'italic' }}>
             Nutrient guidelines based on AAFCO (Association of American Feed Control Officials) standards for dog food. Always consult your veterinarian for dietary advice specific to your dog.
           </p>
         </div>
@@ -401,9 +401,9 @@ function CompareToggle({ food }) {
   return (
     <button onClick={handleClick} className="compare-toggle-btn" style={{
       padding: '10px 20px', borderRadius: 100,
-      border: isAdded ? '1.5px solid #1C1814' : '1.5px solid #ede8df',
+      border: isAdded ? '1.5px solid #1C1814' : '1.5px solid rgba(28,24,20,0.08)',
       background: isAdded ? '#1C1814' : '#fff',
-      color: isAdded ? '#faf8f5' : isFull ? '#b5aa99' : '#1C1814',
+      color: isAdded ? '#faf8f5' : isFull ? 'rgba(28,24,20,0.40)' : '#1C1814',
       fontSize: 13, fontWeight: 600,
       cursor: isFull && !isAdded ? 'default' : 'pointer',
       fontFamily: "'Inter', sans-serif",
@@ -478,7 +478,7 @@ function TileRing({ score, max, color }) {
   return (
     <div style={{ position: 'relative', width: 40, height: 40, flexShrink: 0 }}>
       <svg width={40} height={40} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={20} cy={20} r={16} fill="none" stroke="#ede8df" strokeWidth={3} />
+        <circle cx={20} cy={20} r={16} fill="none" stroke="rgba(28,24,20,0.08)" strokeWidth={3} />
         <circle cx={20} cy={20} r={16} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
           style={{ transition: 'stroke-dashoffset 0.4s ease' }} />
@@ -595,7 +595,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
 
   return (
     <div style={{
-      background: '#ede8df', borderRadius: '0 0 12px 0', marginTop: -2,
+      background: 'rgba(28,24,20,0.08)', borderRadius: '0 0 12px 0', marginTop: -2,
       padding: '16px 18px 18px',
       borderLeft: `3px solid ${color || '#ccc'}`,
       animation: 'fadeIn 0.15s ease',
@@ -603,7 +603,7 @@ function CategoryDetailPanel({ catKey, data, color }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 24px', maxWidth: 460 }}>
         {cells.map((cell, i) => (
           <div key={i}>
-            <div style={{ fontSize: 11, fontWeight: 500, color: '#b5aa99' }}>{cell.l}</div>
+            <div style={{ fontSize: 11, fontWeight: 500, color: 'rgba(28,24,20,0.40)' }}>{cell.l}</div>
             <div style={{
               fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif",
               color: cell.green ? '#2d7a4f' : '#1C1814',
@@ -615,10 +615,10 @@ function CategoryDetailPanel({ catKey, data, color }) {
         <div style={{
           marginTop: 10, paddingTop: 10,
           borderTop: '1px solid rgba(0,0,0,0.06)',
-          fontSize: 11, fontWeight: 400, color: '#8a7e72', lineHeight: 1.6,
+          fontSize: 11, fontWeight: 400, color: 'rgba(28,24,20,0.60)', lineHeight: 1.6,
         }}>
           {context}
-          {citation && <div style={{ fontStyle: 'italic', color: '#b5aa99', marginTop: 2 }}>{citation}</div>}
+          {citation && <div style={{ fontStyle: 'italic', color: 'rgba(28,24,20,0.40)', marginTop: 2 }}>{citation}</div>}
         </div>
       )}
     </div>
@@ -636,18 +636,18 @@ function ScoreTile({ catKey, label, color, textColor, data, isExpanded, onToggle
         style={{
           display: 'flex', alignItems: 'center', gap: 12,
           padding: '14px 18px',
-          background: isExpanded ? '#ede8df' : '#f4f1ec',
+          background: isExpanded ? 'rgba(28,24,20,0.08)' : '#f4f1ec',
           borderRadius: isExpanded ? '12px 12px 0 0' : 12,
           cursor: 'pointer', transition: 'background 0.15s',
         }}
-        onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.background = '#ede8df'; }}
+        onMouseEnter={(e) => { if (!isExpanded) e.currentTarget.style.background = 'rgba(28,24,20,0.08)'; }}
         onMouseLeave={(e) => { if (!isExpanded) e.currentTarget.style.background = '#f4f1ec'; }}
       >
         <TileRing score={data.score} max={data.max} color={color} />
         <span style={{ fontSize: 14, fontWeight: 600, color: nameColor, flex: 1, minWidth: 0, fontFamily: "'Inter', sans-serif" }}>{label}</span>
-        <span style={{ fontSize: 13, fontWeight: 500, color: '#8a7e72', fontFamily: "'Inter', sans-serif", flexShrink: 0 }}>{data.score}/{data.max}</span>
+        <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif", flexShrink: 0 }}>{data.score}/{data.max}</span>
         <span style={{
-          fontSize: 18, color: '#8a7e72', flexShrink: 0, transition: 'transform 0.2s',
+          fontSize: 18, color: 'rgba(28,24,20,0.60)', flexShrink: 0, transition: 'transform 0.2s',
           transform: isExpanded ? 'rotate(180deg)' : 'none',
         }}>▼</span>
       </div>
@@ -666,31 +666,30 @@ function ScoreBreakdownCard({ breakdown }) {
     setExpandedCat(expandedCat === key ? null : key);
   };
 
-  // Brand palette alignment (matches homepage DEMO_CATS):
-  // Protein -> score-good, Fat -> marigold, Carbs/Fiber -> ink-60/40, ingredient rows -> marigold.
+  // Macro tokens for nutrition rows; ink-60 for ingredient rubric categories.
   const nutRow1 = [
-    { key: 'A_protein', label: 'Protein', color: '#3F7A3D' },
-    { key: 'B_fat',     label: 'Fat',     color: '#C8941F' },
+    { key: 'A_protein', label: 'Protein', color: 'var(--color-macro-protein)' },
+    { key: 'B_fat',     label: 'Fat',     color: 'var(--color-macro-fat)' },
   ];
   // Support both old (C_carbs) and new (C1+C2) breakdown keys
   const hasNewCarbs = !!cats?.C1_carb_level;
   const nutRow2 = hasNewCarbs ? [
-    { key: 'C1_carb_level',  label: 'Carb Level',  color: 'rgba(28,24,20,0.60)' },
-    { key: 'C2_carb_source', label: 'Carb Source', color: 'rgba(28,24,20,0.60)' },
+    { key: 'C1_carb_level',  label: 'Carb Level',  color: 'var(--color-macro-carbs)' },
+    { key: 'C2_carb_source', label: 'Carb Source', color: 'var(--color-macro-carbs)' },
   ] : [
-    { key: 'C_carbs', label: 'Carbs', color: 'rgba(28,24,20,0.60)' },
-    { key: 'D_fiber', label: 'Fiber', color: 'rgba(28,24,20,0.40)' },
+    { key: 'C_carbs', label: 'Carbs', color: 'var(--color-macro-carbs)' },
+    { key: 'D_fiber', label: 'Fiber', color: 'var(--color-macro-fiber)' },
   ];
   const nutRow3 = hasNewCarbs ? [
-    { key: 'D_fiber', label: 'Fiber', color: 'rgba(28,24,20,0.40)' },
+    { key: 'D_fiber', label: 'Fiber', color: 'var(--color-macro-fiber)' },
   ] : [];
   const ingRow1 = [
-    { key: 'E_protein_source', label: 'Protein sources', color: '#C8941F' },
-    { key: 'F_preservatives',  label: 'Preservatives',   color: '#C8941F' },
+    { key: 'E_protein_source', label: 'Protein sources', color: 'var(--color-ink-60)' },
+    { key: 'F_preservatives',  label: 'Preservatives',   color: 'var(--color-ink-60)' },
   ];
   const ingRow2 = [
-    { key: 'G_additives',  label: 'Additives',  color: '#C8941F' },
-    { key: 'H_functional', label: 'Functional', color: '#C8941F' },
+    { key: 'G_additives',  label: 'Additives',  color: 'var(--color-ink-60)' },
+    { key: 'H_functional', label: 'Functional', color: 'var(--color-ink-60)' },
   ];
 
   const renderPair = (tiles) => (
@@ -709,33 +708,33 @@ function ScoreBreakdownCard({ breakdown }) {
   return (
     <div style={{
       padding: '40px 32px', background: '#faf8f5', borderRadius: 24,
-      border: '1px solid #ede8df', marginBottom: 28,
+      border: '1px solid rgba(28,24,20,0.08)', marginBottom: 28,
       animation: 'scaleIn 0.5s ease 0.05s both',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24 }}>
-        <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99' }}>Score breakdown</span>
+        <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)' }}>Score breakdown</span>
       </div>
 
-      <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Nutrition</div>
+      <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)', marginBottom: 12 }}>Nutrition</div>
       {renderPair(nutRow1)}
       {renderPair(nutRow2)}
       {nutRow3.length > 0 && renderPair(nutRow3)}
 
-      <div style={{ height: 1, background: '#ede8df', margin: '14px 0 24px' }} />
+      <div style={{ height: 1, background: 'rgba(28,24,20,0.08)', margin: '14px 0 24px' }} />
 
-      <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Ingredients</div>
+      <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)', marginBottom: 12 }}>Ingredients</div>
       {renderPair(ingRow1)}
       {renderPair(ingRow2)}
 
-      <div style={{ height: 1, background: '#ede8df', margin: '14px 0 16px' }} />
+      <div style={{ height: 1, background: 'rgba(28,24,20,0.08)', margin: '14px 0 16px' }} />
 
       <div style={{ textAlign: 'center' }}>
         <a href="/how-we-score" style={{
-          fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif",
+          fontSize: 12, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif",
           textDecoration: 'underline', textUnderlineOffset: 3, transition: 'color 0.15s',
         }}
           onMouseEnter={(e) => e.target.style.color = '#1C1814'}
-          onMouseLeave={(e) => e.target.style.color = '#8a7e72'}
+          onMouseLeave={(e) => e.target.style.color = 'rgba(28,24,20,0.60)'}
         >
           How we score – read our full methodology
         </a>
@@ -832,7 +831,7 @@ export default function FoodPageContent({ productId }) {
       `}</style>
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#fff',
+        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#fff',
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
@@ -869,7 +868,7 @@ export default function FoodPageContent({ productId }) {
             </div>
           </div>
           {/* Skeleton: score breakdown */}
-          <div style={{ background: '#faf8f5', borderRadius: 24, border: '1px solid #ede8df', padding: '40px 32px' }}>
+          <div style={{ background: '#faf8f5', borderRadius: 24, border: '1px solid rgba(28,24,20,0.08)', padding: '40px 32px' }}>
             <div style={{ width: 140, height: 10, borderRadius: 4, background: '#f0ebe3', marginBottom: 24, animation: 'pulse 1.5s ease infinite' }} />
             <div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
               <div style={{ flex: 1, height: 60, borderRadius: 12, background: '#f0ebe3', animation: 'pulse 1.5s ease infinite' }} />
@@ -882,14 +881,14 @@ export default function FoodPageContent({ productId }) {
           </div>
         </div>
       ) : !food ? (
-        <div style={{ textAlign: 'center', padding: '120px 24px', color: '#8a7e72', fontSize: 17 }}>
+        <div style={{ textAlign: 'center', padding: '120px 24px', color: 'rgba(28,24,20,0.60)', fontSize: 17 }}>
           Product not found. <span onClick={goHome} style={{ color: '#1C1814', cursor: 'pointer', textDecoration: 'underline' }}>Go back</span>
         </div>
       ) : (
         <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 80px' }}>
           <button onClick={() => router.push('/discover')} style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
+            background: 'none', border: 'none', color: 'rgba(28,24,20,0.60)', fontSize: 14,
             cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 500,
             marginBottom: 32, padding: 0,
           }}>
@@ -906,10 +905,10 @@ export default function FoodPageContent({ productId }) {
             <div style={{ flex: 1, minWidth: 260 }}>
               <div onClick={goBrand} style={{
                 fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase',
-                color: '#b5aa99', marginBottom: 8, cursor: 'pointer', transition: 'color 0.2s',
+                color: 'rgba(28,24,20,0.40)', marginBottom: 8, cursor: 'pointer', transition: 'color 0.2s',
               }}
                 onMouseEnter={(e) => e.target.style.color = '#1C1814'}
-                onMouseLeave={(e) => e.target.style.color = '#b5aa99'}
+                onMouseLeave={(e) => e.target.style.color = 'rgba(28,24,20,0.40)'}
               >{food.brand} →</div>
               <h1 className="page-title" style={{
                 fontFamily: "'Instrument Serif', serif",
@@ -919,12 +918,12 @@ export default function FoodPageContent({ productId }) {
               {(food.flavor || food.primary_protein) && (
                 <div style={{ marginBottom: 14 }}>
                   {food.flavor && (
-                    <div style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.5 }}>
+                    <div style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', lineHeight: 1.5 }}>
                       <span style={{ fontWeight: 600, color: '#6b6157' }}>Flavor:</span> {food.flavor}
                     </div>
                   )}
                   {food.primary_protein && (
-                    <div style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.5 }}>
+                    <div style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', lineHeight: 1.5 }}>
                       <span style={{ fontWeight: 600, color: '#6b6157' }}>Primary Protein:</span> {food.primary_protein}
                     </div>
                   )}
@@ -935,8 +934,8 @@ export default function FoodPageContent({ productId }) {
               {food.brand && (/prescription|veterinary|vet diet/i.test(food.brand) || /prescription|veterinary|vet diet/i.test(food.name)) && (
                 <div style={{
                   padding: '10px 14px', borderRadius: 10, background: '#f5f2ec',
-                  border: '1px solid #ede8df', marginBottom: 16,
-                  fontSize: 12, color: '#8a7e72', lineHeight: 1.5,
+                  border: '1px solid rgba(28,24,20,0.08)', marginBottom: 16,
+                  fontSize: 12, color: 'rgba(28,24,20,0.60)', lineHeight: 1.5,
                   fontFamily: "'Inter', sans-serif",
                 }}>
                   This score evaluates general formulation quality for healthy adult dogs. Veterinary/prescription diets are formulated for specific clinical conditions and are not intended to score highly on a general-purpose scale.
@@ -951,10 +950,10 @@ export default function FoodPageContent({ productId }) {
                     <div style={{ fontSize: 18, fontWeight: 600, color: '#1C1814', fontFamily: "'Inter', sans-serif", marginBottom: 2 }}>
                       {getScoreTier(food.quality_score).label}
                     </div>
-                    <div style={{ fontSize: 13, color: '#b5aa99', fontFamily: "'Inter', sans-serif" }}>
-                      <a href="/how-we-score" style={{ color: '#b5aa99', textDecoration: 'none' }}
+                    <div style={{ fontSize: 13, color: 'rgba(28,24,20,0.40)', fontFamily: "'Inter', sans-serif" }}>
+                      <a href="/how-we-score" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}
                         onMouseEnter={(e) => { e.target.style.color = '#1C1814'; e.target.style.textDecoration = 'underline'; }}
-                        onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
+                        onMouseLeave={(e) => { e.target.style.color = 'rgba(28,24,20,0.40)'; e.target.style.textDecoration = 'none'; }}
                       >How we score</a> · v{food.score_version || '1.5'}
                     </div>
                   </div>
@@ -977,7 +976,7 @@ export default function FoodPageContent({ productId }) {
                 )}
               </div>
               {food.affiliate_url && (
-                <div style={{ fontSize: 10, color: '#b5aa99', fontStyle: 'italic', marginTop: 8 }}>
+                <div style={{ fontSize: 10, color: 'rgba(28,24,20,0.40)', fontStyle: 'italic', marginTop: 8 }}>
                   As an Amazon Associate, GoodKibble earns from qualifying purchases.
                 </div>
               )}
@@ -992,10 +991,10 @@ export default function FoodPageContent({ productId }) {
           {/* Nutrition - Dry Matter Basis */}
           <div className="nutrition-section" style={{
             padding: '40px 32px', background: '#faf8f5', borderRadius: 24,
-            border: '1px solid #ede8df', animation: 'scaleIn 0.5s ease 0.1s both',
+            border: '1px solid rgba(28,24,20,0.08)', animation: 'scaleIn 0.5s ease 0.1s both',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: 32 }}>
-              <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99' }}>
+              <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)' }}>
                 Guaranteed Analysis (Dry Matter Basis)
               </span>
               <InfoTooltip text="These values are calculated on a Dry Matter Basis (DMB), which removes moisture content to give you a more accurate comparison between foods. Dry matter percentages reflect the actual nutrient concentration in the food solids, making it easier to compare wet and dry foods fairly."
@@ -1006,10 +1005,10 @@ export default function FoodPageContent({ productId }) {
             )}
 
             <div style={{ maxWidth: 560 }}>
-              <NutrientRow label="Protein" value={Math.round((food.protein_dmb || 0) * 10) / 10} color="#2d7a4f" />
-              <NutrientRow label="Fat" value={Math.round((food.fat_dmb || 0) * 10) / 10} color="#c47a20" />
-              <NutrientRow label="Carbohydrates" value={Math.round((food.carbs_dmb || 0) * 10) / 10} color="#5a7a9e" />
-              {food.fiber_dmb > 0 && <NutrientRow label="Fiber" value={Math.round(food.fiber_dmb * 10) / 10} color="#8a6aaf" />}
+              <NutrientRow label="Protein" value={Math.round((food.protein_dmb || 0) * 10) / 10} color="var(--color-macro-protein)" />
+              <NutrientRow label="Fat" value={Math.round((food.fat_dmb || 0) * 10) / 10} color="var(--color-macro-fat)" />
+              <NutrientRow label="Carbohydrates" value={Math.round((food.carbs_dmb || 0) * 10) / 10} color="var(--color-macro-carbs)" />
+              {food.fiber_dmb > 0 && <NutrientRow label="Fiber" value={Math.round(food.fiber_dmb * 10) / 10} color="var(--color-macro-fiber)" />}
             </div>
           </div>
 
@@ -1019,13 +1018,13 @@ export default function FoodPageContent({ productId }) {
           {/* Ingredients */}
           <div className="ingredients-section" onClick={() => { if (activeIngredient && !isMobile) setActiveIngredient(null); }} style={{
             marginTop: 28, padding: '40px 32px', background: '#faf8f5', borderRadius: 24,
-            border: '1px solid #ede8df', animation: 'fadeIn 0.5s ease 0.2s both',
+            border: '1px solid rgba(28,24,20,0.08)', animation: 'fadeIn 0.5s ease 0.2s both',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-              <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: '#b5aa99' }}>Ingredients</div>
-              <div style={{ fontSize: 12, color: '#b5aa99', fontWeight: 500 }}>{ingredients.length} ingredients</div>
+              <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)' }}>Ingredients</div>
+              <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)', fontWeight: 500 }}>{ingredients.length} ingredients</div>
             </div>
-            <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 24, lineHeight: 1.5 }}>
+            <p style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', marginBottom: 24, lineHeight: 1.5 }}>
               Listed in order of weight. The first ingredient is the most prominent. Tap any ingredient with ⓘ to learn more.
               {saltIdx >= 0 && ' Ingredients after the salt indicator typically make up less than 1% of the formula.'}
             </p>
@@ -1048,8 +1047,8 @@ export default function FoodPageContent({ productId }) {
                     <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#639922', marginTop: 2 }}>Good</div>
                   </div>
                   <div style={{ flex: 1, background: '#f5f2ec', borderRadius: 10, padding: '12px 10px', textAlign: 'center' }}>
-                    <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#8a7e72', lineHeight: 1.1 }}>{neutral}</div>
-                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginTop: 2 }}>Neutral</div>
+                    <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: 'rgba(28,24,20,0.60)', lineHeight: 1.1 }}>{neutral}</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: 'rgba(28,24,20,0.60)', marginTop: 2 }}>Neutral</div>
                   </div>
                   <div style={{ flex: 1, background: '#fdf0e0', borderRadius: 10, padding: '12px 10px', textAlign: 'center' }}>
                     <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#d4760a', lineHeight: 1.1 }}>{caution}</div>
@@ -1153,7 +1152,7 @@ export default function FoodPageContent({ productId }) {
 
                 const pill = (
                   <span style={{ ...pillStyle, ...(isActive ? { borderColor: '#C8941F', background: isSalt ? '#C8941F' : isFirst ? '#1C1814' : '#f7efd8' } : {}) }}
-                    onMouseEnter={(e) => { if (hasTooltip) e.currentTarget.style.borderColor = '#b5aa99'; }}
+                    onMouseEnter={(e) => { if (hasTooltip) e.currentTarget.style.borderColor = 'rgba(28,24,20,0.40)'; }}
                     onMouseLeave={(e) => { if (hasTooltip && !isActive) e.currentTarget.style.borderColor = '#e8e0d4'; }}
                   >
                     {showDot && (
@@ -1162,7 +1161,7 @@ export default function FoodPageContent({ productId }) {
                     {ing}
                     {hasTooltip && (
                       <span style={{
-                        fontSize: 11, color: isFirst ? 'rgba(250,248,245,0.5)' : '#b5aa99',
+                        fontSize: 11, color: isFirst ? 'rgba(250,248,245,0.5)' : 'rgba(28,24,20,0.40)',
                         lineHeight: 1, marginLeft: 2,
                       }}>ⓘ</span>
                     )}
@@ -1243,7 +1242,7 @@ export default function FoodPageContent({ productId }) {
 
             {/* Mobile bottom sheet rendered at component root level below */}
             {saltIdx >= 0 && (
-              <div style={{ marginTop: 16, fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>
+              <div style={{ marginTop: 16, fontSize: 12, color: 'rgba(28,24,20,0.40)', fontStyle: 'italic' }}>
                 * Ingredients after salt are dimmed — they typically represent &lt;1% of the formula.
               </div>
             )}
@@ -1262,17 +1261,17 @@ export default function FoodPageContent({ productId }) {
       )}
 
       <div className="footer-bar" style={{
-        borderTop: '1px solid #ede8df', padding: '32px 40px',
+        borderTop: '1px solid rgba(28,24,20,0.08)', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
           Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
-          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'rgba(28,24,20,0.40)', flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>
@@ -1281,7 +1280,7 @@ export default function FoodPageContent({ productId }) {
       {food && food.affiliate_url && (
         <div className="sticky-buy-bar" style={{
           position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 100,
-          background: '#fff', borderTop: '1px solid #ede8df',
+          background: '#fff', borderTop: '1px solid rgba(28,24,20,0.08)',
           boxShadow: '0 -2px 12px rgba(0,0,0,0.06)',
           padding: '12px 16px',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -1297,7 +1296,7 @@ export default function FoodPageContent({ productId }) {
               return (
                 <div style={{ position: 'relative', width: 34, height: 34, flexShrink: 0 }}>
                   <svg width={34} height={34} style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx={17} cy={17} r={r} fill="none" stroke="#ede8df" strokeWidth={2.5} />
+                    <circle cx={17} cy={17} r={r} fill="none" stroke="rgba(28,24,20,0.08)" strokeWidth={2.5} />
                     <circle cx={17} cy={17} r={r} fill="none" stroke={tier.color} strokeWidth={2.5}
                       strokeDasharray={c} strokeDashoffset={o} strokeLinecap="round" />
                   </svg>
@@ -1310,7 +1309,7 @@ export default function FoodPageContent({ productId }) {
             })()}
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 12, fontWeight: 600, color: '#1C1814', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{food.name}</div>
-              <div style={{ fontSize: 10, color: '#b5aa99' }}>{food.brand}</div>
+              <div style={{ fontSize: 10, color: 'rgba(28,24,20,0.40)' }}>{food.brand}</div>
             </div>
           </div>
           <a href={food.affiliate_url} target="_blank" rel="noopener noreferrer sponsored" style={{

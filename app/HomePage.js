@@ -57,7 +57,7 @@ function MarqueeCard({ p, onClick }) {
   return (
     <div onClick={() => onClick(p)} className="marquee-card" style={{
       width: 240, flexShrink: 0, background: '#fff', borderRadius: 16,
-      border: '1px solid #ede8df', cursor: 'pointer',
+      border: '1px solid rgba(28,24,20,0.08)', cursor: 'pointer',
       transition: 'transform 0.25s, box-shadow 0.25s',
       overflow: 'hidden',
     }}>
@@ -80,27 +80,27 @@ function MarqueeCard({ p, onClick }) {
         )}
       </div>
       <div style={{ padding: '28px 16px 18px', textAlign: 'center' }}>
-        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 4, fontFamily: "'Inter', sans-serif" }}>{p.brand}</div>
+        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.60)', marginBottom: 4, fontFamily: "'Inter', sans-serif" }}>{p.brand}</div>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 14, fontWeight: 700, color: '#1C1814', lineHeight: 1.3, marginBottom: 6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
         {p.primary_protein && (
-          <div style={{ fontSize: 11, color: '#8a7e72', marginBottom: 10, fontFamily: "'Inter', sans-serif" }}>
+          <div style={{ fontSize: 11, color: 'rgba(28,24,20,0.60)', marginBottom: 10, fontFamily: "'Inter', sans-serif" }}>
             Primary Protein: {p.primary_protein}
           </div>
         )}
         <div style={{ display: 'flex', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
           {p.protein_dmb != null && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'Inter', sans-serif" }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#3F7A3D', flexShrink: 0 }} />{(Math.round(p.protein_dmb * 10) / 10)}%
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--color-macro-protein)', flexShrink: 0 }} />{(Math.round(p.protein_dmb * 10) / 10)}%
             </span>
           )}
           {p.fat_dmb != null && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'Inter', sans-serif" }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#C8941F', flexShrink: 0 }} />{(Math.round(p.fat_dmb * 10) / 10)}%
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--color-macro-fat)', flexShrink: 0 }} />{(Math.round(p.fat_dmb * 10) / 10)}%
             </span>
           )}
           {p.carbs_dmb != null && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'Inter', sans-serif" }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(28,24,20,0.60)', flexShrink: 0 }} />{(Math.round(p.carbs_dmb * 10) / 10)}%
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--color-macro-carbs)', flexShrink: 0 }} />{(Math.round(p.carbs_dmb * 10) / 10)}%
             </span>
           )}
         </div>
@@ -126,7 +126,7 @@ function ProductMarquee({ onCardClick, products: initialProducts }) {
     }}>
       <div className="marquee-heading" style={{ textAlign: 'center', marginBottom: 40, padding: '0 24px' }}>
         <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1C1814', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 8 }}>See how popular brands stack up</h2>
-        <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'Inter', sans-serif", maxWidth: 480, margin: '0 auto' }}>Every kibble scored 0–100 across nutrition and ingredient quality</p>
+        <p style={{ fontSize: 15, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif", maxWidth: 480, margin: '0 auto' }}>Every kibble scored 0–100 across nutrition and ingredient quality</p>
       </div>
       <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to right, #F4EFE4, transparent)', pointerEvents: 'none' }} />
       <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to left, #F4EFE4, transparent)', pointerEvents: 'none' }} />
@@ -165,7 +165,7 @@ function WhyStrip() {
             color: '#C8941F', fontFamily: 'ui-monospace, SFMono-Regular, monospace',
             marginBottom: 16,
           }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#C8941F', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--color-marigold)', animation: 'heroDot 1.5s ease-in-out infinite' }} />
             Why GoodKibble
           </div>
           <h2 className="statement-h2" style={{
@@ -197,7 +197,7 @@ function WhyStrip() {
                 lineHeight: 1.2, marginBottom: 10, letterSpacing: -0.3,
               }}>{vp.title}</div>
               <p style={{
-                fontSize: 14, color: '#8a7e72', lineHeight: 1.65,
+                fontSize: 14, color: 'rgba(28,24,20,0.60)', lineHeight: 1.65,
                 fontFamily: "'Inter', sans-serif", margin: 0,
               }}>{vp.desc}</p>
             </div>
@@ -212,15 +212,17 @@ function WhyStrip() {
    SECTION 4: SCORING VISUAL DEMO
    ═══════════════════════════════════════ */
 
+// First 4 are macros (use macro tokens); last 4 are scoring rubric categories
+// (neutral ink-60 fill so the visual logic reads: colored = macro, neutral = rubric).
 const DEMO_CATS = [
-  { key: 'A_protein',          name: 'Protein',         max: 25, color: '#3F7A3D' },
-  { key: 'B_fat',              name: 'Fat',             max: 15, color: '#C8941F' },
-  { key: 'C_carbs',            name: 'Carbohydrates',   max: 15, color: 'rgba(28,24,20,0.60)' },
-  { key: 'D_fiber',            name: 'Fiber',           max: 5,  color: 'rgba(28,24,20,0.40)' },
-  { key: 'E_protein_source',   name: 'Protein Sources', max: 15, color: '#C8941F' },
-  { key: 'F_preservatives',    name: 'Preservatives',   max: 10, color: '#C8941F' },
-  { key: 'G_additives',        name: 'Additives',       max: 5,  color: '#C8941F' },
-  { key: 'H_functional',       name: 'Functional',      max: 10, color: '#C8941F' },
+  { key: 'A_protein',          name: 'Protein',         max: 25, color: 'var(--color-macro-protein)' },
+  { key: 'B_fat',              name: 'Fat',             max: 15, color: 'var(--color-macro-fat)' },
+  { key: 'C_carbs',            name: 'Carbohydrates',   max: 15, color: 'var(--color-macro-carbs)' },
+  { key: 'D_fiber',            name: 'Fiber',           max: 5,  color: 'var(--color-macro-fiber)' },
+  { key: 'E_protein_source',   name: 'Protein Sources', max: 15, color: 'var(--color-ink-60)' },
+  { key: 'F_preservatives',    name: 'Preservatives',   max: 10, color: 'var(--color-ink-60)' },
+  { key: 'G_additives',        name: 'Additives',       max: 5,  color: 'var(--color-ink-60)' },
+  { key: 'H_functional',       name: 'Functional',      max: 10, color: 'var(--color-ink-60)' },
 ];
 
 function AnimatedScore({ target, max, active, delay }) {
@@ -295,14 +297,14 @@ function ScoringDemo({ onNavigate }) {
                 <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: cat.color, flexShrink: 0 }} />
                   <span style={{ fontSize: 13, fontWeight: 600, color: '#1C1814', fontFamily: "'Inter', sans-serif", width: 120, flexShrink: 0 }}>{cat.name}</span>
-                  <div style={{ flex: 1, height: 8, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
+                  <div style={{ flex: 1, height: 8, borderRadius: 100, background: 'rgba(28,24,20,0.08)', overflow: 'hidden' }}>
                     <div style={{
                       height: '100%', borderRadius: 100, background: cat.color,
                       width: animated ? `${pct}%` : '0%',
                       transition: `width 1600ms ease-out ${delay}ms`,
                     }} />
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', fontFamily: "'Inter', sans-serif", width: 40, textAlign: 'right', flexShrink: 0 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif", width: 40, textAlign: 'right', flexShrink: 0 }}>
                     <AnimatedScore target={earned} max={cat.max} active={animated} delay={delay} />
                   </span>
                 </div>
@@ -366,10 +368,10 @@ function ScoringDemo({ onNavigate }) {
               </div>
             ) : (
               <div style={{
-                width: 190, height: 190, borderRadius: '50%', border: '4px solid #ede8df',
+                width: 190, height: 190, borderRadius: '50%', border: '4px solid rgba(28,24,20,0.08)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <div style={{ width: 24, height: 24, border: '3px solid #b5aa99', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+                <div style={{ width: 24, height: 24, border: '3px solid rgba(28,24,20,0.40)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
               </div>
             )}
           </div>
@@ -407,11 +409,11 @@ function BrowseByProtein({ proteinCounts, onNavigate }) {
   const [ref, visible] = useFadeIn(0.15);
   const proteins = ['Chicken', 'Salmon', 'Lamb', 'Beef', 'Turkey', 'Fish'];
   return (
-    <div ref={ref} className="protein-section" style={{ background: '#fff', padding: '80px 24px', borderTop: '1px solid #ede8df', borderBottom: '1px solid #ede8df' }}>
+    <div ref={ref} className="protein-section" style={{ background: '#fff', padding: '80px 24px', borderTop: '1px solid rgba(28,24,20,0.08)', borderBottom: '1px solid rgba(28,24,20,0.08)' }}>
       <div style={{ maxWidth: 680, margin: '0 auto', ...fade(visible) }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1C1814', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 8 }}>Browse by protein</h2>
-          <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>Find foods by your dog&apos;s preferred protein source</p>
+          <p style={{ fontSize: 15, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>Find foods by your dog&apos;s preferred protein source</p>
         </div>
         <div className="protein-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
           {proteins.map((name) => (
@@ -420,14 +422,14 @@ function BrowseByProtein({ proteinCounts, onNavigate }) {
               className="protein-tile"
               style={{
                 padding: '24px 16px', borderRadius: 16, background: '#F4EFE4',
-                border: '1px solid #ede8df', cursor: 'pointer',
+                border: '1px solid rgba(28,24,20,0.08)', cursor: 'pointer',
                 transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
                 textAlign: 'center',
               }}
             >
               <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'center' }}>{PROTEIN_ICONS[name]}</div>
               <div style={{ fontSize: 16, fontWeight: 700, color: '#1C1814', fontFamily: "'Inter', sans-serif", marginBottom: 4 }}>{name}</div>
-              <div style={{ fontSize: 12, color: '#b5aa99', fontFamily: "'Inter', sans-serif" }}>
+              <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)', fontFamily: "'Inter', sans-serif" }}>
                 {proteinCounts[name] ? `${proteinCounts[name]} products` : '—'}
               </div>
             </div>
@@ -472,7 +474,7 @@ function FooterCTA({ onNavigate, onSelect }) {
         <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#F4EFE4', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 12 }}>
           Ready to see what&apos;s in your dog&apos;s food?
         </h2>
-        <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 32, fontFamily: "'Inter', sans-serif" }}>Search any brand or browse our full database</p>
+        <p style={{ fontSize: 15, color: 'rgba(28,24,20,0.60)', marginBottom: 32, fontFamily: "'Inter', sans-serif" }}>Search any brand or browse our full database</p>
         <div style={{ marginBottom: 20 }}>
           <SearchBox onSelect={onSelect} variant="hero" />
         </div>
@@ -522,7 +524,7 @@ export default function Home({ marqueeData = [] }) {
         background: '#F4EFE4',
         padding: '14px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        borderBottom: scrolled ? '1px solid #ede8df' : '1px solid transparent',
+        borderBottom: scrolled ? '1px solid rgba(28,24,20,0.08)' : '1px solid transparent',
         boxShadow: scrolled ? '0 2px 12px rgba(26,22,18,0.04)' : 'none',
         transition: 'all 0.3s',
       }}>
@@ -554,7 +556,7 @@ export default function Home({ marqueeData = [] }) {
               fontFamily: 'ui-monospace, SFMono-Regular, monospace',
               animation: 'fadeUp 0.6s ease both',
             }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C8941F', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--color-marigold)', animation: 'heroDot 1.5s ease-in-out infinite' }} />
               <span className="pill-full">1,042 foods · 187 brands · scored &amp; analyzed</span>
               <span className="pill-short">1,042 foods · 187 brands analyzed</span>
             </div>

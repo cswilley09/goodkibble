@@ -14,7 +14,7 @@ function ScoreRing({ score }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, marginLeft: 'auto' }}>
       <svg width={42} height={42} viewBox="0 0 42 42">
-        <circle cx={21} cy={21} r={17} fill="none" stroke="#ede8df" strokeWidth={3} />
+        <circle cx={21} cy={21} r={17} fill="none" stroke="rgba(28,24,20,0.08)" strokeWidth={3} />
         <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" transform="rotate(-90 21 21)" />
         <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
@@ -28,7 +28,7 @@ function ProductCard({ product }) {
   const [imgErr, setImgErr] = useState(false);
   return (
     <a href={`/dog-food/${product.brand_slug}/${product.slug}`} style={{
-      background: '#fff', borderRadius: 16, padding: 16, border: '1px solid #ede8df',
+      background: '#fff', borderRadius: 16, padding: 16, border: '1px solid rgba(28,24,20,0.08)',
       display: 'flex', gap: 14, alignItems: 'center', textDecoration: 'none', color: 'inherit',
       transition: 'transform 0.2s, box-shadow 0.2s',
     }}>
@@ -41,7 +41,7 @@ function ProductCard({ product }) {
         <div style={{ width: 48, height: 60, borderRadius: 8, background: '#faf8f5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>🐕</div>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 11, color: '#b5aa99', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{product.brand}</div>
+        <div style={{ fontSize: 11, color: 'rgba(28,24,20,0.40)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{product.brand}</div>
         <div style={{ fontSize: 13, fontWeight: 600, color: '#1C1814', lineHeight: 1.3,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{product.name}</div>
@@ -65,7 +65,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
     <div style={{ minHeight: '100vh', background: '#ffffff' }}>
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#fff',
+        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#fff',
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
@@ -83,10 +83,10 @@ export default function IngredientPageContent({ ingredient, products, productCou
 
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 24px 80px' }}>
         {/* Breadcrumb */}
-        <nav className="nav-bar" style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
-          <a href="/" style={{ color: '#b5aa99', textDecoration: 'none' }}>Home</a>
+        <nav className="nav-bar" style={{ fontSize: 13, color: 'rgba(28,24,20,0.40)', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
+          <a href="/" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Home</a>
           <span style={{ margin: '0 8px' }}>/</span>
-          <a href="/ingredients" style={{ color: '#b5aa99', textDecoration: 'none' }}>Ingredients</a>
+          <a href="/ingredients" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Ingredients</a>
           <span style={{ margin: '0 8px' }}>/</span>
           <span style={{ color: '#6b6157' }}>{ingredient.display_name}</span>
         </nav>
@@ -113,7 +113,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
             {ingredient.short_description}
           </p>
           {ingredient.source && (
-            <p style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic', fontFamily: "'Inter', sans-serif" }}>
+            <p style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)', fontStyle: 'italic', fontFamily: "'Inter', sans-serif" }}>
               Source: {ingredient.source}
             </p>
           )}
@@ -140,7 +140,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
             fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 700,
             color: '#1C1814', marginBottom: 4,
           }}>Found in {productCount} dog food{productCount !== 1 ? 's' : ''}</h2>
-          <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>
+          <p style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>
             Showing top {products.length} by GoodKibble Score
           </p>
           {products.length > 0 ? (
@@ -148,7 +148,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
               {products.map(p => <ProductCard key={p.id} product={p} />)}
             </div>
           ) : (
-            <p style={{ color: '#8a7e72', fontSize: 14 }}>No products found containing this ingredient.</p>
+            <p style={{ color: 'rgba(28,24,20,0.60)', fontSize: 14 }}>No products found containing this ingredient.</p>
           )}
         </div>
 
@@ -156,7 +156,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
         {related.length > 0 && (
           <div style={{
             padding: '28px 32px', background: '#faf8f5', borderRadius: 20,
-            border: '1px solid #ede8df',
+            border: '1px solid rgba(28,24,20,0.08)',
           }}>
             <h2 style={{
               fontFamily: "'Instrument Serif', serif", fontSize: 20, fontWeight: 700,
@@ -189,17 +189,17 @@ export default function IngredientPageContent({ ingredient, products, productCou
 
       {/* Footer */}
       <div style={{
-        borderTop: '1px solid #ede8df', padding: '32px 40px',
+        borderTop: '1px solid rgba(28,24,20,0.08)', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
           Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
-          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'rgba(28,24,20,0.40)', flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>

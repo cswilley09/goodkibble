@@ -27,7 +27,7 @@ function ScoreRing({ score }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, marginLeft: 'auto' }}>
       <svg width={42} height={42} viewBox="0 0 42 42">
-        <circle cx={21} cy={21} r={17} fill="none" stroke="#ede8df" strokeWidth={3} />
+        <circle cx={21} cy={21} r={17} fill="none" stroke="rgba(28,24,20,0.08)" strokeWidth={3} />
         <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform="rotate(-90 21 21)" />
@@ -36,7 +36,7 @@ function ScoreRing({ score }) {
           {score}
         </text>
       </svg>
-      <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+      <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: 'rgba(28,24,20,0.60)', marginTop: 2 }}>
         {getScoreTier(score)}
       </span>
     </div>
@@ -47,7 +47,7 @@ function ProductCard({ food, onClick }) {
   const [imgErr, setImgErr] = useState(false);
   return (
     <div onClick={onClick} style={{
-      background: '#fff', borderRadius: 16, padding: 16, border: '1px solid #ede8df',
+      background: '#fff', borderRadius: 16, padding: 16, border: '1px solid rgba(28,24,20,0.08)',
       cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
       display: 'flex', gap: 14, alignItems: 'center',
     }}
@@ -62,14 +62,14 @@ function ProductCard({ food, onClick }) {
         <div style={{ width: 56, height: 72, borderRadius: 10, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🐕</div>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 12, color: '#8a7e72', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
+        <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
         <div style={{ fontSize: 14, fontWeight: 600, color: '#1C1814', lineHeight: 1.3, marginBottom: 6,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{food.name}</div>
         {(food.flavor || food.primary_protein) && (
           <div style={{ marginBottom: 6 }}>
             {food.primary_protein && (
-              <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.4 }}>
+              <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', lineHeight: 1.4 }}>
                 <span style={{ fontWeight: 600, color: '#6b6157' }}>Primary Protein:</span> {food.primary_protein}
               </div>
             )}
@@ -98,7 +98,7 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
     <div style={{ minHeight: '100vh', background: '#ffffff' }}>
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#fff',
+        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#fff',
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
@@ -117,7 +117,7 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
-          background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
+          background: 'none', border: 'none', color: 'rgba(28,24,20,0.60)', fontSize: 14,
           cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 500,
           marginBottom: 32, padding: 0,
         }}>
@@ -131,28 +131,28 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
             fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 42px)',
             fontWeight: 700, color: '#1C1814', marginBottom: 8,
           }}>{brandName}</h1>
-          <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 16 }}>
+          <p style={{ fontSize: 15, color: 'rgba(28,24,20,0.60)', marginBottom: 16 }}>
             {products.length} products reviewed
           </p>
 
           {/* Stats */}
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             {avgScore && (
-              <div style={{ background: '#faf8f5', border: '1px solid #ede8df', borderRadius: 12, padding: '12px 20px', textAlign: 'center' }}>
+              <div style={{ background: '#faf8f5', border: '1px solid rgba(28,24,20,0.08)', borderRadius: 12, padding: '12px 20px', textAlign: 'center' }}>
                 <div style={{ fontSize: 24, fontWeight: 700, color: '#1C1814', fontFamily: "'Inter', sans-serif" }}>{avgScore}</div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: '#8a7e72', letterSpacing: 1, textTransform: 'uppercase' }}>Avg Score</div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(28,24,20,0.60)', letterSpacing: 1, textTransform: 'uppercase' }}>Avg Score</div>
               </div>
             )}
             {avgProtein && (
-              <div style={{ background: '#faf8f5', border: '1px solid #ede8df', borderRadius: 12, padding: '12px 20px', textAlign: 'center' }}>
+              <div style={{ background: '#faf8f5', border: '1px solid rgba(28,24,20,0.08)', borderRadius: 12, padding: '12px 20px', textAlign: 'center' }}>
                 <div style={{ fontSize: 24, fontWeight: 700, color: '#2d7a4f', fontFamily: "'Inter', sans-serif" }}>{avgProtein}%</div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: '#8a7e72', letterSpacing: 1, textTransform: 'uppercase' }}>Avg Protein</div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(28,24,20,0.60)', letterSpacing: 1, textTransform: 'uppercase' }}>Avg Protein</div>
               </div>
             )}
             {avgFat && (
-              <div style={{ background: '#faf8f5', border: '1px solid #ede8df', borderRadius: 12, padding: '12px 20px', textAlign: 'center' }}>
+              <div style={{ background: '#faf8f5', border: '1px solid rgba(28,24,20,0.08)', borderRadius: 12, padding: '12px 20px', textAlign: 'center' }}>
                 <div style={{ fontSize: 24, fontWeight: 700, color: '#c47a20', fontFamily: "'Inter', sans-serif" }}>{avgFat}%</div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: '#8a7e72', letterSpacing: 1, textTransform: 'uppercase' }}>Avg Fat</div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'rgba(28,24,20,0.60)', letterSpacing: 1, textTransform: 'uppercase' }}>Avg Fat</div>
               </div>
             )}
           </div>
@@ -167,17 +167,17 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
       </div>
 
       <div className="footer-bar" style={{
-        borderTop: '1px solid #ede8df', padding: '32px 40px',
+        borderTop: '1px solid rgba(28,24,20,0.08)', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
           Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
-          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'rgba(28,24,20,0.40)', flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>

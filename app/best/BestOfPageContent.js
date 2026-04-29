@@ -55,13 +55,13 @@ function RankedCard({ rank, product }) {
   return (
     <div style={{
       display: 'flex', gap: 20, padding: 24, background: '#fff', borderRadius: 20,
-      border: '1px solid #ede8df', marginBottom: 16, alignItems: 'flex-start',
+      border: '1px solid rgba(28,24,20,0.08)', marginBottom: 16, alignItems: 'flex-start',
       transition: 'box-shadow 0.2s',
     }}>
       {/* Rank */}
       <div style={{
         fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 900,
-        color: rank <= 3 ? '#C8941F' : '#b5aa99', lineHeight: 1, minWidth: 36, textAlign: 'center',
+        color: rank <= 3 ? '#C8941F' : 'rgba(28,24,20,0.40)', lineHeight: 1, minWidth: 36, textAlign: 'center',
         flexShrink: 0, paddingTop: 4,
       }}>#{rank}</div>
 
@@ -69,7 +69,7 @@ function RankedCard({ rank, product }) {
       <div className="best-card-img" style={{
         width: 100, height: 120, borderRadius: 12, overflow: 'hidden', flexShrink: 0,
         background: '#faf8f5', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        border: '1px solid #ede8df',
+        border: '1px solid rgba(28,24,20,0.08)',
       }}>
         {product.image_url && !imgErr ? (
           <img src={product.image_url} alt={product.name} loading="lazy"
@@ -86,7 +86,7 @@ function RankedCard({ rank, product }) {
           <div style={{ flex: 1, minWidth: 180 }}>
             <a href={`/brands/${product.brand_slug}`} style={{
               fontSize: 11, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase',
-              color: '#b5aa99', textDecoration: 'none',
+              color: 'rgba(28,24,20,0.40)', textDecoration: 'none',
             }}>{product.brand}</a>
             <h3 style={{ margin: '4px 0 0' }}>
               <a href={`/dog-food/${product.brand_slug}/${product.slug}`} style={{
@@ -99,7 +99,7 @@ function RankedCard({ rank, product }) {
             <ScoreRing score={product.quality_score} />
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, color: tier.color }}>{tier.label}</div>
-              <div style={{ fontSize: 11, color: '#b5aa99' }}>GoodKibble Score</div>
+              <div style={{ fontSize: 11, color: 'rgba(28,24,20,0.40)' }}>GoodKibble Score</div>
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
       {/* Nav */}
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#fff',
+        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#fff',
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
@@ -186,10 +186,10 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
 
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 24px 80px' }}>
         {/* Breadcrumb */}
-        <nav style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
-          <a href="/" style={{ color: '#b5aa99', textDecoration: 'none' }}>Home</a>
+        <nav style={{ fontSize: 13, color: 'rgba(28,24,20,0.40)', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
+          <a href="/" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Home</a>
           <span style={{ margin: '0 8px' }}>/</span>
-          <a href="/best/dog-food" style={{ color: '#b5aa99', textDecoration: 'none' }}>Best</a>
+          <a href="/best/dog-food" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Best</a>
           <span style={{ margin: '0 8px' }}>/</span>
           <span style={{ color: '#6b6157' }}>{title}</span>
         </nav>
@@ -201,7 +201,7 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
             fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800,
             color: '#1C1814', lineHeight: 1.15, letterSpacing: -1, marginBottom: 8,
           }}>{title}</h1>
-          <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>
+          <p style={{ fontSize: 15, color: 'rgba(28,24,20,0.60)', marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>
             {subtitle}
           </p>
           <div style={{
@@ -222,7 +222,7 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
         {/* How We Score */}
         <div style={{
           marginTop: 48, padding: '32px', background: '#faf8f5', borderRadius: 20,
-          border: '1px solid #ede8df',
+          border: '1px solid rgba(28,24,20,0.08)',
         }}>
           <h2 style={{
             fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 700,
@@ -252,15 +252,15 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             {ALL_RANKINGS.filter(r => r.href !== currentPath).map(r => (
               <a key={r.href} href={r.href} style={{
-                padding: '12px 20px', borderRadius: 14, border: '1px solid #ede8df',
+                padding: '12px 20px', borderRadius: 14, border: '1px solid rgba(28,24,20,0.08)',
                 background: '#fff', fontSize: 14, fontWeight: 600, color: '#1C1814',
                 textDecoration: 'none', fontFamily: "'Inter', sans-serif",
                 transition: 'background 0.15s, border-color 0.15s',
               }}>{r.label}</a>
             ))}
             <a href="/discover" style={{
-              padding: '12px 20px', borderRadius: 14, border: '1px solid #ede8df',
-              background: '#faf8f5', fontSize: 14, fontWeight: 600, color: '#8a7e72',
+              padding: '12px 20px', borderRadius: 14, border: '1px solid rgba(28,24,20,0.08)',
+              background: '#faf8f5', fontSize: 14, fontWeight: 600, color: 'rgba(28,24,20,0.60)',
               textDecoration: 'none', fontFamily: "'Inter', sans-serif",
             }}>Browse All 1,000+ Foods</a>
           </div>
@@ -269,17 +269,17 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
 
       {/* Footer */}
       <div style={{
-        borderTop: '1px solid #ede8df', padding: '32px 40px',
+        borderTop: '1px solid rgba(28,24,20,0.08)', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
           Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
-          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'rgba(28,24,20,0.40)', flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>

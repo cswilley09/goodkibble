@@ -24,7 +24,7 @@ export default function HomepageRecalls() {
 
   return (
     <div style={{
-      background: '#fff', borderRadius: 24, border: '1px solid #ede8df',
+      background: '#fff', borderRadius: 24, border: '1px solid rgba(28,24,20,0.08)',
       padding: '40px 36px', position: 'relative', overflow: 'hidden',
       maxWidth: 680, width: '100%', margin: '0 auto', boxSizing: 'border-box',
     }}>
@@ -47,7 +47,7 @@ export default function HomepageRecalls() {
           return (
             <div key={r.id || i} style={{
               display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px',
-              borderRadius: 14, border: '1px solid #ede8df', background: '#F4EFE4',
+              borderRadius: 14, border: '1px solid rgba(28,24,20,0.08)', background: '#F4EFE4',
             }}>
               <span style={{
                 padding: '4px 10px', borderRadius: 100, fontSize: 9, fontWeight: 800,
@@ -61,8 +61,8 @@ export default function HomepageRecalls() {
                 <div style={{ fontSize: 12, color: '#5a5248', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.product_description}</div>
               </div>
               <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                <div style={{ fontSize: 11, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{formatDate(r.recall_date || r.report_date)}</div>
-                {r.lot_numbers && <div style={{ fontSize: 10, color: '#b5aa99', fontFamily: "'Inter', sans-serif" }}>Lots affected</div>}
+                <div style={{ fontSize: 11, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>{formatDate(r.recall_date || r.report_date)}</div>
+                {r.lot_numbers && <div style={{ fontSize: 10, color: 'rgba(28,24,20,0.40)', fontFamily: "'Inter', sans-serif" }}>Lots affected</div>}
               </div>
             </div>
           );
