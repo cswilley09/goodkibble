@@ -32,7 +32,7 @@ function ScoreRing({ score }) {
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform="rotate(-90 21 21)" />
         <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1a1612' }}>
+          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1C1814' }}>
           {score}
         </text>
       </svg>
@@ -63,7 +63,7 @@ function ProductCard({ food, onClick }) {
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 12, color: '#8a7e72', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
-        <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', lineHeight: 1.3, marginBottom: 6,
+        <div style={{ fontSize: 14, fontWeight: 600, color: '#1C1814', lineHeight: 1.3, marginBottom: 6,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{food.name}</div>
         {(food.flavor || food.primary_protein) && (
@@ -103,8 +103,8 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
       }}>
         <div onClick={goHome} style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
-          color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
+          color: '#1C1814', cursor: 'pointer', flexShrink: 0,
+        }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
@@ -129,7 +129,7 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
         <div style={{ marginBottom: 32 }}>
           <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 42px)',
-            fontWeight: 700, color: '#1a1612', marginBottom: 8,
+            fontWeight: 700, color: '#1C1814', marginBottom: 8,
           }}>{brandName}</h1>
           <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 16 }}>
             {products.length} products reviewed
@@ -139,7 +139,7 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             {avgScore && (
               <div style={{ background: '#faf8f5', border: '1px solid #ede8df', borderRadius: 12, padding: '12px 20px', textAlign: 'center' }}>
-                <div style={{ fontSize: 24, fontWeight: 700, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>{avgScore}</div>
+                <div style={{ fontSize: 24, fontWeight: 700, color: '#1C1814', fontFamily: "'Inter', sans-serif" }}>{avgScore}</div>
                 <div style={{ fontSize: 11, fontWeight: 600, color: '#8a7e72', letterSpacing: 1, textTransform: 'uppercase' }}>Avg Score</div>
               </div>
             )}
@@ -170,8 +170,8 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
+          Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

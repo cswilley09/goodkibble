@@ -57,15 +57,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
+    <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
       {/* Nav */}
       <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 24px', borderBottom: '1px solid #ede8df',
-        background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40,
+        background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
+          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1C1814', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
       </nav>
 
@@ -73,16 +73,16 @@ export default function LoginPage() {
         {isLoggedIn ? (
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>{'\u{2705}'}</div>
-            <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 8 }}>You&rsquo;re already signed in!</h1>
+            <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814', marginBottom: 8 }}>You&rsquo;re already signed in!</h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 24 }}>
-              You&rsquo;re logged in as <strong style={{ color: '#C68A1B' }}>{session.user.email}</strong>
+              You&rsquo;re logged in as <strong style={{ color: '#C8941F' }}>{session.user.email}</strong>
             </p>
-            <a href="/profile" style={{ padding: '14px 36px', borderRadius: 100, background: '#1a1612', color: '#faf8f4', fontSize: 16, fontWeight: 700, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Go to Profile &rarr;</a>
+            <a href="/profile" style={{ padding: '14px 36px', borderRadius: 100, background: '#1C1814', color: '#F4EFE4', fontSize: 16, fontWeight: 700, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Go to Profile &rarr;</a>
           </div>
         ) : !sent ? (
           <>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
+              <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814', margin: '0 0 8px', letterSpacing: -0.5 }}>
                 Welcome back
               </h1>
               <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72' }}>
@@ -100,10 +100,10 @@ export default function LoginPage() {
                   width: '100%', padding: '14px 18px', borderRadius: 14,
                   border: '1.5px solid #ede8df', fontSize: 16, background: '#fff',
                   fontFamily: "'Inter', sans-serif", outline: 'none',
-                  color: '#1a1612', boxSizing: 'border-box',
+                  color: '#1C1814', boxSizing: 'border-box',
                   transition: 'border-color 0.2s',
                 }}
-                onFocus={e => (e.target.style.borderColor = '#C68A1B')}
+                onFocus={e => (e.target.style.borderColor = '#C8941F')}
                 onBlur={e => (e.target.style.borderColor = '#ede8df')}
               />
 
@@ -113,8 +113,8 @@ export default function LoginPage() {
 
               <button type="submit" disabled={!isValidEmail(email.trim()) || loading} style={{
                 width: '100%', padding: 14, borderRadius: 100, marginTop: 16,
-                background: isValidEmail(email.trim()) ? '#1a1612' : '#ede8df',
-                color: isValidEmail(email.trim()) ? '#faf8f4' : '#b5aa99',
+                background: isValidEmail(email.trim()) ? '#1C1814' : '#ede8df',
+                color: isValidEmail(email.trim()) ? '#F4EFE4' : '#b5aa99',
                 fontSize: 16, fontWeight: 700, border: 'none',
                 cursor: isValidEmail(email.trim()) ? 'pointer' : 'default',
                 fontFamily: "'Inter', sans-serif",
@@ -127,17 +127,17 @@ export default function LoginPage() {
 
             <p style={{ textAlign: 'center', marginTop: 24, fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72' }}>
               Don&rsquo;t have an account?{' '}
-              <a href="/signup" style={{ color: '#C68A1B', fontWeight: 600, textDecoration: 'none' }}>Sign up &rarr;</a>
+              <a href="/signup" style={{ color: '#C8941F', fontWeight: 600, textDecoration: 'none' }}>Sign up &rarr;</a>
             </p>
           </>
         ) : (
           <div style={{ textAlign: 'center' }}>
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#f7efd8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 20px' }}>{'\u2709\uFE0F'}</div>
-            <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 36px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
+            <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 36px)', fontWeight: 800, color: '#1C1814', margin: '0 0 8px', letterSpacing: -0.5 }}>
               Check your email!
             </h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', lineHeight: 1.6, marginBottom: 8 }}>
-              We sent a sign-in link to <strong style={{ color: '#C68A1B' }}>{email.trim()}</strong>.
+              We sent a sign-in link to <strong style={{ color: '#C8941F' }}>{email.trim()}</strong>.
               <br />Click it to log in.
             </p>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#b5aa99', marginBottom: 28 }}>
@@ -151,7 +151,7 @@ export default function LoginPage() {
                 opacity: loading ? 0.6 : 1,
               }}>Resend Email</button>
               <button onClick={() => { setSent(false); setEmail(''); }} style={{
-                padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#C68A1B',
+                padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#C8941F',
                 fontSize: 14, fontWeight: 600, border: 'none',
                 cursor: 'pointer', fontFamily: "'Inter', sans-serif",
               }}>Try a different email</button>

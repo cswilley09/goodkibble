@@ -96,7 +96,7 @@ export default function SearchBox({ onSelect, variant = 'hero', dark = false }) 
           style={{
             flex: 1, border: 'none', outline: 'none', minWidth: 0,
             fontSize: isNav ? 14 : 17, padding: isNav ? '10px 8px' : '14px 12px',
-            background: 'transparent', color: dark ? '#faf8f4' : '#1a1612',
+            background: 'transparent', color: dark ? '#F4EFE4' : '#1C1814',
             fontFamily: "'Inter', sans-serif", fontWeight: 500,
           }}
         />
@@ -104,7 +104,7 @@ export default function SearchBox({ onSelect, variant = 'hero', dark = false }) 
           <button className="searchbox-btn" onClick={handleSearchButton}
             style={{
               padding: '14px 28px', borderRadius: 14, border: 'none',
-              background: dark ? '#C68A1B' : '#1a1612', color: '#fff', fontSize: 15,
+              background: dark ? '#C8941F' : '#1C1814', color: '#fff', fontSize: 15,
               fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
               whiteSpace: 'nowrap', flexShrink: 0,
             }}>Search</button>
@@ -146,7 +146,7 @@ export default function SearchBox({ onSelect, variant = 'hero', dark = false }) 
                 >
                   <Thumb src={f.image_url} />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1612', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
+                    <div style={{ fontSize: 15, fontWeight: 600, color: '#1C1814', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
                     <div style={{ fontSize: 13, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
                   </div>
                 </div>
@@ -157,7 +157,7 @@ export default function SearchBox({ onSelect, variant = 'hero', dark = false }) 
                   onMouseDown={(e) => { e.preventDefault(); handleSeeAll(); }}
                   style={{
                     padding: '14px 20px', cursor: 'pointer', textAlign: 'center',
-                    fontSize: 14, fontWeight: 600, color: '#1a1612',
+                    fontSize: 14, fontWeight: 600, color: '#1C1814',
                     background: '#faf8f5', borderTop: '1px solid #f0ebe3',
                     transition: 'background 0.15s',
                   }}

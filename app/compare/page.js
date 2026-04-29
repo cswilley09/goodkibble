@@ -70,7 +70,7 @@ function ScoreRing({ score, compact }) {
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`} />
         <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: compact ? 12 : 26, fontWeight: 800, fontFamily: "'Inter', sans-serif", fill: '#1a1612' }}>
+          style={{ fontSize: compact ? 12 : 26, fontWeight: 800, fontFamily: "'Inter', sans-serif", fill: '#1C1814' }}>
           {score}
         </text>
       </svg>
@@ -112,7 +112,7 @@ function NutrientExplainer() {
         alignItems: 'center', border: 'none', background: 'transparent', cursor: 'pointer',
         fontFamily: "'Inter', sans-serif",
       }}>
-        <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', letterSpacing: 1 }}>
+        <span style={{ fontSize: 14, fontWeight: 700, color: '#1C1814', letterSpacing: 1 }}>
           📖 What do these numbers mean?
         </span>
         <span style={{ fontSize: 18, color: '#8a7e72', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
@@ -123,7 +123,7 @@ function NutrientExplainer() {
             <div key={n.name} style={{ marginBottom: 18, paddingBottom: 18, borderBottom: '1px solid #ede8df' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                 <span style={{ width: 10, height: 10, borderRadius: '50%', background: n.color, display: 'inline-block' }} />
-                <span style={{ fontSize: 15, fontWeight: 700, color: '#1a1612' }}>{n.name}</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: '#1C1814' }}>{n.name}</span>
               </div>
               <p style={{ fontSize: 13, color: '#5a5047', lineHeight: 1.6 }}>{n.desc}</p>
             </div>
@@ -203,7 +203,7 @@ function AddCardSearch({ onSelect, compact }) {
 
   return (
     <div style={{
-      borderLeft: '2px solid #E5A93D', padding: compact ? 12 : 20,
+      borderLeft: '2px solid #C8941F', padding: compact ? 12 : 20,
       animation: 'scaleIn 0.2s ease', background: '#fff',
       minWidth: compact ? 180 : undefined,
     }}>
@@ -222,13 +222,13 @@ function AddCardSearch({ onSelect, compact }) {
           border: '1.5px solid #ede8df', fontSize: 13,
           fontFamily: "'Inter', sans-serif", outline: 'none', background: '#faf8f5',
         }}
-        onFocus={(e) => e.target.style.borderColor = '#E5A93D'}
+        onFocus={(e) => e.target.style.borderColor = '#C8941F'}
         onBlur={(e) => e.target.style.borderColor = '#ede8df'}
       />
       <div style={{ marginTop: 6, maxHeight: 200, overflowY: 'auto' }}>
         {results.map((r) => (
           <div key={r.id} onClick={() => { onSelect(r); setActive(false); setQuery(''); setResults([]); }}
-            style={{ padding: '9px 10px', borderRadius: 8, cursor: 'pointer', fontSize: 13, color: '#1a1612', transition: 'background 0.15s', lineHeight: 1.4, display: 'flex', alignItems: 'center', gap: 10 }}
+            style={{ padding: '9px 10px', borderRadius: 8, cursor: 'pointer', fontSize: 13, color: '#1C1814', transition: 'background 0.15s', lineHeight: 1.4, display: 'flex', alignItems: 'center', gap: 10 }}
             onMouseEnter={(e) => e.currentTarget.style.background = '#f5f0e8'}
             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
           >
@@ -360,8 +360,8 @@ export default function ComparePage() {
       }}>
         <div onClick={goHome} style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
-          color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
+          color: '#1C1814', cursor: 'pointer', flexShrink: 0,
+        }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
@@ -389,7 +389,7 @@ export default function ComparePage() {
           <div>
             <h1 className="page-title" style={{
               fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 24 : 'clamp(28px, 3vw, 40px)',
-              fontWeight: 800, color: '#1a1612', letterSpacing: -1,
+              fontWeight: 800, color: '#1C1814', letterSpacing: -1,
             }}>Compare Foods</h1>
             <p style={{ fontSize: isMobile ? 13 : 15, color: '#8a7e72', marginTop: 4 }}>
               {items.length === 0
@@ -415,7 +415,7 @@ export default function ComparePage() {
                 setTimeout(() => setSaved(false), 2500);
               }} style={{
                 padding: '8px 16px', borderRadius: 100,
-                background: saved ? '#2d7a4f' : '#C68A1B', color: '#fff',
+                background: saved ? '#2d7a4f' : '#C8941F', color: '#fff',
                 fontSize: 13, fontWeight: 600, border: 'none',
                 cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 transition: 'background 0.2s',
@@ -443,7 +443,7 @@ export default function ComparePage() {
             background: '#faf8f5', borderRadius: 24, border: '1px solid #ede8df',
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚖️</div>
-            <p style={{ fontSize: 18, fontWeight: 600, color: '#1a1612', marginBottom: 8 }}>No products selected yet</p>
+            <p style={{ fontSize: 18, fontWeight: 600, color: '#1C1814', marginBottom: 8 }}>No products selected yet</p>
             <p style={{ fontSize: 14, color: '#8a7e72', maxWidth: 380, margin: '0 auto 24px' }}>
               Search for a dog food and click &ldquo;+ Add to Compare&rdquo; on any product page, or search below.
             </p>
@@ -536,7 +536,7 @@ export default function ComparePage() {
                     letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 1,
                   }}>{f.brand}</div>
                   <div style={{
-                    fontSize: isMobile ? 11 : 15, fontWeight: 600, color: '#1a1612',
+                    fontSize: isMobile ? 11 : 15, fontWeight: 600, color: '#1C1814',
                     lineHeight: 1.4, marginBottom: isMobile ? 6 : 14, padding: 0,
                     flex: 1, minHeight: isMobile ? 40 : 0,
                   }}>
@@ -580,7 +580,7 @@ export default function ComparePage() {
                         justifyContent: isMobile ? 'center' : 'flex-start',
                       }}>
                         <div style={{
-                          fontSize: isMobile ? 16 : 22, fontWeight: 700, color: '#1a1612',
+                          fontSize: isMobile ? 16 : 22, fontWeight: 700, color: '#1C1814',
                           fontFamily: "'Inter', sans-serif", lineHeight: 1,
                           minWidth: isMobile ? undefined : 44, flexShrink: 0,
                         }}>
@@ -617,7 +617,7 @@ export default function ComparePage() {
                   background: colBg(idx),
                   display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
                 }}>
-                  <span style={{ fontSize: isMobile ? 12 : 15, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>
+                  <span style={{ fontSize: isMobile ? 12 : 15, fontWeight: 600, color: '#1C1814', fontFamily: "'Inter', sans-serif" }}>
                     {f.primary_protein || '\u2014'}
                   </span>
                 </div>
@@ -628,10 +628,10 @@ export default function ComparePage() {
               {/* section header */}
               <div style={{
                 gridColumn: `1 / -1`,
-                background: '#faf8f4', borderTop: '2px solid #ede8df', borderBottom: '1px solid #ede8df',
+                background: '#F4EFE4', borderTop: '2px solid #ede8df', borderBottom: '1px solid #ede8df',
                 padding: isMobile ? '10px 10px' : '12px 24px',
               }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#C68A1B', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: "'Inter', sans-serif" }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#C8941F', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: "'Inter', sans-serif" }}>
                   Top 5 Ingredients
                 </span>
               </div>
@@ -665,7 +665,7 @@ export default function ComparePage() {
                           )}
                           <span style={{
                             fontSize: isMobile ? 10 : 13, fontWeight: rowIdx === 0 ? 700 : 500,
-                            color: '#1a1612', fontFamily: "'Inter', sans-serif", lineHeight: 1.4, textAlign: isMobile ? 'center' : 'left',
+                            color: '#1C1814', fontFamily: "'Inter', sans-serif", lineHeight: 1.4, textAlign: isMobile ? 'center' : 'left',
                           }}>{ing.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</span>
                         </>) : (
                           <span style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>&mdash;</span>
@@ -692,7 +692,7 @@ export default function ComparePage() {
             }}>
               <div style={{ fontSize: 13, color: '#3d352b', lineHeight: 1.5, flex: 1 }}>
                 Want to save this comparison and get notified if scores change?{' '}
-                <span onClick={() => router.push('/pro')} style={{ color: '#C68A1B', fontWeight: 700, cursor: 'pointer' }}>Upgrade to Pro &rarr;</span>
+                <span onClick={() => router.push('/pro')} style={{ color: '#C8941F', fontWeight: 700, cursor: 'pointer' }}>Upgrade to Pro &rarr;</span>
               </div>
               <button onClick={() => setProBannerDismissed(true)} style={{
                 background: 'none', border: 'none', color: '#8a7e72', fontSize: 18,
@@ -709,8 +709,8 @@ export default function ComparePage() {
         borderTop: '1px solid #ede8df', padding: isMobile ? '24px 16px' : '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 24 : 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
+        <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 24 : 32, fontWeight: 800, color: '#1C1814' }}>
+          Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

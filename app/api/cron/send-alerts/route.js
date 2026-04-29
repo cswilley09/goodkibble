@@ -41,7 +41,7 @@ function buildEmailHTML(recall) {
 
     <!-- Header -->
     <div style="text-align:center;padding:24px 0 20px;">
-      <span style="font-size:24px;font-weight:800;color:#1a1612;letter-spacing:-0.5px;">Good<span style="color:#C68A1B;">Kibble</span></span>
+      <span style="font-size:24px;font-weight:800;color:#1C1814;letter-spacing:-0.5px;">Good<span style="color:#C8941F;">Kibble</span></span>
     </div>
 
     <!-- Main Card -->
@@ -56,7 +56,7 @@ function buildEmailHTML(recall) {
 
       <!-- Content -->
       <div style="padding:28px 24px;">
-        <h1 style="font-size:20px;font-weight:800;color:#1a1612;margin:0 0 6px;line-height:1.3;">
+        <h1 style="font-size:20px;font-weight:800;color:#1C1814;margin:0 0 6px;line-height:1.3;">
           A food your dog eats has been recalled
         </h1>
         <p style="font-size:14px;color:#8a7e72;margin:0 0 24px;line-height:1.5;">
@@ -66,7 +66,7 @@ function buildEmailHTML(recall) {
         <!-- Brand -->
         <div style="margin-bottom:20px;">
           <div style="font-size:11px;font-weight:600;color:#8a7e72;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Brand</div>
-          <div style="font-size:18px;font-weight:700;color:#1a1612;">${brandName}</div>
+          <div style="font-size:18px;font-weight:700;color:#1C1814;">${brandName}</div>
         </div>
 
         <!-- Product Description -->
@@ -101,14 +101,14 @@ function buildEmailHTML(recall) {
         <!-- CTA Button -->
         ${recall.source_url ? `
         <div style="text-align:center;margin-bottom:16px;">
-          <a href="${recall.source_url}" target="_blank" rel="noopener" style="display:inline-block;padding:14px 32px;background:#1a1612;color:#faf8f4;font-size:15px;font-weight:700;text-decoration:none;border-radius:100px;">
+          <a href="${recall.source_url}" target="_blank" rel="noopener" style="display:inline-block;padding:14px 32px;background:#1C1814;color:#F4EFE4;font-size:15px;font-weight:700;text-decoration:none;border-radius:100px;">
             View Full FDA Notice →
           </a>
         </div>` : ''}
 
         <!-- Secondary Link -->
         <div style="text-align:center;">
-          <a href="https://www.goodkibble.com/dashboard/recalls" style="font-size:13px;color:#C68A1B;text-decoration:none;font-weight:600;">
+          <a href="https://www.goodkibble.com/dashboard/recalls" style="font-size:13px;color:#C8941F;text-decoration:none;font-weight:600;">
             View All Recalls on GoodKibble →
           </a>
         </div>
@@ -121,7 +121,7 @@ function buildEmailHTML(recall) {
         You're receiving this because you have recall alerts enabled on <strong>GoodKibble Pro</strong>.
       </p>
       <p style="margin:0 0 8px;">
-        To stop receiving recall alerts, update your <a href="https://www.goodkibble.com/profile" style="color:#C68A1B;text-decoration:none;">notification preferences</a>.
+        To stop receiving recall alerts, update your <a href="https://www.goodkibble.com/profile" style="color:#C8941F;text-decoration:none;">notification preferences</a>.
       </p>
       <p style="margin:0;color:#d4cfc6;">
         © ${new Date().getFullYear()} GoodKibble. Not affiliated with any dog food brand.

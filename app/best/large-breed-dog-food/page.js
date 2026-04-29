@@ -59,7 +59,7 @@ export default async function BestLargeBreedPage() {
       <BestOfPageContent
         title="Best Large Breed Dog Food in 2026"
         subtitle="Ranked by our scoring methodology across 116 large-breed products"
-        intro={<>Large breeds have unique nutritional needs — controlled calcium-to-phosphorus ratios, moderate fat, and high-quality protein for lean muscle. We scored every large breed formula in our database and ranked them by overall nutrition and ingredient quality. <a href="/how-we-score" style={{ color: '#1a1612', textDecoration: 'underline', textUnderlineOffset: 3 }}>Read our full methodology</a>.</>}
+        intro={<>Large breeds have unique nutritional needs — controlled calcium-to-phosphorus ratios, moderate fat, and high-quality protein for lean muscle. We scored every large breed formula in our database and ranked them by overall nutrition and ingredient quality. <a href="/how-we-score" style={{ color: '#1C1814', textDecoration: 'underline', textUnderlineOffset: 3 }}>Read our full methodology</a>.</>}
         products={products}
         currentPath="/best/large-breed-dog-food"
         totalAnalyzed="116"

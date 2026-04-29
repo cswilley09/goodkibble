@@ -18,7 +18,7 @@ function ScoreRing({ score }) {
         <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" transform="rotate(-90 21 21)" />
         <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1a1612' }}>{score}</text>
+          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1C1814' }}>{score}</text>
       </svg>
     </div>
   );
@@ -42,7 +42,7 @@ function ProductCard({ product }) {
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 11, color: '#b5aa99', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{product.brand}</div>
-        <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1612', lineHeight: 1.3,
+        <div style={{ fontSize: 13, fontWeight: 600, color: '#1C1814', lineHeight: 1.3,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{product.name}</div>
         <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginTop: 4 }}>
@@ -70,8 +70,8 @@ export default function IngredientPageContent({ ingredient, products, productCou
       }}>
         <div onClick={goHome} style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
-          color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
+          color: '#1C1814', cursor: 'pointer', flexShrink: 0,
+        }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
@@ -96,7 +96,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
             <h1 className="page-title" style={{
               fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(26px, 4vw, 38px)',
-              fontWeight: 700, color: '#1a1612', lineHeight: 1.2, margin: 0,
+              fontWeight: 700, color: '#1C1814', lineHeight: 1.2, margin: 0,
             }}>{ingredient.display_name}</h1>
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
@@ -138,7 +138,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
         <div style={{ marginBottom: 40 }}>
           <h2 style={{
             fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 700,
-            color: '#1a1612', marginBottom: 4,
+            color: '#1C1814', marginBottom: 4,
           }}>Found in {productCount} dog food{productCount !== 1 ? 's' : ''}</h2>
           <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>
             Showing top {products.length} by GoodKibble Score
@@ -160,7 +160,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
           }}>
             <h2 style={{
               fontFamily: "'Instrument Serif', serif", fontSize: 20, fontWeight: 700,
-              color: '#1a1612', marginBottom: 16,
+              color: '#1C1814', marginBottom: 16,
             }}>Related Ingredients</h2>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               {related.map(r => {
@@ -181,7 +181,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
         {/* Browse all */}
         <div style={{ marginTop: 24, textAlign: 'center' }}>
           <a href="/ingredients" style={{
-            fontSize: 14, fontWeight: 600, color: '#1a1612', textDecoration: 'underline',
+            fontSize: 14, fontWeight: 600, color: '#1C1814', textDecoration: 'underline',
             textUnderlineOffset: 3, fontFamily: "'Inter', sans-serif",
           }}>Browse all 666 ingredients</a>
         </div>
@@ -192,8 +192,8 @@ export default function IngredientPageContent({ ingredient, products, productCou
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
+          Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

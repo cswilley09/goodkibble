@@ -59,7 +59,7 @@ export default async function BestGrainFreePage() {
       <BestOfPageContent
         title="Best Grain-Free Dog Food in 2026"
         subtitle="Ranked by our scoring methodology across 109 grain-free products"
-        intro={<>Grain-free formulas replace grains with legumes, potatoes, or sweet potatoes. We scored every grain-free kibble in our database on protein, fat, ingredient quality, preservatives, and functional ingredients. These are the top 10. <a href="/how-we-score" style={{ color: '#1a1612', textDecoration: 'underline', textUnderlineOffset: 3 }}>Read our full methodology</a>.</>}
+        intro={<>Grain-free formulas replace grains with legumes, potatoes, or sweet potatoes. We scored every grain-free kibble in our database on protein, fat, ingredient quality, preservatives, and functional ingredients. These are the top 10. <a href="/how-we-score" style={{ color: '#1C1814', textDecoration: 'underline', textUnderlineOffset: 3 }}>Read our full methodology</a>.</>}
         products={products}
         currentPath="/best/grain-free-dog-food"
         totalAnalyzed="109"

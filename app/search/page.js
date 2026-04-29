@@ -33,7 +33,7 @@ function ScoreRing({ score }) {
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform="rotate(-90 21 21)" />
         <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1a1612' }}>
+          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1C1814' }}>
           {score}
         </text>
       </svg>
@@ -65,7 +65,7 @@ function ProductCard({ food, onClick }) {
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 12, color: '#8a7e72', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
-        <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', lineHeight: 1.3, marginBottom: 6,
+        <div style={{ fontSize: 14, fontWeight: 600, color: '#1C1814', lineHeight: 1.3, marginBottom: 6,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{food.name}</div>
         {(food.flavor || food.primary_protein) && (
@@ -135,8 +135,8 @@ function SearchResults() {
       }}>
         <div onClick={goHome} style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
-          color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
+          color: '#1C1814', cursor: 'pointer', flexShrink: 0,
+        }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
@@ -162,7 +162,7 @@ function SearchResults() {
           <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8 }}>Search results</div>
           <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif",
-            fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: '#1a1612',
+            fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: '#1C1814',
             lineHeight: 1.1, marginBottom: 8, letterSpacing: -1,
           }}>&ldquo;{query}&rdquo;</h1>
           {!loading && (
@@ -174,7 +174,7 @@ function SearchResults() {
 
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
-            <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+            <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1C1814', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
           </div>
         ) : results.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 24px', color: '#8a7e72' }}>
@@ -196,8 +196,8 @@ function SearchResults() {
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
+        <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
+          Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
@@ -216,7 +216,7 @@ export default function SearchPage() {
   return (
     <Suspense fallback={
       <div style={{ display: 'flex', justifyContent: 'center', padding: '120px 0' }}>
-        <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1C1814', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
       </div>
     }>
       <SearchResults />

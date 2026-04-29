@@ -59,7 +59,7 @@ export default async function BestPuppyFoodPage() {
       <BestOfPageContent
         title="Best Puppy Food in 2026"
         subtitle="Ranked by our scoring methodology across 152 puppy-specific products"
-        intro={<>Puppies need higher protein and fat than adult dogs to support growth. We scored every puppy food in our database across protein adequacy, fat-to-protein ratios, ingredient quality, and more. These are the top 10. <a href="/how-we-score" style={{ color: '#1a1612', textDecoration: 'underline', textUnderlineOffset: 3 }}>Read our full methodology</a>.</>}
+        intro={<>Puppies need higher protein and fat than adult dogs to support growth. We scored every puppy food in our database across protein adequacy, fat-to-protein ratios, ingredient quality, and more. These are the top 10. <a href="/how-we-score" style={{ color: '#1C1814', textDecoration: 'underline', textUnderlineOffset: 3 }}>Read our full methodology</a>.</>}
         products={products}
         currentPath="/best/puppy-food"
         totalAnalyzed="152"

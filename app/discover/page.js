@@ -74,7 +74,7 @@ function ScoreRing({ score }) {
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform="rotate(-90 21 21)" />
         <text x={21} y={21} textAnchor="middle" dominantBaseline="central"
-          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1a1612' }}>
+          style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", fill: '#1C1814' }}>
           {score}
         </text>
       </svg>
@@ -110,7 +110,7 @@ function FilterSection({ title, children, defaultOpen = true, forceOpen = false 
         border: 'none', background: 'none', cursor: 'pointer', padding: '4px 0',
         fontFamily: "'Inter', sans-serif",
       }}>
-        <span style={{ fontSize: 13, fontWeight: 700, color: '#1a1612', letterSpacing: 1, textTransform: 'uppercase' }}>{title}</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: '#1C1814', letterSpacing: 1, textTransform: 'uppercase' }}>{title}</span>
         <span style={{ fontSize: 14, color: '#8a7e72', transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
       </button>
       {isOpen && <div style={{ marginTop: 10 }}>{children}</div>}
@@ -126,7 +126,7 @@ function CheckOption({ label, checked, onChange, count }) {
       cursor: 'pointer', fontSize: 14, color: '#3d352b',
       fontFamily: "'Inter', sans-serif",
     }}>
-      <input type="checkbox" checked={checked} onChange={onChange} style={{ accentColor: '#1a1612', width: 16, height: 16 }} />
+      <input type="checkbox" checked={checked} onChange={onChange} style={{ accentColor: '#1C1814', width: 16, height: 16 }} />
       <span style={{ flex: 1 }}>{label}</span>
       {count !== undefined && <span style={{ fontSize: 12, color: '#b5aa99' }}>({count})</span>}
     </label>
@@ -154,7 +154,7 @@ function ProductCard({ food, onClick }) {
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 12, color: '#8a7e72', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
-        <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1612', lineHeight: 1.3, marginBottom: 6,
+        <div style={{ fontSize: 14, fontWeight: 600, color: '#1C1814', lineHeight: 1.3, marginBottom: 6,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{food.name}</div>
         {(food.flavor || food.primary_protein) && (
@@ -392,7 +392,7 @@ function DiscoverContent() {
             border: '1.5px solid #ede8df', fontSize: 13, marginBottom: 8,
             fontFamily: "'Inter', sans-serif", outline: 'none', background: '#faf8f5',
           }}
-          onFocus={(e) => e.target.style.borderColor = '#E5A93D'}
+          onFocus={(e) => e.target.style.borderColor = '#C8941F'}
           onBlur={(e) => e.target.style.borderColor = '#ede8df'}
         />
         <div style={{ maxHeight: 200, overflowY: 'auto' }}>
@@ -448,8 +448,8 @@ function DiscoverContent() {
       }}>
         <div onClick={goHome} style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
-          color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
+          color: '#1C1814', cursor: 'pointer', flexShrink: 0,
+        }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={goFood} variant="nav" />
         </div>
@@ -466,7 +466,7 @@ function DiscoverContent() {
         <div style={{ marginBottom: 8 }}>
           <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3vw, 40px)',
-            fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 4,
+            fontWeight: 800, color: '#1C1814', letterSpacing: -1, marginBottom: 4,
           }}>Discover Foods</h1>
         </div>
 
@@ -475,7 +475,7 @@ function DiscoverContent() {
           <button onClick={() => setMobileFiltersOpen(true)} style={{
             width: '100%', padding: '12px 20px', borderRadius: 14,
             border: '1.5px solid #ede8df', background: '#fff',
-            fontSize: 14, fontWeight: 600, color: '#1a1612', cursor: 'pointer',
+            fontSize: 14, fontWeight: 600, color: '#1C1814', cursor: 'pointer',
             fontFamily: "'Inter', sans-serif",
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           }}>
@@ -500,7 +500,7 @@ function DiscoverContent() {
                   fontSize: 13, color: '#b5aa99', cursor: 'pointer',
                   fontFamily: "'Inter', sans-serif", transition: 'color 0.15s',
                 }}
-                onMouseEnter={(e) => { e.target.style.color = '#1a1612'; e.target.style.textDecoration = 'underline'; }}
+                onMouseEnter={(e) => { e.target.style.color = '#1C1814'; e.target.style.textDecoration = 'underline'; }}
                 onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
               >
                 · Clear filters
@@ -514,7 +514,7 @@ function DiscoverContent() {
               onChange={(e) => handleSortChange(e.target.value)}
               style={{
                 padding: '8px 12px', borderRadius: 10, border: '1.5px solid #ede8df',
-                background: '#fff', fontSize: 13, color: '#1a1612', cursor: 'pointer',
+                background: '#fff', fontSize: 13, color: '#1C1814', cursor: 'pointer',
                 fontFamily: "'Inter', sans-serif", outline: 'none',
                 appearance: 'none', WebkitAppearance: 'none',
                 backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'10\' height=\'6\' viewBox=\'0 0 10 6\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M1 1L5 5L9 1\' stroke=\'%238a7e72\' stroke-width=\'1.5\' stroke-linecap=\'round\'/%3E%3C/svg%3E")',
@@ -572,7 +572,7 @@ function DiscoverContent() {
                 <div style={{ textAlign: 'center', marginTop: 24 }}>
                   <button onClick={() => setVisibleCount(v => v + 48)} style={{
                     padding: '12px 32px', borderRadius: 100, border: '1.5px solid #ede8df',
-                    background: '#fff', color: '#1a1612', fontSize: 14, fontWeight: 600,
+                    background: '#fff', color: '#1C1814', fontSize: 14, fontWeight: 600,
                     cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'all 0.2s',
                   }}
                     onMouseEnter={(e) => { e.target.style.background = '#f5f0e8'; }}
@@ -599,7 +599,7 @@ function DiscoverContent() {
             animation: 'fadeUp 0.25s ease',
           }} onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-              <span style={{ fontSize: 18, fontWeight: 700, color: '#1a1612' }}>Filters</span>
+              <span style={{ fontSize: 18, fontWeight: 700, color: '#1C1814' }}>Filters</span>
               <button onClick={() => setMobileFiltersOpen(false)} style={{
                 background: 'none', border: 'none', fontSize: 22, color: '#8a7e72', cursor: 'pointer',
               }}>✕</button>
@@ -607,7 +607,7 @@ function DiscoverContent() {
             {filterContent}
             <button onClick={() => setMobileFiltersOpen(false)} style={{
               width: '100%', padding: '14px', borderRadius: 14,
-              border: 'none', background: '#1a1612', color: '#faf8f5',
+              border: 'none', background: '#1C1814', color: '#faf8f5',
               fontSize: 15, fontWeight: 600, cursor: 'pointer', marginTop: 16,
               fontFamily: "'Inter', sans-serif",
             }}>
@@ -622,8 +622,8 @@ function DiscoverContent() {
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
+          Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
@@ -649,7 +649,7 @@ export default function DiscoverPage() {
   return (
     <Suspense fallback={
       <div style={{ display: 'flex', justifyContent: 'center', padding: '120px 0' }}>
-        <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1a1612', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1C1814', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
       </div>
     }>
       <DiscoverContent />

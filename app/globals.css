@@ -1,9 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap');
 
+/* ─────────────────────────────────────────────────────────────
+   Brand color tokens. Five locked colors plus three score tokens
+   and three ink-derived rgba utilities. Marigold must read as a
+   live yellow — never bronze or olive.
+   ──────────────────────────────────────────────────────────── */
+:root {
+  --color-paper:    #F4EFE4;  /* page background, warm cream */
+  --color-ink:      #1C1814;  /* primary text, headlines (warm near-black) */
+  --color-marigold: #C8941F;  /* hero italic, eyebrow text, CTAs, links */
+  --color-sand:     #EBDFC2;  /* eyebrow pill bg, soft surfaces */
+  --color-brick:    #A8442A;  /* warnings, recall accents, score-poor */
+
+  --color-score-good: #3F7A3D;
+  --color-score-mid:  #C8941F;
+  --color-score-poor: #A8442A;
+
+  --color-ink-08: rgba(28, 24, 20, 0.08);  /* card borders */
+  --color-ink-60: rgba(28, 24, 20, 0.60);  /* secondary text */
+  --color-ink-40: rgba(28, 24, 20, 0.40);  /* tertiary text, placeholders */
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
-::selection { background: #f5e8c8; color: #1a1612; }
-body { font-family: 'Inter', system-ui, sans-serif; background: #faf8f4; color: #1a1612; overflow-x: hidden; }
-input::placeholder { color: #b5aa99; }
+::selection { background: var(--color-sand); color: var(--color-ink); }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--color-paper); color: var(--color-ink); overflow-x: hidden; }
+input::placeholder { color: var(--color-ink-40); }
 
 @keyframes fadeUp { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:translateY(0) } }
 @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }

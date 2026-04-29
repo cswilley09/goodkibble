@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 const ADMIN_PASSWORD = 'gk_admin_2026';
 const ADMIN_SECRET = 'gk_admin_2026';
 
-const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'Inter', sans-serif", color: '#1a1612', boxSizing: 'border-box' };
+const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'Inter', sans-serif", color: '#1C1814', boxSizing: 'border-box' };
 const labelStyle = { fontSize: 11, fontWeight: 600, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block', letterSpacing: 0.5, textTransform: 'uppercase' };
 
 export default function AddRecallPage() {
@@ -26,14 +26,14 @@ export default function AddRecallPage() {
 
   if (!authed) {
     return (
-      <div style={{ minHeight: '100vh', background: '#faf8f4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ minHeight: '100vh', background: '#F4EFE4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ maxWidth: 360, width: '100%', padding: 24, textAlign: 'center' }}>
-          <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#1a1612', marginBottom: 24 }}>Good<span style={{ color: '#A32D2D' }}>Kibble</span> Recalls</div>
+          <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#1C1814', marginBottom: 24 }}>Good<span style={{ color: '#A32D2D' }}>Kibble</span> Recalls</div>
           <input type="password" value={password} onChange={e => setPassword(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && password === ADMIN_PASSWORD) setAuthed(true); }}
             placeholder="Admin password" style={inputStyle} />
           <button onClick={() => { if (password === ADMIN_PASSWORD) setAuthed(true); else setError('Wrong password'); }}
-            style={{ width: '100%', padding: 12, borderRadius: 100, marginTop: 12, background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Enter</button>
+            style={{ width: '100%', padding: 12, borderRadius: 100, marginTop: 12, background: '#1C1814', color: '#F4EFE4', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Enter</button>
           {error && <p style={{ color: '#b5483a', fontSize: 13, marginTop: 8, fontFamily: "'Inter', sans-serif" }}>{error}</p>}
         </div>
       </div>
@@ -109,14 +109,14 @@ export default function AddRecallPage() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
+    <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
       <div style={{ maxWidth: 700, margin: '0 auto', padding: '40px 24px 80px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
           <div>
-            <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 4 }}>Add Recall</div>
+            <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814', marginBottom: 4 }}>Add Recall</div>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', margin: 0 }}>Paste a URL, upload a PDF, or paste email text. AI extracts the recall details.</p>
           </div>
-          <a href="/admin/add-product" style={{ fontSize: 12, color: '#C68A1B', fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Add Product &rarr;</a>
+          <a href="/admin/add-product" style={{ fontSize: 12, color: '#C8941F', fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Add Product &rarr;</a>
         </div>
 
         {/* Tabs */}
@@ -127,7 +127,7 @@ export default function AddRecallPage() {
                 <button key={t.key} onClick={() => setTab(t.key)} style={{
                   flex: 1, padding: '12px 0', background: 'none', border: 'none',
                   borderBottom: tab === t.key ? '2px solid #A32D2D' : '2px solid transparent',
-                  color: tab === t.key ? '#1a1612' : '#b5aa99', fontSize: 13, fontWeight: tab === t.key ? 600 : 500,
+                  color: tab === t.key ? '#1C1814' : '#b5aa99', fontSize: 13, fontWeight: tab === t.key ? 600 : 500,
                   cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 }}>{t.label}</button>
               ))}
@@ -152,7 +152,7 @@ export default function AddRecallPage() {
                   {pdfFile ? (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: '#fff', borderRadius: 10, border: '1.5px solid #ede8df' }}>
                       <span style={{ fontSize: 20 }}>{'\u{1F4C4}'}</span>
-                      <span style={{ flex: 1, fontSize: 14, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>{pdfFile.name}</span>
+                      <span style={{ flex: 1, fontSize: 14, color: '#1C1814', fontFamily: "'Inter', sans-serif" }}>{pdfFile.name}</span>
                       <button type="button" onClick={() => { setPdfFile(null); if (fileRef.current) fileRef.current.value = ''; }} style={{ background: 'none', border: 'none', color: '#b5aa99', fontSize: 16, cursor: 'pointer' }}>&times;</button>
                     </div>
                   ) : (
@@ -226,7 +226,7 @@ export default function AddRecallPage() {
 
             <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #ede8df', overflow: 'hidden' }}>
               {/* Severity indicator */}
-              <div style={{ height: 4, background: editData.severity === 'Class I' ? '#A32D2D' : editData.severity === 'Class II' ? '#d4760a' : '#C68A1B' }} />
+              <div style={{ height: 4, background: editData.severity === 'Class I' ? '#A32D2D' : editData.severity === 'Class II' ? '#d4760a' : '#C8941F' }} />
 
               <div style={{ padding: 20 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
