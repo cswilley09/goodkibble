@@ -94,7 +94,7 @@ export default function IngredientPageContent({ ingredient, products, productCou
         {/* Hero */}
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
-            <h1 style={{
+            <h1 className="page-title" style={{
               fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(26px, 4vw, 38px)',
               fontWeight: 700, color: '#1a1612', lineHeight: 1.2, margin: 0,
             }}>{ingredient.display_name}</h1>

@@ -97,7 +97,7 @@ export default function BrandPage() {
 
         <div style={{ animation: 'fadeUp 0.5s ease' }}>
           <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8 }}>Brand</div>
-          <h1 style={{
+          <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif",
             fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: '#1a1612',
             lineHeight: 1.1, marginBottom: 8, letterSpacing: -1,

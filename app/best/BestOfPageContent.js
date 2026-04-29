@@ -196,7 +196,7 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
 
         {/* Hero */}
         <div style={{ marginBottom: 40 }}>
-          <h1 style={{
+          <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif",
             fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800,
             color: '#1a1612', lineHeight: 1.15, letterSpacing: -1, marginBottom: 8,

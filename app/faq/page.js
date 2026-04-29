@@ -181,7 +181,7 @@ function FoodRequestForm() {
       background: '#fff', borderRadius: 20, border: '1px solid #ede8df', padding: 32,
     }}>
       <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#C68A1B', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Request</div>
-      <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 700, color: '#1a1612', marginBottom: 6 }}>
+      <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 700, color: '#1a1612', marginBottom: 6 }}>
         Can't find your dog's food?
       </h2>
       <p style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.6, marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>
@@ -270,7 +270,7 @@ export default function FAQPage() {
 
       <div style={{ maxWidth: 740, margin: '0 auto', padding: '48px 24px 80px' }}>
         <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8 }}>Support</p>
-        <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#1a1612', marginBottom: 8 }}>Frequently Asked Questions</h1>
+        <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#1a1612', marginBottom: 8 }}>Frequently Asked Questions</h1>
         <p style={{ fontSize: 15, color: '#8a7e72', lineHeight: 1.6, marginBottom: 48, fontFamily: "'Inter', sans-serif" }}>
           Everything you need to know about how GoodKibble works, where our data comes from, and what the scores mean.
         </p>

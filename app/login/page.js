@@ -73,7 +73,7 @@ export default function LoginPage() {
         {isLoggedIn ? (
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>{'\u{2705}'}</div>
-            <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 8 }}>You&rsquo;re already signed in!</h1>
+            <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 8 }}>You&rsquo;re already signed in!</h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 24 }}>
               You&rsquo;re logged in as <strong style={{ color: '#C68A1B' }}>{session.user.email}</strong>
             </p>
@@ -82,7 +82,7 @@ export default function LoginPage() {
         ) : !sent ? (
           <>
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
+              <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
                 Welcome back
               </h1>
               <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72' }}>
@@ -133,7 +133,7 @@ export default function LoginPage() {
         ) : (
           <div style={{ textAlign: 'center' }}>
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#f7efd8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 20px' }}>{'\u2709\uFE0F'}</div>
-            <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 36px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
+            <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 36px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
               Check your email!
             </h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', lineHeight: 1.6, marginBottom: 8 }}>

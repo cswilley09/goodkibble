@@ -909,7 +909,7 @@ export default function FoodPageContent({ productId }) {
                 onMouseEnter={(e) => e.target.style.color = '#1a1612'}
                 onMouseLeave={(e) => e.target.style.color = '#b5aa99'}
               >{food.brand} →</div>
-              <h1 style={{
+              <h1 className="page-title" style={{
                 fontFamily: "'Instrument Serif', serif",
                 fontSize: 'clamp(22px, 3vw, 34px)', fontWeight: 700, color: '#1a1612',
                 lineHeight: 1.2, marginBottom: 12, letterSpacing: -0.5,

@@ -670,7 +670,7 @@ export default function SignupPage() {
         {curType === 'welcome' && (
           <div style={{ textAlign: 'center' }}>
             <DogIcon />
-            <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 42px)', fontWeight: 800, color: '#1a1612', margin: '20px 0 16px', letterSpacing: -1, lineHeight: 1.15 }}>
+            <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 42px)', fontWeight: 800, color: '#1a1612', margin: '20px 0 16px', letterSpacing: -1, lineHeight: 1.15 }}>
               Let&rsquo;s find the best food for your dog
             </h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', lineHeight: 1.6, maxWidth: 440, margin: '0 auto 12px' }}>
@@ -782,7 +782,7 @@ export default function SignupPage() {
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#C68A1B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>
               {numDogs > 1 ? `${curDogName}\u2019s current food (${curDogIdx + 1} of ${numDogs})` : `${curDogName}\u2019s current food`}
             </div>
-            <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 28px', letterSpacing: -0.5 }}>
+            <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 28px', letterSpacing: -0.5 }}>
               Right now I feed {curDogName}
             </h2>
 
@@ -845,7 +845,7 @@ export default function SignupPage() {
         {curType === 'priorities' && (
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#C68A1B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>What matters to you</div>
-            <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 8px', letterSpacing: -0.5 }}>
+            <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 8px', letterSpacing: -0.5 }}>
               When it comes to {numDogs > 1 ? 'your dogs\u2019' : `${firstDogName}\u2019s`} food, I care most about...
             </h2>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 24 }}>Select all that apply.</p>
@@ -871,7 +871,7 @@ export default function SignupPage() {
         {curType === 'account' && (
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, fontWeight: 700, color: '#C68A1B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 6 }}>Almost done</div>
-            <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 8px', letterSpacing: -0.5 }}>
+            <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1a1612', margin: '8px 0 8px', letterSpacing: -0.5 }}>
               Save {numDogs > 1 ? 'your dogs\u2019 profiles' : `${firstDogName}\u2019s profile`}
             </h2>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 28 }}>
@@ -920,7 +920,7 @@ export default function SignupPage() {
         {curType === 'plan' && (
           <div style={{ textAlign: 'center' }}>
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#f7efd8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 20px' }}>{'\u{1F389}'}</div>
-            <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
+            <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -0.5 }}>
               You&rsquo;re in, {firstName || 'there'}!
             </h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: '#8a7e72', lineHeight: 1.6, maxWidth: 440, margin: '0 auto 24px' }}>
@@ -1036,7 +1036,7 @@ export default function SignupPage() {
         {curType === 'confirm' && (
           <div style={{ textAlign: 'center' }}>
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#f7efd8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 20px' }}>{'\u2709\uFE0F'}</div>
-            <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 40px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -1 }}>
+            <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 40px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px', letterSpacing: -1 }}>
               Check your email!
             </h1>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', marginBottom: 8, lineHeight: 1.6 }}>

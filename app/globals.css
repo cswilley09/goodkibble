@@ -13,6 +13,29 @@ input::placeholder { color: #b5aa99; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 @keyframes heroDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
+/* ───────────────────────────────────────
+   Type system — site-wide heading tokens.
+   Apply via className. Use !important so they
+   win over per-page inline fontSize/fontWeight,
+   which lets pages keep their own color/margin.
+   ─────────────────────────────────────── */
+.page-title,
+.section-h2,
+.statement-h2 {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.5px !important;
+}
+.page-title   { font-size: clamp(32px, 4.5vw, 48px) !important; line-height: 1.05 !important; }
+.section-h2   { font-size: clamp(28px, 3.2vw, 40px) !important; line-height: 1.1 !important; }
+.statement-h2 { font-size: clamp(32px, 4vw, 48px) !important; line-height: 1.05 !important; }
+
+@media (max-width: 768px) {
+  .page-title   { font-size: 32px !important; }
+  .section-h2   { font-size: 26px !important; }
+  .statement-h2 { font-size: 30px !important; }
+}
+
 @media (max-width: 768px) {
   .hero-layout { flex-direction: column !important; gap: 16px !important; padding: 12px 24px 24px !important; align-items: center !important; }
   .hero-kibble-col { width: auto !important; }

@@ -31,7 +31,7 @@ export default function RecallDashboardPage() {
             fontSize: 11, fontWeight: 700, marginBottom: 16,
             fontFamily: "'Inter', sans-serif", letterSpacing: 0.5,
           }}>{'\u{1F6A8}'} LIVE MONITORING</div>
-          <h1 style={{
+          <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 38px)',
             fontWeight: 900, color: '#1a1612', margin: '0 0 10px', letterSpacing: -0.5,
           }}>Recall &amp; Safety Tracker</h1>

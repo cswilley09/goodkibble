@@ -49,7 +49,7 @@ export default function ProSuccessPage() {
 
       <div style={{ maxWidth: 520, margin: '0 auto', padding: '60px 24px 80px', textAlign: 'center' }}>
         <div style={{ fontSize: 48, marginBottom: 20 }}>{'\u{1F389}'}</div>
-        <h1 style={{
+        <h1 className="page-title" style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 38px)',
           fontWeight: 900, color: '#1a1612', margin: '0 0 12px', letterSpacing: -1,
         }}>Welcome to GoodKibble Pro!</h1>

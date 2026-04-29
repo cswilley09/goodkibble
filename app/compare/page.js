@@ -387,7 +387,7 @@ export default function ComparePage() {
         {/* header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: isMobile ? 20 : 36, flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <h1 style={{
+            <h1 className="page-title" style={{
               fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 24 : 'clamp(28px, 3vw, 40px)',
               fontWeight: 800, color: '#1a1612', letterSpacing: -1,
             }}>Compare Foods</h1>

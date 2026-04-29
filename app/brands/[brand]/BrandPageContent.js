@@ -127,7 +127,7 @@ export default function BrandPageContent({ brandName, brandSlug, products, avgSc
 
         {/* Brand header */}
         <div style={{ marginBottom: 32 }}>
-          <h1 style={{
+          <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 42px)',
             fontWeight: 700, color: '#1a1612', marginBottom: 8,
           }}>{brandName}</h1>

@@ -33,7 +33,7 @@ export default function HomepageRecalls() {
 
       <div style={{ textAlign: 'center', marginBottom: 28 }}>
         <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#A32D2D', marginBottom: 10, fontFamily: "'Inter', sans-serif" }}>Recent FDA Recalls</div>
-        <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>
+        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>
           Is your dog&rsquo;s food safe?
         </h2>
         <p style={{ fontSize: 15, color: '#5a5248', maxWidth: 480, margin: '0 auto', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>

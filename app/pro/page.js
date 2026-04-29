@@ -94,7 +94,7 @@ export default function ProPage() {
           fontSize: 11, fontWeight: 700, marginBottom: 20,
           fontFamily: "'Inter', sans-serif",
         }}>{'\u2605'} PRO</span>
-        <h1 style={{
+        <h1 className="page-title" style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(32px, 5vw, 44px)',
           fontWeight: 900, color: '#1a1612', margin: '0 0 16px', letterSpacing: -1,
         }}>Know more. Choose better.</h1>
@@ -221,7 +221,7 @@ export default function ProPage() {
 
         {/* FAQ */}
         <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'left' }}>
-          <h2 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', textAlign: 'center', marginBottom: 24 }}>Common questions</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', textAlign: 'center', marginBottom: 24 }}>Common questions</h2>
           {FAQS.map((faq, i) => (
             <div key={i} style={{ padding: '16px 0', borderTop: i === 0 ? 'none' : '1px solid #ede8df' }}>
               <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>{faq.q}</div>

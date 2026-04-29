@@ -141,7 +141,7 @@ export default function RecallsPage() {
         )}
 
         {/* Header */}
-        <h1 style={{ fontFamily: "Georgia, 'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px' }}>FDA Dog Food Recalls</h1>
+        <h1 className="page-title" style={{ fontFamily: "Georgia, 'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px' }}>FDA Dog Food Recalls</h1>
         <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>Updated every 6 hours from FDA and AVMA sources</p>
 
         {/* Search bar */}

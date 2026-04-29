@@ -52,7 +52,7 @@ export default function IngredientsIndexContent({ ingredients }) {
           <span style={{ color: '#6b6157' }}>Ingredients</span>
         </nav>
 
-        <h1 style={{
+        <h1 className="page-title" style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 42px)',
           fontWeight: 800, color: '#1a1612', marginBottom: 8,
         }}>Dog Food Ingredients</h1>

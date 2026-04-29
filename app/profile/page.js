@@ -398,7 +398,7 @@ export default function ProfilePage() {
         </nav>
         <div style={{ maxWidth: 500, margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 20 }}>{'\u{1F436}'}</div>
-          <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1a1612', marginBottom: 12 }}>
+          <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1a1612', marginBottom: 12 }}>
             Sign in to view your profile
           </h1>
           <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', marginBottom: 32 }}>
@@ -438,7 +438,7 @@ export default function ProfilePage() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{ fontSize: 48, marginBottom: 12 }}>{'\u{1F436}'}</div>
-          <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px', letterSpacing: -0.5 }}>
+          <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px', letterSpacing: -0.5 }}>
             {displayName}&rsquo;s Dashboard
           </h1>
           <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72' }}>

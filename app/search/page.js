@@ -160,7 +160,7 @@ function SearchResults() {
 
         <div style={{ animation: 'fadeUp 0.5s ease', marginBottom: 32 }}>
           <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8 }}>Search results</div>
-          <h1 style={{
+          <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif",
             fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: '#1a1612',
             lineHeight: 1.1, marginBottom: 8, letterSpacing: -1,

@@ -36,7 +36,7 @@ export default function TermsPage() {
 
       <div style={{ maxWidth: 740, margin: '0 auto', padding: '48px 24px 80px' }}>
         <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8 }}>Legal</p>
-        <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#1a1612', marginBottom: 40 }}>Terms of Service</h1>
+        <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#1a1612', marginBottom: 40 }}>Terms of Service</h1>
 
         <div style={section}>
           <h2 style={h2Style}>1. Acceptance of Terms</h2>

@@ -464,7 +464,7 @@ function DiscoverContent() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>
         {/* header */}
         <div style={{ marginBottom: 8 }}>
-          <h1 style={{
+          <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3vw, 40px)',
             fontWeight: 800, color: '#1a1612', letterSpacing: -1, marginBottom: 4,
           }}>Discover Foods</h1>
