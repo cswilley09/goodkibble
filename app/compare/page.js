@@ -65,7 +65,7 @@ function ScoreRing({ score, compact }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#ede8df" strokeWidth={sw} />
+        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(28,24,20,0.08)" strokeWidth={sw} />
         <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={sw}
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`} />
@@ -79,13 +79,13 @@ function ScoreRing({ score, compact }) {
           <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Inter', sans-serif", color, marginTop: 4 }}>
             {getScoreTier(score)}
           </span>
-          <span style={{ fontSize: 10, fontFamily: "'Inter', sans-serif", color: '#b5aa99', marginTop: 1 }}>
+          <span style={{ fontSize: 10, fontFamily: "'Inter', sans-serif", color: 'rgba(28,24,20,0.40)', marginTop: 1 }}>
             GoodKibble Score
           </span>
         </>
       )}
       {compact && (
-        <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+        <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: 'rgba(28,24,20,0.60)', marginTop: 2 }}>
           {getScoreTier(score)}
         </span>
       )}
@@ -104,7 +104,7 @@ function NutrientExplainer() {
   ];
   return (
     <div style={{
-      marginTop: 20, borderRadius: 20, border: '1px solid #ede8df',
+      marginTop: 20, borderRadius: 20, border: '1px solid rgba(28,24,20,0.08)',
       background: '#faf8f5', overflow: 'hidden',
     }}>
       <button onClick={() => setOpen(!open)} style={{
@@ -115,12 +115,12 @@ function NutrientExplainer() {
         <span style={{ fontSize: 14, fontWeight: 700, color: '#1C1814', letterSpacing: 1 }}>
           📖 What do these numbers mean?
         </span>
-        <span style={{ fontSize: 18, color: '#8a7e72', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+        <span style={{ fontSize: 18, color: 'rgba(28,24,20,0.60)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
       </button>
       {open && (
         <div style={{ padding: '0 28px 24px' }}>
           {nutrients.map((n) => (
-            <div key={n.name} style={{ marginBottom: 18, paddingBottom: 18, borderBottom: '1px solid #ede8df' }}>
+            <div key={n.name} style={{ marginBottom: 18, paddingBottom: 18, borderBottom: '1px solid rgba(28,24,20,0.08)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                 <span style={{ width: 10, height: 10, borderRadius: '50%', background: n.color, display: 'inline-block' }} />
                 <span style={{ fontSize: 15, fontWeight: 700, color: '#1C1814' }}>{n.name}</span>
@@ -128,7 +128,7 @@ function NutrientExplainer() {
               <p style={{ fontSize: 13, color: '#5a5047', lineHeight: 1.6 }}>{n.desc}</p>
             </div>
           ))}
-          <p style={{ fontSize: 12, color: '#b5aa99', lineHeight: 1.5, fontStyle: 'italic' }}>
+          <p style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)', lineHeight: 1.5, fontStyle: 'italic' }}>
             Nutrient guidelines based on AAFCO (Association of American Feed Control Officials) standards for dog food. Always consult your veterinarian for dietary advice specific to your dog.
           </p>
         </div>
@@ -143,7 +143,7 @@ function TickBar({ value, color }) {
   const ticks = [10, 20, 30, 40].map(v => (v / SHARED_MAX) * 100);
   return (
     <div style={{ flex: 1, position: 'relative', height: 8 }}>
-      <div style={{ position: 'absolute', inset: 0, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', inset: 0, borderRadius: 100, background: 'rgba(28,24,20,0.08)', overflow: 'hidden' }}>
         <div style={{
           height: '100%', borderRadius: 100, background: color,
           width: `${pct}%`, transition: 'width 0.8s ease',
@@ -191,12 +191,12 @@ function AddCardSearch({ onSelect, compact }) {
         onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
       >
         <div style={{
-          width: compact ? 36 : 44, height: compact ? 36 : 44, borderRadius: '50%', background: '#ede8df',
+          width: compact ? 36 : 44, height: compact ? 36 : 44, borderRadius: '50%', background: 'rgba(28,24,20,0.08)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: compact ? 18 : 22, marginBottom: compact ? 6 : 10, color: '#8a7e72',
+          fontSize: compact ? 18 : 22, marginBottom: compact ? 6 : 10, color: 'rgba(28,24,20,0.60)',
         }}>+</div>
-        <div style={{ fontSize: compact ? 12 : 14, fontWeight: 600, color: '#8a7e72', marginBottom: 2 }}>Add a food</div>
-        {!compact && <div style={{ fontSize: 12, color: '#b5aa99' }}>Click to search</div>}
+        <div style={{ fontSize: compact ? 12 : 14, fontWeight: 600, color: 'rgba(28,24,20,0.60)', marginBottom: 2 }}>Add a food</div>
+        {!compact && <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)' }}>Click to search</div>}
       </div>
     );
   }
@@ -208,9 +208,9 @@ function AddCardSearch({ onSelect, compact }) {
       minWidth: compact ? 180 : undefined,
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-        <span style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', letterSpacing: 1 }}>SEARCH</span>
+        <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(28,24,20,0.60)', letterSpacing: 1 }}>SEARCH</span>
         <button onClick={() => { setActive(false); setQuery(''); setResults([]); }} style={{
-          background: 'none', border: 'none', color: '#b5aa99', fontSize: 16, cursor: 'pointer', padding: 0, lineHeight: 1,
+          background: 'none', border: 'none', color: 'rgba(28,24,20,0.40)', fontSize: 16, cursor: 'pointer', padding: 0, lineHeight: 1,
         }}>✕</button>
       </div>
       <input
@@ -219,11 +219,11 @@ function AddCardSearch({ onSelect, compact }) {
         placeholder="Brand or food..."
         style={{
           width: '100%', padding: '9px 12px', borderRadius: 10,
-          border: '1.5px solid #ede8df', fontSize: 13,
+          border: '1.5px solid rgba(28,24,20,0.08)', fontSize: 13,
           fontFamily: "'Inter', sans-serif", outline: 'none', background: '#faf8f5',
         }}
         onFocus={(e) => e.target.style.borderColor = '#C8941F'}
-        onBlur={(e) => e.target.style.borderColor = '#ede8df'}
+        onBlur={(e) => e.target.style.borderColor = 'rgba(28,24,20,0.08)'}
       />
       <div style={{ marginTop: 6, maxHeight: 200, overflowY: 'auto' }}>
         {results.map((r) => (
@@ -239,12 +239,12 @@ function AddCardSearch({ onSelect, compact }) {
             )}
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontWeight: 600 }}>{r.brand}</div>
-              <div style={{ color: '#8a7e72', fontSize: 11, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{r.name}</div>
+              <div style={{ color: 'rgba(28,24,20,0.60)', fontSize: 11, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{r.name}</div>
             </div>
           </div>
         ))}
         {query.length >= 2 && results.length === 0 && (
-          <div style={{ padding: '14px 10px', fontSize: 12, color: '#b5aa99', textAlign: 'center' }}>No results</div>
+          <div style={{ padding: '14px 10px', fontSize: 12, color: 'rgba(28,24,20,0.40)', textAlign: 'center' }}>No results</div>
         )}
       </div>
     </div>
@@ -345,7 +345,7 @@ export default function ComparePage() {
     ...(isMobile ? {
       position: 'sticky', left: 0, zIndex: 2,
       background: '#faf8f5',
-      borderRight: '1px solid #ede8df',
+      borderRight: '1px solid rgba(28,24,20,0.08)',
     } : {}),
     ...extra,
   });
@@ -355,7 +355,7 @@ export default function ComparePage() {
       {/* nav */}
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#fff',
+        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#fff',
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
@@ -376,7 +376,7 @@ export default function ComparePage() {
       <div style={{ maxWidth: items.length > 3 ? 1400 : 1200, margin: '0 auto', padding: isMobile ? '24px 12px 60px' : '40px 40px 80px', transition: 'max-width 0.3s' }}>
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
-          background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
+          background: 'none', border: 'none', color: 'rgba(28,24,20,0.60)', fontSize: 14,
           cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 500,
           marginBottom: isMobile ? 20 : 32, padding: 0,
         }}>
@@ -391,7 +391,7 @@ export default function ComparePage() {
               fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 24 : 'clamp(28px, 3vw, 40px)',
               fontWeight: 800, color: '#1C1814', letterSpacing: -1,
             }}>Compare Foods</h1>
-            <p style={{ fontSize: isMobile ? 13 : 15, color: '#8a7e72', marginTop: 4 }}>
+            <p style={{ fontSize: isMobile ? 13 : 15, color: 'rgba(28,24,20,0.60)', marginTop: 4 }}>
               {items.length === 0
                 ? 'Add products to start comparing'
                 : items.length === 1
@@ -422,7 +422,7 @@ export default function ComparePage() {
               }}>{saved ? '\u2713 Saved!' : 'Save Comparison'}</button>
               <button onClick={clearAll} style={{
                 padding: '8px 16px', borderRadius: 100, border: '1px solid #e8e0d4',
-                background: '#fff', color: '#8a7e72', fontSize: 13, fontWeight: 500,
+                background: '#fff', color: 'rgba(28,24,20,0.60)', fontSize: 13, fontWeight: 500,
                 cursor: 'pointer', fontFamily: "'Inter', sans-serif",
               }}>Clear All</button>
             </div>
@@ -430,7 +430,7 @@ export default function ComparePage() {
           {items.length === 1 && (
             <button onClick={clearAll} style={{
               padding: '8px 16px', borderRadius: 100, border: '1px solid #e8e0d4',
-              background: '#fff', color: '#8a7e72', fontSize: 13, fontWeight: 500,
+              background: '#fff', color: 'rgba(28,24,20,0.60)', fontSize: 13, fontWeight: 500,
               cursor: 'pointer', fontFamily: "'Inter', sans-serif",
             }}>Clear All</button>
           )}
@@ -440,11 +440,11 @@ export default function ComparePage() {
         {items.length === 0 ? (
           <div style={{
             textAlign: 'center', padding: isMobile ? '36px 16px' : '48px 24px',
-            background: '#faf8f5', borderRadius: 24, border: '1px solid #ede8df',
+            background: '#faf8f5', borderRadius: 24, border: '1px solid rgba(28,24,20,0.08)',
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚖️</div>
             <p style={{ fontSize: 18, fontWeight: 600, color: '#1C1814', marginBottom: 8 }}>No products selected yet</p>
-            <p style={{ fontSize: 14, color: '#8a7e72', maxWidth: 380, margin: '0 auto 24px' }}>
+            <p style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', maxWidth: 380, margin: '0 auto 24px' }}>
               Search for a dog food and click &ldquo;+ Add to Compare&rdquo; on any product page, or search below.
             </p>
             <div style={{ maxWidth: 340, margin: '0 auto', borderRadius: 20, border: '2px dashed #e8e0d4', overflow: 'hidden' }}>
@@ -456,7 +456,7 @@ export default function ComparePage() {
           {/* ═══ COMPARISON GRID ═══ */}
           {isMobile && (
             <div style={{
-              textAlign: 'center', fontSize: 11, color: '#b5aa99', fontWeight: 500,
+              textAlign: 'center', fontSize: 11, color: 'rgba(28,24,20,0.40)', fontWeight: 500,
               marginBottom: 8, letterSpacing: 0.5,
               fontFamily: "'Inter', sans-serif",
             }}>
@@ -465,7 +465,7 @@ export default function ComparePage() {
           )}
           <div style={{
             background: '#faf8f5', borderRadius: isMobile ? 16 : 24,
-            border: '1px solid #ede8df',
+            border: '1px solid rgba(28,24,20,0.08)',
             overflow: isMobile ? 'auto' : 'hidden',
             animation: 'fadeUp 0.5s ease',
             WebkitOverflowScrolling: 'touch',
@@ -481,15 +481,15 @@ export default function ComparePage() {
               {/* label cell */}
               <div style={{
                 ...(isMobile ? { position: 'sticky', left: 0, zIndex: 2, background: '#faf8f5' } : {}),
-                borderBottom: '2px solid #ede8df',
+                borderBottom: '2px solid rgba(28,24,20,0.08)',
               }} />
 
               {items.map((f, idx) => (
                 <div key={f.id} style={{
                   padding: isMobile ? '10px 8px 10px' : '28px 20px 22px',
                   textAlign: 'center',
-                  borderLeft: '1px solid #ede8df',
-                  borderBottom: '2px solid #ede8df',
+                  borderLeft: '1px solid rgba(28,24,20,0.08)',
+                  borderBottom: '2px solid rgba(28,24,20,0.08)',
                   background: colBg(idx),
                   cursor: 'pointer', transition: 'background 0.2s',
                   display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -503,17 +503,17 @@ export default function ComparePage() {
                   {!isMobile ? (
                     <div onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
                       position: 'absolute', top: 8, right: 8, width: 30, height: 30, borderRadius: '50%',
-                      background: '#f0ebe3', color: '#8a7e72', fontSize: 16,
+                      background: '#f0ebe3', color: 'rgba(28,24,20,0.60)', fontSize: 16,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       cursor: 'pointer', zIndex: 2, transition: 'background 0.15s',
                     }}
-                      onMouseEnter={(e) => { e.currentTarget.style.background = '#ede8df'; }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(28,24,20,0.08)'; }}
                       onMouseLeave={(e) => { e.currentTarget.style.background = '#f0ebe3'; }}
                     >&times;</div>
                   ) : (
                     <button onClick={(e) => { e.stopPropagation(); removeItem(f.id); }} style={{
                       position: 'absolute', top: 4, right: 4, padding: '2px 6px', borderRadius: 100,
-                      border: '1px solid #e8e0d4', background: '#fff', color: '#8a7e72',
+                      border: '1px solid #e8e0d4', background: '#fff', color: 'rgba(28,24,20,0.60)',
                       fontSize: 10, cursor: 'pointer', fontFamily: "'Inter', sans-serif", zIndex: 2,
                     }}>&times;</button>
                   )}
@@ -524,7 +524,7 @@ export default function ComparePage() {
                       margin: isMobile ? '0 auto 6px' : '0 auto 12px', borderRadius: isMobile ? 8 : 10,
                       overflow: 'hidden', background: '#fff', display: 'flex',
                       alignItems: 'center', justifyContent: 'center',
-                      border: '1px solid #ede8df', flexShrink: 0,
+                      border: '1px solid rgba(28,24,20,0.08)', flexShrink: 0,
                     }}>
                       <img src={f.image_url} alt={f.name}
                         style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }}
@@ -532,7 +532,7 @@ export default function ComparePage() {
                     </div>
                   )}
                   <div style={{
-                    fontSize: isMobile ? 9 : 12, color: '#8a7e72', fontWeight: 600,
+                    fontSize: isMobile ? 9 : 12, color: 'rgba(28,24,20,0.60)', fontWeight: 600,
                     letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 1,
                   }}>{f.brand}</div>
                   <div style={{
@@ -551,7 +551,7 @@ export default function ComparePage() {
 
               {/* add slot */}
               {hasAddSlot && (
-                <div style={{ borderBottom: '2px solid #ede8df' }}>
+                <div style={{ borderBottom: '2px solid rgba(28,24,20,0.08)' }}>
                   <AddCardSearch onSelect={gatedAddItem} compact={isMobile} />
                 </div>
               )}
@@ -584,7 +584,7 @@ export default function ComparePage() {
                           fontFamily: "'Inter', sans-serif", lineHeight: 1,
                           minWidth: isMobile ? undefined : 44, flexShrink: 0,
                         }}>
-                          {val}<span style={{ fontSize: 12, fontWeight: 500, color: '#8a7e72' }}>%</span>
+                          {val}<span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(28,24,20,0.60)' }}>%</span>
                         </div>
                         {/* bar: desktop only */}
                         {!isMobile && <TickBar value={val} color={color} />}
@@ -606,14 +606,14 @@ export default function ComparePage() {
               <div style={{
                 ...labelCell(),
                 borderBottom: '1px solid #f0ebe3',
-                borderTop: '2px solid #ede8df',
+                borderTop: '2px solid rgba(28,24,20,0.08)',
               }}>Primary Protein</div>
               {items.map((f, idx) => (
                 <div key={`pp-${f.id}`} style={{
                   padding: isMobile ? '10px 10px' : '18px 20px',
                   borderLeft: '1px solid #f0ebe3',
                   borderBottom: '1px solid #f0ebe3',
-                  borderTop: '2px solid #ede8df',
+                  borderTop: '2px solid rgba(28,24,20,0.08)',
                   background: colBg(idx),
                   display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
                 }}>
@@ -622,13 +622,13 @@ export default function ComparePage() {
                   </span>
                 </div>
               ))}
-              {hasAddSlot && <div style={{ borderLeft: '1px dashed #e8e0d4', borderTop: '2px solid #ede8df', borderBottom: '1px solid #f0ebe3' }} />}
+              {hasAddSlot && <div style={{ borderLeft: '1px dashed #e8e0d4', borderTop: '2px solid rgba(28,24,20,0.08)', borderBottom: '1px solid #f0ebe3' }} />}
 
               {/* ══ TOP 5 INGREDIENTS ══ */}
               {/* section header */}
               <div style={{
                 gridColumn: `1 / -1`,
-                background: '#F4EFE4', borderTop: '2px solid #ede8df', borderBottom: '1px solid #ede8df',
+                background: '#F4EFE4', borderTop: '2px solid rgba(28,24,20,0.08)', borderBottom: '1px solid rgba(28,24,20,0.08)',
                 padding: isMobile ? '10px 10px' : '12px 24px',
               }}>
                 <span style={{ fontSize: 11, fontWeight: 700, color: '#C8941F', letterSpacing: 1.5, textTransform: 'uppercase', fontFamily: "'Inter', sans-serif" }}>
@@ -639,7 +639,7 @@ export default function ComparePage() {
               {/* ingredient rows: 5 rows, no labels in left column */}
               {[0, 1, 2, 3, 4].map((rowIdx) => {
                 const isLast = rowIdx === 4;
-                const dotColors = { good: '#639922', neutral: '#8a7e72', caution: '#d4760a' };
+                const dotColors = { good: '#639922', neutral: 'rgba(28,24,20,0.60)', caution: '#d4760a' };
                 return [
                   /* empty left label cell to maintain grid alignment */
                   <div key={`ing-label-${rowIdx}`} style={{
@@ -668,7 +668,7 @@ export default function ComparePage() {
                             color: '#1C1814', fontFamily: "'Inter', sans-serif", lineHeight: 1.4, textAlign: isMobile ? 'center' : 'left',
                           }}>{ing.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</span>
                         </>) : (
-                          <span style={{ fontSize: 12, color: '#b5aa99', fontStyle: 'italic' }}>&mdash;</span>
+                          <span style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)', fontStyle: 'italic' }}>&mdash;</span>
                         )}
                       </div>
                     );
@@ -695,7 +695,7 @@ export default function ComparePage() {
                 <span onClick={() => router.push('/pro')} style={{ color: '#C8941F', fontWeight: 700, cursor: 'pointer' }}>Upgrade to Pro &rarr;</span>
               </div>
               <button onClick={() => setProBannerDismissed(true)} style={{
-                background: 'none', border: 'none', color: '#8a7e72', fontSize: 18,
+                background: 'none', border: 'none', color: 'rgba(28,24,20,0.60)', fontSize: 18,
                 cursor: 'pointer', padding: '0 4px', lineHeight: 1, flexShrink: 0,
               }}>&times;</button>
             </div>
@@ -706,17 +706,17 @@ export default function ComparePage() {
 
       {/* footer */}
       <div className="footer-bar" style={{
-        borderTop: '1px solid #ede8df', padding: isMobile ? '24px 16px' : '32px 40px',
+        borderTop: '1px solid rgba(28,24,20,0.08)', padding: isMobile ? '24px 16px' : '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: isMobile ? 24 : 32, fontWeight: 800, color: '#1C1814' }}>
           Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
-          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'rgba(28,24,20,0.40)', flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>

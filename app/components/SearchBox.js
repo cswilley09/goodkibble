@@ -85,7 +85,7 @@ export default function SearchBox({ onSelect, variant = 'hero', dark = false }) 
         border: dark ? '1px solid rgba(255,255,255,0.1)' : 'none',
       }}>
         <svg width={isNav ? 16 : 20} height={isNav ? 16 : 20} viewBox="0 0 24 24" fill="none"
-          stroke={isNav ? '#8a7e72' : (dark ? 'rgba(255,255,255,0.3)' : '#b5aa99')} strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}>
+          stroke={isNav ? 'rgba(28,24,20,0.60)' : (dark ? 'rgba(255,255,255,0.3)' : 'rgba(28,24,20,0.40)')} strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}>
           <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" />
         </svg>
         <input type="text"
@@ -128,9 +128,9 @@ export default function SearchBox({ onSelect, variant = 'hero', dark = false }) 
           maxHeight: 440, overflowY: 'auto',
         }}>
           {loading && results.length === 0 ? (
-            <div style={{ padding: 24, textAlign: 'center', color: '#8a7e72', fontSize: 15 }}>Searching...</div>
+            <div style={{ padding: 24, textAlign: 'center', color: 'rgba(28,24,20,0.60)', fontSize: 15 }}>Searching...</div>
           ) : results.length === 0 ? (
-            <div style={{ padding: 24, textAlign: 'center', color: '#8a7e72', fontSize: 15 }}>No results found.</div>
+            <div style={{ padding: 24, textAlign: 'center', color: 'rgba(28,24,20,0.60)', fontSize: 15 }}>No results found.</div>
           ) : (
             <>
               {results.map((f, i) => (
@@ -147,7 +147,7 @@ export default function SearchBox({ onSelect, variant = 'hero', dark = false }) 
                   <Thumb src={f.image_url} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 15, fontWeight: 600, color: '#1C1814', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
-                    <div style={{ fontSize: 13, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
+                    <div style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
                   </div>
                 </div>
               ))}

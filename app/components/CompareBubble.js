@@ -33,7 +33,7 @@ export default function CompareBubble() {
           padding: '8px 18px', borderRadius: 100,
           border: active ? '1.5px solid #1C1814' : '1.5px solid #d4c9b8',
           background: active ? '#1C1814' : 'transparent',
-          color: active ? '#faf8f5' : '#b5aa99',
+          color: active ? '#faf8f5' : 'rgba(28,24,20,0.40)',
           fontSize: 13, fontWeight: 600, cursor: active ? 'pointer' : 'default',
           fontFamily: "'Inter', sans-serif",
           transition: 'all 0.25s',

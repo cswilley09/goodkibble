@@ -28,7 +28,7 @@ export default function IngredientsIndexContent({ ingredients }) {
     <div style={{ minHeight: '100vh', background: '#ffffff' }}>
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#fff',
+        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#fff',
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
@@ -46,8 +46,8 @@ export default function IngredientsIndexContent({ ingredients }) {
 
       <div style={{ maxWidth: 960, margin: '0 auto', padding: '32px 24px 80px' }}>
         {/* Breadcrumb */}
-        <nav className="nav-bar" style={{ fontSize: 13, color: '#b5aa99', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
-          <a href="/" style={{ color: '#b5aa99', textDecoration: 'none' }}>Home</a>
+        <nav className="nav-bar" style={{ fontSize: 13, color: 'rgba(28,24,20,0.40)', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>
+          <a href="/" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Home</a>
           <span style={{ margin: '0 8px' }}>/</span>
           <span style={{ color: '#6b6157' }}>Ingredients</span>
         </nav>
@@ -56,14 +56,14 @@ export default function IngredientsIndexContent({ ingredients }) {
           fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 42px)',
           fontWeight: 800, color: '#1C1814', marginBottom: 8,
         }}>Dog Food Ingredients</h1>
-        <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 28, fontFamily: "'Inter', sans-serif" }}>
+        <p style={{ fontSize: 15, color: 'rgba(28,24,20,0.60)', marginBottom: 28, fontFamily: "'Inter', sans-serif" }}>
           {ingredients.length} ingredients explained — tap any ingredient to learn what it is and which products contain it.
         </p>
 
         {/* Category filter tabs */}
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 32 }}>
           <button onClick={() => setActiveCategory(null)} style={{
-            padding: '8px 16px', borderRadius: 100, border: '1.5px solid #ede8df',
+            padding: '8px 16px', borderRadius: 100, border: '1.5px solid rgba(28,24,20,0.08)',
             background: !activeCategory ? '#1C1814' : '#fff',
             color: !activeCategory ? '#faf8f5' : '#3d352b',
             fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
@@ -74,7 +74,7 @@ export default function IngredientsIndexContent({ ingredients }) {
             return (
               <button key={cat} onClick={() => setActiveCategory(isActive ? null : cat)} style={{
                 padding: '8px 16px', borderRadius: 100,
-                border: isActive ? `1.5px solid ${ci.color}` : '1.5px solid #ede8df',
+                border: isActive ? `1.5px solid ${ci.color}` : '1.5px solid rgba(28,24,20,0.08)',
                 background: isActive ? ci.color + '15' : '#fff',
                 color: isActive ? ci.color : '#3d352b',
                 fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
@@ -115,17 +115,17 @@ export default function IngredientsIndexContent({ ingredients }) {
 
       {/* Footer */}
       <div style={{
-        borderTop: '1px solid #ede8df', padding: '32px 40px',
+        borderTop: '1px solid rgba(28,24,20,0.08)', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
           Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
-          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'rgba(28,24,20,0.40)', flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>

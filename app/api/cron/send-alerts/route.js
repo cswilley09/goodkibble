@@ -26,7 +26,7 @@ const SEVERITY_INFO = {
 };
 
 function buildEmailHTML(recall) {
-  const sev = SEVERITY_INFO[recall.severity] || { label: 'Unclassified', desc: 'Severity not yet determined', color: '#8a7e72', bg: '#f0ebe3' };
+  const sev = SEVERITY_INFO[recall.severity] || { label: 'Unclassified', desc: 'Severity not yet determined', color: 'rgba(28,24,20,0.60)', bg: '#f0ebe3' };
   const brandName = recall.brand_name || 'Unknown Brand';
   const recallDate = recall.recall_date
     ? new Date(recall.recall_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
@@ -45,10 +45,10 @@ function buildEmailHTML(recall) {
     </div>
 
     <!-- Main Card -->
-    <div style="background:#ffffff;border-radius:16px;border:1px solid #ede8df;overflow:hidden;">
+    <div style="background:#ffffff;border-radius:16px;border:1px solid rgba(28,24,20,0.08);overflow:hidden;">
 
       <!-- Alert Banner -->
-      <div style="background:${sev.bg};padding:16px 24px;border-bottom:1px solid #ede8df;">
+      <div style="background:${sev.bg};padding:16px 24px;border-bottom:1px solid rgba(28,24,20,0.08);">
         <div style="font-size:13px;font-weight:700;color:${sev.color};text-transform:uppercase;letter-spacing:0.5px;">
           ⚠️ Recall Alert
         </div>
@@ -59,33 +59,33 @@ function buildEmailHTML(recall) {
         <h1 style="font-size:20px;font-weight:800;color:#1C1814;margin:0 0 6px;line-height:1.3;">
           A food your dog eats has been recalled
         </h1>
-        <p style="font-size:14px;color:#8a7e72;margin:0 0 24px;line-height:1.5;">
+        <p style="font-size:14px;color:rgba(28,24,20,0.60);margin:0 0 24px;line-height:1.5;">
           The FDA has issued a recall notice that may affect your dog's food.
         </p>
 
         <!-- Brand -->
         <div style="margin-bottom:20px;">
-          <div style="font-size:11px;font-weight:600;color:#8a7e72;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Brand</div>
+          <div style="font-size:11px;font-weight:600;color:rgba(28,24,20,0.60);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Brand</div>
           <div style="font-size:18px;font-weight:700;color:#1C1814;">${brandName}</div>
         </div>
 
         <!-- Product Description -->
         ${recall.product_description ? `
         <div style="margin-bottom:20px;">
-          <div style="font-size:11px;font-weight:600;color:#8a7e72;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Product</div>
+          <div style="font-size:11px;font-weight:600;color:rgba(28,24,20,0.60);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Product</div>
           <div style="font-size:14px;color:#3d352b;line-height:1.5;">${recall.product_description}</div>
         </div>` : ''}
 
         <!-- Reason -->
         ${recall.reason && recall.reason !== recall.product_description ? `
         <div style="margin-bottom:20px;">
-          <div style="font-size:11px;font-weight:600;color:#8a7e72;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Reason</div>
+          <div style="font-size:11px;font-weight:600;color:rgba(28,24,20,0.60);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Reason</div>
           <div style="font-size:14px;color:#3d352b;line-height:1.5;">${recall.reason}</div>
         </div>` : ''}
 
         <!-- Severity Badge -->
         <div style="margin-bottom:20px;">
-          <div style="font-size:11px;font-weight:600;color:#8a7e72;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;">Severity</div>
+          <div style="font-size:11px;font-weight:600;color:rgba(28,24,20,0.60);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;">Severity</div>
           <div style="display:inline-block;padding:8px 16px;border-radius:10px;background:${sev.bg};border:1px solid ${sev.color}20;">
             <div style="font-size:14px;font-weight:700;color:${sev.color};">${sev.label}</div>
             <div style="font-size:12px;color:${sev.color};opacity:0.8;margin-top:2px;">${sev.desc}</div>
@@ -94,7 +94,7 @@ function buildEmailHTML(recall) {
 
         <!-- Date -->
         <div style="margin-bottom:28px;">
-          <div style="font-size:11px;font-weight:600;color:#8a7e72;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Recall Date</div>
+          <div style="font-size:11px;font-weight:600;color:rgba(28,24,20,0.60);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;">Recall Date</div>
           <div style="font-size:14px;color:#3d352b;">${recallDate}</div>
         </div>
 
@@ -116,7 +116,7 @@ function buildEmailHTML(recall) {
     </div>
 
     <!-- Footer -->
-    <div style="text-align:center;padding:24px 16px;font-size:11px;color:#b5aa99;line-height:1.6;">
+    <div style="text-align:center;padding:24px 16px;font-size:11px;color:rgba(28,24,20,0.40);line-height:1.6;">
       <p style="margin:0 0 8px;">
         You're receiving this because you have recall alerts enabled on <strong>GoodKibble Pro</strong>.
       </p>

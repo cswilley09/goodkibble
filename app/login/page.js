@@ -61,7 +61,7 @@ export default function LoginPage() {
       {/* Nav */}
       <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid #ede8df',
+        padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)',
         background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
@@ -74,7 +74,7 @@ export default function LoginPage() {
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>{'\u{2705}'}</div>
             <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814', marginBottom: 8 }}>You&rsquo;re already signed in!</h1>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 24 }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: 'rgba(28,24,20,0.60)', marginBottom: 24 }}>
               You&rsquo;re logged in as <strong style={{ color: '#C8941F' }}>{session.user.email}</strong>
             </p>
             <a href="/profile" style={{ padding: '14px 36px', borderRadius: 100, background: '#1C1814', color: '#F4EFE4', fontSize: 16, fontWeight: 700, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Go to Profile &rarr;</a>
@@ -85,7 +85,7 @@ export default function LoginPage() {
               <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814', margin: '0 0 8px', letterSpacing: -0.5 }}>
                 Welcome back
               </h1>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72' }}>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: 'rgba(28,24,20,0.60)' }}>
                 Enter your email and we&rsquo;ll send you a sign-in link.
               </p>
             </div>
@@ -98,13 +98,13 @@ export default function LoginPage() {
                 placeholder="your@email.com"
                 style={{
                   width: '100%', padding: '14px 18px', borderRadius: 14,
-                  border: '1.5px solid #ede8df', fontSize: 16, background: '#fff',
+                  border: '1.5px solid rgba(28,24,20,0.08)', fontSize: 16, background: '#fff',
                   fontFamily: "'Inter', sans-serif", outline: 'none',
                   color: '#1C1814', boxSizing: 'border-box',
                   transition: 'border-color 0.2s',
                 }}
                 onFocus={e => (e.target.style.borderColor = '#C8941F')}
-                onBlur={e => (e.target.style.borderColor = '#ede8df')}
+                onBlur={e => (e.target.style.borderColor = 'rgba(28,24,20,0.08)')}
               />
 
               {error && (
@@ -113,8 +113,8 @@ export default function LoginPage() {
 
               <button type="submit" disabled={!isValidEmail(email.trim()) || loading} style={{
                 width: '100%', padding: 14, borderRadius: 100, marginTop: 16,
-                background: isValidEmail(email.trim()) ? '#1C1814' : '#ede8df',
-                color: isValidEmail(email.trim()) ? '#F4EFE4' : '#b5aa99',
+                background: isValidEmail(email.trim()) ? '#1C1814' : 'rgba(28,24,20,0.08)',
+                color: isValidEmail(email.trim()) ? '#F4EFE4' : 'rgba(28,24,20,0.40)',
                 fontSize: 16, fontWeight: 700, border: 'none',
                 cursor: isValidEmail(email.trim()) ? 'pointer' : 'default',
                 fontFamily: "'Inter', sans-serif",
@@ -125,7 +125,7 @@ export default function LoginPage() {
               </button>
             </form>
 
-            <p style={{ textAlign: 'center', marginTop: 24, fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72' }}>
+            <p style={{ textAlign: 'center', marginTop: 24, fontFamily: "'Inter', sans-serif", fontSize: 14, color: 'rgba(28,24,20,0.60)' }}>
               Don&rsquo;t have an account?{' '}
               <a href="/signup" style={{ color: '#C8941F', fontWeight: 600, textDecoration: 'none' }}>Sign up &rarr;</a>
             </p>
@@ -136,17 +136,17 @@ export default function LoginPage() {
             <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 36px)', fontWeight: 800, color: '#1C1814', margin: '0 0 8px', letterSpacing: -0.5 }}>
               Check your email!
             </h1>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', lineHeight: 1.6, marginBottom: 8 }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: 'rgba(28,24,20,0.60)', lineHeight: 1.6, marginBottom: 8 }}>
               We sent a sign-in link to <strong style={{ color: '#C8941F' }}>{email.trim()}</strong>.
               <br />Click it to log in.
             </p>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#b5aa99', marginBottom: 28 }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: 'rgba(28,24,20,0.40)', marginBottom: 28 }}>
               Didn&rsquo;t get it? Check your spam folder, or wait a moment and try again.
             </p>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
               <button onClick={resendEmail} disabled={loading} style={{
-                padding: '10px 24px', borderRadius: 100, background: 'transparent', color: '#8a7e72',
-                fontSize: 14, fontWeight: 600, border: '1.5px solid #ede8df',
+                padding: '10px 24px', borderRadius: 100, background: 'transparent', color: 'rgba(28,24,20,0.60)',
+                fontSize: 14, fontWeight: 600, border: '1.5px solid rgba(28,24,20,0.08)',
                 cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 opacity: loading ? 0.6 : 1,
               }}>Resend Email</button>

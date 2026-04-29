@@ -48,18 +48,18 @@ export function ProGateModal({ icon, title, description, buttonText, subtext, on
         textAlign: 'center', fontFamily: "'Inter', sans-serif",
       }}>
         <div onClick={onClose} style={{
-          position: 'absolute', top: 16, right: 16, fontSize: 18, color: '#b5aa99',
+          position: 'absolute', top: 16, right: 16, fontSize: 18, color: 'rgba(28,24,20,0.40)',
           cursor: 'pointer', lineHeight: 1, padding: 4,
         }}>&times;</div>
         <div style={{ fontSize: 32, marginBottom: 16, opacity: 0.5 }}>{icon}</div>
         <h3 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 20, fontWeight: 800, color: '#1C1814', margin: '0 0 8px' }}>{title}</h3>
-        <p style={{ fontSize: 13, color: '#8a7e72', marginBottom: 24, maxWidth: 320, margin: '0 auto 24px', lineHeight: 1.6 }}>{description}</p>
+        <p style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', marginBottom: 24, maxWidth: 320, margin: '0 auto 24px', lineHeight: 1.6 }}>{description}</p>
         <button onClick={() => router.push('/pro')} style={{
           padding: '12px 28px', borderRadius: 100, background: '#C8941F', color: '#fff',
           fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
           fontFamily: "'Inter', sans-serif",
         }}>{buttonText || 'Unlock with Pro →'}</button>
-        {subtext && <p style={{ fontSize: 11, color: '#b5aa99', marginTop: 10 }}>{subtext}</p>}
+        {subtext && <p style={{ fontSize: 11, color: 'rgba(28,24,20,0.40)', marginTop: 10 }}>{subtext}</p>}
       </div>
     </>
   );

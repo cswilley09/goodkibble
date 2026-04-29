@@ -37,7 +37,7 @@ export default function NutrientRing({ label, value, color, delay = 0 }) {
       </div>
       <span style={{
         fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600,
-        letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72',
+        letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.60)',
       }}>{label}</span>
     </div>
   );

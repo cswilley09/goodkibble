@@ -18,7 +18,7 @@ export default function PrivacyPage() {
     <div style={{ minHeight: '100vh', background: '#faf8f5' }}>
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#faf8f5',
+        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#faf8f5',
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
@@ -35,7 +35,7 @@ export default function PrivacyPage() {
       </nav>
 
       <div style={{ maxWidth: 740, margin: '0 auto', padding: '48px 24px 80px' }}>
-        <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8 }}>Legal</p>
+        <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)', marginBottom: 8 }}>Legal</p>
         <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, color: '#1C1814', marginBottom: 40 }}>Privacy Policy</h1>
 
         <div style={section}>
@@ -172,17 +172,17 @@ export default function PrivacyPage() {
       </div>
 
       <div className="footer-bar" style={{
-        borderTop: '1px solid #ede8df', padding: '32px 40px',
+        borderTop: '1px solid rgba(28,24,20,0.08)', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
           Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99' }}>
-          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'rgba(28,24,20,0.40)' }}>
+          <a href="/terms" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>

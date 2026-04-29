@@ -69,7 +69,7 @@ function ScoreRing({ score }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, marginLeft: 'auto' }}>
       <svg width={42} height={42} viewBox="0 0 42 42">
-        <circle cx={21} cy={21} r={17} fill="none" stroke="#ede8df" strokeWidth={3} />
+        <circle cx={21} cy={21} r={17} fill="none" stroke="rgba(28,24,20,0.08)" strokeWidth={3} />
         <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform="rotate(-90 21 21)" />
@@ -78,7 +78,7 @@ function ScoreRing({ score }) {
           {score}
         </text>
       </svg>
-      <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+      <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: 'rgba(28,24,20,0.60)', marginTop: 2 }}>
         {getScoreTier(score)}
       </span>
     </div>
@@ -104,14 +104,14 @@ function FilterSection({ title, children, defaultOpen = true, forceOpen = false 
   const [open, setOpen] = useState(defaultOpen);
   const isOpen = open || forceOpen;
   return (
-    <div style={{ marginBottom: 16, borderBottom: '1px solid #ede8df', paddingBottom: 12 }}>
+    <div style={{ marginBottom: 16, borderBottom: '1px solid rgba(28,24,20,0.08)', paddingBottom: 12 }}>
       <button onClick={() => setOpen(!open)} style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%',
         border: 'none', background: 'none', cursor: 'pointer', padding: '4px 0',
         fontFamily: "'Inter', sans-serif",
       }}>
         <span style={{ fontSize: 13, fontWeight: 700, color: '#1C1814', letterSpacing: 1, textTransform: 'uppercase' }}>{title}</span>
-        <span style={{ fontSize: 14, color: '#8a7e72', transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+        <span style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
       </button>
       {isOpen && <div style={{ marginTop: 10 }}>{children}</div>}
     </div>
@@ -128,7 +128,7 @@ function CheckOption({ label, checked, onChange, count }) {
     }}>
       <input type="checkbox" checked={checked} onChange={onChange} style={{ accentColor: '#1C1814', width: 16, height: 16 }} />
       <span style={{ flex: 1 }}>{label}</span>
-      {count !== undefined && <span style={{ fontSize: 12, color: '#b5aa99' }}>({count})</span>}
+      {count !== undefined && <span style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)' }}>({count})</span>}
     </label>
   );
 }
@@ -138,7 +138,7 @@ function ProductCard({ food, onClick }) {
   const [imgErr, setImgErr] = useState(false);
   return (
     <div onClick={onClick} style={{
-      background: '#fff', borderRadius: 16, padding: 16, border: '1px solid #ede8df',
+      background: '#fff', borderRadius: 16, padding: 16, border: '1px solid rgba(28,24,20,0.08)',
       cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
       display: 'flex', gap: 14, alignItems: 'center',
     }}
@@ -153,19 +153,19 @@ function ProductCard({ food, onClick }) {
         <div style={{ width: 56, height: 72, borderRadius: 10, background: '#f5f2ec', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🐕</div>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 12, color: '#8a7e72', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
+        <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
         <div style={{ fontSize: 14, fontWeight: 600, color: '#1C1814', lineHeight: 1.3, marginBottom: 6,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{food.name}</div>
         {(food.flavor || food.primary_protein) && (
           <div style={{ marginBottom: 6 }}>
             {food.flavor && (
-              <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.4 }}>
+              <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', lineHeight: 1.4 }}>
                 <span style={{ fontWeight: 600, color: '#6b6157' }}>Flavor:</span> {food.flavor}
               </div>
             )}
             {food.primary_protein && (
-              <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.4 }}>
+              <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', lineHeight: 1.4 }}>
                 <span style={{ fontWeight: 600, color: '#6b6157' }}>Primary Protein:</span> {food.primary_protein}
               </div>
             )}
@@ -389,11 +389,11 @@ function DiscoverContent() {
           value={brandSearch} onChange={(e) => setBrandSearch(e.target.value)}
           style={{
             width: '100%', padding: '8px 12px', borderRadius: 10,
-            border: '1.5px solid #ede8df', fontSize: 13, marginBottom: 8,
+            border: '1.5px solid rgba(28,24,20,0.08)', fontSize: 13, marginBottom: 8,
             fontFamily: "'Inter', sans-serif", outline: 'none', background: '#faf8f5',
           }}
           onFocus={(e) => e.target.style.borderColor = '#C8941F'}
-          onBlur={(e) => e.target.style.borderColor = '#ede8df'}
+          onBlur={(e) => e.target.style.borderColor = 'rgba(28,24,20,0.08)'}
         />
         <div style={{ maxHeight: 200, overflowY: 'auto' }}>
           {filteredBrands.map(b => (
@@ -443,7 +443,7 @@ function DiscoverContent() {
       {/* nav */}
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#faf8f5',
+        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#faf8f5',
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
@@ -474,13 +474,13 @@ function DiscoverContent() {
         <div className="mobile-filter-toggle" style={{ display: 'none', marginBottom: 12 }}>
           <button onClick={() => setMobileFiltersOpen(true)} style={{
             width: '100%', padding: '12px 20px', borderRadius: 14,
-            border: '1.5px solid #ede8df', background: '#fff',
+            border: '1.5px solid rgba(28,24,20,0.08)', background: '#fff',
             fontSize: 14, fontWeight: 600, color: '#1C1814', cursor: 'pointer',
             fontFamily: "'Inter', sans-serif",
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           }}>
             <span>Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}</span>
-            <span style={{ color: '#8a7e72' }}>▼</span>
+            <span style={{ color: 'rgba(28,24,20,0.60)' }}>▼</span>
           </button>
         </div>
 
@@ -490,30 +490,30 @@ function DiscoverContent() {
           flexWrap: 'wrap', gap: 12, marginBottom: 20,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
+            <span style={{ fontSize: 15, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>
               {getResultText()}
             </span>
             {activeFilterCount > 0 && (
               <span
                 onClick={clearAll}
                 style={{
-                  fontSize: 13, color: '#b5aa99', cursor: 'pointer',
+                  fontSize: 13, color: 'rgba(28,24,20,0.40)', cursor: 'pointer',
                   fontFamily: "'Inter', sans-serif", transition: 'color 0.15s',
                 }}
                 onMouseEnter={(e) => { e.target.style.color = '#1C1814'; e.target.style.textDecoration = 'underline'; }}
-                onMouseLeave={(e) => { e.target.style.color = '#b5aa99'; e.target.style.textDecoration = 'none'; }}
+                onMouseLeave={(e) => { e.target.style.color = 'rgba(28,24,20,0.40)'; e.target.style.textDecoration = 'none'; }}
               >
                 · Clear filters
               </span>
             )}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 13, color: '#b5aa99', fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap' }}>Sort by:</span>
+            <span style={{ fontSize: 13, color: 'rgba(28,24,20,0.40)', fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap' }}>Sort by:</span>
             <select
               value={sortValue}
               onChange={(e) => handleSortChange(e.target.value)}
               style={{
-                padding: '8px 12px', borderRadius: 10, border: '1.5px solid #ede8df',
+                padding: '8px 12px', borderRadius: 10, border: '1.5px solid rgba(28,24,20,0.08)',
                 background: '#fff', fontSize: 13, color: '#1C1814', cursor: 'pointer',
                 fontFamily: "'Inter', sans-serif", outline: 'none',
                 appearance: 'none', WebkitAppearance: 'none',
@@ -545,7 +545,7 @@ function DiscoverContent() {
             {loading ? (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
                 {Array.from({ length: 12 }).map((_, i) => (
-                  <div key={i} style={{ background: '#fff', borderRadius: 16, padding: 16, border: '1px solid #ede8df', display: 'flex', gap: 14, alignItems: 'center' }}>
+                  <div key={i} style={{ background: '#fff', borderRadius: 16, padding: 16, border: '1px solid rgba(28,24,20,0.08)', display: 'flex', gap: 14, alignItems: 'center' }}>
                     <div style={{ width: 56, height: 72, borderRadius: 10, background: '#f0ebe3', flexShrink: 0, animation: 'pulse 1.5s ease infinite' }} />
                     <div style={{ flex: 1 }}>
                       <div style={{ width: '40%', height: 10, borderRadius: 4, background: '#f0ebe3', marginBottom: 8, animation: 'pulse 1.5s ease infinite' }} />
@@ -556,7 +556,7 @@ function DiscoverContent() {
                 ))}
               </div>
             ) : sorted.length === 0 ? (
-              <div style={{ padding: '60px 32px', borderRadius: 24, border: '2px dashed #e8e0d4', textAlign: 'center', color: '#b5aa99' }}>
+              <div style={{ padding: '60px 32px', borderRadius: 24, border: '2px dashed #e8e0d4', textAlign: 'center', color: 'rgba(28,24,20,0.40)' }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
                 <div style={{ fontSize: 16, fontWeight: 500 }}>No products match your filters</div>
                 <div style={{ fontSize: 14, marginTop: 8 }}>Try removing some filters</div>
@@ -571,7 +571,7 @@ function DiscoverContent() {
               {visibleCount < sorted.length && (
                 <div style={{ textAlign: 'center', marginTop: 24 }}>
                   <button onClick={() => setVisibleCount(v => v + 48)} style={{
-                    padding: '12px 32px', borderRadius: 100, border: '1.5px solid #ede8df',
+                    padding: '12px 32px', borderRadius: 100, border: '1.5px solid rgba(28,24,20,0.08)',
                     background: '#fff', color: '#1C1814', fontSize: 14, fontWeight: 600,
                     cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'all 0.2s',
                   }}
@@ -601,7 +601,7 @@ function DiscoverContent() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <span style={{ fontSize: 18, fontWeight: 700, color: '#1C1814' }}>Filters</span>
               <button onClick={() => setMobileFiltersOpen(false)} style={{
-                background: 'none', border: 'none', fontSize: 22, color: '#8a7e72', cursor: 'pointer',
+                background: 'none', border: 'none', fontSize: 22, color: 'rgba(28,24,20,0.60)', cursor: 'pointer',
               }}>✕</button>
             </div>
             {filterContent}
@@ -619,17 +619,17 @@ function DiscoverContent() {
 
       {/* footer */}
       <div className="footer-bar" style={{
-        borderTop: '1px solid #ede8df', padding: '32px 40px',
+        borderTop: '1px solid rgba(28,24,20,0.08)', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
           Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
-          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'rgba(28,24,20,0.40)', flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>
@@ -649,7 +649,7 @@ export default function DiscoverPage() {
   return (
     <Suspense fallback={
       <div style={{ display: 'flex', justifyContent: 'center', padding: '120px 0' }}>
-        <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1C1814', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ width: 40, height: 40, border: '4px solid rgba(28,24,20,0.08)', borderTopColor: '#1C1814', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
       </div>
     }>
       <DiscoverContent />

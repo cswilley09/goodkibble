@@ -80,7 +80,7 @@ const EMPTY_DOG = { name: '', gender: '', age: '', ageUnit: 'years', neutered: '
 /* ── Shared dropdown styles ── */
 const dropdownPanelStyle = {
   position: 'absolute', top: 'calc(100% + 4px)', left: '50%', transform: 'translateX(-50%)',
-  background: '#fff', borderRadius: 12, border: '1px solid #ede8df',
+  background: '#fff', borderRadius: 12, border: '1px solid rgba(28,24,20,0.08)',
   boxShadow: '0 8px 24px rgba(0,0,0,0.08)', padding: 4, maxHeight: 240,
   overflowY: 'auto', zIndex: 9999, minWidth: 140,
 };
@@ -214,7 +214,7 @@ function BreedAutocomplete({ value, onChange, style: extra }) {
       {open && query && (
         <div style={{ ...dropdownPanelStyle, minWidth: 240 }}>
           {displayMatches.length === 0 ? (
-            <div style={{ padding: '10px 16px', fontSize: 14, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>No breeds found</div>
+            <div style={{ padding: '10px 16px', fontSize: 14, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>No breeds found</div>
           ) : (<>
             {displayMatches.map(b => {
               const isSel = b === value;
@@ -243,7 +243,7 @@ function BreedAutocomplete({ value, onChange, style: extra }) {
 function DogIcon() {
   return (
     <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="32" cy="50" rx="18" ry="4" fill="#ede8df" />
+      <ellipse cx="32" cy="50" rx="18" ry="4" fill="rgba(28,24,20,0.08)" />
       <path d="M18 28c-3-8-1-16 2-18s6 2 8 6" stroke="#C8941F" strokeWidth="2.5" strokeLinecap="round" fill="none" />
       <path d="M46 28c3-8 1-16-2-18s-6 2-8 6" stroke="#C8941F" strokeWidth="2.5" strokeLinecap="round" fill="none" />
       <ellipse cx="32" cy="34" rx="14" ry="12" stroke="#C8941F" strokeWidth="2.5" fill="none" />
@@ -265,13 +265,13 @@ function ProgressDots({ step, total }) {
           <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
             <div style={{
               width: current ? 14 : 10, height: current ? 14 : 10, borderRadius: '50%',
-              background: completed || current ? '#C8941F' : '#ede8df',
+              background: completed || current ? '#C8941F' : 'rgba(28,24,20,0.08)',
               border: current ? '3px solid rgba(201,168,76,0.3)' : 'none',
               transition: 'all 0.3s ease',
             }} />
             {i < total - 1 && (
               <div style={{ width: Math.max(12, Math.min(32, 200 / total)), height: 2,
-                background: completed ? '#C8941F' : '#ede8df', transition: 'background 0.3s ease' }} />
+                background: completed ? '#C8941F' : 'rgba(28,24,20,0.08)', transition: 'background 0.3s ease' }} />
             )}
           </div>
         );
@@ -327,15 +327,15 @@ function FoodSearch({ onSelect, selectedFood }) {
             <span style={{ color: '#2d7a4f', fontSize: 16, fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>
             <span style={{ fontSize: 14, color: '#1C1814', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selectedFood.name}</span>
           </div>
-          <button onClick={() => { onSelect(null); setText(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8a7e72', fontSize: 16, padding: '0 0 0 8px', flexShrink: 0 }}>&times;</button>
+          <button onClick={() => { onSelect(null); setText(''); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(28,24,20,0.60)', fontSize: 16, padding: '0 0 0 8px', flexShrink: 0 }}>&times;</button>
         </div>
       </div>
     );
   }
   return (
     <div ref={boxRef} data-food-search style={{ position: 'relative', width: '100%', maxWidth: 500, margin: '0 auto' }}>
-      <div style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 16, padding: '6px 6px 6px 20px', boxShadow: '0 4px 24px rgba(26,22,18,0.08)', border: '1.5px solid #ede8df' }}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b5aa99" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" /></svg>
+      <div style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 16, padding: '6px 6px 6px 20px', boxShadow: '0 4px 24px rgba(26,22,18,0.08)', border: '1.5px solid rgba(28,24,20,0.08)' }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(28,24,20,0.40)" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" /></svg>
         <input type="text" placeholder="Search for your dog's current food..." value={text} onChange={handleChange}
           onFocus={() => { if (results.length > 0) setOpen(true); }}
           style={{ flex: 1, border: 'none', outline: 'none', minWidth: 0, fontSize: 15, padding: '12px 10px', background: 'transparent', color: '#1C1814', fontFamily: "'Inter', sans-serif", fontWeight: 500 }}
@@ -344,9 +344,9 @@ function FoodSearch({ onSelect, selectedFood }) {
       {open && (
         <div style={{ position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0, background: '#fff', borderRadius: 14, overflow: 'hidden', boxShadow: '0 12px 48px rgba(26,22,18,0.15)', zIndex: 9999, maxHeight: 400, overflowY: 'auto' }}>
           {loading && results.length === 0 ? (
-            <div style={{ padding: 20, textAlign: 'center', color: '#8a7e72', fontSize: 14 }}>Searching...</div>
+            <div style={{ padding: 20, textAlign: 'center', color: 'rgba(28,24,20,0.60)', fontSize: 14 }}>Searching...</div>
           ) : results.length === 0 ? (
-            <div style={{ padding: 20, textAlign: 'center', color: '#8a7e72', fontSize: 14 }}>No results found.</div>
+            <div style={{ padding: 20, textAlign: 'center', color: 'rgba(28,24,20,0.60)', fontSize: 14 }}>No results found.</div>
           ) : results.map((f) => (
             <div key={f.id} onMouseDown={(e) => { e.preventDefault(); handleSelect(f); }}
               style={{ padding: '12px 18px', cursor: 'pointer', borderBottom: '1px solid #f0ebe3', display: 'flex', alignItems: 'center', gap: 10 }}
@@ -360,7 +360,7 @@ function FoodSearch({ onSelect, selectedFood }) {
               )}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#1C1814', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.brand}</div>
-                <div style={{ fontSize: 12, color: '#8a7e72', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
+                <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
               </div>
             </div>
           ))}
@@ -649,14 +649,14 @@ export default function SignupPage() {
       {/* Nav */}
       <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid #ede8df',
+        padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)',
         background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
           <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1C1814', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
         {step < STEP_PLAN && (
-          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: '#8a7e72', letterSpacing: 1, textTransform: 'uppercase' }}>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: 'rgba(28,24,20,0.60)', letterSpacing: 1, textTransform: 'uppercase' }}>
             Step {step + 1} of {TOTAL_STEPS}
           </span>
         )}
@@ -673,14 +673,14 @@ export default function SignupPage() {
             <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 42px)', fontWeight: 800, color: '#1C1814', margin: '20px 0 16px', letterSpacing: -1, lineHeight: 1.15 }}>
               Let&rsquo;s find the best food for your dog
             </h1>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', lineHeight: 1.6, maxWidth: 440, margin: '0 auto 12px' }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: 'rgba(28,24,20,0.60)', lineHeight: 1.6, maxWidth: 440, margin: '0 auto 12px' }}>
               Tell us about your pup and we&rsquo;ll show you how their current food stacks up &mdash; plus smarter alternatives.
             </p>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#b5aa99' }}>Takes about 2 minutes.</p>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: 'rgba(28,24,20,0.40)' }}>Takes about 2 minutes.</p>
             <button onClick={() => goTo(1)} style={{ marginTop: 32, padding: '14px 48px', borderRadius: 100, background: '#1C1814', color: '#F4EFE4', fontSize: 16, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>
               Get Started &rarr;
             </button>
-            <p style={{ marginTop: 32, fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#8a7e72' }}>
+            <p style={{ marginTop: 32, fontFamily: "'Inter', sans-serif", fontSize: 13, color: 'rgba(28,24,20,0.60)' }}>
               Already have an account?{' '}
               <a href="/login" style={{ color: '#C8941F', fontWeight: 600, textDecoration: 'none' }}>Sign in &rarr;</a>
             </p>
@@ -722,7 +722,7 @@ export default function SignupPage() {
               )}
             </div>
             {parseInt(dogCount) > 5 && (
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#b5aa99', marginTop: 12 }}>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: 'rgba(28,24,20,0.40)', marginTop: 12 }}>
                 We support up to 5 dog profiles right now.
               </p>
             )}
@@ -736,12 +736,12 @@ export default function SignupPage() {
               {numDogs > 1 ? `Dog ${curDogIdx + 1} of ${numDogs}: ${curDogName}` : `Tell us about ${curDogName}`}
             </div>
             {numDogs > 1 && curDogIdx === 0 && (
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 28 }}>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: 'rgba(28,24,20,0.60)', marginBottom: 28 }}>
                 Let&rsquo;s learn about {curDogName} first.{numDogs > 1 && ` You\u2019ll do ${dogNames.slice(1, numDogs).filter(n=>n.trim()).join(', ') || 'the others'} next.`}
               </p>
             )}
             {(numDogs === 1 || curDogIdx > 0) && (
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 28 }}>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: 'rgba(28,24,20,0.60)', marginBottom: 28 }}>
                 This helps us personalize food recommendations.
               </p>
             )}
@@ -818,7 +818,7 @@ export default function SignupPage() {
                     if (!selected) { updateDog(curDogIdx, 'food', null); updateDog(curDogIdx, 'foodAltText', ''); }
                   }} style={{
                     padding: '10px 20px', borderRadius: 100,
-                    border: selected ? '2px solid #C8941F' : '1.5px solid #ede8df',
+                    border: selected ? '2px solid #C8941F' : '1.5px solid rgba(28,24,20,0.08)',
                     background: selected ? '#f7efd8' : '#fff',
                     color: '#1C1814', fontSize: 14, fontWeight: 600,
                     cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'all 0.2s ease',
@@ -832,9 +832,9 @@ export default function SignupPage() {
                 <input type="text" value={curDog.foodAltText}
                   onChange={e => updateDog(curDogIdx, 'foodAltText', e.target.value)}
                   placeholder={curDog.foodAlt === 'no_kibble' ? 'What do you feed? (e.g., raw diet, homemade, fresh food...)' : "Type your dog's food brand and product name"}
-                  style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1.5px solid #ede8df', fontSize: 15, fontFamily: "'Inter', sans-serif", background: '#fff', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' }}
+                  style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1.5px solid rgba(28,24,20,0.08)', fontSize: 15, fontFamily: "'Inter', sans-serif", background: '#fff', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' }}
                   onFocus={e => (e.target.style.borderColor = '#C8941F')}
-                  onBlur={e => (e.target.style.borderColor = '#ede8df')}
+                  onBlur={e => (e.target.style.borderColor = 'rgba(28,24,20,0.08)')}
                 />
               </div>
             )}
@@ -848,14 +848,14 @@ export default function SignupPage() {
             <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1C1814', margin: '8px 0 8px', letterSpacing: -0.5 }}>
               When it comes to {numDogs > 1 ? 'your dogs\u2019' : `${firstDogName}\u2019s`} food, I care most about...
             </h2>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 24 }}>Select all that apply.</p>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: 'rgba(28,24,20,0.60)', marginBottom: 24 }}>Select all that apply.</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10, maxWidth: 500, margin: '0 auto' }}>
               {PRIORITIES.map(p => {
                 const selected = priorities.includes(p.label);
                 return (
                   <button key={p.label} onClick={() => togglePriority(p.label)} style={{
                     padding: '12px 16px', borderRadius: 14,
-                    border: selected ? '2px solid #C8941F' : '1.5px solid #ede8df',
+                    border: selected ? '2px solid #C8941F' : '1.5px solid rgba(28,24,20,0.08)',
                     background: selected ? '#f7efd8' : '#fff',
                     color: '#1C1814', fontSize: 14, fontWeight: 600,
                     cursor: 'pointer', fontFamily: "'Inter', sans-serif",
@@ -874,7 +874,7 @@ export default function SignupPage() {
             <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, color: '#1C1814', margin: '8px 0 8px', letterSpacing: -0.5 }}>
               Save {numDogs > 1 ? 'your dogs\u2019 profiles' : `${firstDogName}\u2019s profile`}
             </h2>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', marginBottom: 28 }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: 'rgba(28,24,20,0.60)', marginBottom: 28 }}>
               We&rsquo;ll use this to personalize your recommendations and keep you updated on food scores.
             </p>
 
@@ -910,7 +910,7 @@ export default function SignupPage() {
 
             {error && <p style={{ color: '#b5483a', fontSize: 14, marginTop: 16, fontFamily: "'Inter', sans-serif" }}>{error}</p>}
 
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: '#b5aa99', fontStyle: 'italic', marginTop: 20, lineHeight: 1.5 }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: 'rgba(28,24,20,0.40)', fontStyle: 'italic', marginTop: 20, lineHeight: 1.5 }}>
               By creating a profile, you agree to receive occasional emails from GoodKibble. Unsubscribe anytime. We never share your data.
             </p>
           </div>
@@ -923,7 +923,7 @@ export default function SignupPage() {
             <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1C1814', margin: '0 0 8px', letterSpacing: -0.5 }}>
               You&rsquo;re in, {firstName || 'there'}!
             </h1>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: '#8a7e72', lineHeight: 1.6, maxWidth: 440, margin: '0 auto 24px' }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: 'rgba(28,24,20,0.60)', lineHeight: 1.6, maxWidth: 440, margin: '0 auto 24px' }}>
               Choose how you want to use GoodKibble.
             </p>
 
@@ -932,18 +932,18 @@ export default function SignupPage() {
               <button onClick={() => setBilling('monthly')} style={{
                 padding: '10px 24px', borderRadius: '100px 0 0 100px', border: 'none',
                 background: billing === 'monthly' ? '#1C1814' : 'transparent',
-                color: billing === 'monthly' ? '#F4EFE4' : '#8a7e72',
+                color: billing === 'monthly' ? '#F4EFE4' : 'rgba(28,24,20,0.60)',
                 fontSize: 14, fontWeight: 600, cursor: 'pointer',
                 fontFamily: "'Inter', sans-serif",
-                ...(billing !== 'monthly' ? { border: '1.5px solid #ede8df', borderRight: 'none' } : {}),
+                ...(billing !== 'monthly' ? { border: '1.5px solid rgba(28,24,20,0.08)', borderRight: 'none' } : {}),
               }}>Monthly</button>
               <button onClick={() => setBilling('yearly')} style={{
                 padding: '10px 24px', borderRadius: '0 100px 100px 0', border: 'none',
                 background: billing === 'yearly' ? '#1C1814' : 'transparent',
-                color: billing === 'yearly' ? '#F4EFE4' : '#8a7e72',
+                color: billing === 'yearly' ? '#F4EFE4' : 'rgba(28,24,20,0.60)',
                 fontSize: 14, fontWeight: 600, cursor: 'pointer',
                 fontFamily: "'Inter', sans-serif", position: 'relative',
-                ...(billing !== 'yearly' ? { border: '1.5px solid #ede8df', borderLeft: 'none' } : {}),
+                ...(billing !== 'yearly' ? { border: '1.5px solid rgba(28,24,20,0.08)', borderLeft: 'none' } : {}),
               }}>
                 Yearly
                 <span style={{
@@ -958,12 +958,12 @@ export default function SignupPage() {
             <div className="plan-cards" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 560, margin: '0 auto', textAlign: 'left' }}>
               {/* Free card */}
               <div style={{
-                background: '#fff', borderRadius: 20, border: '1px solid #ede8df', padding: '24px 20px',
+                background: '#fff', borderRadius: 20, border: '1px solid rgba(28,24,20,0.08)', padding: '24px 20px',
                 display: 'flex', flexDirection: 'column',
               }}>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>Free</div>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.60)', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>Free</div>
                 <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 900, color: '#1C1814', marginBottom: 4 }}>$0</div>
-                <div style={{ fontSize: 12, color: '#b5aa99', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>Free forever</div>
+                <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>Free forever</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, flex: 1 }}>
                   {['Search & score any food', 'Score breakdown (9 categories)', 'Compare up to 2 foods', '1 dog profile'].map(f => (
                     <div key={f} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13, fontFamily: "'Inter', sans-serif", color: '#3d352b' }}>
@@ -972,8 +972,8 @@ export default function SignupPage() {
                   ))}
                 </div>
                 <button onClick={() => goTo(STEP_CONFIRM)} style={{
-                  width: '100%', padding: '12px 0', borderRadius: 100, border: '1.5px solid #ede8df',
-                  background: 'transparent', color: '#8a7e72', fontSize: 14, fontWeight: 600,
+                  width: '100%', padding: '12px 0', borderRadius: 100, border: '1.5px solid rgba(28,24,20,0.08)',
+                  background: 'transparent', color: 'rgba(28,24,20,0.60)', fontSize: 14, fontWeight: 600,
                   cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 }}>Continue Free</button>
               </div>
@@ -992,9 +992,9 @@ export default function SignupPage() {
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8941F', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>Pro</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
                   <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 900, color: '#F4EFE4' }}>{billing === 'yearly' ? '$29' : '$3.99'}</span>
-                  <span style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{billing === 'yearly' ? '/year' : '/month'}</span>
+                  <span style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>{billing === 'yearly' ? '/year' : '/month'}</span>
                 </div>
-                <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>
+                <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>
                   {billing === 'yearly' ? "That\u2019s just $2.42/month" : 'Cancel anytime'}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, flex: 1 }}>
@@ -1026,7 +1026,7 @@ export default function SignupPage() {
             </div>
 
             <button onClick={() => goTo(STEP_CONFIRM)} style={{
-              marginTop: 24, background: 'none', border: 'none', color: '#b5aa99',
+              marginTop: 24, background: 'none', border: 'none', color: 'rgba(28,24,20,0.40)',
               fontSize: 13, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
             }}>Skip for now</button>
           </div>
@@ -1039,16 +1039,16 @@ export default function SignupPage() {
             <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 40px)', fontWeight: 800, color: '#1C1814', margin: '0 0 8px', letterSpacing: -1 }}>
               Check your email!
             </h1>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72', marginBottom: 8, lineHeight: 1.6 }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 16, color: 'rgba(28,24,20,0.60)', marginBottom: 8, lineHeight: 1.6 }}>
               We sent a magic link to <strong style={{ color: '#C8941F' }}>{email.trim()}</strong>.
               <br />Click the link in your email to activate your profile.
             </p>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#b5aa99', marginBottom: 28 }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: 'rgba(28,24,20,0.40)', marginBottom: 28 }}>
               Didn&rsquo;t get it? Check your spam folder, or wait a moment and try again.
             </p>
             <button onClick={resendEmail} style={{
-              padding: '10px 28px', borderRadius: 100, background: 'transparent', color: '#8a7e72',
-              fontSize: 14, fontWeight: 600, border: '1.5px solid #ede8df',
+              padding: '10px 28px', borderRadius: 100, background: 'transparent', color: 'rgba(28,24,20,0.60)',
+              fontSize: 14, fontWeight: 600, border: '1.5px solid rgba(28,24,20,0.08)',
               cursor: 'pointer', fontFamily: "'Inter', sans-serif",
             }}>Resend Email</button>
           </div>
@@ -1065,11 +1065,11 @@ export default function SignupPage() {
         {/* Navigation buttons */}
         {step >= 1 && step < STEP_PLAN && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginTop: 40 }}>
-            <button onClick={handleBack} style={{ padding: '12px 28px', borderRadius: 100, background: 'transparent', color: '#8a7e72', fontSize: 15, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>&larr; Back</button>
+            <button onClick={handleBack} style={{ padding: '12px 28px', borderRadius: 100, background: 'transparent', color: 'rgba(28,24,20,0.60)', fontSize: 15, fontWeight: 600, border: '1.5px solid rgba(28,24,20,0.08)', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>&larr; Back</button>
             <button onClick={handleNext} disabled={!canContinue() || submitting} style={{
               padding: '14px 48px', borderRadius: 100,
-              background: canContinue() ? '#1C1814' : '#ede8df',
-              color: canContinue() ? '#F4EFE4' : '#b5aa99',
+              background: canContinue() ? '#1C1814' : 'rgba(28,24,20,0.08)',
+              color: canContinue() ? '#F4EFE4' : 'rgba(28,24,20,0.40)',
               fontSize: 16, fontWeight: 700, border: 'none',
               cursor: canContinue() ? 'pointer' : 'default',
               fontFamily: "'Inter', sans-serif",

@@ -72,7 +72,7 @@ export default function ProPage() {
     <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
       <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid #ede8df',
+        padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)',
         background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
@@ -110,18 +110,18 @@ export default function ProPage() {
           <button onClick={() => setBilling('monthly')} style={{
             padding: '10px 24px', borderRadius: '100px 0 0 100px', border: 'none',
             background: billing === 'monthly' ? '#1C1814' : 'transparent',
-            color: billing === 'monthly' ? '#F4EFE4' : '#8a7e72',
+            color: billing === 'monthly' ? '#F4EFE4' : 'rgba(28,24,20,0.60)',
             fontSize: 14, fontWeight: 600, cursor: 'pointer',
             fontFamily: "'Inter', sans-serif",
-            ...(billing !== 'monthly' ? { border: '1.5px solid #ede8df', borderRight: 'none' } : {}),
+            ...(billing !== 'monthly' ? { border: '1.5px solid rgba(28,24,20,0.08)', borderRight: 'none' } : {}),
           }}>Monthly</button>
           <button onClick={() => setBilling('yearly')} style={{
             padding: '10px 24px', borderRadius: '0 100px 100px 0', border: 'none',
             background: billing === 'yearly' ? '#1C1814' : 'transparent',
-            color: billing === 'yearly' ? '#F4EFE4' : '#8a7e72',
+            color: billing === 'yearly' ? '#F4EFE4' : 'rgba(28,24,20,0.60)',
             fontSize: 14, fontWeight: 600, cursor: 'pointer',
             fontFamily: "'Inter', sans-serif", position: 'relative',
-            ...(billing !== 'yearly' ? { border: '1.5px solid #ede8df', borderLeft: 'none' } : {}),
+            ...(billing !== 'yearly' ? { border: '1.5px solid rgba(28,24,20,0.08)', borderLeft: 'none' } : {}),
           }}>
             Yearly
             <span style={{
@@ -136,12 +136,12 @@ export default function ProPage() {
         {/* Plan Cards */}
         <div className="pro-cards" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 760, margin: '0 auto 48px', textAlign: 'left' }}>
           {/* Free Card */}
-          <div style={{ background: '#fff', borderRadius: 24, border: '1px solid #ede8df', padding: 32 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Free</div>
+          <div style={{ background: '#fff', borderRadius: 24, border: '1px solid rgba(28,24,20,0.08)', padding: 32 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.60)', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Free</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
               <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 36, fontWeight: 900, color: '#1C1814' }}>$0</span>
             </div>
-            <div style={{ fontSize: 13, color: '#8a7e72', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>Free forever</div>
+            <div style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>Free forever</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
               {FREE_FEATURES.map(f => (
                 <div key={f} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, fontFamily: "'Inter', sans-serif", color: '#3d352b' }}>
@@ -152,8 +152,8 @@ export default function ProPage() {
             </div>
             {!isPro && (
               <div style={{
-                padding: '12px 0', borderRadius: 100, border: '1.5px solid #ede8df',
-                textAlign: 'center', fontSize: 14, fontWeight: 600, color: '#8a7e72',
+                padding: '12px 0', borderRadius: 100, border: '1.5px solid rgba(28,24,20,0.08)',
+                textAlign: 'center', fontSize: 14, fontWeight: 600, color: 'rgba(28,24,20,0.60)',
                 fontFamily: "'Inter', sans-serif",
               }}>Current Plan</div>
             )}
@@ -170,9 +170,9 @@ export default function ProPage() {
             <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8941F', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Pro</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
               <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 36, fontWeight: 900, color: '#F4EFE4' }}>{price}</span>
-              <span style={{ fontSize: 14, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>{period}</span>
+              <span style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>{period}</span>
             </div>
-            <div style={{ fontSize: 13, color: '#8a7e72', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>{subtitle}</div>
+            <div style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>{subtitle}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
               {/* "Everything in Free, plus:" */}
               <div style={{ fontSize: 14, fontFamily: "'Inter', sans-serif", color: '#C8941F', fontWeight: 700 }}>Everything in Free, plus:</div>
@@ -189,7 +189,7 @@ export default function ProPage() {
               </div>
 
               {/* Divider */}
-              <div style={{ height: 1, background: '#ede8df', margin: '4px 0' }} />
+              <div style={{ height: 1, background: 'rgba(28,24,20,0.08)', margin: '4px 0' }} />
 
               {/* Group 2: Power tools */}
               <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8941F', fontFamily: "'Inter', sans-serif" }}>For the deep divers</div>
@@ -223,7 +223,7 @@ export default function ProPage() {
         <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'left' }}>
           <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1C1814', textAlign: 'center', marginBottom: 24 }}>Common questions</h2>
           {FAQS.map((faq, i) => (
-            <div key={i} style={{ padding: '16px 0', borderTop: i === 0 ? 'none' : '1px solid #ede8df' }}>
+            <div key={i} style={{ padding: '16px 0', borderTop: i === 0 ? 'none' : '1px solid rgba(28,24,20,0.08)' }}>
               <div style={{ fontSize: 14, fontWeight: 700, color: '#1C1814', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>{faq.q}</div>
               <div style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>{faq.a}</div>
             </div>

@@ -4,8 +4,8 @@ import { useState, useRef } from 'react';
 const ADMIN_PASSWORD = 'gk_admin_2026';
 const ADMIN_SECRET = 'gk_admin_2026';
 
-const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'Inter', sans-serif", color: '#1C1814', boxSizing: 'border-box' };
-const labelStyle = { fontSize: 11, fontWeight: 600, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block', letterSpacing: 0.5, textTransform: 'uppercase' };
+const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid rgba(28,24,20,0.08)', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'Inter', sans-serif", color: '#1C1814', boxSizing: 'border-box' };
+const labelStyle = { fontSize: 11, fontWeight: 600, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif", marginBottom: 4, display: 'block', letterSpacing: 0.5, textTransform: 'uppercase' };
 
 export default function AddRecallPage() {
   const [authed, setAuthed] = useState(false);
@@ -114,7 +114,7 @@ export default function AddRecallPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
           <div>
             <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814', marginBottom: 4 }}>Add Recall</div>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', margin: 0 }}>Paste a URL, upload a PDF, or paste email text. AI extracts the recall details.</p>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: 'rgba(28,24,20,0.60)', margin: 0 }}>Paste a URL, upload a PDF, or paste email text. AI extracts the recall details.</p>
           </div>
           <a href="/admin/add-product" style={{ fontSize: 12, color: '#C8941F', fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Add Product &rarr;</a>
         </div>
@@ -122,12 +122,12 @@ export default function AddRecallPage() {
         {/* Tabs */}
         {!editData && !saved && (
           <>
-            <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid #ede8df', marginBottom: 20 }}>
+            <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid rgba(28,24,20,0.08)', marginBottom: 20 }}>
               {tabs.map(t => (
                 <button key={t.key} onClick={() => setTab(t.key)} style={{
                   flex: 1, padding: '12px 0', background: 'none', border: 'none',
                   borderBottom: tab === t.key ? '2px solid #A32D2D' : '2px solid transparent',
-                  color: tab === t.key ? '#1C1814' : '#b5aa99', fontSize: 13, fontWeight: tab === t.key ? 600 : 500,
+                  color: tab === t.key ? '#1C1814' : 'rgba(28,24,20,0.40)', fontSize: 13, fontWeight: tab === t.key ? 600 : 500,
                   cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 }}>{t.label}</button>
               ))}
@@ -140,7 +140,7 @@ export default function AddRecallPage() {
                   <input type="url" value={url} onChange={e => setUrl(e.target.value)} disabled={loading}
                     placeholder="https://www.fda.gov/... or https://example.com/recall.pdf"
                     style={{ ...inputStyle, opacity: loading ? 0.5 : 1 }} />
-                  <div style={{ fontSize: 11, color: '#b5aa99', marginTop: 4, fontFamily: "'Inter', sans-serif" }}>
+                  <div style={{ fontSize: 11, color: 'rgba(28,24,20,0.40)', marginTop: 4, fontFamily: "'Inter', sans-serif" }}>
                     Works with FDA pages, company press releases, Petful articles, or direct PDF links
                   </div>
                 </div>
@@ -150,18 +150,18 @@ export default function AddRecallPage() {
                 <div style={{ marginBottom: 16 }}>
                   <label style={labelStyle}>Upload PDF</label>
                   {pdfFile ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: '#fff', borderRadius: 10, border: '1.5px solid #ede8df' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', background: '#fff', borderRadius: 10, border: '1.5px solid rgba(28,24,20,0.08)' }}>
                       <span style={{ fontSize: 20 }}>{'\u{1F4C4}'}</span>
                       <span style={{ flex: 1, fontSize: 14, color: '#1C1814', fontFamily: "'Inter', sans-serif" }}>{pdfFile.name}</span>
-                      <button type="button" onClick={() => { setPdfFile(null); if (fileRef.current) fileRef.current.value = ''; }} style={{ background: 'none', border: 'none', color: '#b5aa99', fontSize: 16, cursor: 'pointer' }}>&times;</button>
+                      <button type="button" onClick={() => { setPdfFile(null); if (fileRef.current) fileRef.current.value = ''; }} style={{ background: 'none', border: 'none', color: 'rgba(28,24,20,0.40)', fontSize: 16, cursor: 'pointer' }}>&times;</button>
                     </div>
                   ) : (
                     <div onDragOver={e => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)}
                       onDrop={e => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer?.files?.[0]; if (f?.type === 'application/pdf') setPdfFile(f); }}
                       onClick={() => fileRef.current?.click()}
-                      style={{ border: `2px dashed ${dragOver ? '#A32D2D' : '#ede8df'}`, borderRadius: 14, padding: '28px 20px', textAlign: 'center', background: dragOver ? '#fce8e8' : '#fff', cursor: 'pointer' }}>
+                      style={{ border: `2px dashed ${dragOver ? '#A32D2D' : 'rgba(28,24,20,0.08)'}`, borderRadius: 14, padding: '28px 20px', textAlign: 'center', background: dragOver ? '#fce8e8' : '#fff', cursor: 'pointer' }}>
                       <div style={{ fontSize: 28, marginBottom: 6, opacity: 0.3 }}>{'\u{1F4C4}'}</div>
-                      <div style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>Drop PDF here or click to browse</div>
+                      <div style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>Drop PDF here or click to browse</div>
                     </div>
                   )}
                   <input ref={fileRef} type="file" accept=".pdf" hidden onChange={e => { const f = e.target.files?.[0]; if (f) setPdfFile(f); }} />
@@ -179,7 +179,7 @@ export default function AddRecallPage() {
 
               <button type="submit" disabled={loading} style={{
                 width: '100%', padding: 14, borderRadius: 100, border: 'none',
-                background: loading ? '#ede8df' : '#A32D2D', color: loading ? '#b5aa99' : '#fff',
+                background: loading ? 'rgba(28,24,20,0.08)' : '#A32D2D', color: loading ? 'rgba(28,24,20,0.40)' : '#fff',
                 fontSize: 15, fontWeight: 700, cursor: loading ? 'default' : 'pointer',
                 fontFamily: "'Inter', sans-serif",
               }}>{loading ? 'Extracting...' : 'Extract Recall Details'}</button>
@@ -189,8 +189,8 @@ export default function AddRecallPage() {
 
         {/* Loading */}
         {loading && status && (
-          <div style={{ padding: '14px 20px', borderRadius: 12, background: '#fff', border: '1px solid #ede8df', marginTop: 16, display: 'flex', alignItems: 'center', gap: 12, fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#5a5248' }}>
-            <div style={{ width: 16, height: 16, border: '2px solid #ede8df', borderTopColor: '#A32D2D', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
+          <div style={{ padding: '14px 20px', borderRadius: 12, background: '#fff', border: '1px solid rgba(28,24,20,0.08)', marginTop: 16, display: 'flex', alignItems: 'center', gap: 12, fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#5a5248' }}>
+            <div style={{ width: 16, height: 16, border: '2px solid rgba(28,24,20,0.08)', borderTopColor: '#A32D2D', borderRadius: '50%', animation: 'spin 0.8s linear infinite', flexShrink: 0 }} />
             {status}
           </div>
         )}
@@ -220,11 +220,11 @@ export default function AddRecallPage() {
               <span>{'\u{1F50D}'} <strong>Review &amp; edit before saving</strong></span>
               <div style={{ display: 'flex', gap: 8 }}>
                 <button onClick={confirmSave} disabled={saving} style={{ padding: '6px 16px', borderRadius: 100, border: 'none', background: '#2d7a4f', color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: saving ? 0.6 : 1, fontFamily: "'Inter', sans-serif" }}>{saving ? 'Saving...' : '\u2713 Save Recall'}</button>
-                <button onClick={reset} style={{ padding: '6px 14px', borderRadius: 100, border: '1.5px solid #ede8df', background: 'transparent', color: '#8a7e72', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Discard</button>
+                <button onClick={reset} style={{ padding: '6px 14px', borderRadius: 100, border: '1.5px solid rgba(28,24,20,0.08)', background: 'transparent', color: 'rgba(28,24,20,0.60)', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Discard</button>
               </div>
             </div>
 
-            <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #ede8df', overflow: 'hidden' }}>
+            <div style={{ background: '#fff', borderRadius: 16, border: '1px solid rgba(28,24,20,0.08)', overflow: 'hidden' }}>
               {/* Severity indicator */}
               <div style={{ height: 4, background: editData.severity === 'Class I' ? '#A32D2D' : editData.severity === 'Class II' ? '#d4760a' : '#C8941F' }} />
 
@@ -286,8 +286,8 @@ export default function AddRecallPage() {
                   cursor: 'pointer', fontFamily: "'Inter', sans-serif", opacity: saving ? 0.6 : 1,
                 }}>{saving ? 'Saving...' : '\u2713 Save Recall to Database'}</button>
                 <button onClick={reset} style={{
-                  padding: '12px 24px', borderRadius: 100, border: '1.5px solid #ede8df',
-                  background: 'transparent', color: '#8a7e72', fontSize: 14, fontWeight: 600,
+                  padding: '12px 24px', borderRadius: 100, border: '1.5px solid rgba(28,24,20,0.08)',
+                  background: 'transparent', color: 'rgba(28,24,20,0.60)', fontSize: 14, fontWeight: 600,
                   cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                 }}>Discard</button>
               </div>

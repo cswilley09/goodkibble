@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 const ADMIN_PASSWORD = 'gk_admin_2026';
 const ADMIN_SECRET = 'gk_admin_2026';
 
-const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'Inter', sans-serif", color: '#1C1814', boxSizing: 'border-box' };
+const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid rgba(28,24,20,0.08)', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'Inter', sans-serif", color: '#1C1814', boxSizing: 'border-box' };
 
 export default function NewsQueuePage() {
   const [authed, setAuthed] = useState(false);
@@ -102,11 +102,11 @@ export default function NewsQueuePage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
           <div>
             <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814', marginBottom: 4 }}>News Queue</div>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', margin: 0 }}>Google News recall articles pending review</p>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: 'rgba(28,24,20,0.60)', margin: 0 }}>Google News recall articles pending review</p>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <button onClick={triggerPoll} disabled={pollLoading} style={{
-              padding: '8px 16px', borderRadius: 100, border: '1.5px solid #ede8df',
+              padding: '8px 16px', borderRadius: 100, border: '1.5px solid rgba(28,24,20,0.08)',
               background: pollLoading ? '#f5f2ec' : '#fff', color: '#1C1814',
               fontSize: 13, fontWeight: 600, cursor: pollLoading ? 'default' : 'pointer',
               fontFamily: "'Inter', sans-serif",
@@ -131,12 +131,12 @@ export default function NewsQueuePage() {
         )}
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid #ede8df', marginBottom: 20 }}>
+        <div style={{ display: 'flex', gap: 0, borderBottom: '1px solid rgba(28,24,20,0.08)', marginBottom: 20 }}>
           {tabs.map(t => (
             <button key={t.key} onClick={() => setTab(t.key)} style={{
               flex: 1, padding: '12px 0', background: 'none', border: 'none',
               borderBottom: tab === t.key ? '2px solid #A32D2D' : '2px solid transparent',
-              color: tab === t.key ? '#1C1814' : '#b5aa99', fontSize: 14, fontWeight: tab === t.key ? 600 : 500,
+              color: tab === t.key ? '#1C1814' : 'rgba(28,24,20,0.40)', fontSize: 14, fontWeight: tab === t.key ? 600 : 500,
               cursor: 'pointer', fontFamily: "'Inter', sans-serif",
             }}>{t.label}</button>
           ))}
@@ -144,14 +144,14 @@ export default function NewsQueuePage() {
 
         {/* Loading */}
         {loading && (
-          <div style={{ textAlign: 'center', padding: 40, fontFamily: "'Inter', sans-serif", color: '#b5aa99', fontSize: 14 }}>
+          <div style={{ textAlign: 'center', padding: 40, fontFamily: "'Inter', sans-serif", color: 'rgba(28,24,20,0.40)', fontSize: 14 }}>
             Loading...
           </div>
         )}
 
         {/* Empty state */}
         {!loading && items.length === 0 && (
-          <div style={{ textAlign: 'center', padding: 60, fontFamily: "'Inter', sans-serif", color: '#b5aa99' }}>
+          <div style={{ textAlign: 'center', padding: 60, fontFamily: "'Inter', sans-serif", color: 'rgba(28,24,20,0.40)' }}>
             <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.4 }}>{tab === 'pending' ? '\u{1F4ED}' : tab === 'approved' ? '\u2705' : '\u{1F5D1}'}</div>
             <div style={{ fontSize: 15 }}>No {tab} items</div>
             {tab === 'pending' && <div style={{ fontSize: 13, marginTop: 8 }}>Click "Poll Now" to fetch latest news</div>}
@@ -161,7 +161,7 @@ export default function NewsQueuePage() {
         {/* Items */}
         {!loading && items.map(item => (
           <div key={item.id} style={{
-            background: '#fff', borderRadius: 14, border: '1px solid #ede8df', padding: 20,
+            background: '#fff', borderRadius: 14, border: '1px solid rgba(28,24,20,0.08)', padding: 20,
             marginBottom: 12, fontFamily: "'Inter', sans-serif",
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
@@ -171,7 +171,7 @@ export default function NewsQueuePage() {
                 }}>
                   {item.title}
                 </a>
-                <div style={{ display: 'flex', gap: 12, marginTop: 8, fontSize: 12, color: '#8a7e72', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: 12, marginTop: 8, fontSize: 12, color: 'rgba(28,24,20,0.60)', flexWrap: 'wrap' }}>
                   {item.source_name && <span style={{ background: '#f5f2ec', padding: '2px 10px', borderRadius: 100 }}>{item.source_name}</span>}
                   <span>{formatDate(item.pub_date)}</span>
                   {item.reviewed_at && <span>Reviewed: {formatDate(item.reviewed_at)}</span>}
@@ -190,8 +190,8 @@ export default function NewsQueuePage() {
                     }}>Approve</button>
                   <button onClick={() => handleAction(item.id, 'dismiss')} disabled={actionLoading === item.id}
                     style={{
-                      padding: '6px 14px', borderRadius: 100, border: '1.5px solid #ede8df',
-                      background: 'transparent', color: '#8a7e72',
+                      padding: '6px 14px', borderRadius: 100, border: '1.5px solid rgba(28,24,20,0.08)',
+                      background: 'transparent', color: 'rgba(28,24,20,0.60)',
                       fontSize: 12, fontWeight: 600, cursor: actionLoading === item.id ? 'default' : 'pointer',
                       fontFamily: "'Inter', sans-serif",
                     }}>Dismiss</button>

@@ -78,7 +78,7 @@ export default async function IngredientPage({ params }) {
   const ingredient = await getIngredient(slug)
   if (!ingredient) {
     return (
-      <div style={{ textAlign: 'center', padding: '120px 24px', color: '#8a7e72', fontSize: 17 }}>
+      <div style={{ textAlign: 'center', padding: '120px 24px', color: 'rgba(28,24,20,0.60)', fontSize: 17 }}>
         Ingredient not found. <a href="/ingredients" style={{ color: '#1C1814', textDecoration: 'underline' }}>Browse all ingredients</a>
       </div>
     )

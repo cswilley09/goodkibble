@@ -28,7 +28,7 @@ function ScoreRing({ score }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, marginLeft: 'auto' }}>
       <svg width={42} height={42} viewBox="0 0 42 42">
-        <circle cx={21} cy={21} r={17} fill="none" stroke="#ede8df" strokeWidth={3} />
+        <circle cx={21} cy={21} r={17} fill="none" stroke="rgba(28,24,20,0.08)" strokeWidth={3} />
         <circle cx={21} cy={21} r={17} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={circumference} strokeDashoffset={offset}
           strokeLinecap="round" transform="rotate(-90 21 21)" />
@@ -37,7 +37,7 @@ function ScoreRing({ score }) {
           {score}
         </text>
       </svg>
-      <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: '#8a7e72', marginTop: 2 }}>
+      <span style={{ fontSize: 9, fontFamily: "'Inter', sans-serif", color: 'rgba(28,24,20,0.60)', marginTop: 2 }}>
         {getScoreTier(score)}
       </span>
     </div>
@@ -49,7 +49,7 @@ function ProductCard({ food, onClick }) {
   const [imgErr, setImgErr] = useState(false);
   return (
     <div onClick={onClick} style={{
-      background: '#fff', borderRadius: 16, padding: 16, border: '1px solid #ede8df',
+      background: '#fff', borderRadius: 16, padding: 16, border: '1px solid rgba(28,24,20,0.08)',
       cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s',
       display: 'flex', gap: 14, alignItems: 'center',
     }}
@@ -64,19 +64,19 @@ function ProductCard({ food, onClick }) {
         <div style={{ width: 56, aspectRatio: '4/5', background: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>🐕</div>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 12, color: '#8a7e72', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
+        <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 }}>{food.brand}</div>
         <div style={{ fontSize: 14, fontWeight: 600, color: '#1C1814', lineHeight: 1.3, marginBottom: 6,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{food.name}</div>
         {(food.flavor || food.primary_protein) && (
           <div style={{ marginBottom: 6 }}>
             {food.flavor && (
-              <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.4 }}>
+              <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', lineHeight: 1.4 }}>
                 <span style={{ fontWeight: 600, color: '#6b6157' }}>Flavor:</span> {food.flavor}
               </div>
             )}
             {food.primary_protein && (
-              <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.4 }}>
+              <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', lineHeight: 1.4 }}>
                 <span style={{ fontWeight: 600, color: '#6b6157' }}>Primary Protein:</span> {food.primary_protein}
               </div>
             )}
@@ -130,7 +130,7 @@ function SearchResults() {
       {/* nav */}
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#faf8f5',
+        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#faf8f5',
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
@@ -150,7 +150,7 @@ function SearchResults() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '24px 24px 80px' }}>
         <button onClick={goHome} style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
-          background: 'none', border: 'none', color: '#8a7e72', fontSize: 14,
+          background: 'none', border: 'none', color: 'rgba(28,24,20,0.60)', fontSize: 14,
           cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 500,
           marginBottom: 32, padding: 0,
         }}>
@@ -159,14 +159,14 @@ function SearchResults() {
         </button>
 
         <div style={{ animation: 'fadeUp 0.5s ease', marginBottom: 32 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 8 }}>Search results</div>
+          <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)', marginBottom: 8 }}>Search results</div>
           <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif",
             fontSize: 'clamp(28px, 3.5vw, 44px)', fontWeight: 800, color: '#1C1814',
             lineHeight: 1.1, marginBottom: 8, letterSpacing: -1,
           }}>&ldquo;{query}&rdquo;</h1>
           {!loading && (
-            <p style={{ fontSize: 15, color: '#8a7e72' }}>
+            <p style={{ fontSize: 15, color: 'rgba(28,24,20,0.60)' }}>
               {results.length} {results.length === 1 ? 'product' : 'products'} found
             </p>
           )}
@@ -174,13 +174,13 @@ function SearchResults() {
 
         {loading ? (
           <div style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
-            <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1C1814', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+            <div style={{ width: 40, height: 40, border: '4px solid rgba(28,24,20,0.08)', borderTopColor: '#1C1814', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
           </div>
         ) : results.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 24px', color: '#8a7e72' }}>
+          <div style={{ textAlign: 'center', padding: '60px 24px', color: 'rgba(28,24,20,0.60)' }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
             <p style={{ fontSize: 17, marginBottom: 8 }}>No products found for &ldquo;{query}&rdquo;</p>
-            <p style={{ fontSize: 14, color: '#b5aa99' }}>Try a different search term, brand name, or flavor.</p>
+            <p style={{ fontSize: 14, color: 'rgba(28,24,20,0.40)' }}>Try a different search term, brand name, or flavor.</p>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
@@ -193,17 +193,17 @@ function SearchResults() {
 
       {/* footer */}
       <div className="footer-bar" style={{
-        borderTop: '1px solid #ede8df', padding: '32px 40px',
+        borderTop: '1px solid rgba(28,24,20,0.08)', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div className="footer-logo" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
           Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
-          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'rgba(28,24,20,0.40)', flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>
@@ -216,7 +216,7 @@ export default function SearchPage() {
   return (
     <Suspense fallback={
       <div style={{ display: 'flex', justifyContent: 'center', padding: '120px 0' }}>
-        <div style={{ width: 40, height: 40, border: '4px solid #ede8df', borderTopColor: '#1C1814', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <div style={{ width: 40, height: 40, border: '4px solid rgba(28,24,20,0.08)', borderTopColor: '#1C1814', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
       </div>
     }>
       <SearchResults />

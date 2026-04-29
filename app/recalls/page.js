@@ -92,7 +92,7 @@ export default function RecallsPage() {
       padding: '10px 14px', background: '#F4EFE4', borderRadius: 10,
       border: '1px solid #f0ebe3',
     }}>
-      <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif", marginBottom: 4 }}>{label}</div>
       <div style={{ fontSize: 14, fontWeight: 700, color: '#1C1814', fontFamily: "'Inter', sans-serif", lineHeight: 1.4, wordBreak: 'break-word' }}>{value}</div>
     </div>
   );
@@ -101,7 +101,7 @@ export default function RecallsPage() {
     <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
       <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid #ede8df',
+        padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)',
         background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
@@ -128,7 +128,7 @@ export default function RecallsPage() {
               <span style={{ fontSize: 22, flexShrink: 0 }}>{'\u{1F514}'}</span>
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', fontFamily: "'Inter', sans-serif" }}>Never check manually again</div>
-                <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>Pro members get instant email alerts when a recall affects their dog&rsquo;s food</div>
+                <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>Pro members get instant email alerts when a recall affects their dog&rsquo;s food</div>
               </div>
             </div>
             <a href="/pro" className="pro-banner-btn" style={{
@@ -142,15 +142,15 @@ export default function RecallsPage() {
 
         {/* Header */}
         <h1 className="page-title" style={{ fontFamily: "Georgia, 'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814', margin: '0 0 6px' }}>FDA Dog Food Recalls</h1>
-        <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>Updated every 6 hours from FDA and AVMA sources</p>
+        <p style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>Updated every 6 hours from FDA and AVMA sources</p>
 
         {/* Search bar */}
         <div style={{ marginBottom: 12 }}>
           <div style={{
             display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 14,
-            border: '1.5px solid #ede8df', padding: '4px 4px 4px 18px',
+            border: '1.5px solid rgba(28,24,20,0.08)', padding: '4px 4px 4px 18px',
           }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b5aa99" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(28,24,20,0.40)" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0 }}>
               <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.35-4.35" />
             </svg>
             <input
@@ -163,7 +163,7 @@ export default function RecallsPage() {
             />
             {search && (
               <button onClick={() => setSearch('')} style={{
-                background: '#f0ebe3', border: 'none', color: '#8a7e72', fontSize: 12,
+                background: '#f0ebe3', border: 'none', color: 'rgba(28,24,20,0.60)', fontSize: 12,
                 cursor: 'pointer', padding: '8px 16px', borderRadius: 10,
                 fontFamily: "'Inter', sans-serif", fontWeight: 600, flexShrink: 0,
               }}>Clear</button>
@@ -172,18 +172,18 @@ export default function RecallsPage() {
         </div>
 
         {/* Results count */}
-        <div style={{ fontSize: 12, color: '#b5aa99', marginBottom: 12, fontFamily: "'Inter', sans-serif" }}>
+        <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.40)', marginBottom: 12, fontFamily: "'Inter', sans-serif" }}>
           {loading ? '' : `${filtered.length} recall${filtered.length !== 1 ? 's' : ''} found`}
         </div>
 
         {/* Content */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 60, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
-            <div style={{ width: 24, height: 24, border: '3px solid #ede8df', borderTopColor: '#A32D2D', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
+          <div style={{ textAlign: 'center', padding: 60, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>
+            <div style={{ width: 24, height: 24, border: '3px solid rgba(28,24,20,0.08)', borderTopColor: '#A32D2D', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
             Loading recalls...
           </div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 60, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
+          <div style={{ textAlign: 'center', padding: 60, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>
             <div style={{ fontSize: 32, opacity: 0.3, marginBottom: 12 }}>{'\u{1F6E1}\u{FE0F}'}</div>
             {search ? `No recalls match "${search}"` : 'No recalls found in the last year'}
           </div>
@@ -221,7 +221,7 @@ export default function RecallsPage() {
                       borderRadius: expanded ? '16px 16px 0 0' : 16, overflow: 'hidden',
                       cursor: 'pointer',
                       background: urgent ? '#fef8f8' : '#fff',
-                      border: urgent ? '1px solid #e8c4c4' : '1px solid #ede8df',
+                      border: urgent ? '1px solid #e8c4c4' : '1px solid rgba(28,24,20,0.08)',
                       transition: 'box-shadow 0.2s',
                     }}
                     onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.05)'; }}
@@ -256,7 +256,7 @@ export default function RecallsPage() {
                           {multiBrand && (
                             <span style={{
                               padding: '2px 8px', borderRadius: 100, background: '#f0ebe3',
-                              fontSize: 9, fontWeight: 700, color: '#8a7e72', fontFamily: "'Inter', sans-serif",
+                              fontSize: 9, fontWeight: 700, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif",
                               letterSpacing: 0.5, flexShrink: 0,
                             }}>MULTI-BRAND</span>
                           )}
@@ -265,7 +265,7 @@ export default function RecallsPage() {
                           {r.product_description}
                         </div>
                         {r.reason && r.reason !== r.product_description && (
-                          <div className="recall-reason" style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <div className="recall-reason" style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif", marginTop: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {r.reason}
                           </div>
                         )}
@@ -277,7 +277,7 @@ export default function RecallsPage() {
                           {formatDate(r.recall_date || r.report_date)}
                         </div>
                         {r.lot_numbers && (
-                          <div style={{ fontSize: 10, color: '#b5aa99', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>Lots affected</div>
+                          <div style={{ fontSize: 10, color: 'rgba(28,24,20,0.40)', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>Lots affected</div>
                         )}
                       </div>
 
@@ -294,7 +294,7 @@ export default function RecallsPage() {
                   }}>
                     <div style={{
                       padding: '24px 24px 20px', background: '#fff',
-                      border: urgent ? '1px solid #e8c4c4' : '1px solid #ede8df',
+                      border: urgent ? '1px solid #e8c4c4' : '1px solid rgba(28,24,20,0.08)',
                       borderTop: 'none', borderRadius: '0 0 16px 16px',
                     }}>
 
@@ -308,7 +308,7 @@ export default function RecallsPage() {
                       {/* Affected products (from AI enrichment) */}
                       {r.affected_products && (
                         <div style={{ marginBottom: 16 }}>
-                          <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 6 }}>Affected Products</div>
+                          <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif", marginBottom: 6 }}>Affected Products</div>
                           <div style={{ fontSize: 13, color: '#1C1814', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>{r.affected_products}</div>
                         </div>
                       )}
@@ -343,7 +343,7 @@ export default function RecallsPage() {
 
                       {/* Company contact (from AI enrichment) */}
                       {r.company_contact && (
-                        <div style={{ fontSize: 12, color: '#8a7e72', marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>
+                        <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', marginBottom: 16, fontFamily: "'Inter', sans-serif" }}>
                           <strong>Company contact:</strong> {r.company_contact}
                         </div>
                       )}
@@ -388,7 +388,7 @@ export default function RecallsPage() {
                           }}>View FDA Source &rarr;</a>
                         )}
                         <button onClick={(e) => { e.stopPropagation(); router.push('/discover'); }} style={{
-                          padding: '8px 16px', borderRadius: 100, border: '1.5px solid #ede8df',
+                          padding: '8px 16px', borderRadius: 100, border: '1.5px solid rgba(28,24,20,0.08)',
                           background: 'transparent', color: '#1C1814', fontSize: 12, fontWeight: 600,
                           cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                         }}>Find Alternatives</button>

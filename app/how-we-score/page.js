@@ -26,7 +26,7 @@ const CAT_COLORS = {
 function CategoryDetail({ color, name, maxPts, type, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div style={{ borderBottom: '1px solid #ede8df' }}>
+    <div style={{ borderBottom: '1px solid rgba(28,24,20,0.08)' }}>
       <button onClick={() => setOpen(!open)} style={{
         width: '100%', display: 'flex', alignItems: 'center', gap: 12,
         padding: '18px 0', border: 'none', background: 'none', cursor: 'pointer',
@@ -35,7 +35,7 @@ function CategoryDetail({ color, name, maxPts, type, children, defaultOpen = fal
         <div style={{ width: 10, height: 10, borderRadius: '50%', background: color, flexShrink: 0 }} />
         <div style={{ flex: 1 }}>
           <span style={{ fontSize: 15, fontWeight: 600, color: '#1C1814' }}>{name}</span>
-          <span style={{ fontSize: 13, color: '#b5aa99', marginLeft: 8 }}>{maxPts} pts</span>
+          <span style={{ fontSize: 13, color: 'rgba(28,24,20,0.40)', marginLeft: 8 }}>{maxPts} pts</span>
         </div>
         <span style={{
           fontSize: 11, fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase',
@@ -43,7 +43,7 @@ function CategoryDetail({ color, name, maxPts, type, children, defaultOpen = fal
           padding: '3px 10px', borderRadius: 100,
           background: type === 'Nutrition' ? '#e8f5ee' : '#e1f5ee',
         }}>{type}</span>
-        <span style={{ fontSize: 14, color: '#b5aa99', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', marginLeft: 8 }}>▼</span>
+        <span style={{ fontSize: 14, color: 'rgba(28,24,20,0.40)', transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', marginLeft: 8 }}>▼</span>
       </button>
       {open && (
         <div style={{ padding: '0 0 28px 22px', animation: 'fadeIn 0.2s ease' }}>
@@ -62,7 +62,7 @@ function ThresholdTable({ headers, rows }) {
         <thead>
           <tr>
             {headers.map((h, i) => (
-              <th key={i} style={{ textAlign: 'left', padding: '8px 12px', borderBottom: '2px solid #ede8df', color: '#8a7e72', fontWeight: 600, fontSize: 11, letterSpacing: 1, textTransform: 'uppercase' }}>{h}</th>
+              <th key={i} style={{ textAlign: 'left', padding: '8px 12px', borderBottom: '2px solid rgba(28,24,20,0.08)', color: 'rgba(28,24,20,0.60)', fontWeight: 600, fontSize: 11, letterSpacing: 1, textTransform: 'uppercase' }}>{h}</th>
             ))}
           </tr>
         </thead>
@@ -82,7 +82,7 @@ function ThresholdTable({ headers, rows }) {
 
 /* ── Citation text ── */
 function Citations({ text }) {
-  return <p style={{ fontSize: 11, color: '#b5aa99', fontStyle: 'italic', marginTop: 12, lineHeight: 1.5 }}>{text}</p>;
+  return <p style={{ fontSize: 11, color: 'rgba(28,24,20,0.40)', fontStyle: 'italic', marginTop: 12, lineHeight: 1.5 }}>{text}</p>;
 }
 
 /* ── Paragraph helper ── */
@@ -101,7 +101,7 @@ function GlanceBar({ label, pts, max, color }) {
           <span style={{ fontSize: 11, fontWeight: 600, color: '#fff', fontFamily: "'Inter', sans-serif" }}>{pts}</span>
         </div>
       </div>
-      <div style={{ fontSize: 11, color: '#b5aa99', fontFamily: "'Inter', sans-serif", minWidth: 28, textAlign: 'right' }}>/{max}</div>
+      <div style={{ fontSize: 11, color: 'rgba(28,24,20,0.40)', fontFamily: "'Inter', sans-serif", minWidth: 28, textAlign: 'right' }}>/{max}</div>
     </div>
   );
 }
@@ -122,7 +122,7 @@ export default function HowWeScorePage() {
       {/* Nav */}
       <nav className="nav-bar" style={{
         padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid #ede8df', background: '#faf8f5',
+        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#faf8f5',
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
@@ -142,7 +142,7 @@ export default function HowWeScorePage() {
 
         {/* ─── Section 1: Hero ─── */}
         <div style={{ marginBottom: 56, animation: 'fadeUp 0.5s ease' }}>
-          <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Methodology</div>
+          <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)', marginBottom: 12 }}>Methodology</div>
           <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif",
             fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: '#1C1814',
@@ -153,7 +153,7 @@ export default function HowWeScorePage() {
           </p>
           <span style={{
             display: 'inline-block', padding: '5px 14px', borderRadius: 100,
-            background: '#f0ebe3', fontSize: 12, color: '#8a7e72', fontWeight: 500,
+            background: '#f0ebe3', fontSize: 12, color: 'rgba(28,24,20,0.60)', fontWeight: 500,
             fontFamily: "'Inter', sans-serif",
           }}>Methodology v1.5 · Last updated April 2026</span>
         </div>
@@ -170,16 +170,16 @@ export default function HowWeScorePage() {
               { n: '04', title: 'Fully transparent', desc: 'This page explains every factor, every threshold, every citation. Nothing is hidden or proprietary.' },
             ].map((p) => (
               <div key={p.n} style={{
-                padding: '24px', borderRadius: 20, border: '1px solid #ede8df', background: '#fff',
+                padding: '24px', borderRadius: 20, border: '1px solid rgba(28,24,20,0.08)', background: '#fff',
               }}>
                 <div style={{
                   width: 32, height: 32, borderRadius: '50%', background: '#f0ebe3',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 12, fontWeight: 700, color: '#8a7e72', marginBottom: 12,
+                  fontSize: 12, fontWeight: 700, color: 'rgba(28,24,20,0.60)', marginBottom: 12,
                   fontFamily: "'Inter', sans-serif",
                 }}>{p.n}</div>
                 <div style={{ fontSize: 15, fontWeight: 600, color: '#1C1814', marginBottom: 6 }}>{p.title}</div>
-                <div style={{ fontSize: 13, color: '#8a7e72', lineHeight: 1.5 }}>{p.desc}</div>
+                <div style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', lineHeight: 1.5 }}>{p.desc}</div>
               </div>
             ))}
           </div>
@@ -205,49 +205,49 @@ export default function HowWeScorePage() {
               </p>
             </div>
           </div>
-          <p style={{ fontSize: 13, color: '#8a7e72', lineHeight: 1.6, marginTop: 16 }}>
+          <p style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', lineHeight: 1.6, marginTop: 16 }}>
             When we state a fact, it is cited. When we make a scoring decision, we say so. The scoring brackets should be interpreted as a comparative ranking system, not clinical recommendations.
           </p>
         </div>
 
         {/* ─── Section 2b: Why Dry Matter Basis? ─── */}
-        <div style={{ marginBottom: 56, background: '#fff', borderRadius: 24, border: '1px solid #ede8df', padding: '36px 32px' }}>
+        <div style={{ marginBottom: 56, background: '#fff', borderRadius: 24, border: '1px solid rgba(28,24,20,0.08)', padding: '36px 32px' }}>
           <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1C1814', marginBottom: 8, textAlign: 'center' }}>Why Dry Matter Basis?</h2>
-          <p style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.6, marginBottom: 32, textAlign: 'center', maxWidth: 560, margin: '0 auto 32px' }}>
+          <p style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', lineHeight: 1.6, marginBottom: 32, textAlign: 'center', maxWidth: 560, margin: '0 auto 32px' }}>
             The guaranteed analysis on the bag includes moisture. We remove it so you see the real nutrition.
           </p>
 
           {/* Flow boxes */}
           <div className="dmb-flow" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 24 }}>
             {/* Box 1 — Label says */}
-            <div style={{ flex: '1 1 0', maxWidth: 200, background: '#f5f2ec', border: '1px solid #ede8df', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 8 }}>Label says</div>
-              <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 900, color: '#8a7e72', lineHeight: 1 }}>26%</div>
-              <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>protein</div>
+            <div style={{ flex: '1 1 0', maxWidth: 200, background: '#f5f2ec', border: '1px solid rgba(28,24,20,0.08)', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: 'rgba(28,24,20,0.60)', marginBottom: 8 }}>Label says</div>
+              <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 900, color: 'rgba(28,24,20,0.60)', lineHeight: 1 }}>26%</div>
+              <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', marginTop: 6 }}>protein</div>
             </div>
 
-            <span className="dmb-arrow" style={{ fontSize: 20, color: '#b5aa99', flexShrink: 0 }}>&rarr;</span>
+            <span className="dmb-arrow" style={{ fontSize: 20, color: 'rgba(28,24,20,0.40)', flexShrink: 0 }}>&rarr;</span>
 
             {/* Box 2 — Remove moisture */}
             <div style={{ flex: '1 1 0', maxWidth: 200, background: '#e8f1fb', border: '1px solid #c4d9f0', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#378ADD', marginBottom: 8 }}>Remove moisture</div>
               <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 900, color: '#378ADD', lineHeight: 1 }}>10%</div>
-              <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>water content</div>
+              <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', marginTop: 6 }}>water content</div>
             </div>
 
-            <span className="dmb-arrow" style={{ fontSize: 20, color: '#b5aa99', flexShrink: 0 }}>&rarr;</span>
+            <span className="dmb-arrow" style={{ fontSize: 20, color: 'rgba(28,24,20,0.40)', flexShrink: 0 }}>&rarr;</span>
 
             {/* Box 3 — Real nutrition */}
             <div style={{ flex: '1 1 0', maxWidth: 200, background: '#eef5e4', border: '1px solid #c8e0a8', borderRadius: 16, padding: '20px 24px', textAlign: 'center' }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#639922', marginBottom: 8 }}>Real nutrition</div>
               <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 900, color: '#639922', lineHeight: 1 }}>28.9%</div>
-              <div style={{ fontSize: 12, color: '#8a7e72', marginTop: 6 }}>DMB protein</div>
+              <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', marginTop: 6 }}>DMB protein</div>
             </div>
           </div>
 
           {/* Equation bar */}
           <div style={{ background: '#f5f2ec', borderRadius: 12, padding: '16px 20px', textAlign: 'center', fontSize: 16, fontWeight: 600, color: '#3d352b' }}>
-            26% protein <span style={{ color: '#b5aa99' }}>&divide;</span> (100% <span style={{ color: '#b5aa99' }}>&minus;</span> 10% moisture) <span style={{ color: '#b5aa99' }}>=</span>{' '}
+            26% protein <span style={{ color: 'rgba(28,24,20,0.40)' }}>&divide;</span> (100% <span style={{ color: 'rgba(28,24,20,0.40)' }}>&minus;</span> 10% moisture) <span style={{ color: 'rgba(28,24,20,0.40)' }}>=</span>{' '}
             <span style={{ color: '#639922', fontWeight: 800, fontSize: 18 }}>28.9% DMB</span>
           </div>
 
@@ -263,30 +263,30 @@ export default function HowWeScorePage() {
         {/* ─── Section 3: Score at a Glance ─── */}
         <div style={{ marginBottom: 56 }}>
           <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1C1814', marginBottom: 8 }}>The score at a glance</h2>
-          <p style={{ fontSize: 14, color: '#8a7e72', lineHeight: 1.6, marginBottom: 24 }}>
+          <p style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', lineHeight: 1.6, marginBottom: 24 }}>
             Every dry kibble is scored 0–100 across eight categories. The first four measure nutritional content from the guaranteed analysis. The last four evaluate ingredient quality from the ingredient list.
           </p>
-          <div style={{ padding: '28px 32px', background: '#fff', borderRadius: 20, border: '1px solid #ede8df' }}>
-            <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Nutrition</div>
+          <div style={{ padding: '28px 32px', background: '#fff', borderRadius: 20, border: '1px solid rgba(28,24,20,0.08)' }}>
+            <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)', marginBottom: 12 }}>Nutrition</div>
             <GlanceBar label="Protein" pts={25} max={25} color={CAT_COLORS.protein} />
             <GlanceBar label="Fat" pts={15} max={15} color={CAT_COLORS.fat} />
             <GlanceBar label="Carb level" pts={5} max={5} color={CAT_COLORS.carbs} />
             <GlanceBar label="Carb source quality" pts={5} max={5} color={CAT_COLORS.carbs} />
             <GlanceBar label="Fiber" pts={5} max={5} color={CAT_COLORS.fiber} />
-            <div style={{ height: 1, background: '#ede8df', margin: '16px 0' }} />
-            <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Ingredients</div>
+            <div style={{ height: 1, background: 'rgba(28,24,20,0.08)', margin: '16px 0' }} />
+            <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)', marginBottom: 12 }}>Ingredients</div>
             <GlanceBar label="Protein sources" pts={20} max={20} color={CAT_COLORS.teal} />
             <GlanceBar label="Preservatives" pts={10} max={10} color={CAT_COLORS.teal} />
             <GlanceBar label="Additives" pts={5} max={5} color={CAT_COLORS.teal} />
             <GlanceBar label="Functional" pts={10} max={10} color={CAT_COLORS.teal} />
-            <div style={{ textAlign: 'right', fontSize: 12, color: '#8a7e72', marginTop: 12, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}>Total: 100 points</div>
+            <div style={{ textAlign: 'right', fontSize: 12, color: 'rgba(28,24,20,0.60)', marginTop: 12, fontFamily: "'Inter', sans-serif", fontWeight: 500 }}>Total: 100 points</div>
           </div>
         </div>
 
         {/* ─── Section 4: What the Scores Mean ─── */}
         <div style={{ marginBottom: 56 }}>
           <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1C1814', marginBottom: 8 }}>What the scores mean</h2>
-          <div style={{ padding: '24px 28px', background: '#fff', borderRadius: 20, border: '1px solid #ede8df', marginTop: 16 }}>
+          <div style={{ padding: '24px 28px', background: '#fff', borderRadius: 20, border: '1px solid rgba(28,24,20,0.08)', marginTop: 16 }}>
             {[
               { range: '90–100', label: 'Excellent', color: TIER_COLORS.excellent, desc: 'Exceeds standards across all categories' },
               { range: '80–89', label: 'Great', color: TIER_COLORS.great, desc: 'Strong profile with minor gaps' },
@@ -300,7 +300,7 @@ export default function HowWeScorePage() {
               }}>
                 <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: tier.color, minWidth: 60 }}>{tier.range}</div>
                 <div style={{ fontWeight: 600, fontSize: 14, color: tier.color, minWidth: 110 }}>{tier.label}</div>
-                <div style={{ fontSize: 13, color: '#8a7e72', flex: 1 }}>{tier.desc}</div>
+                <div style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', flex: 1 }}>{tier.desc}</div>
               </div>
             ))}
           </div>
@@ -309,9 +309,9 @@ export default function HowWeScorePage() {
         {/* ─── Section 5: Category Details ─── */}
         <div style={{ marginBottom: 56 }}>
           <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1C1814', marginBottom: 8 }}>Category details</h2>
-          <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20 }}>Click any category to see the exact thresholds and the science behind them.</p>
+          <p style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', marginBottom: 20 }}>Click any category to see the exact thresholds and the science behind them.</p>
 
-          <div style={{ background: '#fff', borderRadius: 20, border: '1px solid #ede8df', padding: '0 28px' }}>
+          <div style={{ background: '#fff', borderRadius: 20, border: '1px solid rgba(28,24,20,0.08)', padding: '0 28px' }}>
 
             {/* A — Protein */}
             <CategoryDetail color={CAT_COLORS.protein} name="Protein" maxPts={25} type="Nutrition">
@@ -343,7 +343,7 @@ export default function HowWeScorePage() {
               <P>What the science does NOT establish: an optimal fat percentage, a &quot;safe upper limit,&quot; or an evidence-based fat-to-protein ratio for healthy adult dogs.</P>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8A415', margin: '16px 0 8px' }}>How we score (design choices)</div>
               <P>Fat is scored in two parts: absolute level and fat-to-protein ratio. All thresholds are design choices. The 20% upper boundary for full points reflects that high-protein kibbles using whole-animal ingredients typically contain 16–20% fat as a natural compositional consequence.</P>
-              <div style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', marginTop: 8, marginBottom: 4 }}>Fat level (8 points)</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(28,24,20,0.60)', marginTop: 8, marginBottom: 4 }}>Fat level (8 points)</div>
               <ThresholdTable
                 headers={['Range (DMB)', 'Points']}
                 rows={[
@@ -355,7 +355,7 @@ export default function HowWeScorePage() {
                   ['Below 5.5%', '0'],
                 ]}
               />
-              <div style={{ fontSize: 12, fontWeight: 600, color: '#8a7e72', marginTop: 8, marginBottom: 4 }}>Fat-to-protein ratio (7 points)</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'rgba(28,24,20,0.60)', marginTop: 8, marginBottom: 4 }}>Fat-to-protein ratio (7 points)</div>
               <ThresholdTable
                 headers={['Ratio', 'Points']}
                 rows={[
@@ -385,7 +385,7 @@ export default function HowWeScorePage() {
                   ['55%+', '1'],
                 ]}
               />
-              <div style={{ padding: '10px 14px', borderRadius: 10, background: '#faf8f5', fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginTop: 8 }}>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: '#faf8f5', fontSize: 12, color: 'rgba(28,24,20,0.60)', lineHeight: 1.5, marginTop: 8 }}>
                 <strong>Note:</strong> Carbohydrate is calculated as: 100 − protein − fat − fiber − ash (all dry matter basis). When ash is not provided, we use a sliding default: 7% for products under 30% protein DMB, 8% for 30–39.9%, 9% for 40%+.
               </div>
               <Citations text="NRC, 2006 (Ch. 3); Li et al., 2017, mBio, 8(1):e01703-16" />
@@ -409,7 +409,7 @@ export default function HowWeScorePage() {
                   ['Tier 3 — All refined', 'Multiple refined carb sources, no low-GI present', '1'],
                 ]}
               />
-              <div style={{ padding: '10px 14px', borderRadius: 10, background: '#faf8f5', fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginTop: 8 }}>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: '#faf8f5', fontSize: 12, color: 'rgba(28,24,20,0.60)', lineHeight: 1.5, marginTop: 8 }}>
                 <strong>Note on DCM:</strong> This scoring is source-quality-neutral on the grain vs grain-free debate. Oatmeal and barley (grains) score Tier 1 equally with peas and lentils (pulses). The algorithm rewards glycemic profile quality, not grain-free status.
               </div>
               <Citations text="Carciofi et al., 2008, JAPN, 92(3):326-336; Adolphe et al., 2012, Nutrition Research, 32:278-284; Adolphe et al., 2015, JAPN, 99:767-776; Vastolo et al., 2023, Frontiers in Vet Sci, 10:1201611; Rankovic et al., 2020, J Animal Science (PMC7455921); Domingues et al., 2023, Animal Feed Science & Technology" />
@@ -523,7 +523,7 @@ export default function HowWeScorePage() {
                   ['Maximum', '10 pts', ''],
                 ]}
               />
-              <div style={{ padding: '10px 14px', borderRadius: 10, background: '#faf8f5', fontSize: 12, color: '#8a7e72', lineHeight: 1.5, marginTop: 8 }}>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: '#faf8f5', fontSize: 12, color: 'rgba(28,24,20,0.60)', lineHeight: 1.5, marginTop: 8 }}>
                 <strong>Note on copper:</strong> Chelated copper is included in the mineral scoring. However, certain breeds (Labrador Retrievers, Doberman Pinschers, Bedlington Terriers) are predisposed to Copper Storage Hepatopathy. Owners of these breeds should consult their veterinarian about dietary copper.
               </div>
               <Citations text="Schmitz & Suchodolski, 2016; Bauer, 2011, JAVMA; McCarthy et al., 2007, Veterinary Record; Wedekind et al., 2010" />
@@ -534,7 +534,7 @@ export default function HowWeScorePage() {
         {/* ─── Section 6: Limitations ─── */}
         <div style={{ marginBottom: 56 }}>
           <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1C1814', marginBottom: 8 }}>What this score doesn&apos;t tell you</h2>
-          <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20 }}>Being honest about our limitations is part of being trustworthy.</p>
+          <p style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', marginBottom: 20 }}>Being honest about our limitations is part of being trustworthy.</p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {[
@@ -554,7 +554,7 @@ export default function HowWeScorePage() {
                 }}>✕</div>
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: '#1C1814', marginBottom: 2 }}>{item.title}</div>
-                  <div style={{ fontSize: 13, color: '#8a7e72', lineHeight: 1.5 }}>{item.desc}</div>
+                  <div style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', lineHeight: 1.5 }}>{item.desc}</div>
                 </div>
               </div>
             ))}
@@ -568,8 +568,8 @@ export default function HowWeScorePage() {
           <P>Every scoring threshold is reviewed when relevant new peer-reviewed research is published. When we update the methodology, every product in our database is rescored under the new version so all scores remain directly comparable. Previous versions are archived and documented below.</P>
           <P>We are actively working with veterinary nutrition professionals to review and strengthen this methodology. If you are a veterinary professional and would like to provide feedback, we welcome your input.</P>
 
-          <div style={{ marginTop: 20, padding: '20px 24px', background: '#fff', borderRadius: 16, border: '1px solid #ede8df' }}>
-            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#b5aa99', marginBottom: 12 }}>Version history</div>
+          <div style={{ marginTop: 20, padding: '20px 24px', background: '#fff', borderRadius: 16, border: '1px solid rgba(28,24,20,0.08)' }}>
+            <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(28,24,20,0.40)', marginBottom: 12 }}>Version history</div>
             {[
               { v: 'v1.5 (current)', desc: 'Category C restructured: 15→10 pts, split into C1 (Level, 5 pts) + C2 (Source Quality, 5 pts). C2 tiers carb sources by published canine glycemic index data from 6 peer-reviewed studies. Category E expanded: 15→20 pts backed by DIAAS research. Organ meats reclassified as animal proteins. Position-dependent byproduct scoring. Category H: after-salt functional ingredients now receive partial credit (~60%) instead of zero.' },
               { v: 'v1.4', desc: 'Separated verified facts (Layer 1) from scoring design (Layer 2). Removed Kealy (2002). Corrected Carciofi and Xenoulis journal references. Added Templeman & Shoveller (2022) and Sieja/Oba (2023) to protein sources.' },
@@ -580,7 +580,7 @@ export default function HowWeScorePage() {
             ].map((ver, i) => (
               <div key={i} style={{ display: 'flex', gap: 12, padding: '6px 0', borderBottom: i < 5 ? '1px solid #f0ebe3' : 'none' }}>
                 <div style={{ fontSize: 12, fontWeight: 600, color: '#1C1814', minWidth: 100, fontFamily: "'Inter', sans-serif" }}>{ver.v}</div>
-                <div style={{ fontSize: 12, color: '#8a7e72' }}>{ver.desc}</div>
+                <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)' }}>{ver.desc}</div>
               </div>
             ))}
           </div>
@@ -589,7 +589,7 @@ export default function HowWeScorePage() {
         {/* ─── Section 9: References ─── */}
         <div style={{ marginBottom: 40 }}>
           <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 700, color: '#1C1814', marginBottom: 16 }}>References</h2>
-          <div style={{ fontSize: 12, color: '#8a7e72', lineHeight: 1.8 }}>
+          <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', lineHeight: 1.8 }}>
             <ol style={{ paddingLeft: 20, margin: 0 }}>
               <li>AAFCO (2016). <em>Dog Food Nutrient Profiles.</em></li>
               <li>National Research Council (2006). <em>Nutrient Requirements of Dogs and Cats.</em> National Academies Press.</li>
@@ -619,17 +619,17 @@ export default function HowWeScorePage() {
 
       {/* Footer */}
       <div className="footer-bar" style={{
-        borderTop: '1px solid #ede8df', padding: '32px 40px',
+        borderTop: '1px solid rgba(28,24,20,0.08)', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
         <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
           Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
-          <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>
-          <a href="/privacy" style={{ color: '#b5aa99', textDecoration: 'none' }}>Privacy</a>
-          <a href="/recalls" style={{ color: '#b5aa99', textDecoration: 'none' }}>Recalls</a>
-          <a href="/faq" style={{ color: '#b5aa99', textDecoration: 'none' }}>FAQ</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: 'rgba(28,24,20,0.40)', flexWrap: 'wrap' }}>
+          <a href="/terms" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Terms</a>
+          <a href="/privacy" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Privacy</a>
+          <a href="/recalls" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>Recalls</a>
+          <a href="/faq" style={{ color: 'rgba(28,24,20,0.40)', textDecoration: 'none' }}>FAQ</a>
           <span>© 2026 GoodKibble. Not affiliated with any dog food brand.</span>
         </div>
       </div>
