@@ -1050,9 +1050,9 @@ export default function FoodPageContent({ productId }) {
                     <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: 'rgba(28,24,20,0.60)', lineHeight: 1.1 }}>{neutral}</div>
                     <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: 'rgba(28,24,20,0.60)', marginTop: 2 }}>Neutral</div>
                   </div>
-                  <div style={{ flex: 1, background: '#fdf0e0', borderRadius: 10, padding: '12px 10px', textAlign: 'center' }}>
-                    <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#d4760a', lineHeight: 1.1 }}>{caution}</div>
-                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: '#d4760a', marginTop: 2 }}>Caution</div>
+                  <div style={{ flex: 1, background: 'var(--color-sand)', borderRadius: 10, padding: '12px 10px', textAlign: 'center' }}>
+                    <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: 'var(--color-brick)', lineHeight: 1.1 }}>{caution}</div>
+                    <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--color-brick)', marginTop: 2 }}>Caution</div>
                   </div>
                 </div>
               );
@@ -1071,7 +1071,6 @@ export default function FoodPageContent({ productId }) {
                 let bgColor = '#fff';
                 if (isSalt) bgColor = '#C8941F';
                 else if (isFirst) bgColor = '#1C1814';
-                else if (i < 5) bgColor = '#f5f0e8';
 
                 let textColor = '#3d352b';
                 if (isSalt) textColor = '#1C1814';
@@ -1159,9 +1158,10 @@ export default function FoodPageContent({ productId }) {
                       <span style={{ width: 6, height: 6, borderRadius: '50%', background: dotColor, flexShrink: 0 }} />
                     )}
                     {ing}
-                    {hasTooltip && (
+                    {(hasTooltip || isSalt) && (
                       <span style={{
-                        fontSize: 11, color: isFirst ? 'rgba(250,248,245,0.5)' : 'rgba(28,24,20,0.40)',
+                        fontSize: 11,
+                        color: isFirst ? 'rgba(250,248,245,0.5)' : isSalt ? 'rgba(28,24,20,0.50)' : 'rgba(28,24,20,0.40)',
                         lineHeight: 1, marginLeft: 2,
                       }}>ⓘ</span>
                     )}
