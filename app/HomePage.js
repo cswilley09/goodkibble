@@ -85,7 +85,13 @@ function MarqueeCard({ p, onClick }) {
       </div>
       <div style={{ padding: 'var(--space-8) var(--space-4) var(--space-4)', textAlign: 'center' }}>
         <div className="t-micro" style={{ color: 'var(--color-ink-60)', marginBottom: 'var(--space-1)' }}>{p.brand}</div>
-        <div className="t-display-sm" style={{ color: 'var(--color-ink)', marginBottom: 'var(--space-1)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
+        <div className="t-display-sm" style={{
+          color: 'var(--color-ink)', marginBottom: 'var(--space-1)',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+        }}>{p.name}</div>
         {p.primary_protein && (
           <div className="t-body-sm" style={{ color: 'var(--color-ink-60)', marginBottom: 'var(--space-3)' }}>
             Primary Protein: {p.primary_protein}
@@ -104,8 +110,7 @@ function MarqueeCard({ p, onClick }) {
           )}
           {p.carbs_dmb != null && (
             <span className="t-micro" style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)', color: 'var(--color-ink-60)', background: 'var(--color-sand)', borderRadius: 'var(--radius-pill)', padding: '4px 8px' }}>
-              {/* TODO: token — carbs/fiber data-viz colors are not yet in the token system */}
-              <span style={{ width: 6, height: 6, borderRadius: 'var(--radius-pill)', background: '#378ADD', flexShrink: 0 }} />{(Math.round(p.carbs_dmb * 10) / 10)}%
+              <span style={{ width: 6, height: 6, borderRadius: 'var(--radius-pill)', background: 'var(--color-ink-60)', flexShrink: 0 }} />{(Math.round(p.carbs_dmb * 10) / 10)}%
             </span>
           )}
         </div>
@@ -209,7 +214,8 @@ function WhyStrip() {
 const DEMO_CATS = [
   { key: 'A_protein',         name: 'Protein',         max: 25, color: 'var(--color-score-good)' },
   { key: 'B_fat',              name: 'Fat',             max: 15, color: 'var(--color-marigold)' },
-  { key: 'C_carbs',            name: 'Carbohydrates',   max: 15, color: '#378ADD' },
+  { key: 'C_carbs',            name: 'Carbohydrates',   max: 15, color: 'var(--color-ink-60)' },
+  // TODO: token — fiber data-viz color (purple) is not yet in the token system
   { key: 'D_fiber',            name: 'Fiber',           max: 5,  color: '#7F77DD' },
   { key: 'E_protein_source',   name: 'Protein Sources', max: 15, color: 'var(--color-marigold)' },
   { key: 'F_preservatives',    name: 'Preservatives',   max: 10, color: 'var(--color-marigold)' },
@@ -571,7 +577,7 @@ export default function Home({ marqueeData = [] }) {
 
       {/* ═══ 1. HERO ═══ */}
       <section className="hero-section gk-container" style={{ paddingTop: 'var(--space-12)', paddingBottom: 'var(--space-16)', position: 'relative', zIndex: 30 }}>
-        <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 'var(--space-12)', alignItems: 'center' }}>
+        <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 'var(--space-12)', alignItems: 'center' }}>
           {/* Left: text + search */}
           <div className="hero-text">
             <div className="t-eyebrow" style={{
