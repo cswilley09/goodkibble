@@ -59,7 +59,7 @@ export default async function BestDogFoodPage() {
       <BestOfPageContent
         title="Best Dog Food in 2026"
         subtitle="Ranked by our scoring methodology across 1,000+ products"
-        intro={<>Every food in our database is scored 0-100 across eight categories including protein content, fat ratios, ingredient sourcing, preservative safety, and functional ingredients like omega-3s and probiotics. These are the 10 highest-scoring dry kibbles. <a href="/how-we-score" style={{ color: '#1a1612', textDecoration: 'underline', textUnderlineOffset: 3 }}>Read our full methodology</a>.</>}
+        intro={<>Every food in our database is scored 0-100 across eight categories including protein content, fat ratios, ingredient sourcing, preservative safety, and functional ingredients like omega-3s and probiotics. These are the 10 highest-scoring dry kibbles. <a href="/how-we-score" style={{ color: '#1C1814', textDecoration: 'underline', textUnderlineOffset: 3 }}>Read our full methodology</a>.</>}
         products={products}
         currentPath="/best/dog-food"
         totalAnalyzed="1,000+"

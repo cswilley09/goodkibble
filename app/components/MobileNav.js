@@ -85,7 +85,7 @@ export default function MobileNav() {
       {/* ─── Sticky top bar ─── */}
       <header className="gk-mobilenav" style={{
         position: 'sticky', top: 0, zIndex: 50,
-        background: '#faf8f4',
+        background: '#F4EFE4',
         padding: '12px 16px',
         display: 'none', /* shown via media query below */
         justifyContent: 'space-between', alignItems: 'center',
@@ -95,22 +95,22 @@ export default function MobileNav() {
         {/* Logo */}
         <Link href="/" style={{
           fontFamily: "'Instrument Serif', Georgia, serif",
-          fontSize: 24, fontWeight: 800, color: '#1a1612',
+          fontSize: 24, fontWeight: 800, color: '#1C1814',
           letterSpacing: -0.3, textDecoration: 'none',
         }}>
-          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
+          Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </Link>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {/* Avatar */}
           <Link href={avatarHref} aria-label={isLoggedIn ? 'Account' : 'Sign up'} style={{
             width: 36, height: 36, borderRadius: '50%',
-            background: '#C68A1B', color: '#fff',
+            background: '#C8941F', color: '#fff',
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 14, fontWeight: 700, textDecoration: 'none',
             fontFamily: "'Inter', sans-serif",
             position: 'relative', flexShrink: 0,
-            ...(isPro ? { boxShadow: '0 0 0 2px #C68A1B, 0 0 8px rgba(198,138,27,0.3)' } : {}),
+            ...(isPro ? { boxShadow: '0 0 0 2px #C8941F, 0 0 8px rgba(198,138,27,0.3)' } : {}),
           }}>
             {isLoggedIn && initial ? initial : (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round">
@@ -122,9 +122,9 @@ export default function MobileNav() {
               <span style={{
                 position: 'absolute', bottom: -2, right: -2,
                 width: 14, height: 14, borderRadius: '50%',
-                background: '#C68A1B', color: '#fff', fontSize: 8,
+                background: '#C8941F', color: '#fff', fontSize: 8,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                border: '2px solid #faf8f4',
+                border: '2px solid #F4EFE4',
               }}>★</span>
             )}
           </Link>
@@ -144,7 +144,7 @@ export default function MobileNav() {
               flexShrink: 0,
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1612" strokeWidth="2" strokeLinecap="round">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1C1814" strokeWidth="2" strokeLinecap="round">
               <line x1="4" y1="7" x2="20" y2="7" />
               <line x1="4" y1="12" x2="20" y2="12" />
               <line x1="4" y1="17" x2="20" y2="17" />
@@ -177,7 +177,7 @@ export default function MobileNav() {
         style={{
           position: 'fixed', top: 0, right: 0, height: '100vh', zIndex: 70,
           width: '85vw', maxWidth: 360,
-          background: '#faf8f4',
+          background: '#F4EFE4',
           display: 'flex', flexDirection: 'column',
           transform: open ? 'translateX(0)' : 'translateX(100%)',
           transition: 'transform 200ms ease',
@@ -200,7 +200,7 @@ export default function MobileNav() {
               background: 'transparent', border: 'none', cursor: 'pointer',
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1612" strokeWidth="2" strokeLinecap="round">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1C1814" strokeWidth="2" strokeLinecap="round">
               <line x1="6" y1="6" x2="18" y2="18" />
               <line x1="18" y1="6" x2="6" y2="18" />
             </svg>
@@ -222,7 +222,7 @@ export default function MobileNav() {
                 display: 'flex', alignItems: 'center',
                 minHeight: 56, padding: '0 24px',
                 fontFamily: "'Instrument Serif', Georgia, serif",
-                fontSize: 18, color: '#1a1612', textDecoration: 'none',
+                fontSize: 18, color: '#1C1814', textDecoration: 'none',
                 borderBottom: i < arr.length - 1 ? '0.5px solid rgba(26,22,18,0.08)' : 'none',
               }}
             >{it.label}</Link>
@@ -238,7 +238,7 @@ export default function MobileNav() {
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 width: '100%', minHeight: 48, padding: '0 24px',
-                background: '#C68A1B', color: '#1a1612',
+                background: '#C8941F', color: '#1C1814',
                 borderRadius: 100, textDecoration: 'none',
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 15, fontWeight: 700,

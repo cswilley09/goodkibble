@@ -33,8 +33,8 @@ export default function IngredientsIndexContent({ ingredients }) {
       }}>
         <div onClick={goHome} style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
-          color: '#1a1612', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
+          color: '#1C1814', cursor: 'pointer', flexShrink: 0,
+        }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
           <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
         </div>
@@ -54,7 +54,7 @@ export default function IngredientsIndexContent({ ingredients }) {
 
         <h1 className="page-title" style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 42px)',
-          fontWeight: 800, color: '#1a1612', marginBottom: 8,
+          fontWeight: 800, color: '#1C1814', marginBottom: 8,
         }}>Dog Food Ingredients</h1>
         <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 28, fontFamily: "'Inter', sans-serif" }}>
           {ingredients.length} ingredients explained — tap any ingredient to learn what it is and which products contain it.
@@ -64,7 +64,7 @@ export default function IngredientsIndexContent({ ingredients }) {
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 32 }}>
           <button onClick={() => setActiveCategory(null)} style={{
             padding: '8px 16px', borderRadius: 100, border: '1.5px solid #ede8df',
-            background: !activeCategory ? '#1a1612' : '#fff',
+            background: !activeCategory ? '#1C1814' : '#fff',
             color: !activeCategory ? '#faf8f5' : '#3d352b',
             fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter', sans-serif",
           }}>All ({ingredients.length})</button>
@@ -118,8 +118,8 @@ export default function IngredientsIndexContent({ ingredients }) {
         borderTop: '1px solid #ede8df', padding: '32px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612' }}>
-          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814' }}>
+          Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, color: '#b5aa99', flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#b5aa99', textDecoration: 'none' }}>Terms</a>

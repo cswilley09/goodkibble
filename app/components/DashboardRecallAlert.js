@@ -54,7 +54,7 @@ export default function DashboardRecallAlert({ dogName, currentFood, currentFood
           </div>
         </div>
         <div style={{ padding: 24 }}>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1612', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>{matchedRecall.brand_name} — {matchedRecall.product_description}</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#1C1814', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>{matchedRecall.brand_name} — {matchedRecall.product_description}</div>
           {matchedRecall.reason && matchedRecall.reason !== matchedRecall.product_description && (
             <div style={{ fontSize: 13, color: '#5a5248', lineHeight: 1.6, marginBottom: 12, fontFamily: "'Inter', sans-serif" }}>{matchedRecall.reason}</div>
           )}
@@ -74,7 +74,7 @@ export default function DashboardRecallAlert({ dogName, currentFood, currentFood
             )}
             <button onClick={() => router.push('/discover')} style={{
               padding: '10px 22px', borderRadius: 100, border: '1.5px solid #ede8df',
-              background: 'transparent', color: '#1a1612', fontSize: 13, fontWeight: 600,
+              background: 'transparent', color: '#1C1814', fontSize: 13, fontWeight: 600,
               cursor: 'pointer', fontFamily: "'Inter', sans-serif",
             }}>Find Alternatives</button>
           </div>
@@ -84,16 +84,16 @@ export default function DashboardRecallAlert({ dogName, currentFood, currentFood
       {/* Pro upgrade nudge (free users only) */}
       {!isPro && (
         <div style={{
-          background: 'linear-gradient(135deg, #1a1612, #2a2318)', borderRadius: 20,
+          background: 'linear-gradient(135deg, #1C1814, #2a2318)', borderRadius: 20,
           padding: 28, textAlign: 'center',
         }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#C68A1B', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>You found this recall by checking manually.</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#C8941F', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>You found this recall by checking manually.</div>
           <h3 style={{ fontFamily: "'Instrument Serif', serif", fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 8px' }}>What about the next one?</h3>
           <p style={{ fontSize: 13, color: '#8a7e72', maxWidth: 380, margin: '0 auto 16px', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>
             Pro members get instant email alerts when a recall affects their food. You&rsquo;ll know within hours &mdash; not days or weeks.
           </p>
           <button onClick={() => router.push('/pro')} style={{
-            padding: '12px 28px', borderRadius: 100, background: '#C68A1B', color: '#fff',
+            padding: '12px 28px', borderRadius: 100, background: '#C8941F', color: '#fff',
             fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
             fontFamily: "'Inter', sans-serif",
           }}>Get Recall Alerts &mdash; $29/year &rarr;</button>

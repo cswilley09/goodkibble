@@ -35,14 +35,14 @@ export default function ProSuccessPage() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
+    <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
       <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 24px', borderBottom: '1px solid #ede8df',
-        background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40,
+        background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
+          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1C1814', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
         <SignUpButton />
       </nav>
@@ -51,7 +51,7 @@ export default function ProSuccessPage() {
         <div style={{ fontSize: 48, marginBottom: 20 }}>{'\u{1F389}'}</div>
         <h1 className="page-title" style={{
           fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 5vw, 38px)',
-          fontWeight: 900, color: '#1a1612', margin: '0 0 12px', letterSpacing: -1,
+          fontWeight: 900, color: '#1C1814', margin: '0 0 12px', letterSpacing: -1,
         }}>Welcome to GoodKibble Pro!</h1>
         <p style={{
           fontFamily: "'Inter', sans-serif", fontSize: 16, color: '#8a7e72',
@@ -64,13 +64,13 @@ export default function ProSuccessPage() {
         }}>
           <div style={{
             fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700,
-            color: '#C68A1B', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16,
+            color: '#C8941F', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 16,
           }}>What you unlocked</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {unlocked.map(f => (
               <div key={f} style={{
                 display: 'flex', gap: 10, alignItems: 'center',
-                fontSize: 14, fontFamily: "'Inter', sans-serif", color: '#1a1612',
+                fontSize: 14, fontFamily: "'Inter', sans-serif", color: '#1C1814',
               }}>
                 <span style={{ color: '#639922', fontWeight: 700, flexShrink: 0 }}>{'\u2713'}</span>
                 {f}
@@ -81,12 +81,12 @@ export default function ProSuccessPage() {
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
           <button onClick={() => router.push('/profile')} style={{
-            padding: '14px 32px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
+            padding: '14px 32px', borderRadius: 100, background: '#1C1814', color: '#F4EFE4',
             fontSize: 16, fontWeight: 700, border: 'none', cursor: 'pointer',
             fontFamily: "'Inter', sans-serif",
           }}>Go to Dashboard &rarr;</button>
           <button onClick={() => router.push('/discover')} style={{
-            padding: '14px 32px', borderRadius: 100, background: 'transparent', color: '#1a1612',
+            padding: '14px 32px', borderRadius: 100, background: 'transparent', color: '#1C1814',
             fontSize: 16, fontWeight: 600, border: '1.5px solid #ede8df', cursor: 'pointer',
             fontFamily: "'Inter', sans-serif",
           }}>Browse Foods &rarr;</button>

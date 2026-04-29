@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 const ADMIN_PASSWORD = 'gk_admin_2026';
 const ADMIN_SECRET = 'gk_admin_2026';
 
-const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'Inter', sans-serif", color: '#1a1612', boxSizing: 'border-box' };
+const inputStyle = { width: '100%', padding: '10px 14px', borderRadius: 10, border: '1.5px solid #ede8df', fontSize: 14, background: '#fff', outline: 'none', fontFamily: "'Inter', sans-serif", color: '#1C1814', boxSizing: 'border-box' };
 
 export default function NewsQueuePage() {
   const [authed, setAuthed] = useState(false);
@@ -69,14 +69,14 @@ export default function NewsQueuePage() {
 
   if (!authed) {
     return (
-      <div style={{ minHeight: '100vh', background: '#faf8f4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ minHeight: '100vh', background: '#F4EFE4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ maxWidth: 360, width: '100%', padding: 24, textAlign: 'center' }}>
-          <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#1a1612', marginBottom: 24 }}>Good<span style={{ color: '#A32D2D' }}>Kibble</span> News Queue</div>
+          <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#1C1814', marginBottom: 24 }}>Good<span style={{ color: '#A32D2D' }}>Kibble</span> News Queue</div>
           <input type="password" value={password} onChange={e => setPassword(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && password === ADMIN_PASSWORD) setAuthed(true); else if (e.key === 'Enter') setAuthError('Wrong password'); }}
             placeholder="Admin password" style={inputStyle} />
           <button onClick={() => { if (password === ADMIN_PASSWORD) setAuthed(true); else setAuthError('Wrong password'); }}
-            style={{ width: '100%', padding: 12, borderRadius: 100, marginTop: 12, background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Enter</button>
+            style={{ width: '100%', padding: 12, borderRadius: 100, marginTop: 12, background: '#1C1814', color: '#F4EFE4', fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: "'Inter', sans-serif" }}>Enter</button>
           {authError && <p style={{ color: '#b5483a', fontSize: 13, marginTop: 8, fontFamily: "'Inter', sans-serif" }}>{authError}</p>}
         </div>
       </div>
@@ -96,22 +96,22 @@ export default function NewsQueuePage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
+    <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
       <div style={{ maxWidth: 800, margin: '0 auto', padding: '40px 24px 80px' }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
           <div>
-            <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', marginBottom: 4 }}>News Queue</div>
+            <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814', marginBottom: 4 }}>News Queue</div>
             <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#8a7e72', margin: 0 }}>Google News recall articles pending review</p>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <button onClick={triggerPoll} disabled={pollLoading} style={{
               padding: '8px 16px', borderRadius: 100, border: '1.5px solid #ede8df',
-              background: pollLoading ? '#f5f2ec' : '#fff', color: '#1a1612',
+              background: pollLoading ? '#f5f2ec' : '#fff', color: '#1C1814',
               fontSize: 13, fontWeight: 600, cursor: pollLoading ? 'default' : 'pointer',
               fontFamily: "'Inter', sans-serif",
             }}>{pollLoading ? 'Polling...' : 'Poll Now'}</button>
-            <a href="/admin/add-recall" style={{ fontSize: 12, color: '#C68A1B', fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Add Recall &rarr;</a>
+            <a href="/admin/add-recall" style={{ fontSize: 12, color: '#C8941F', fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter', sans-serif" }}>Add Recall &rarr;</a>
           </div>
         </div>
 
@@ -136,7 +136,7 @@ export default function NewsQueuePage() {
             <button key={t.key} onClick={() => setTab(t.key)} style={{
               flex: 1, padding: '12px 0', background: 'none', border: 'none',
               borderBottom: tab === t.key ? '2px solid #A32D2D' : '2px solid transparent',
-              color: tab === t.key ? '#1a1612' : '#b5aa99', fontSize: 14, fontWeight: tab === t.key ? 600 : 500,
+              color: tab === t.key ? '#1C1814' : '#b5aa99', fontSize: 14, fontWeight: tab === t.key ? 600 : 500,
               cursor: 'pointer', fontFamily: "'Inter', sans-serif",
             }}>{t.label}</button>
           ))}
@@ -167,7 +167,7 @@ export default function NewsQueuePage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <a href={item.source_url} target="_blank" rel="noopener noreferrer" style={{
-                  fontSize: 15, fontWeight: 600, color: '#1a1612', textDecoration: 'none', lineHeight: 1.4, display: 'block',
+                  fontSize: 15, fontWeight: 600, color: '#1C1814', textDecoration: 'none', lineHeight: 1.4, display: 'block',
                 }}>
                   {item.title}
                 </a>

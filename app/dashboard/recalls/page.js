@@ -6,14 +6,14 @@ import CompareBubble from '../../components/CompareBubble';
 
 export default function RecallDashboardPage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
+    <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
       <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 24px', borderBottom: '1px solid #ede8df',
-        background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40,
+        background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
+          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1C1814', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
@@ -33,7 +33,7 @@ export default function RecallDashboardPage() {
           }}>{'\u{1F6A8}'} LIVE MONITORING</div>
           <h1 className="page-title" style={{
             fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 4vw, 38px)',
-            fontWeight: 900, color: '#1a1612', margin: '0 0 10px', letterSpacing: -0.5,
+            fontWeight: 900, color: '#1C1814', margin: '0 0 10px', letterSpacing: -0.5,
           }}>Recall &amp; Safety Tracker</h1>
           <p style={{
             fontFamily: "'Inter', sans-serif", fontSize: 15, color: '#8a7e72',

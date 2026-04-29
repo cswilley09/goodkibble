@@ -37,7 +37,7 @@ export default function RecallTracker() {
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 24px', color: '#8a7e72', fontFamily: "'Inter', sans-serif", fontSize: 16 }}>
-        <div style={{ width: 32, height: 32, border: '3px solid #ede8df', borderTopColor: '#C68A1B', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
+        <div style={{ width: 32, height: 32, border: '3px solid #ede8df', borderTopColor: '#C8941F', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
         Loading recall data...
       </div>
     );
@@ -66,7 +66,7 @@ export default function RecallTracker() {
         marginBottom: 28,
       }}>
         {[
-          { label: 'Total Recalls', value: summary.totalRecalls || 0, color: '#1a1612' },
+          { label: 'Total Recalls', value: summary.totalRecalls || 0, color: '#1C1814' },
           { label: 'Class I (Serious)', value: summary.classIRecalls || 0, color: '#b5483a' },
           { label: 'Ingredient Changes', value: summary.totalIngredientChanges || 0, color: '#c47a20' },
         ].map(s => (
@@ -96,7 +96,7 @@ export default function RecallTracker() {
             placeholder="Filter by brand or product..."
             style={{
               flex: 1, border: 'none', outline: 'none', fontSize: 14, padding: '10px 12px',
-              background: 'transparent', color: '#1a1612',
+              background: 'transparent', color: '#1C1814',
               fontFamily: "'Inter', sans-serif", fontWeight: 500,
             }}
           />
@@ -119,7 +119,7 @@ export default function RecallTracker() {
           borderRadius: 16, border: '1px solid #ede8df',
         }}>
           <div style={{ fontSize: 36, opacity: 0.3, marginBottom: 12 }}>{'\u{1F6E1}\u{FE0F}'}</div>
-          <div style={{ fontSize: 16, fontWeight: 600, color: '#1a1612', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>
+          <div style={{ fontSize: 16, fontWeight: 600, color: '#1C1814', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>
             {search ? 'No recalls match your search' : 'No recalls found'}
           </div>
           <p style={{ fontSize: 13, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>
@@ -142,7 +142,7 @@ export default function RecallTracker() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 8 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
-                      fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, color: '#1a1612',
+                      fontFamily: "'Inter', sans-serif", fontSize: 16, fontWeight: 700, color: '#1C1814',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                     }}>
                       {recall.brand_name || 'Unknown Brand'}
@@ -180,7 +180,7 @@ export default function RecallTracker() {
                   </span>
                   {recall.source_url && (
                     <a href={recall.source_url} target="_blank" rel="noopener noreferrer" style={{
-                      fontSize: 11, fontWeight: 600, color: '#C68A1B',
+                      fontSize: 11, fontWeight: 600, color: '#C8941F',
                       textDecoration: 'none', fontFamily: "'Inter', sans-serif",
                     }}>View FDA Source &rarr;</a>
                   )}

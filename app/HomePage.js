@@ -11,11 +11,11 @@ import { useRouter } from 'next/navigation';
    HELPERS
    ═══════════════════════════════════════ */
 
+// 3-tier score → brand-palette color (good / mid / poor).
 function getScoreColor(score) {
-  if (score >= 90) return '#639922';
-  if (score >= 70) return '#7BAF2E';
-  if (score >= 50) return '#EF9F27';
-  return '#D97B2A';
+  if (score >= 80) return '#3F7A3D';
+  if (score >= 50) return '#C8941F';
+  return '#A8442A';
 }
 
 function getScoreTier(score) {
@@ -81,7 +81,7 @@ function MarqueeCard({ p, onClick }) {
       </div>
       <div style={{ padding: '28px 16px 18px', textAlign: 'center' }}>
         <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', color: '#8a7e72', marginBottom: 4, fontFamily: "'Inter', sans-serif" }}>{p.brand}</div>
-        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 14, fontWeight: 700, color: '#1a1612', lineHeight: 1.3, marginBottom: 6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 14, fontWeight: 700, color: '#1C1814', lineHeight: 1.3, marginBottom: 6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
         {p.primary_protein && (
           <div style={{ fontSize: 11, color: '#8a7e72', marginBottom: 10, fontFamily: "'Inter', sans-serif" }}>
             Primary Protein: {p.primary_protein}
@@ -90,17 +90,17 @@ function MarqueeCard({ p, onClick }) {
         <div style={{ display: 'flex', justifyContent: 'center', gap: 6, flexWrap: 'wrap' }}>
           {p.protein_dmb != null && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'Inter', sans-serif" }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#639922', flexShrink: 0 }} />{(Math.round(p.protein_dmb * 10) / 10)}%
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#3F7A3D', flexShrink: 0 }} />{(Math.round(p.protein_dmb * 10) / 10)}%
             </span>
           )}
           {p.fat_dmb != null && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'Inter', sans-serif" }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#EF9F27', flexShrink: 0 }} />{(Math.round(p.fat_dmb * 10) / 10)}%
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#C8941F', flexShrink: 0 }} />{(Math.round(p.fat_dmb * 10) / 10)}%
             </span>
           )}
           {p.carbs_dmb != null && (
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: '#5a5248', background: '#f5f2ec', borderRadius: 20, padding: '3px 8px', fontFamily: "'Inter', sans-serif" }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#378ADD', flexShrink: 0 }} />{(Math.round(p.carbs_dmb * 10) / 10)}%
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'rgba(28,24,20,0.60)', flexShrink: 0 }} />{(Math.round(p.carbs_dmb * 10) / 10)}%
             </span>
           )}
         </div>
@@ -125,11 +125,11 @@ function ProductMarquee({ onCardClick, products: initialProducts }) {
       padding: '72px 0 64px', overflow: 'hidden', position: 'relative',
     }}>
       <div className="marquee-heading" style={{ textAlign: 'center', marginBottom: 40, padding: '0 24px' }}>
-        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1a1612', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 8 }}>See how popular brands stack up</h2>
+        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1C1814', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 8 }}>See how popular brands stack up</h2>
         <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'Inter', sans-serif", maxWidth: 480, margin: '0 auto' }}>Every kibble scored 0–100 across nutrition and ingredient quality</p>
       </div>
-      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to right, #faf8f4, transparent)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to left, #faf8f4, transparent)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to right, #F4EFE4, transparent)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, background: 'linear-gradient(to left, #F4EFE4, transparent)', pointerEvents: 'none' }} />
       <div className="marquee-track" style={{ display: 'flex', gap: 20, width: 'max-content', animation: 'marquee 45s linear infinite' }}>
         {doubled.map((p, i) => <MarqueeCard key={`${p.id}-${i}`} p={p} onClick={onCardClick} />)}
       </div>
@@ -145,7 +145,7 @@ function WhyStrip() {
   const [ref, visible] = useFadeIn(0.2);
   return (
     <div ref={ref} className="why-section" style={{
-      background: 'linear-gradient(180deg, #1a1612 0%, #13100d 100%)',
+      background: 'linear-gradient(180deg, #1C1814 0%, #13100d 100%)',
       padding: '96px 24px 104px',
       position: 'relative',
       overflow: 'hidden',
@@ -162,19 +162,19 @@ function WhyStrip() {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase',
-            color: '#E5A93D', fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+            color: '#C8941F', fontFamily: 'ui-monospace, SFMono-Regular, monospace',
             marginBottom: 16,
           }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#E5A93D', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#C8941F', animation: 'heroDot 1.5s ease-in-out infinite' }} />
             Why GoodKibble
           </div>
           <h2 className="statement-h2" style={{
             fontFamily: "'Instrument Serif', Georgia, serif",
-            fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 400, color: '#faf8f4',
+            fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 400, color: '#F4EFE4',
             lineHeight: 1.05, letterSpacing: -0.5, margin: 0,
           }}>
             Built on data,{' '}
-            <em style={{ color: '#E5A93D', fontStyle: 'italic' }}>not marketing.</em>
+            <em style={{ color: '#C8941F', fontStyle: 'italic' }}>not marketing.</em>
           </h2>
         </div>
         <div className="why-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 48 }}>
@@ -193,7 +193,7 @@ function WhyStrip() {
               }}>{vp.icon}</div>
               <div style={{
                 fontFamily: "'Instrument Serif', Georgia, serif",
-                fontSize: 24, fontWeight: 400, color: '#faf8f4',
+                fontSize: 24, fontWeight: 400, color: '#F4EFE4',
                 lineHeight: 1.2, marginBottom: 10, letterSpacing: -0.3,
               }}>{vp.title}</div>
               <p style={{
@@ -213,14 +213,14 @@ function WhyStrip() {
    ═══════════════════════════════════════ */
 
 const DEMO_CATS = [
-  { key: 'A_protein', name: 'Protein', max: 25, color: '#639922' },
-  { key: 'B_fat', name: 'Fat', max: 15, color: '#EF9F27' },
-  { key: 'C_carbs', name: 'Carbohydrates', max: 15, color: '#378ADD' },
-  { key: 'D_fiber', name: 'Fiber', max: 5, color: '#7F77DD' },
-  { key: 'E_protein_source', name: 'Protein Sources', max: 15, color: '#C68A1B' },
-  { key: 'F_preservatives', name: 'Preservatives', max: 10, color: '#C68A1B' },
-  { key: 'G_additives', name: 'Additives', max: 5, color: '#C68A1B' },
-  { key: 'H_functional', name: 'Functional', max: 10, color: '#C68A1B' },
+  { key: 'A_protein',          name: 'Protein',         max: 25, color: '#3F7A3D' },
+  { key: 'B_fat',              name: 'Fat',             max: 15, color: '#C8941F' },
+  { key: 'C_carbs',            name: 'Carbohydrates',   max: 15, color: 'rgba(28,24,20,0.60)' },
+  { key: 'D_fiber',            name: 'Fiber',           max: 5,  color: 'rgba(28,24,20,0.40)' },
+  { key: 'E_protein_source',   name: 'Protein Sources', max: 15, color: '#C8941F' },
+  { key: 'F_preservatives',    name: 'Preservatives',   max: 10, color: '#C8941F' },
+  { key: 'G_additives',        name: 'Additives',       max: 5,  color: '#C8941F' },
+  { key: 'H_functional',       name: 'Functional',      max: 10, color: '#C8941F' },
 ];
 
 function AnimatedScore({ target, max, active, delay }) {
@@ -275,9 +275,9 @@ function ScoringDemo({ onNavigate }) {
   const cats = demoProduct?.score_breakdown?.categories;
 
   return (
-    <div ref={sectionRef} className="scoring-section" style={{ background: '#faf8f4', padding: '80px 24px' }}>
+    <div ref={sectionRef} className="scoring-section" style={{ background: '#F4EFE4', padding: '80px 24px' }}>
       <div style={{ maxWidth: 820, margin: '0 auto', opacity: demoProduct ? 1 : 0, transform: demoProduct ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 0.7s ease, transform 0.7s ease' }}>
-        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1a1612', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 10, textAlign: 'center' }}>
+        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1C1814', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 10, textAlign: 'center' }}>
           A score you can actually understand
         </h2>
         <p style={{ fontSize: 16, color: '#5a5248', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 44px', textAlign: 'center', fontFamily: "'Inter', sans-serif" }}>
@@ -294,7 +294,7 @@ function ScoringDemo({ onNavigate }) {
               return (
                 <div key={cat.key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: cat.color, flexShrink: 0 }} />
-                  <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif", width: 120, flexShrink: 0 }}>{cat.name}</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#1C1814', fontFamily: "'Inter', sans-serif", width: 120, flexShrink: 0 }}>{cat.name}</span>
                   <div style={{ flex: 1, height: 8, borderRadius: 100, background: '#ede8df', overflow: 'hidden' }}>
                     <div style={{
                       height: '100%', borderRadius: 100, background: cat.color,
@@ -335,10 +335,10 @@ function ScoringDemo({ onNavigate }) {
                     <path id="botArc" d="M 163,118 A 65,65 0 0,1 37,118" fill="none"/>
                   </defs>
                   <g filter="url(#stampWorn)" opacity="0.78">
-                    <circle cx="100" cy="100" r="93" fill="none" stroke="#C68A1B" strokeWidth="4.5"/>
-                    <circle cx="100" cy="100" r="81" fill="none" stroke="#C68A1B" strokeWidth="2"/>
-                    <circle cx="100" cy="100" r="87" fill="none" stroke="#C68A1B" strokeWidth="0.5" strokeDasharray="2,4" opacity="0.5"/>
-                    <g fill="#C68A1B" fontSize="7" textAnchor="middle" fontFamily="serif">
+                    <circle cx="100" cy="100" r="93" fill="none" stroke="#C8941F" strokeWidth="4.5"/>
+                    <circle cx="100" cy="100" r="81" fill="none" stroke="#C8941F" strokeWidth="2"/>
+                    <circle cx="100" cy="100" r="87" fill="none" stroke="#C8941F" strokeWidth="0.5" strokeDasharray="2,4" opacity="0.5"/>
+                    <g fill="#C8941F" fontSize="7" textAnchor="middle" fontFamily="serif">
                       <text x="100" y="14">★</text>
                       <text x="100" y="194">★</text>
                       <text x="9" y="104">★</text>
@@ -348,17 +348,17 @@ function ScoringDemo({ onNavigate }) {
                       <text x="27" y="174">★</text>
                       <text x="173" y="174">★</text>
                     </g>
-                    <text fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="8" fontWeight="700" letterSpacing="3.5" fill="#C68A1B" textAnchor="middle">
+                    <text fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="8" fontWeight="700" letterSpacing="3.5" fill="#C8941F" textAnchor="middle">
                       <textPath href="#topArc" startOffset="50%">GOODKIBBLE RATED</textPath>
                     </text>
-                    <text x="100" y="95" textAnchor="middle" fontFamily="Georgia, 'Instrument Serif', 'Times New Roman', serif" fontSize="52" fontWeight="bold" fill="#C68A1B" style={{ fontWeight: 900, letterSpacing: '-2px' }}>
+                    <text x="100" y="95" textAnchor="middle" fontFamily="Georgia, 'Instrument Serif', 'Times New Roman', serif" fontSize="52" fontWeight="bold" fill="#C8941F" style={{ fontWeight: 900, letterSpacing: '-2px' }}>
                       {demoProduct.quality_score}
                     </text>
-                    <rect x="18" y="100" width="164" height="24" rx="2" fill="#C68A1B"/>
-                    <text x="100" y="117" textAnchor="middle" fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="13" fontWeight="800" letterSpacing="5" fill="#FAF8F4">
+                    <rect x="18" y="100" width="164" height="24" rx="2" fill="#C8941F"/>
+                    <text x="100" y="117" textAnchor="middle" fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="13" fontWeight="800" letterSpacing="5" fill="#F4EFE4">
                       {getScoreTier(demoProduct.quality_score).toUpperCase()}
                     </text>
-                    <text fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="7.5" fontWeight="600" letterSpacing="2" fill="#C68A1B" opacity="0.85" textAnchor="middle">
+                    <text fontFamily="'Inter', Helvetica, Arial, sans-serif" fontSize="7.5" fontWeight="600" letterSpacing="2" fill="#C8941F" opacity="0.85" textAnchor="middle">
                       <textPath href="#botArc" startOffset="50%">★ CERTIFIED QUALITY ★</textPath>
                     </text>
                   </g>
@@ -378,11 +378,11 @@ function ScoringDemo({ onNavigate }) {
         <div style={{ textAlign: 'center' }}>
           <button onClick={() => onNavigate('/how-we-score')} style={{
             padding: '14px 32px', borderRadius: 100, border: 'none',
-            background: '#1a1612', color: '#faf8f4', fontSize: 15, fontWeight: 600,
+            background: '#1C1814', color: '#F4EFE4', fontSize: 15, fontWeight: 600,
             cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'background 0.2s',
           }}
             onMouseEnter={(e) => { e.target.style.background = '#3d352b'; }}
-            onMouseLeave={(e) => { e.target.style.background = '#1a1612'; }}
+            onMouseLeave={(e) => { e.target.style.background = '#1C1814'; }}
           >See full methodology →</button>
         </div>
       </div>
@@ -395,12 +395,12 @@ function ScoringDemo({ onNavigate }) {
    ═══════════════════════════════════════ */
 
 const PROTEIN_ICONS = {
-  Chicken: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="18" cy="17" rx="8" ry="10" stroke="#C68A1B" strokeWidth="1.5"/><path d="M10 15c-3 1-5 3-4 5s3 1 5 0" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M26 15c3 1 5 3 4 5s-3 1-5 0" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 26c-1 2-2 4-1 5" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M22 26c1 2 2 4 1 5" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M18 10v12" stroke="#C68A1B" strokeWidth="0.8" opacity="0.4" strokeLinecap="round"/></svg>,
-  Salmon: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 18c0 0 4-8 14-8s14 8 14 8-4 8-14 8S4 18 4 18z" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2-3 4-4 4-4s-1 5-2 6" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2 3 4 4 4 4s-1-5-2-6" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="10" cy="17.5" r="1.5" fill="#C68A1B"/><path d="M16 14c1 2 1 6 0 8" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><path d="M20 13c1 2.5 1 7 0 10" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><path d="M24 14.5c.8 1.5.8 5 0 7" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/></svg>,
-  Lamb: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="18" cy="18" rx="11" ry="8" stroke="#C68A1B" strokeWidth="1.5"/><path d="M10 12c1-2 3-2 4 0s3 2 4 0 3-2 4 0 3 2 4 0" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="28" cy="14" rx="4" ry="3.5" stroke="#C68A1B" strokeWidth="1.5"/><circle cx="29.5" cy="13.5" r="0.8" fill="#C68A1B"/><path d="M31 11.5c1.5-1 3-0.5 3 1" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M26 11c-1-1.5-0.5-3 1-3" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><line x1="12" y1="25" x2="12" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="16" y1="25.5" x2="16" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="25.5" x2="21" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="25" y1="25" x2="25" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/></svg>,
-  Beef: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="17" cy="18" rx="12" ry="7" stroke="#C68A1B" strokeWidth="1.5"/><ellipse cx="30" cy="14" rx="4" ry="3.5" stroke="#C68A1B" strokeWidth="1.5"/><path d="M27 16c1-.5 2-1.5 3-2" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M28 11c-.5-2-1.5-3-1-4" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M33 11.5c.5-2 1-3 .5-4" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M34 13c1.5 0 2-.5 1.5-1.5" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><circle cx="31" cy="13.5" r="0.8" fill="#C68A1B"/><circle cx="33" cy="15.5" r="0.5" fill="#C68A1B"/><path d="M5 15c-2-1-3-3-2.5-5" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M20 24c0 1-1 1.5-2 1.5s-2-.5-2-1.5" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><line x1="10" y1="24" x2="10" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="14" y1="24.5" x2="14" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="24.5" x2="21" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="25" y1="24" x2="25" y2="30" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M9 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M13 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M20 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M24 30h2" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/></svg>,
-  Turkey: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 8c4 2 6 6 6 10" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M4 12c4 1 6 4 7 8" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M3 16c3 1 6 3 8 6" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><path d="M8 6c3 3 5 7 4 12" stroke="#C68A1B" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="18" cy="20" rx="8" ry="6" stroke="#C68A1B" strokeWidth="1.5"/><path d="M24 16c2-3 3-6 2.5-9" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><circle cx="26" cy="7" r="3" stroke="#C68A1B" strokeWidth="1.5"/><circle cx="27" cy="6.5" r="0.8" fill="#C68A1B"/><path d="M29 7.5l2.5 0.5-2.5 1" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/><path d="M25.5 9c-.5 1.5-1 2.5-1 3" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><line x1="16" y1="25.5" x2="16" y2="31" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="25.5" x2="21" y2="31" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 31h4" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M19 31h4" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/></svg>,
-  Fish: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 18c0 0 3.5-7 13-7s13 7 13 7-3.5 7-13 7S5 18 5 18z" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M29 14l5-4v16l-5-4" stroke="#C68A1B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="11" cy="17.5" r="1.8" fill="#C68A1B"/><circle cx="11.5" cy="17" r="0.6" fill="#FAF8F4"/><path d="M17 11c0-3 2-5 4-5-1 2-1 4 0 6" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M19 25c0 2 1 3.5 2.5 4-0.5-1.5-0.5-3 0.5-4.5" stroke="#C68A1B" strokeWidth="1.2" strokeLinecap="round"/><path d="M15 14.5c-1 2-1 5 0 7" stroke="#C68A1B" strokeWidth="1" strokeLinecap="round"/></svg>,
+  Chicken: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="18" cy="17" rx="8" ry="10" stroke="#C8941F" strokeWidth="1.5"/><path d="M10 15c-3 1-5 3-4 5s3 1 5 0" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><path d="M26 15c3 1 5 3 4 5s-3 1-5 0" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 26c-1 2-2 4-1 5" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><path d="M22 26c1 2 2 4 1 5" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><path d="M18 10v12" stroke="#C8941F" strokeWidth="0.8" opacity="0.4" strokeLinecap="round"/></svg>,
+  Salmon: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 18c0 0 4-8 14-8s14 8 14 8-4 8-14 8S4 18 4 18z" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2-3 4-4 4-4s-1 5-2 6" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M30 18c2 3 4 4 4 4s-1-5-2-6" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="10" cy="17.5" r="1.5" fill="#C8941F"/><path d="M16 14c1 2 1 6 0 8" stroke="#C8941F" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><path d="M20 13c1 2.5 1 7 0 10" stroke="#C8941F" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><path d="M24 14.5c.8 1.5.8 5 0 7" stroke="#C8941F" strokeWidth="1" strokeLinecap="round" opacity="0.5"/></svg>,
+  Lamb: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="18" cy="18" rx="11" ry="8" stroke="#C8941F" strokeWidth="1.5"/><path d="M10 12c1-2 3-2 4 0s3 2 4 0 3-2 4 0 3 2 4 0" stroke="#C8941F" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="28" cy="14" rx="4" ry="3.5" stroke="#C8941F" strokeWidth="1.5"/><circle cx="29.5" cy="13.5" r="0.8" fill="#C8941F"/><path d="M31 11.5c1.5-1 3-0.5 3 1" stroke="#C8941F" strokeWidth="1.2" strokeLinecap="round"/><path d="M26 11c-1-1.5-0.5-3 1-3" stroke="#C8941F" strokeWidth="1.2" strokeLinecap="round"/><line x1="12" y1="25" x2="12" y2="30" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><line x1="16" y1="25.5" x2="16" y2="30" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="25.5" x2="21" y2="30" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><line x1="25" y1="25" x2="25" y2="30" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/></svg>,
+  Beef: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="17" cy="18" rx="12" ry="7" stroke="#C8941F" strokeWidth="1.5"/><ellipse cx="30" cy="14" rx="4" ry="3.5" stroke="#C8941F" strokeWidth="1.5"/><path d="M27 16c1-.5 2-1.5 3-2" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><path d="M28 11c-.5-2-1.5-3-1-4" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><path d="M33 11.5c.5-2 1-3 .5-4" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><path d="M34 13c1.5 0 2-.5 1.5-1.5" stroke="#C8941F" strokeWidth="1.2" strokeLinecap="round"/><circle cx="31" cy="13.5" r="0.8" fill="#C8941F"/><circle cx="33" cy="15.5" r="0.5" fill="#C8941F"/><path d="M5 15c-2-1-3-3-2.5-5" stroke="#C8941F" strokeWidth="1.3" strokeLinecap="round"/><path d="M20 24c0 1-1 1.5-2 1.5s-2-.5-2-1.5" stroke="#C8941F" strokeWidth="1" strokeLinecap="round" opacity="0.5"/><line x1="10" y1="24" x2="10" y2="30" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><line x1="14" y1="24.5" x2="14" y2="30" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="24.5" x2="21" y2="30" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><line x1="25" y1="24" x2="25" y2="30" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><path d="M9 30h2" stroke="#C8941F" strokeWidth="1.3" strokeLinecap="round"/><path d="M13 30h2" stroke="#C8941F" strokeWidth="1.3" strokeLinecap="round"/><path d="M20 30h2" stroke="#C8941F" strokeWidth="1.3" strokeLinecap="round"/><path d="M24 30h2" stroke="#C8941F" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  Turkey: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 8c4 2 6 6 6 10" stroke="#C8941F" strokeWidth="1.3" strokeLinecap="round"/><path d="M4 12c4 1 6 4 7 8" stroke="#C8941F" strokeWidth="1.3" strokeLinecap="round"/><path d="M3 16c3 1 6 3 8 6" stroke="#C8941F" strokeWidth="1.3" strokeLinecap="round"/><path d="M8 6c3 3 5 7 4 12" stroke="#C8941F" strokeWidth="1.3" strokeLinecap="round"/><ellipse cx="18" cy="20" rx="8" ry="6" stroke="#C8941F" strokeWidth="1.5"/><path d="M24 16c2-3 3-6 2.5-9" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><circle cx="26" cy="7" r="3" stroke="#C8941F" strokeWidth="1.5"/><circle cx="27" cy="6.5" r="0.8" fill="#C8941F"/><path d="M29 7.5l2.5 0.5-2.5 1" stroke="#C8941F" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/><path d="M25.5 9c-.5 1.5-1 2.5-1 3" stroke="#C8941F" strokeWidth="1.2" strokeLinecap="round"/><line x1="16" y1="25.5" x2="16" y2="31" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><line x1="21" y1="25.5" x2="21" y2="31" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 31h4" stroke="#C8941F" strokeWidth="1.2" strokeLinecap="round"/><path d="M19 31h4" stroke="#C8941F" strokeWidth="1.2" strokeLinecap="round"/></svg>,
+  Fish: <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 18c0 0 3.5-7 13-7s13 7 13 7-3.5 7-13 7S5 18 5 18z" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M29 14l5-4v16l-5-4" stroke="#C8941F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><circle cx="11" cy="17.5" r="1.8" fill="#C8941F"/><circle cx="11.5" cy="17" r="0.6" fill="#F4EFE4"/><path d="M17 11c0-3 2-5 4-5-1 2-1 4 0 6" stroke="#C8941F" strokeWidth="1.2" strokeLinecap="round"/><path d="M19 25c0 2 1 3.5 2.5 4-0.5-1.5-0.5-3 0.5-4.5" stroke="#C8941F" strokeWidth="1.2" strokeLinecap="round"/><path d="M15 14.5c-1 2-1 5 0 7" stroke="#C8941F" strokeWidth="1" strokeLinecap="round"/></svg>,
 };
 
 function BrowseByProtein({ proteinCounts, onNavigate }) {
@@ -410,7 +410,7 @@ function BrowseByProtein({ proteinCounts, onNavigate }) {
     <div ref={ref} className="protein-section" style={{ background: '#fff', padding: '80px 24px', borderTop: '1px solid #ede8df', borderBottom: '1px solid #ede8df' }}>
       <div style={{ maxWidth: 680, margin: '0 auto', ...fade(visible) }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1a1612', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 8 }}>Browse by protein</h2>
+          <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#1C1814', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 8 }}>Browse by protein</h2>
           <p style={{ fontSize: 15, color: '#8a7e72', fontFamily: "'Inter', sans-serif" }}>Find foods by your dog&apos;s preferred protein source</p>
         </div>
         <div className="protein-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
@@ -419,14 +419,14 @@ function BrowseByProtein({ proteinCounts, onNavigate }) {
               onClick={() => onNavigate(`/discover?protein=${encodeURIComponent(name)}`)}
               className="protein-tile"
               style={{
-                padding: '24px 16px', borderRadius: 16, background: '#faf8f4',
+                padding: '24px 16px', borderRadius: 16, background: '#F4EFE4',
                 border: '1px solid #ede8df', cursor: 'pointer',
                 transition: 'transform 0.2s, box-shadow 0.2s, border-color 0.2s',
                 textAlign: 'center',
               }}
             >
               <div style={{ marginBottom: 8, display: 'flex', justifyContent: 'center' }}>{PROTEIN_ICONS[name]}</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1612', fontFamily: "'Inter', sans-serif", marginBottom: 4 }}>{name}</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#1C1814', fontFamily: "'Inter', sans-serif", marginBottom: 4 }}>{name}</div>
               <div style={{ fontSize: 12, color: '#b5aa99', fontFamily: "'Inter', sans-serif" }}>
                 {proteinCounts[name] ? `${proteinCounts[name]} products` : '—'}
               </div>
@@ -446,17 +446,17 @@ const VALUE_PROPS = [
   {
     title: 'Transparent Scoring',
     desc: 'Every score is broken down across 8 categories. See exactly why a food earned its rating.',
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E5A93D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C8941F" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>,
   },
   {
     title: 'Manufacturer-Sourced Data',
     desc: 'All nutritional data comes directly from the manufacturer. No guesswork, no retailer approximations.',
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E5A93D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C8941F" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
   },
   {
     title: 'Apples-to-Apples Nutrition',
     desc: "We strip moisture out of the equation so every food is compared on equal footing. Real nutrition, side by side.",
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E5A93D" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="#E5A93D"/><circle cx="17" cy="12" r="2" fill="#E5A93D"/><circle cx="11" cy="18" r="2" fill="#E5A93D"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C8941F" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="#C8941F"/><circle cx="17" cy="12" r="2" fill="#C8941F"/><circle cx="11" cy="18" r="2" fill="#C8941F"/></svg>,
   },
 ];
 
@@ -467,9 +467,9 @@ const VALUE_PROPS = [
 function FooterCTA({ onNavigate, onSelect }) {
   const [ref, visible] = useFadeIn(0.15);
   return (
-    <div ref={ref} className="footer-cta-section" style={{ background: '#1a1612', padding: '72px 24px 80px', textAlign: 'center', overflow: 'hidden' }}>
+    <div ref={ref} className="footer-cta-section" style={{ background: '#1C1814', padding: '72px 24px 80px', textAlign: 'center', overflow: 'hidden' }}>
       <div style={{ maxWidth: 560, margin: '0 auto', width: '100%', boxSizing: 'border-box', ...fade(visible) }}>
-        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#faf8f4', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 12 }}>
+        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#F4EFE4', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 12 }}>
           Ready to see what&apos;s in your dog&apos;s food?
         </h2>
         <p style={{ fontSize: 15, color: '#8a7e72', marginBottom: 32, fontFamily: "'Inter', sans-serif" }}>Search any brand or browse our full database</p>
@@ -481,7 +481,7 @@ function FooterCTA({ onNavigate, onSelect }) {
           background: 'transparent', color: '#d4c9b8', fontSize: 15, fontWeight: 600,
           cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'all 0.2s',
         }}
-          onMouseEnter={(e) => { e.target.style.background = '#E5A93D'; e.target.style.color = '#1a1612'; e.target.style.borderColor = '#E5A93D'; }}
+          onMouseEnter={(e) => { e.target.style.background = '#C8941F'; e.target.style.color = '#1C1814'; e.target.style.borderColor = '#C8941F'; }}
           onMouseLeave={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#d4c9b8'; e.target.style.borderColor = '#3d352b'; }}
         >Discover 1,000+ dog foods →</button>
       </div>
@@ -514,24 +514,24 @@ export default function Home({ marqueeData = [] }) {
   }, [router]);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8f4' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#F4EFE4' }}>
 
       {/* ═══ NAV (desktop only — MobileNav is rendered globally in app/layout.js) ═══ */}
       <nav className="site-nav" style={{
         position: 'sticky', top: 0, zIndex: 50,
-        background: '#faf8f4',
+        background: '#F4EFE4',
         padding: '14px 40px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         borderBottom: scrolled ? '1px solid #ede8df' : '1px solid transparent',
         boxShadow: scrolled ? '0 2px 12px rgba(26,22,18,0.04)' : 'none',
         transition: 'all 0.3s',
       }}>
-        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1a1612', cursor: 'pointer' }} onClick={() => goTo('/')}>
-          Good<span style={{ color: '#E5A93D' }}>Kibble</span>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814', cursor: 'pointer' }} onClick={() => goTo('/')}>
+          Good<span style={{ color: '#C8941F' }}>Kibble</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span className="nav-discover-link" onClick={() => goTo('/discover')} style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'color 0.2s' }}
-            onMouseEnter={(e) => e.target.style.color = '#1a1612'}
+            onMouseEnter={(e) => e.target.style.color = '#1C1814'}
             onMouseLeave={(e) => e.target.style.color = '#5a5248'}
           >Discover Foods</span>
           <RecallsNav />
@@ -548,25 +548,25 @@ export default function Home({ marqueeData = [] }) {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase',
-              color: '#C68A1B', background: '#F5E8C8',
+              color: '#C8941F', background: '#EBDFC2',
               padding: '6px 14px', borderRadius: 100,
               marginBottom: 24,
               fontFamily: 'ui-monospace, SFMono-Regular, monospace',
               animation: 'fadeUp 0.6s ease both',
             }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C68A1B', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C8941F', animation: 'heroDot 1.5s ease-in-out infinite' }} />
               <span className="pill-full">1,042 foods · 187 brands · scored &amp; analyzed</span>
               <span className="pill-short">1,042 foods · 187 brands analyzed</span>
             </div>
-            <h1 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 'clamp(44px, 6vw, 72px)', fontWeight: 400, color: '#1a1612', lineHeight: 1.02, letterSpacing: -1, marginBottom: 28, animation: 'fadeUp 0.6s ease 0.1s both' }}>
+            <h1 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 'clamp(44px, 6vw, 72px)', fontWeight: 400, color: '#1C1814', lineHeight: 1.02, letterSpacing: -1, marginBottom: 28, animation: 'fadeUp 0.6s ease 0.1s both' }}>
               Look up any dog food.<br />
-              <em style={{ color: '#C68A1B', fontStyle: 'italic' }}>See what&apos;s really in it.</em>
+              <em style={{ color: '#C8941F', fontStyle: 'italic' }}>See what&apos;s really in it.</em>
             </h1>
             <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, width: '100%', boxSizing: 'border-box' }}>
               <SearchBox onSelect={handleSelect} variant="hero" />
             </div>
             <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.35s both' }}>
-              <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#1a1612', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
+              <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#1C1814', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
                 onMouseEnter={(e) => { e.target.style.textDecoration = 'underline'; }}
                 onMouseLeave={(e) => { e.target.style.textDecoration = 'none'; }}
               >or discover 1,000+ dog foods by filter →</span>
@@ -596,8 +596,8 @@ export default function Home({ marqueeData = [] }) {
       <FooterCTA onNavigate={goTo} onSelect={handleSelect} />
 
       {/* ═══ FOOTER ═══ */}
-      <div style={{ borderTop: '1px solid #3d352b', padding: '28px 40px', background: '#1a1612', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#faf8f4' }}>Good<span style={{ color: '#E5A93D' }}>Kibble</span></div>
+      <div style={{ borderTop: '1px solid #3d352b', padding: '28px 40px', background: '#1C1814', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 24, fontWeight: 800, color: '#F4EFE4' }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#5a5248', fontFamily: "'Inter', sans-serif", flexWrap: 'wrap' }}>
           <a href="/terms" style={{ color: '#5a5248', textDecoration: 'none' }}>Terms</a>
           <a href="/privacy" style={{ color: '#5a5248', textDecoration: 'none' }}>Privacy</a>
@@ -615,7 +615,7 @@ export default function Home({ marqueeData = [] }) {
         }
         .marquee-track:hover { animation-play-state: paused; }
         .marquee-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,22,18,0.10); }
-        .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #C68A1B !important; }
+        .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #C8941F !important; }
         /* Mobile pill-text swap (long form on desktop, short on mobile) */
         .pill-short { display: none; }
         @media (max-width: 960px) {

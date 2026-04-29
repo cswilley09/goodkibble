@@ -32,7 +32,7 @@ export default function NutrientRing({ label, value, color, delay = 0 }) {
         </svg>
         <div style={{
           position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: "'Inter', sans-serif", fontSize: 32, fontWeight: 500, color: '#1a1612',
+          fontFamily: "'Inter', sans-serif", fontSize: 32, fontWeight: 500, color: '#1C1814',
         }}>{anim}%</div>
       </div>
       <span style={{

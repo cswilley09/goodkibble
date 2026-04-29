@@ -15,7 +15,7 @@ export default function RecallsNav() {
         fontFamily: "'Inter', sans-serif", display: 'inline-block',
         transition: 'color 0.2s',
       }}
-        onMouseEnter={e => (e.currentTarget.style.color = '#1a1612')}
+        onMouseEnter={e => (e.currentTarget.style.color = '#1C1814')}
         onMouseLeave={e => (e.currentTarget.style.color = '#5a5248')}
       >
         Recalls

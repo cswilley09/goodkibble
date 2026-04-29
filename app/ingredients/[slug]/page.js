@@ -79,7 +79,7 @@ export default async function IngredientPage({ params }) {
   if (!ingredient) {
     return (
       <div style={{ textAlign: 'center', padding: '120px 24px', color: '#8a7e72', fontSize: 17 }}>
-        Ingredient not found. <a href="/ingredients" style={{ color: '#1a1612', textDecoration: 'underline' }}>Browse all ingredients</a>
+        Ingredient not found. <a href="/ingredients" style={{ color: '#1C1814', textDecoration: 'underline' }}>Browse all ingredients</a>
       </div>
     )
   }

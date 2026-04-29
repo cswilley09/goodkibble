@@ -33,7 +33,7 @@ export default function HomepageRecalls() {
 
       <div style={{ textAlign: 'center', marginBottom: 28 }}>
         <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#A32D2D', marginBottom: 10, fontFamily: "'Inter', sans-serif" }}>Recent FDA Recalls</div>
-        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: 800, color: '#1a1612', margin: '0 0 8px' }}>
+        <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: 800, color: '#1C1814', margin: '0 0 8px' }}>
           Is your dog&rsquo;s food safe?
         </h2>
         <p style={{ fontSize: 15, color: '#5a5248', maxWidth: 480, margin: '0 auto', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>
@@ -47,7 +47,7 @@ export default function HomepageRecalls() {
           return (
             <div key={r.id || i} style={{
               display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px',
-              borderRadius: 14, border: '1px solid #ede8df', background: '#faf8f4',
+              borderRadius: 14, border: '1px solid #ede8df', background: '#F4EFE4',
             }}>
               <span style={{
                 padding: '4px 10px', borderRadius: 100, fontSize: 9, fontWeight: 800,
@@ -57,7 +57,7 @@ export default function HomepageRecalls() {
                 fontFamily: "'Inter', sans-serif",
               }}>{isUrgent ? 'URGENT' : 'CAUTION'}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.brand_name || 'Unknown Brand'}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#1C1814', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.brand_name || 'Unknown Brand'}</div>
                 <div style={{ fontSize: 12, color: '#5a5248', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.product_description}</div>
               </div>
               <div style={{ textAlign: 'right', flexShrink: 0 }}>
@@ -71,13 +71,13 @@ export default function HomepageRecalls() {
 
       <div style={{ textAlign: 'center' }}>
         <button onClick={() => router.push('/recalls')} style={{
-          padding: '12px 28px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
+          padding: '12px 28px', borderRadius: 100, background: '#1C1814', color: '#F4EFE4',
           fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
           fontFamily: "'Inter', sans-serif", marginBottom: 10,
         }}>View All Recalls &rarr;</button>
         <div>
           <span onClick={() => router.push('/pro')} style={{
-            fontSize: 12, color: '#C68A1B', fontWeight: 600, cursor: 'pointer',
+            fontSize: 12, color: '#C8941F', fontWeight: 600, cursor: 'pointer',
             fontFamily: "'Inter', sans-serif",
           }}>Get instant recall alerts with Pro &rarr;</span>
         </div>

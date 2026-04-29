@@ -31,8 +31,8 @@ export default function CompareBubble() {
         className={`compare-bubble${wiggle ? ' compare-wiggle' : ''}${active ? ' compare-active' : ''}`}
         style={{
           padding: '8px 18px', borderRadius: 100,
-          border: active ? '1.5px solid #1a1612' : '1.5px solid #d4c9b8',
-          background: active ? '#1a1612' : 'transparent',
+          border: active ? '1.5px solid #1C1814' : '1.5px solid #d4c9b8',
+          background: active ? '#1C1814' : 'transparent',
           color: active ? '#faf8f5' : '#b5aa99',
           fontSize: 13, fontWeight: 600, cursor: active ? 'pointer' : 'default',
           fontFamily: "'Inter', sans-serif",

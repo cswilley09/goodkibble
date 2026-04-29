@@ -89,23 +89,23 @@ export default function RecallsPage() {
   /* ── label+value card for the key details grid ── */
   const DetailCard = ({ label, value }) => (
     <div style={{
-      padding: '10px 14px', background: '#faf8f4', borderRadius: 10,
+      padding: '10px 14px', background: '#F4EFE4', borderRadius: 10,
       border: '1px solid #f0ebe3',
     }}>
       <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 4 }}>{label}</div>
-      <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1612', fontFamily: "'Inter', sans-serif", lineHeight: 1.4, wordBreak: 'break-word' }}>{value}</div>
+      <div style={{ fontSize: 14, fontWeight: 700, color: '#1C1814', fontFamily: "'Inter', sans-serif", lineHeight: 1.4, wordBreak: 'break-word' }}>{value}</div>
     </div>
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#faf8f4' }}>
+    <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
       <nav className="nav-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 24px', borderBottom: '1px solid #ede8df',
-        background: '#faf8f4', position: 'sticky', top: 0, zIndex: 40,
+        background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1a1612', letterSpacing: -0.5 }}>GoodKibble</span>
+          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1C1814', letterSpacing: -0.5 }}>GoodKibble</span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
@@ -120,7 +120,7 @@ export default function RecallsPage() {
         {/* Pro banner — free users only */}
         {!isPro && (
           <div className="pro-banner" style={{
-            background: 'linear-gradient(135deg, #1a1612, #2a2318)', borderRadius: 16,
+            background: 'linear-gradient(135deg, #1C1814, #2a2318)', borderRadius: 16,
             padding: '16px 24px', display: 'flex', justifyContent: 'space-between',
             alignItems: 'center', marginBottom: 28, gap: 16,
           }}>
@@ -132,7 +132,7 @@ export default function RecallsPage() {
               </div>
             </div>
             <a href="/pro" className="pro-banner-btn" style={{
-              padding: '8px 20px', borderRadius: 100, background: '#C68A1B', color: '#fff',
+              padding: '8px 20px', borderRadius: 100, background: '#C8941F', color: '#fff',
               fontSize: 12, fontWeight: 700, border: 'none', cursor: 'pointer',
               fontFamily: "'Inter', sans-serif", whiteSpace: 'nowrap', flexShrink: 0,
               textDecoration: 'none', display: 'inline-block',
@@ -141,7 +141,7 @@ export default function RecallsPage() {
         )}
 
         {/* Header */}
-        <h1 className="page-title" style={{ fontFamily: "Georgia, 'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1a1612', margin: '0 0 6px' }}>FDA Dog Food Recalls</h1>
+        <h1 className="page-title" style={{ fontFamily: "Georgia, 'Instrument Serif', serif", fontSize: 32, fontWeight: 800, color: '#1C1814', margin: '0 0 6px' }}>FDA Dog Food Recalls</h1>
         <p style={{ fontSize: 14, color: '#8a7e72', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>Updated every 6 hours from FDA and AVMA sources</p>
 
         {/* Search bar */}
@@ -158,7 +158,7 @@ export default function RecallsPage() {
               placeholder="Search by brand, product, or reason..."
               style={{
                 flex: 1, border: 'none', outline: 'none', fontSize: 15, padding: '10px 12px',
-                background: 'transparent', color: '#1a1612', fontFamily: "'Inter', sans-serif", fontWeight: 500,
+                background: 'transparent', color: '#1C1814', fontFamily: "'Inter', sans-serif", fontWeight: 500,
               }}
             />
             {search && (
@@ -250,7 +250,7 @@ export default function RecallsPage() {
                       {/* Content area */}
                       <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
-                          <span style={{ fontSize: 16, fontWeight: 800, color: '#1a1612', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <span style={{ fontSize: 16, fontWeight: 800, color: '#1C1814', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {r.brand_name || 'Unknown Brand'}
                           </span>
                           {multiBrand && (
@@ -273,7 +273,7 @@ export default function RecallsPage() {
 
                       {/* Date area */}
                       <div className="recall-date" style={{ textAlign: 'right', flexShrink: 0, minWidth: 100 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: '#1a1612', fontFamily: "'Inter', sans-serif" }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: '#1C1814', fontFamily: "'Inter', sans-serif" }}>
                           {formatDate(r.recall_date || r.report_date)}
                         </div>
                         {r.lot_numbers && (
@@ -309,7 +309,7 @@ export default function RecallsPage() {
                       {r.affected_products && (
                         <div style={{ marginBottom: 16 }}>
                           <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#8a7e72', fontFamily: "'Inter', sans-serif", marginBottom: 6 }}>Affected Products</div>
-                          <div style={{ fontSize: 13, color: '#1a1612', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>{r.affected_products}</div>
+                          <div style={{ fontSize: 13, color: '#1C1814', lineHeight: 1.6, fontFamily: "'Inter', sans-serif" }}>{r.affected_products}</div>
                         </div>
                       )}
 
@@ -383,13 +383,13 @@ export default function RecallsPage() {
                       <div style={{ display: 'flex', gap: 10, marginTop: 4, flexWrap: 'wrap' }}>
                         {r.source_url && (
                           <a href={r.source_url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{
-                            padding: '8px 16px', borderRadius: 100, background: '#1a1612', color: '#faf8f4',
+                            padding: '8px 16px', borderRadius: 100, background: '#1C1814', color: '#F4EFE4',
                             fontSize: 12, fontWeight: 700, textDecoration: 'none', fontFamily: "'Inter', sans-serif",
                           }}>View FDA Source &rarr;</a>
                         )}
                         <button onClick={(e) => { e.stopPropagation(); router.push('/discover'); }} style={{
                           padding: '8px 16px', borderRadius: 100, border: '1.5px solid #ede8df',
-                          background: 'transparent', color: '#1a1612', fontSize: 12, fontWeight: 600,
+                          background: 'transparent', color: '#1C1814', fontSize: 12, fontWeight: 600,
                           cursor: 'pointer', fontFamily: "'Inter', sans-serif",
                         }}>Find Alternatives</button>
                       </div>
@@ -402,7 +402,7 @@ export default function RecallsPage() {
                           gap: 12, fontFamily: "'Inter', sans-serif",
                         }}>
                           <span style={{ fontSize: 13, color: '#5a5248' }}>{'\u{1F514}'} Get instant recall alerts to your email</span>
-                          <a href="/pro" style={{ fontSize: 13, color: '#C68A1B', fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Learn about Pro &rarr;</a>
+                          <a href="/pro" style={{ fontSize: 13, color: '#C8941F', fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Learn about Pro &rarr;</a>
                         </div>
                       )}
                     </div>
