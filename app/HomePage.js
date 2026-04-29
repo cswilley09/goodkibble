@@ -141,23 +141,68 @@ function ProductMarquee({ onCardClick, products: initialProducts }) {
    SECTION 3: STATS STRIP
    ═══════════════════════════════════════ */
 
-function StatsStrip() {
+function WhyStrip() {
   const [ref, visible] = useFadeIn(0.2);
-  const stats = [
-    { number: '1,000+', label: 'products scored' },
-    { number: '50+', label: 'brands analyzed' },
-    { number: '8', label: 'scoring categories' },
-    { number: '100%', label: 'manufacturer-sourced' },
-  ];
   return (
-    <div ref={ref} style={{ background: '#1a1612', padding: '56px 24px' }}>
-      <div className="stats-grid" style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24, ...fade(visible) }}>
-        {stats.map((s, i) => (
-          <div key={i} style={{ textAlign: 'center' }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#f0c930', lineHeight: 1.1, marginBottom: 6 }}>{s.number}</div>
-            <div style={{ fontSize: 12, color: '#8a7e72', fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>{s.label}</div>
+    <div ref={ref} style={{
+      background: 'linear-gradient(180deg, #1a1612 0%, #13100d 100%)',
+      padding: '96px 24px 104px',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      {/* Soft gold glow */}
+      <div aria-hidden style={{
+        position: 'absolute', top: '-30%', left: '50%', transform: 'translateX(-50%)',
+        width: 800, height: 500, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(240,201,48,0.08) 0%, transparent 65%)',
+        pointerEvents: 'none',
+      }} />
+      <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', ...fade(visible) }}>
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            fontSize: 11, fontWeight: 700, letterSpacing: 2.5, textTransform: 'uppercase',
+            color: '#f0c930', fontFamily: "'DM Sans', sans-serif",
+            marginBottom: 16,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f0c930', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+            Why GoodKibble
           </div>
-        ))}
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: '#faf8f4',
+            lineHeight: 1.05, letterSpacing: -1, margin: 0,
+          }}>
+            Built on data,{' '}
+            <em style={{ color: '#f0c930', fontStyle: 'italic', fontWeight: 800 }}>not marketing.</em>
+          </h2>
+        </div>
+        <div className="why-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 48 }}>
+          {VALUE_PROPS.map((vp, i) => (
+            <div key={vp.title} style={{
+              textAlign: 'left',
+              paddingLeft: i === 0 ? 0 : 32,
+              borderLeft: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)',
+            }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: 12,
+                background: 'rgba(240,201,48,0.1)',
+                border: '1px solid rgba(240,201,48,0.2)',
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: 20,
+              }}>{vp.icon}</div>
+              <div style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: 22, fontWeight: 800, color: '#faf8f4',
+                lineHeight: 1.2, marginBottom: 10, letterSpacing: -0.3,
+              }}>{vp.title}</div>
+              <p style={{
+                fontSize: 14, color: '#8a7e72', lineHeight: 1.65,
+                fontFamily: "'DM Sans', sans-serif", margin: 0,
+              }}>{vp.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -401,17 +446,17 @@ const VALUE_PROPS = [
   {
     title: 'Transparent Scoring',
     desc: 'Every score is broken down across 8 categories. See exactly why a food earned its rating.',
-    icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f0c930" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>,
   },
   {
     title: 'Manufacturer-Sourced Data',
-    desc: 'All nutritional data comes directly from manufacturer websites. No guesswork, no retailer approximations.',
-    icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
+    desc: 'All nutritional data comes directly from the manufacturer. No guesswork, no retailer approximations.',
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f0c930" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
   },
   {
     title: 'Apples-to-Apples Nutrition',
     desc: "We strip moisture out of the equation so every food is compared on equal footing. Real nutrition, side by side.",
-    icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="#C9A84C"/><circle cx="17" cy="12" r="2" fill="#C9A84C"/><circle cx="11" cy="18" r="2" fill="#C9A84C"/></svg>,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f0c930" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="#f0c930"/><circle cx="17" cy="12" r="2" fill="#f0c930"/><circle cx="11" cy="18" r="2" fill="#f0c930"/></svg>,
   },
 ];
 
@@ -514,32 +559,32 @@ export default function Home({ marqueeData = [] }) {
         </div>
       </nav>
 
-      {/* ═══ 1. HERO (ported from staging — desktop only) ═══ */}
+      {/* ═══ 1. HERO ═══ */}
       <div className="hero-section" style={{ padding: '56px 40px 64px', maxWidth: 1200, width: '100%', margin: '0 auto', position: 'relative', zIndex: 30, boxSizing: 'border-box' }}>
         <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 48, alignItems: 'center' }}>
           {/* Left: text + search */}
           <div className="hero-text">
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase',
-              color: '#C68A1B', background: '#F5E8C8',
+              fontSize: 11, fontWeight: 700, letterSpacing: 2.5, textTransform: 'uppercase',
+              color: '#C9A84C', background: '#F5EDD2',
               padding: '6px 14px', borderRadius: 100,
               marginBottom: 24,
-              fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+              fontFamily: "'DM Sans', sans-serif",
               animation: 'fadeUp 0.6s ease both',
             }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C68A1B', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C9A84C', animation: 'heroDot 1.5s ease-in-out infinite' }} />
               1,042 foods · 187 brands · scored &amp; analyzed
             </div>
-            <h1 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 'clamp(44px, 6vw, 72px)', fontWeight: 400, color: '#1a1612', lineHeight: 1.02, letterSpacing: -1, marginBottom: 28, animation: 'fadeUp 0.6s ease 0.1s both' }}>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(44px, 6vw, 72px)', fontWeight: 800, color: '#1a1612', lineHeight: 1.02, letterSpacing: -2, marginBottom: 28, animation: 'fadeUp 0.6s ease 0.1s both' }}>
               Look up any dog food.<br />
-              <em style={{ color: '#C68A1B', fontStyle: 'italic' }}>See what&apos;s really in it.</em>
+              <em style={{ color: '#C9A84C', fontStyle: 'italic', fontWeight: 800 }}>See what&apos;s really in it.</em>
             </h1>
             <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, width: '100%', boxSizing: 'border-box' }}>
               <SearchBox onSelect={handleSelect} variant="hero" />
             </div>
             <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.35s both' }}>
-              <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#1a1612', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
+              <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#1a1612', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
                 onMouseEnter={(e) => { e.target.style.textDecoration = 'underline'; }}
                 onMouseLeave={(e) => { e.target.style.textDecoration = 'none'; }}
               >or discover 1,000+ dog foods by filter →</span>
@@ -556,8 +601,8 @@ export default function Home({ marqueeData = [] }) {
       {/* ═══ 2. MARQUEE ═══ */}
       <ProductMarquee onCardClick={handleSelect} products={marqueeData} />
 
-      {/* ═══ 3. STATS ═══ */}
-      <StatsStrip />
+      {/* ═══ 3. WHY GOODKIBBLE (dark editorial strip) ═══ */}
+      <WhyStrip />
 
       {/* ═══ 4. SCORING DEMO ═══ */}
       <ScoringDemo onNavigate={goTo} />
@@ -565,10 +610,7 @@ export default function Home({ marqueeData = [] }) {
       {/* ═══ 5. BROWSE BY PROTEIN ═══ */}
       <BrowseByProtein proteinCounts={proteinCounts} onNavigate={goTo} />
 
-      {/* ═══ 6. WHY GOODKIBBLE ═══ */}
-      <WhyGoodKibble />
-
-      {/* ═══ 7. FOOTER CTA ═══ */}
+      {/* ═══ 6. FOOTER CTA ═══ */}
       <FooterCTA onNavigate={goTo} onSelect={handleSelect} />
 
       {/* ═══ FOOTER ═══ */}
@@ -603,10 +645,10 @@ export default function Home({ marqueeData = [] }) {
           .site-nav > div:first-child { font-size: 22px !important; }
           .site-nav > div:last-child { gap: 10px !important; }
           .nav-discover-link { font-size: 12px !important; }
-          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 28px 16px !important; }
+          .why-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+          .why-grid > div:not(:first-child) { padding-left: 0 !important; border-left: none !important; border-top: 1px solid rgba(255,255,255,0.08) !important; padding-top: 32px !important; }
           .demo-layout { grid-template-columns: 1fr !important; gap: 32px !important; }
           .protein-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .value-grid { grid-template-columns: 1fr !important; }
           .marquee-card { width: 210px !important; }
           .hero-section { padding-left: 16px !important; padding-right: 16px !important; }
           .hero-search-wrap { max-width: 100% !important; }
