@@ -4,6 +4,7 @@ import SearchBox from './components/SearchBox';
 import CompareBubble from './components/CompareBubble';
 import SignUpButton from './components/SignUpButton';
 import RecallsNav from './components/RecallsNav';
+import KibbleAnalyzer from './components/KibbleAnalyzer';
 import { useRouter } from 'next/navigation';
 
 /* ═══════════════════════════════════════
@@ -513,31 +514,42 @@ export default function Home({ marqueeData = [] }) {
         </div>
       </nav>
 
-      {/* ═══ 1. HERO ═══ */}
-      <div className="hero-section" style={{ padding: '48px 24px 36px', maxWidth: 680, width: '100%', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 30, boxSizing: 'border-box' }}>
-        <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#C9A84C', marginBottom: 16, animation: 'fadeUp 0.6s ease both' }}>1,000+ dog foods scored &amp; analyzed</div>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(38px, 5vw, 58px)', fontWeight: 900, color: '#1a1612', lineHeight: 1.08, letterSpacing: -2, marginBottom: 20, animation: 'fadeUp 0.6s ease 0.1s both' }}>
-          See what&apos;s really in<br />your dog&apos;s food
-        </h1>
-        <p style={{ fontSize: 18, color: '#8a7e72', lineHeight: 1.6, maxWidth: 480, margin: '0 auto 32px', fontFamily: "'DM Sans', sans-serif", animation: 'fadeUp 0.6s ease 0.2s both' }}>
-          Search any dog food. Get a full breakdown of ingredients, nutrition, and an honest 0&ndash;100 score.
-        </p>
-        <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
-          <SearchBox onSelect={handleSelect} variant="hero" />
-        </div>
-        {/* Social proof bar */}
-        <div className="social-proof-bar" style={{ marginTop: 20, animation: 'fadeUp 0.6s ease 0.35s both', textAlign: 'center', fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8a7e72', lineHeight: 1.8 }}>
-          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>Trusted by industry professionals</span></span>
-          <span className="proof-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
-          <span><span style={{ fontWeight: 600, color: '#8a7e72' }}>9 nutrition categories</span></span>
-          <span className="proof-dot proof-fda-dot" style={{ margin: '0 10px', opacity: 0.5 }}>&middot;</span>
-          <span className="proof-fda"><span style={{ fontWeight: 600, color: '#8a7e72' }}>FDA recalls tracked every 6 hours</span></span>
-        </div>
-        <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.4s both', textAlign: 'center' }}>
-          <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#C9A84C', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
-            onMouseEnter={(e) => { e.target.style.color = '#a8882e'; e.target.style.textDecoration = 'underline'; }}
-            onMouseLeave={(e) => { e.target.style.color = '#C9A84C'; e.target.style.textDecoration = 'none'; }}
-          >or discover 1,000+ dog foods by filter →</span>
+      {/* ═══ 1. HERO (ported from staging — desktop only) ═══ */}
+      <div className="hero-section" style={{ padding: '56px 40px 64px', maxWidth: 1200, width: '100%', margin: '0 auto', position: 'relative', zIndex: 30, boxSizing: 'border-box' }}>
+        <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 48, alignItems: 'center' }}>
+          {/* Left: text + search */}
+          <div className="hero-text">
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase',
+              color: '#C68A1B', background: '#F5E8C8',
+              padding: '6px 14px', borderRadius: 100,
+              marginBottom: 24,
+              fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+              animation: 'fadeUp 0.6s ease both',
+            }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#C68A1B', animation: 'heroDot 1.5s ease-in-out infinite' }} />
+              1,042 foods · 187 brands · scored &amp; analyzed
+            </div>
+            <h1 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 'clamp(44px, 6vw, 72px)', fontWeight: 400, color: '#1a1612', lineHeight: 1.02, letterSpacing: -1, marginBottom: 28, animation: 'fadeUp 0.6s ease 0.1s both' }}>
+              Look up any dog food.<br />
+              <em style={{ color: '#C68A1B', fontStyle: 'italic' }}>See what&apos;s really in it.</em>
+            </h1>
+            <div className="hero-search-wrap" style={{ animation: 'fadeUp 0.6s ease 0.3s both', position: 'relative', zIndex: 60, maxWidth: 520, width: '100%', boxSizing: 'border-box' }}>
+              <SearchBox onSelect={handleSelect} variant="hero" />
+            </div>
+            <div style={{ marginTop: 16, animation: 'fadeUp 0.6s ease 0.35s both' }}>
+              <span onClick={() => goTo('/discover')} style={{ fontSize: 14, color: '#1a1612', cursor: 'pointer', fontFamily: "'Inter', sans-serif", fontWeight: 600, transition: 'color 0.2s' }}
+                onMouseEnter={(e) => { e.target.style.textDecoration = 'underline'; }}
+                onMouseLeave={(e) => { e.target.style.textDecoration = 'none'; }}
+              >or discover 1,000+ dog foods by filter →</span>
+            </div>
+          </div>
+
+          {/* Right: KibbleAnalyzer */}
+          <div className="hero-analyzer" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', animation: 'fadeIn 0.8s ease 0.3s both' }}>
+            <KibbleAnalyzer />
+          </div>
         </div>
       </div>
 
@@ -580,7 +592,13 @@ export default function Home({ marqueeData = [] }) {
         .marquee-track:hover { animation-play-state: paused; }
         .marquee-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,22,18,0.10); }
         .protein-tile:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,22,18,0.06); border-color: #C9A84C !important; }
+        /* Hero ported from staging — minimum responsive rules so the new hero doesn't break smaller viewports */
+        @media (max-width: 960px) {
+          .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+          .hero-analyzer { max-width: 480px; margin: 0 auto; }
+        }
         @media (max-width: 768px) {
+          .hero-analyzer { display: none !important; }
           .site-nav { padding: 12px 16px !important; }
           .site-nav > div:first-child { font-size: 22px !important; }
           .site-nav > div:last-child { gap: 10px !important; }
