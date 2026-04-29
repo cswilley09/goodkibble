@@ -4,6 +4,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './AuthContext';
 
+const accountItemStyle = {
+  display: 'flex', alignItems: 'center',
+  width: '100%', padding: '16px 24px',
+  fontFamily: "'Inter', sans-serif",
+  fontSize: 18, fontWeight: 400, color: '#1C1814',
+  textDecoration: 'none',
+};
+
 /**
  * Mobile-only nav: sticky 3-element top bar (logo / avatar / hamburger) plus a
  * right-sliding drawer with the rest of the nav. Hidden at desktop widths
@@ -184,10 +192,10 @@ export default function MobileNav() {
           boxShadow: open ? '-12px 0 32px rgba(0,0,0,0.08)' : 'none',
         }}
       >
-        {/* Drawer header — close button */}
+        {/* Drawer header — close button (24px icon, 44px hit area) */}
         <div style={{
           display: 'flex', justifyContent: 'flex-end', alignItems: 'center',
-          padding: '12px 16px', minHeight: 56,
+          padding: '20px 12px 0',
         }}>
           <button
             ref={closeBtnRef}
@@ -207,84 +215,101 @@ export default function MobileNav() {
           </button>
         </div>
 
-        {/* Nav items */}
-        <nav style={{ flex: 1, overflowY: 'auto' }}>
+        {/* Primary nav — display type, generous padding, no dividers */}
+        <nav style={{ marginTop: 32 }}>
           {[
             { label: 'Discover Foods', href: '/discover' },
-            { label: 'Recalls', href: '/recalls' },
-            { label: 'Compare', href: '/compare' },
-          ].map((it, i, arr) => (
+            { label: 'Recalls',        href: '/recalls'  },
+            { label: 'Compare',        href: '/compare'  },
+          ].map((it) => (
             <Link
               key={it.href}
               href={it.href}
               onClick={() => setOpen(false)}
               style={{
                 display: 'flex', alignItems: 'center',
-                minHeight: 56, padding: '0 24px',
+                padding: '20px 24px',
                 fontFamily: "'Instrument Serif', Georgia, serif",
-                fontSize: 18, color: '#1C1814', textDecoration: 'none',
-                borderBottom: i < arr.length - 1 ? '0.5px solid rgba(26,22,18,0.08)' : 'none',
+                fontSize: 24, fontWeight: 400, color: '#1C1814',
+                textDecoration: 'none',
               }}
             >{it.label}</Link>
           ))}
         </nav>
 
-        {/* Footer (auth-aware) */}
-        <div style={{ padding: '32px 24px 24px', borderTop: '0.5px solid rgba(26,22,18,0.08)' }}>
-          {!isPro && (
-            <Link
-              href="/pro"
-              onClick={() => setOpen(false)}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                width: '100%', minHeight: 48, padding: '0 24px',
-                background: '#C8941F', color: '#1C1814',
-                borderRadius: 100, textDecoration: 'none',
-                fontFamily: "'Inter', sans-serif",
-                fontSize: 15, fontWeight: 700,
-              }}
-            >Get Pro</Link>
-          )}
+        {/* Account section */}
+        <div style={{ marginTop: 32 }}>
+          <div style={{
+            padding: '0 24px',
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 12, fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase',
+            color: 'rgba(28,24,20,0.60)',
+            marginBottom: 12,
+          }}>Account</div>
 
-          <div style={{ marginTop: isPro ? 0 : 16, textAlign: 'center' }}>
-            {isLoggedIn ? (
-              <>
-                {isPro && (
-                  <Link
-                    href="/profile"
-                    onClick={() => setOpen(false)}
-                    style={{
-                      display: 'inline-block', padding: '8px 0',
-                      color: 'rgba(26,22,18,0.7)', textDecoration: 'none',
-                      fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 500,
-                    }}
-                  >Manage subscription</Link>
-                )}
-                <button
-                  type="button"
-                  onClick={handleSignOut}
-                  style={{
-                    display: 'block', margin: isPro ? '8px auto 0' : '0 auto',
-                    padding: '8px 0', background: 'transparent', border: 'none', cursor: 'pointer',
-                    color: 'rgba(26,22,18,0.7)',
-                    fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 500,
-                  }}
-                >Sign out</button>
-              </>
-            ) : (
-              <span style={{
-                fontFamily: "'Inter', sans-serif", fontSize: 14,
-                color: 'rgba(26,22,18,0.7)',
+          {isLoggedIn ? (
+            <>
+              {/* TODO: route — /saved and /settings don't exist yet, falling back to /profile */}
+              <Link href="/profile" onClick={() => setOpen(false)} style={accountItemStyle}>Saved foods</Link>
+              <Link href="/profile" onClick={() => setOpen(false)} style={accountItemStyle}>Settings</Link>
+              <button type="button" onClick={handleSignOut} style={{ ...accountItemStyle, background: 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer' }}>
+                Sign out
+              </button>
+            </>
+          ) : (
+            <Link href="/login" onClick={() => setOpen(false)} style={accountItemStyle}>Sign in</Link>
+          )}
+        </div>
+
+        {/* Spacer pushes the Pro CTA to the bottom */}
+        <div style={{ flex: 1 }} />
+
+        {/* Get Pro CTA (or Manage subscription link if already Pro) */}
+        <div style={{ padding: '0 24px 32px' }}>
+          {isPro ? (
+            <div style={{ textAlign: 'center' }}>
+              <Link
+                href="/profile"
+                onClick={() => setOpen(false)}
+                style={{
+                  display: 'inline-block', padding: '8px 0',
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 14, fontWeight: 500,
+                  color: 'rgba(28,24,20,0.60)',
+                  textDecoration: 'none',
+                }}
+              >Manage subscription →</Link>
+            </div>
+          ) : (
+            <>
+              <div style={{
+                textAlign: 'center',
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 14, lineHeight: 1.5,
+                color: 'rgba(28,24,20,0.60)',
+                marginBottom: 12,
               }}>
-                Already have an account?{' '}
-                <Link
-                  href="/login"
-                  onClick={() => setOpen(false)}
-                  style={{ color: 'rgba(26,22,18,0.7)', textDecoration: 'underline', fontWeight: 600 }}
-                >Sign in</Link>
-              </span>
-            )}
-          </div>
+                Unlimited compares, recall alerts, and more.
+              </div>
+              <Link
+                href="/pro"
+                onClick={() => setOpen(false)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  width: '100%', minHeight: 48,
+                  background: '#C8941F', color: '#1C1814',
+                  borderRadius: 9999, textDecoration: 'none',
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: 15, fontWeight: 600,
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#1C1814" aria-hidden>
+                  <path d="M12 2l2.6 7.4 7.4.6-5.7 4.8 1.7 7.2L12 17.8 5.9 22l1.7-7.2L2 10l7.4-.6L12 2z" />
+                </svg>
+                Get Pro
+              </Link>
+            </>
+          )}
         </div>
       </aside>
 
