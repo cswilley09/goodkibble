@@ -1,6 +1,7 @@
 'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import { paywallEnabled } from '@/lib/paywall';
 
 const AuthContext = createContext();
 
@@ -85,7 +86,10 @@ export function AuthProvider({ children }) {
     } catch {}
   }
 
-  const isPro = !!userProfile?.is_pro;
+  // When paywall is disabled (NEXT_PUBLIC_PAYWALL_ENABLED=false), unlock all
+  // Pro-gated features for everyone. Every consumer that destructures `isPro`
+  // from useAuth() automatically gets `true`.
+  const isPro = !paywallEnabled || !!userProfile?.is_pro;
 
   return (
     <AuthContext.Provider value={{ session, userProfile, loading, signOut, fetchProfile, isPro }}>

@@ -6,6 +6,7 @@ import RecallsNav from '../components/RecallsNav';
 import CompareBubble from '../components/CompareBubble';
 import { useAuth } from '../components/AuthContext';
 import DashboardRecallAlert from '../components/DashboardRecallAlert';
+import { paywallEnabled } from '@/lib/paywall';
 
 const BREEDS = [
   'Affenpinscher', 'Afghan Hound', 'Airedale Terrier', 'Akita', 'Alaskan Malamute',
@@ -1138,7 +1139,8 @@ export default function ProfilePage() {
         {/* ═══ SETTINGS TAB ═══ */}
         {tab === 'settings' && (
           <>
-            {/* Subscription */}
+            {/* Subscription — only relevant when paywall is on */}
+            {paywallEnabled && (
             <div style={cardStyle}>
               <div style={eyebrow()}>Subscription</div>
               {isPro ? (
@@ -1157,12 +1159,13 @@ export default function ProfilePage() {
                 </>
               )}
             </div>
+            )}
 
             {/* Notifications */}
             <div style={cardStyle}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, ...eyebrow() }}>
                 Email Notifications
-                {isPro && <span style={{ background: 'linear-gradient(135deg, #C8941F, #d4b65e)', color: '#fff', padding: '2px 8px', borderRadius: 100, fontSize: 9, fontWeight: 700 }}>{'\u2605'} PRO</span>}
+                {paywallEnabled && isPro && <span style={{ background: 'linear-gradient(135deg, #C8941F, #d4b65e)', color: '#fff', padding: '2px 8px', borderRadius: 100, fontSize: 9, fontWeight: 700 }}>{'\u2605'} PRO</span>}
               </div>
               {isPro ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

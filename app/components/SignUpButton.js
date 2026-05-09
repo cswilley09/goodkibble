@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './AuthContext';
+import { paywallEnabled } from '@/lib/paywall';
 
 export default function SignUpButton() {
   const router = useRouter();
@@ -19,14 +20,16 @@ export default function SignUpButton() {
 
   if (loading || !mounted) return null;
 
-  const isUserPro = !!userProfile?.is_pro;
+  // When paywall is off, treat no one as "Pro" for badge/CTA purposes —
+  // every user already has full access, so no upsell or distinguishing star.
+  const isUserPro = paywallEnabled && !!userProfile?.is_pro;
 
   // Logged in via Supabase auth
   if (session?.user && userProfile?.first_name) {
     const initial = userProfile.first_name.charAt(0).toUpperCase();
     return (
       <>
-        {!isUserPro && (
+        {paywallEnabled && !isUserPro && (
           <span onClick={() => router.push('/pro')} className="nav-pro-link" style={{
             fontSize: 14, fontWeight: 600, color: '#C8941F', cursor: 'pointer',
             fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: 3,
@@ -94,14 +97,16 @@ export default function SignUpButton() {
   // Logged out — Pro link + pill on desktop, person icon on mobile
   return (
     <>
-      <span onClick={() => router.push('/pro')} className="nav-pro-link" style={{
-        fontSize: 14, fontWeight: 600, color: '#C8941F', cursor: 'pointer',
-        fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: 3,
-        transition: 'opacity 0.2s', flexShrink: 0,
-      }}
-        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
-        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-      >{'\u2605'} Pro</span>
+      {paywallEnabled && (
+        <span onClick={() => router.push('/pro')} className="nav-pro-link" style={{
+          fontSize: 14, fontWeight: 600, color: '#C8941F', cursor: 'pointer',
+          fontFamily: "'Inter', sans-serif", display: 'flex', alignItems: 'center', gap: 3,
+          transition: 'opacity 0.2s', flexShrink: 0,
+        }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+        >{'\u2605'} Pro</span>
+      )}
       <div
         onClick={() => router.push('/signup')}
         className="signup-btn-desktop"
