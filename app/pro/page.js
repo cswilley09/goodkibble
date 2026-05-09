@@ -170,9 +170,9 @@ export default function ProPage() {
             <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8941F', marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>Pro</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
               <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 36, fontWeight: 900, color: '#F4EFE4' }}>{price}</span>
-              <span style={{ fontSize: 14, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>{period}</span>
+              <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', fontFamily: "'Inter', sans-serif" }}>{period}</span>
             </div>
-            <div style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>{subtitle}</div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', marginBottom: 24, fontFamily: "'Inter', sans-serif" }}>{subtitle}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
               {/* "Everything in Free, plus:" */}
               <div style={{ fontSize: 14, fontFamily: "'Inter', sans-serif", color: '#C8941F', fontWeight: 700 }}>Everything in Free, plus:</div>
@@ -189,7 +189,7 @@ export default function ProPage() {
               </div>
 
               {/* Divider */}
-              <div style={{ height: 1, background: 'rgba(28,24,20,0.08)', margin: '4px 0' }} />
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', margin: '4px 0' }} />
 
               {/* Group 2: Power tools */}
               <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8941F', fontFamily: "'Inter', sans-serif" }}>For the deep divers</div>

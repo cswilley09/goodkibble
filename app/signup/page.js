@@ -992,9 +992,9 @@ export default function SignupPage() {
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#C8941F', marginBottom: 6, fontFamily: "'Inter', sans-serif" }}>Pro</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
                   <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 900, color: '#F4EFE4' }}>{billing === 'yearly' ? '$29' : '$3.99'}</span>
-                  <span style={{ fontSize: 13, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif" }}>{billing === 'yearly' ? '/year' : '/month'}</span>
+                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', fontFamily: "'Inter', sans-serif" }}>{billing === 'yearly' ? '/year' : '/month'}</span>
                 </div>
-                <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', marginBottom: 20, fontFamily: "'Inter', sans-serif" }}>
                   {billing === 'yearly' ? "That\u2019s just $2.42/month" : 'Cancel anytime'}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, flex: 1 }}>
