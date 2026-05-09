@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import SearchBox from './SearchBox';
 import CompareBubble from './CompareBubble';
@@ -755,6 +755,19 @@ export default function FoodPageContent({ productId }) {
   const pillsContainerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Hover delay so the tooltip doesn't flicker as the cursor moves between
+  // ingredient pills, and so the user can hover into the tooltip itself
+  // (e.g. to copy a source citation) without it disappearing.
+  const closeTimer = useRef(null);
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
+  }, []);
+  const scheduleClose = useCallback((delay = 200) => {
+    cancelClose();
+    closeTimer.current = setTimeout(() => setActiveIngredient(null), delay);
+  }, [cancelClose]);
+  useEffect(() => () => cancelClose(), [cancelClose]);
+
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 768);
     check();
@@ -1168,29 +1181,44 @@ export default function FoodPageContent({ productId }) {
                   </span>
                 );
 
+                const showThis = (e) => {
+                  if (!isMobile && pillsContainerRef.current && e.currentTarget) {
+                    const pillRect = e.currentTarget.getBoundingClientRect();
+                    const containerRect = pillsContainerRef.current.getBoundingClientRect();
+                    setTooltipTop(pillRect.bottom - containerRect.top + 8);
+                  }
+                  if (isSalt) {
+                    setActiveIngredient({ idx: i, info: { display_name: 'Salt Divider', quality_signal: 'caution', short_description: 'Any ingredient listed after salt typically makes up less than 1% of the total formula, as salt itself usually represents <1% of the recipe.', source: null } });
+                  } else if (info) {
+                    setActiveIngredient({ idx: i, info });
+                  }
+                };
                 return (
-                  <span key={i} style={wrapStyle} onClick={(e) => {
-                    e.stopPropagation();
-                    if (!clickable) return;
-                    if (isActive) { setActiveIngredient(null); return; }
-                    // Calculate position relative to pills container
-                    if (!isMobile && pillsContainerRef.current) {
-                      const pillRect = e.currentTarget.getBoundingClientRect();
-                      const containerRect = pillsContainerRef.current.getBoundingClientRect();
-                      setTooltipTop(pillRect.bottom - containerRect.top + 8);
-                    }
-                    if (isSalt) {
-                      setActiveIngredient({ idx: i, info: { display_name: 'Salt Divider', quality_signal: 'caution', short_description: 'Any ingredient listed after salt typically makes up less than 1% of the total formula, as salt itself usually represents <1% of the recipe.', source: null } });
-                    } else if (info) {
-                      setActiveIngredient({ idx: i, info });
-                    }
-                  }}>{pill}</span>
+                  <span key={i} style={wrapStyle}
+                    onMouseEnter={(e) => {
+                      if (isMobile || !clickable) return;
+                      cancelClose();
+                      showThis(e);
+                    }}
+                    onMouseLeave={() => { if (!isMobile) scheduleClose(); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!clickable) return;
+                      if (isActive) { setActiveIngredient(null); return; }
+                      cancelClose();
+                      showThis(e);
+                    }}
+                  >{pill}</span>
                 );
               })}
 
               {/* Desktop overlay tooltip — full width of pills container, absolutely positioned */}
               {activeIngredient && !isMobile && (
-                <div onClick={(e) => e.stopPropagation()} style={{
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  onMouseEnter={cancelClose}
+                  onMouseLeave={() => scheduleClose()}
+                  style={{
                   position: 'absolute', left: 0, right: 0, top: tooltipTop,
                   zIndex: 50, borderRadius: 12, overflow: 'visible',
                   boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
