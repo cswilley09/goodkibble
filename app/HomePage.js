@@ -495,7 +495,9 @@ function FooterCTA({ onNavigate, onSelect }) {
    MAIN PAGE
    ═══════════════════════════════════════ */
 
-export default function Home({ marqueeData = [] }) {
+export default function Home({ marqueeData = [], counts = null }) {
+  const foodsLabel = counts?.foods ? counts.foods.toLocaleString() : '1,000+';
+  const brandsLabel = counts?.brands ? counts.brands.toLocaleString() : '180+';
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
 
@@ -557,8 +559,8 @@ export default function Home({ marqueeData = [] }) {
               animation: 'fadeUp 0.6s ease both',
             }}>
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--color-marigold)', animation: 'heroDot 1.5s ease-in-out infinite' }} />
-              <span className="pill-full">1,042 foods · 187 brands · scored &amp; analyzed</span>
-              <span className="pill-short">1,042 foods · 187 brands analyzed</span>
+              <span className="pill-full">{foodsLabel} foods · {brandsLabel} brands · scored &amp; analyzed</span>
+              <span className="pill-short">{foodsLabel} foods · {brandsLabel} brands analyzed</span>
             </div>
             <h1 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 'clamp(44px, 6vw, 72px)', fontWeight: 400, color: '#1C1814', lineHeight: 1.02, letterSpacing: -1, marginBottom: 28, animation: 'fadeUp 0.6s ease 0.1s both' }}>
               Look up any dog food.<br />
