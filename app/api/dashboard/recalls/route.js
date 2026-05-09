@@ -107,18 +107,41 @@ function recallDateMs(r) {
   return d ? new Date(d).getTime() : 0;
 }
 
+// Strip punctuation + common filler words so brand variants from different
+// sources can match. "Acme Pet Foods Inc." and "Acme" both → "acme".
+const BRAND_FILLER_RE = /\b(pet|pets|food|foods|natural|naturals|company|companies|inc|llc|corp|corporation|co|the|brand|brands|products|product|kitchen|kitchens)\b/g;
+
+function normalizeBrand(s) {
+  return (s || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, ' ')
+    .replace(BRAND_FILLER_RE, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function brandsMatch(a, b) {
+  const na = normalizeBrand(a);
+  const nb = normalizeBrand(b);
+  if (!na || !nb) return false;
+  if (na === nb) return true;
+  // Substring containment — "Darwin s" matches "Darwin s Natural"
+  const [shorter, longer] = na.length <= nb.length ? [na, nb] : [nb, na];
+  if (shorter.length >= 4 && longer.includes(shorter)) return true;
+  return false;
+}
+
 function dedupeBySource(recalls) {
   const groups = [];
   for (const r of recalls) {
-    const brand = (r.brand_name || '').toLowerCase().trim();
     // No brand → can't reliably match against other sources, leave alone
-    if (!brand) { groups.push([r]); continue; }
+    if (!r.brand_name) { groups.push([r]); continue; }
     const ms = recallDateMs(r);
 
     let placed = false;
     for (const g of groups) {
       const head = g[0];
-      if ((head.brand_name || '').toLowerCase().trim() !== brand) continue;
+      if (!brandsMatch(head.brand_name, r.brand_name)) continue;
       const dayDiff = Math.abs(ms - recallDateMs(head)) / 86400000;
       if (dayDiff <= DEDUP_WINDOW_DAYS) { g.push(r); placed = true; break; }
     }
