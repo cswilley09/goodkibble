@@ -186,9 +186,14 @@ export async function GET(request) {
 
     const { data, error } = await query;
     if (error) console.error('Recalls query error:', error.message);
-    // Filter to dog-related, dedupe across sources (FDA wins over news), then
-    // resolve source URLs to real pages.
-    recalls = dedupeBySource((data || []).filter(isDogRelated)).map(r => ({
+    // Filter to dog-related, drop brand-less news rows (almost always
+    // duplicates of better-sourced FDA rows; "Unknown Brand" is noise),
+    // dedupe across sources (FDA wins over news), then resolve source URLs.
+    const isBrandlessNews = (r) => r.source === 'google_news'
+      && (!r.brand_name || /^unknown/i.test(r.brand_name.trim()));
+    recalls = dedupeBySource(
+      (data || []).filter(isDogRelated).filter(r => !isBrandlessNews(r))
+    ).map(r => ({
       ...r,
       source_url: resolveSourceUrl(r),
     }));
