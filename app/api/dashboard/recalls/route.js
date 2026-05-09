@@ -88,6 +88,54 @@ function getSupabase() {
   );
 }
 
+// Source trust order: lower = more authoritative. When multiple rows describe
+// the same recall (same brand within a date window), keep the row from the
+// most authoritative source.
+const SOURCE_PRIORITY = {
+  manual: 0,
+  openfda_enforcement: 1,
+  fda_vet_recalls: 2,
+  fda_outbreaks: 3,
+  fda_rss: 4,
+  google_news: 5,
+};
+
+const DEDUP_WINDOW_DAYS = 21;
+
+function recallDateMs(r) {
+  const d = r.recall_date || r.report_date || r.created_at;
+  return d ? new Date(d).getTime() : 0;
+}
+
+function dedupeBySource(recalls) {
+  const groups = [];
+  for (const r of recalls) {
+    const brand = (r.brand_name || '').toLowerCase().trim();
+    // No brand → can't reliably match against other sources, leave alone
+    if (!brand) { groups.push([r]); continue; }
+    const ms = recallDateMs(r);
+
+    let placed = false;
+    for (const g of groups) {
+      const head = g[0];
+      if ((head.brand_name || '').toLowerCase().trim() !== brand) continue;
+      const dayDiff = Math.abs(ms - recallDateMs(head)) / 86400000;
+      if (dayDiff <= DEDUP_WINDOW_DAYS) { g.push(r); placed = true; break; }
+    }
+    if (!placed) groups.push([r]);
+  }
+
+  return groups.map(g => {
+    g.sort((a, b) => {
+      const pa = SOURCE_PRIORITY[a.source] ?? 99;
+      const pb = SOURCE_PRIORITY[b.source] ?? 99;
+      if (pa !== pb) return pa - pb;
+      return recallDateMs(b) - recallDateMs(a);
+    });
+    return g[0];
+  });
+}
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const brand = searchParams.get('brand');
@@ -115,8 +163,9 @@ export async function GET(request) {
 
     const { data, error } = await query;
     if (error) console.error('Recalls query error:', error.message);
-    // Filter to dog-related only, and resolve source URLs to real pages
-    recalls = (data || []).filter(isDogRelated).map(r => ({
+    // Filter to dog-related, dedupe across sources (FDA wins over news), then
+    // resolve source URLs to real pages.
+    recalls = dedupeBySource((data || []).filter(isDogRelated)).map(r => ({
       ...r,
       source_url: resolveSourceUrl(r),
     }));
