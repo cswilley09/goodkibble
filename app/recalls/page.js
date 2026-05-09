@@ -248,7 +248,7 @@ export default function RecallsPage() {
                       }}>{urgent ? 'URGENT' : 'CAUTION'}</span>
 
                       {/* Content area */}
-                      <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                      <div className="recall-content" style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
                         <div className="recall-brand-row" style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
                           <span className="recall-brand-name" style={{ fontSize: 16, fontWeight: 800, color: '#1C1814', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {r.brand_name || 'Unknown Brand'}
@@ -423,9 +423,25 @@ export default function RecallsPage() {
           .recalls-container { padding: 24px 16px 60px !important; }
           .pro-banner { flex-direction: column !important; text-align: center !important; }
           .pro-banner-btn { width: 100% !important; text-align: center !important; }
-          .recall-card-inner { flex-wrap: wrap !important; gap: 12px !important; padding: 16px !important; }
-          .recall-badge { order: -1; }
-          .recall-date { text-align: left !important; width: 100%; margin-top: 0 !important; }
+          .recall-card-inner {
+            display: grid !important;
+            grid-template-columns: auto 1fr;
+            grid-template-rows: auto auto;
+            column-gap: 16px !important;
+            row-gap: 12px !important;
+            padding: 16px !important;
+            align-items: start !important;
+          }
+          .recall-badge { grid-column: 1; grid-row: 1; align-self: start; }
+          .recall-content { grid-column: 2; grid-row: 1 / span 2; min-width: 0; }
+          .recall-date {
+            grid-column: 1; grid-row: 2;
+            text-align: left !important;
+            width: auto !important;
+            min-width: 0 !important;
+            margin-top: 0 !important;
+            align-self: start;
+          }
           .recall-reason { white-space: normal !important; }
           .recall-brand-row { flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; }
           .recall-brand-name {
