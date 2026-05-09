@@ -42,7 +42,7 @@ export default function ProSuccessPage() {
         background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1C1814', letterSpacing: -0.5 }}>GoodKibble</span>
+          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814' }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></span>
         </a>
         <SignUpButton />
       </nav>
