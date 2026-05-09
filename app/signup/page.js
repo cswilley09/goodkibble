@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
+import { paywallEnabled } from '@/lib/paywall';
 
 function getSupabase() {
   return createClient(
@@ -592,7 +593,9 @@ export default function SignupPage() {
         options: { emailRedirectTo: window.location.origin + '/profile' },
       });
 
-      goTo(STEP_PLAN);
+      // Skip plan-selection step when the paywall is off — go straight
+      // to magic-link confirmation.
+      goTo(paywallEnabled ? STEP_PLAN : STEP_CONFIRM);
     } catch (err) {
       setError(err.message);
     }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { paywallEnabled } from '@/lib/paywall';
 
 /*
   STRIPE SETUP REQUIRED:
@@ -19,6 +20,11 @@ const PRICE_IDS = {
 
 export async function POST(request) {
   try {
+    // Paywall off → no checkout. UI doesn't link here, but block direct hits too.
+    if (!paywallEnabled) {
+      return NextResponse.json({ error: 'Subscriptions are not currently available.' }, { status: 404 });
+    }
+
     const { email, plan, source } = await request.json();
 
     if (!email || !plan) {

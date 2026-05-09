@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { paywallEnabled } from '@/lib/paywall';
 
 function formatDate(d) {
   if (!d) return '';
@@ -75,12 +76,14 @@ export default function HomepageRecalls() {
           fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer',
           fontFamily: "'Inter', sans-serif", marginBottom: 10,
         }}>View All Recalls &rarr;</button>
-        <div>
-          <span onClick={() => router.push('/pro')} style={{
-            fontSize: 12, color: '#C8941F', fontWeight: 600, cursor: 'pointer',
-            fontFamily: "'Inter', sans-serif",
-          }}>Get instant recall alerts with Pro &rarr;</span>
-        </div>
+        {paywallEnabled && (
+          <div>
+            <span onClick={() => router.push('/pro')} style={{
+              fontSize: 12, color: '#C8941F', fontWeight: 600, cursor: 'pointer',
+              fontFamily: "'Inter', sans-serif",
+            }}>Get instant recall alerts with Pro &rarr;</span>
+          </div>
+        )}
       </div>
 
       <style>{`

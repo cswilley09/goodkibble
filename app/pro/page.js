@@ -1,10 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../components/AuthContext';
 import SignUpButton from '../components/SignUpButton';
 import RecallsNav from '../components/RecallsNav';
 import CompareBubble from '../components/CompareBubble';
+import { paywallEnabled } from '@/lib/paywall';
 
 const FREE_FEATURES = [
   'Search any food & see the score',
@@ -43,6 +44,12 @@ export default function ProPage() {
   const { session, isPro, loading } = useAuth();
   const [billing, setBilling] = useState('yearly');
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  // Paywall off → /pro is not a real page; redirect to home.
+  useEffect(() => {
+    if (!paywallEnabled) router.replace('/');
+  }, [router]);
+  if (!paywallEnabled) return null;
 
   async function handleUpgrade() {
     if (!session?.user) {

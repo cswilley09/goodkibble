@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './AuthContext';
+import { paywallEnabled } from '@/lib/paywall';
 
 const HAIRLINE = '1px solid rgba(28,24,20,0.10)';
 
@@ -130,7 +131,7 @@ export default function MobileNav() {
             fontSize: 14, fontWeight: 700, textDecoration: 'none',
             fontFamily: "'Inter', sans-serif",
             position: 'relative', flexShrink: 0,
-            ...(isPro ? { boxShadow: '0 0 0 2px #C8941F, 0 0 8px rgba(198,138,27,0.3)' } : {}),
+            ...(paywallEnabled && isPro ? { boxShadow: '0 0 0 2px #C8941F, 0 0 8px rgba(198,138,27,0.3)' } : {}),
           }}>
             {isLoggedIn && initial ? initial : (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round">
@@ -138,7 +139,7 @@ export default function MobileNav() {
                 <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
               </svg>
             )}
-            {isLoggedIn && isPro && (
+            {paywallEnabled && isLoggedIn && isPro && (
               <span style={{
                 position: 'absolute', bottom: -2, right: -2,
                 width: 14, height: 14, borderRadius: '50%',
@@ -277,6 +278,7 @@ export default function MobileNav() {
         </div>
 
         {/* Get Pro CTA pinned to bottom via margin-top: auto (single anchor) */}
+        {paywallEnabled && (
         <div style={{ marginTop: 'auto', padding: '0 24px calc(32px + env(safe-area-inset-bottom))' }}>
           {isPro ? (
             <div style={{ textAlign: 'center' }}>
@@ -323,6 +325,7 @@ export default function MobileNav() {
             </>
           )}
         </div>
+        )}
       </aside>
 
       {/* ─── Visibility rules ─── */}
