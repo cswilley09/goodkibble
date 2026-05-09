@@ -128,7 +128,7 @@ export default function RecallsPage() {
               <span style={{ fontSize: 22, flexShrink: 0 }}>{'\u{1F514}'}</span>
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', fontFamily: "'Inter', sans-serif" }}>Never check manually again</div>
-                <div style={{ fontSize: 12, color: 'rgba(28,24,20,0.60)', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>Pro members get instant email alerts when a recall affects their dog&rsquo;s food</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>Pro members get instant email alerts when a recall affects their dog&rsquo;s food</div>
               </div>
             </div>
             <a href="/pro" className="pro-banner-btn" style={{

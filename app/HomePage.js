@@ -197,7 +197,7 @@ function WhyStrip() {
                 lineHeight: 1.2, marginBottom: 10, letterSpacing: -0.3,
               }}>{vp.title}</div>
               <p style={{
-                fontSize: 14, color: 'rgba(28,24,20,0.60)', lineHeight: 1.65,
+                fontSize: 14, color: 'rgba(244,239,228,0.60)', lineHeight: 1.65,
                 fontFamily: "'Inter', sans-serif", margin: 0,
               }}>{vp.desc}</p>
             </div>
@@ -474,7 +474,7 @@ function FooterCTA({ onNavigate, onSelect }) {
         <h2 className="section-h2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(28px, 3.2vw, 40px)', fontWeight: 400, color: '#F4EFE4', letterSpacing: -0.5, lineHeight: 1.1, marginBottom: 12 }}>
           Ready to see what&apos;s in your dog&apos;s food?
         </h2>
-        <p style={{ fontSize: 15, color: 'rgba(28,24,20,0.60)', marginBottom: 32, fontFamily: "'Inter', sans-serif" }}>Search any brand or browse our full database</p>
+        <p style={{ fontSize: 15, color: 'rgba(244,239,228,0.60)', marginBottom: 32, fontFamily: "'Inter', sans-serif" }}>Search any brand or browse our full database</p>
         <div style={{ marginBottom: 20 }}>
           <SearchBox onSelect={onSelect} variant="hero" />
         </div>
