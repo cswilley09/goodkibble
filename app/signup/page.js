@@ -653,7 +653,7 @@ export default function SignupPage() {
         background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
       }}>
         <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 22, fontWeight: 800, color: '#1C1814', letterSpacing: -0.5 }}>GoodKibble</span>
+          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814' }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></span>
         </a>
         {step < STEP_PLAN && (
           <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: 'rgba(28,24,20,0.60)', letterSpacing: 1, textTransform: 'uppercase' }}>

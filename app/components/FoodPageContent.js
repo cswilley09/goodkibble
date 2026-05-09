@@ -835,7 +835,7 @@ export default function FoodPageContent({ productId }) {
         position: 'sticky', top: 0, zIndex: 40, gap: 16,
       }}>
         <div onClick={goHome} style={{
-          fontFamily: "'Instrument Serif', serif", fontSize: 32, fontWeight: 800,
+          fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800,
           color: '#1C1814', cursor: 'pointer', flexShrink: 0,
         }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
         <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
