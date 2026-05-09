@@ -195,7 +195,7 @@ export default function MobileNav() {
         aria-label="Main menu"
         className="gk-mobilenav-drawer"
         style={{
-          position: 'fixed', top: 0, right: 0, height: '100vh', zIndex: 70,
+          position: 'fixed', top: 0, right: 0, height: '100dvh', zIndex: 70,
           width: '85vw', maxWidth: 360,
           background: '#F4EFE4',
           display: 'flex', flexDirection: 'column',
@@ -277,7 +277,7 @@ export default function MobileNav() {
         </div>
 
         {/* Get Pro CTA pinned to bottom via margin-top: auto (single anchor) */}
-        <div style={{ marginTop: 'auto', padding: '0 24px 32px' }}>
+        <div style={{ marginTop: 'auto', padding: '0 24px calc(32px + env(safe-area-inset-bottom))' }}>
           {isPro ? (
             <div style={{ textAlign: 'center' }}>
               <Link
