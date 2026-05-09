@@ -249,8 +249,8 @@ export default function RecallsPage() {
 
                       {/* Content area */}
                       <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
-                          <span style={{ fontSize: 16, fontWeight: 800, color: '#1C1814', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <div className="recall-brand-row" style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
+                          <span className="recall-brand-name" style={{ fontSize: 16, fontWeight: 800, color: '#1C1814', fontFamily: "'Inter', sans-serif", overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {r.brand_name || 'Unknown Brand'}
                           </span>
                           {multiBrand && (
@@ -277,12 +277,12 @@ export default function RecallsPage() {
                           {formatDate(r.recall_date || r.report_date)}
                         </div>
                         {r.lot_numbers && (
-                          <div style={{ fontSize: 10, color: 'rgba(28,24,20,0.40)', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>Lots affected</div>
+                          <div className="recall-lots-label" style={{ fontSize: 10, color: 'rgba(28,24,20,0.40)', fontFamily: "'Inter', sans-serif", marginTop: 2 }}>Lots affected</div>
                         )}
                       </div>
 
                       {/* Arrow */}
-                      <span style={{ fontSize: 16, color: '#d4c9b8', flexShrink: 0, fontWeight: 300, transition: 'transform 0.2s', transform: expanded ? 'rotate(90deg)' : 'none' }}>{'\u203A'}</span>
+                      <span className="recall-caret" style={{ fontSize: 16, color: '#d4c9b8', flexShrink: 0, fontWeight: 300, transition: 'transform 0.2s', transform: expanded ? 'rotate(90deg)' : 'none' }}>{'\u203A'}</span>
                     </div>
                   </div>
 
@@ -423,10 +423,21 @@ export default function RecallsPage() {
           .recalls-container { padding: 24px 16px 60px !important; }
           .pro-banner { flex-direction: column !important; text-align: center !important; }
           .pro-banner-btn { width: 100% !important; text-align: center !important; }
-          .recall-card-inner { flex-wrap: wrap !important; gap: 10px !important; padding: 14px 16px !important; }
+          .recall-card-inner { flex-wrap: wrap !important; gap: 12px !important; padding: 16px !important; }
           .recall-badge { order: -1; }
-          .recall-date { text-align: left !important; width: 100%; margin-top: 4px; }
+          .recall-date { text-align: left !important; width: 100%; margin-top: 0 !important; }
           .recall-reason { white-space: normal !important; }
+          .recall-brand-row { flex-direction: column !important; align-items: flex-start !important; gap: 6px !important; }
+          .recall-brand-name {
+            white-space: normal !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 2 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            line-height: 1.25 !important;
+          }
+          .recall-caret { display: none !important; }
+          .recall-lots-label { display: none !important; }
           .pro-popup-modal { padding: 24px !important; }
           .key-details-grid { grid-template-columns: 1fr 1fr !important; }
           .recall-pro-strip { flex-wrap: wrap !important; gap: 6px !important; }
