@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import SignUpButton from '../../components/SignUpButton';
+import SiteNav from '../../components/SiteNav';
 import { useAuth } from '../../components/AuthContext';
 
 export default function ProSuccessPage() {
@@ -36,16 +37,7 @@ export default function ProSuccessPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
-      <nav className="nav-bar" style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)',
-        background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
-      }}>
-        <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814' }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></span>
-        </a>
-        <SignUpButton />
-      </nav>
+      <SiteNav />
 
       <div style={{ maxWidth: 520, margin: '0 auto', padding: '60px 24px 80px', textAlign: 'center' }}>
         <div style={{ fontSize: 48, marginBottom: 20 }}>{'\u{1F389}'}</div>

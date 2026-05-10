@@ -6,6 +6,7 @@ import RecallsNav from '../components/RecallsNav';
 import CompareBubble from '../components/CompareBubble';
 import { useAuth } from '../components/AuthContext';
 import DashboardRecallAlert from '../components/DashboardRecallAlert';
+import SiteNav from '../components/SiteNav';
 import { paywallEnabled } from '@/lib/paywall';
 
 const BREEDS = [
@@ -388,15 +389,7 @@ export default function ProfilePage() {
   if (!user || noAuth) {
     return (
       <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
-        <nav className="nav-bar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40 }}>
-          <a href="/" style={{ textDecoration: 'none' }}><span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814' }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></span></a>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
-            <RecallsNav />
-            <CompareBubble />
-            <SignUpButton />
-          </div>
-        </nav>
+        <SiteNav />
         <div style={{ maxWidth: 500, margin: '0 auto', padding: '80px 24px', textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 20 }}>{'\u{1F436}'}</div>
           <h1 className="page-title" style={{ fontFamily: "'Instrument Serif', serif", fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 800, color: '#1C1814', marginBottom: 12 }}>
@@ -418,22 +411,7 @@ export default function ProfilePage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
-      {/* Nav */}
-      <nav className="nav-bar" style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)',
-        background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
-      }}>
-        <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814' }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></span>
-        </a>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
-          <RecallsNav />
-          <CompareBubble />
-          <SignUpButton />
-        </div>
-      </nav>
+      <SiteNav />
 
       <div className="profile-container" style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 80px' }}>
         {/* Header */}

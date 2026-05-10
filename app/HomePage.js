@@ -5,6 +5,7 @@ import CompareBubble from './components/CompareBubble';
 import SignUpButton from './components/SignUpButton';
 import RecallsNav from './components/RecallsNav';
 import KibbleAnalyzer from './components/KibbleAnalyzer';
+import SiteNav from './components/SiteNav';
 import { useRouter } from 'next/navigation';
 
 /* ═══════════════════════════════════════
@@ -498,18 +499,11 @@ function FooterCTA({ onNavigate, onSelect }) {
 export default function Home({ marqueeData = [], counts = null }) {
   const foodsLabel = counts?.foods ? counts.foods.toLocaleString() : '1,000+';
   const brandsLabel = counts?.brands ? counts.brands.toLocaleString() : '180+';
-  const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
 
   // Derive protein counts from server-provided marquee data
   const proteinCounts = {};
   marqueeData.forEach(r => { if (r.primary_protein) proteinCounts[r.primary_protein] = (proteinCounts[r.primary_protein] || 0) + 1; });
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   const goTo = useCallback((path) => router.push(path), [router]);
   const handleSelect = useCallback((food) => {
@@ -521,28 +515,7 @@ export default function Home({ marqueeData = [], counts = null }) {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#F4EFE4' }}>
 
       {/* ═══ NAV (desktop only — MobileNav is rendered globally in app/layout.js) ═══ */}
-      <nav className="site-nav" style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        background: '#F4EFE4',
-        padding: '14px 40px',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        borderBottom: scrolled ? '1px solid rgba(28,24,20,0.08)' : '1px solid transparent',
-        boxShadow: scrolled ? '0 2px 12px rgba(26,22,18,0.04)' : 'none',
-        transition: 'all 0.3s',
-      }}>
-        <div style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814', cursor: 'pointer' }} onClick={() => goTo('/')}>
-          Good<span style={{ color: '#C8941F' }}>Kibble</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span className="nav-discover-link" onClick={() => goTo('/discover')} style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", transition: 'color 0.2s' }}
-            onMouseEnter={(e) => e.target.style.color = '#1C1814'}
-            onMouseLeave={(e) => e.target.style.color = '#5a5248'}
-          >Discover Foods</span>
-          <RecallsNav />
-          <CompareBubble />
-          <SignUpButton />
-        </div>
-      </nav>
+      <SiteNav />
 
       {/* ═══ 1. HERO ═══ */}
       <div className="hero-section" style={{ padding: '56px 40px 64px', maxWidth: 1200, width: '100%', margin: '0 auto', position: 'relative', zIndex: 30, boxSizing: 'border-box' }}>

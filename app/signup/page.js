@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import { paywallEnabled } from '@/lib/paywall';
+import SiteNav from '../components/SiteNav';
 
 function getSupabase() {
   return createClient(
@@ -649,21 +650,7 @@ export default function SignupPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
-      {/* Nav */}
-      <nav className="nav-bar" style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)',
-        background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
-      }}>
-        <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814' }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></span>
-        </a>
-        {step < STEP_PLAN && (
-          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: 'rgba(28,24,20,0.60)', letterSpacing: 1, textTransform: 'uppercase' }}>
-            Step {step + 1} of {TOTAL_STEPS}
-          </span>
-        )}
-      </nav>
+      <SiteNav />
 
       {step < STEP_PLAN && <ProgressDots step={step} total={TOTAL_STEPS} />}
 

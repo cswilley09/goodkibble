@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import SignUpButton from '../components/SignUpButton';
 import RecallsNav from '../components/RecallsNav';
 import CompareBubble from '../components/CompareBubble';
+import SiteNav from '../components/SiteNav';
 import { useAuth } from '../components/AuthContext';
 
 function formatDate(d) {
@@ -99,21 +100,7 @@ export default function RecallsPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
-      <nav className="nav-bar" style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)',
-        background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
-      }}>
-        <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814' }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></span>
-        </a>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <a href="/discover" className="nav-discover-link" style={{ fontSize: 14, fontWeight: 600, color: '#5a5248', cursor: 'pointer', fontFamily: "'Inter', sans-serif", textDecoration: 'none' }}>Discover Foods</a>
-          <RecallsNav />
-          <CompareBubble />
-          <SignUpButton />
-        </div>
-      </nav>
+      <SiteNav />
 
       <div className="recalls-container" style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 80px' }}>
 

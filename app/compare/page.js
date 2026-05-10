@@ -8,6 +8,7 @@ import { useAuth } from '../components/AuthContext';
 import { ProGateModal } from '../components/ProGate';
 import SignUpButton from '../components/SignUpButton';
 import SearchBox from '../components/SearchBox';
+import SiteNav from '../components/SiteNav';
 
 /* ── fixed nutrient colors (same as product page) ── */
 const NC = {
@@ -352,25 +353,7 @@ export default function ComparePage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#fff' }}>
-      {/* nav */}
-      <nav className="nav-bar" style={{
-        padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#fff',
-        position: 'sticky', top: 0, zIndex: 40, gap: 16,
-      }}>
-        <div onClick={goHome} style={{
-          fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800,
-          color: '#1C1814', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
-        <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
-          <SearchBox onSelect={goFood} variant="nav" />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <RecallsNav />
-          <CompareBubble />
-          <SignUpButton />
-        </div>
-      </nav>
+      <SiteNav />
 
       {/* content */}
       <div style={{ maxWidth: items.length > 3 ? 1400 : 1200, margin: '0 auto', padding: isMobile ? '24px 12px 60px' : '40px 40px 80px', transition: 'max-width 0.3s' }}>
