@@ -4,6 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import SearchBox from '../../components/SearchBox';
 import CompareBubble from '../../components/CompareBubble';
 import SignUpButton from '../../components/SignUpButton';
+import SiteNav from '../../components/SiteNav';
 
 /* ── score tier helpers ── */
 function getScoreColor(score) {
@@ -68,21 +69,7 @@ export default function BrandPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#faf8f5' }}>
-      <nav className="nav-bar" style={{
-        padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#faf8f5',
-        position: 'sticky', top: 0, zIndex: 40, gap: 16,
-      }}>
-        <div onClick={goHome} style={{
-          fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800,
-          color: '#1C1814', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
-        <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}><SearchBox onSelect={goFood} variant="nav" /></div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <CompareBubble />
-          <SignUpButton />
-        </div>
-      </nav>
+      <SiteNav />
 
       <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 24px 80px' }}>
         <button onClick={goHome} style={{

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import SearchBox from './SearchBox';
 import CompareBubble from './CompareBubble';
 import SignUpButton from './SignUpButton';
+import SiteNav from './SiteNav';
 import { useCompare } from './CompareContext';
 import { useAuth } from './AuthContext';
 import { ProGateOverlay } from './ProGate';
@@ -842,23 +843,7 @@ export default function FoodPageContent({ productId }) {
           to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
-      <nav className="nav-bar" style={{
-        padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#fff',
-        position: 'sticky', top: 0, zIndex: 40, gap: 16,
-      }}>
-        <div onClick={goHome} style={{
-          fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800,
-          color: '#1C1814', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
-        <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
-          <SearchBox onSelect={goFood} variant="nav" />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <CompareBubble />
-          <SignUpButton />
-        </div>
-      </nav>
+      <SiteNav />
 
       {loading ? (
         <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 80px' }}>

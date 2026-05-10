@@ -4,6 +4,7 @@ import { useState } from 'react';
 import SearchBox from '@/app/components/SearchBox';
 import CompareBubble from '@/app/components/CompareBubble';
 import SignUpButton from '@/app/components/SignUpButton';
+import SiteNav from '@/app/components/SiteNav';
 
 function getScoreTier(score) {
   if (score >= 90) return { label: 'Excellent', color: '#639922' };
@@ -165,24 +166,7 @@ export default function BestOfPageContent({ title, subtitle, intro, products, cu
 
   return (
     <div style={{ minHeight: '100vh', background: '#ffffff' }}>
-      {/* Nav */}
-      <nav className="nav-bar" style={{
-        padding: '16px 24px 16px 40px', display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', borderBottom: '1px solid rgba(28,24,20,0.08)', background: '#fff',
-        position: 'sticky', top: 0, zIndex: 40, gap: 16,
-      }}>
-        <div onClick={goHome} style={{
-          fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800,
-          color: '#1C1814', cursor: 'pointer', flexShrink: 0,
-        }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></div>
-        <div className="nav-search" style={{ flex: 1, maxWidth: 380 }}>
-          <SearchBox onSelect={(id) => router.push(`/food/${id}`)} variant="nav" />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <CompareBubble />
-          <SignUpButton />
-        </div>
-      </nav>
+      <SiteNav />
 
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 24px 80px' }}>
         {/* Breadcrumb */}

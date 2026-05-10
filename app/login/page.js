@@ -10,6 +10,7 @@ function getSupabase() {
   );
 }
 import { useAuth } from '../components/AuthContext';
+import SiteNav from '../components/SiteNav';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -58,16 +59,7 @@ export default function LoginPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F4EFE4' }}>
-      {/* Nav */}
-      <nav className="nav-bar" style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px 24px', borderBottom: '1px solid rgba(28,24,20,0.08)',
-        background: '#F4EFE4', position: 'sticky', top: 0, zIndex: 40,
-      }}>
-        <a href="/" style={{ textDecoration: 'none' }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 28, fontWeight: 800, color: '#1C1814' }}>Good<span style={{ color: '#C8941F' }}>Kibble</span></span>
-        </a>
-      </nav>
+      <SiteNav />
 
       <div style={{ maxWidth: 500, margin: '0 auto', padding: '60px 24px 80px' }}>
         {isLoggedIn ? (
